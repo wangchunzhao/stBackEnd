@@ -55,9 +55,9 @@ dependencies {
 	
 	
 	runtimeOnly 'mysql:mysql-connector-java'
-	//Gradle 5.0�汾���£�
+	//Gradle 5.0
 	compileOnly 'org.projectlombok:lombok:1.18.8'
-	//Gradle 5.0�����ϰ汾��
+	//Gradle 5.0
 	annotationProcessor 'org.projectlombok:lombok:1.18.8'
 	
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
