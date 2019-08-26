@@ -28,12 +28,16 @@ public class User {
     private int id;
 	
 	@NotNull
-	@Column(length = 64)
-    private String user_mail;
+	@Column(name = "user_mail",length = 45)
+    private String mail;
 	
 	@NotNull
-	@Column(length = 1)
-    private boolean active;
+	@Column(name="isActive",length = 1,columnDefinition = "TINYINT")
+    private boolean isActive;
+	
+	@NotNull
+	@Column(name = "user_identity",length = 45)
+    private String domainId;
 	
 	
 	
@@ -45,21 +49,33 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUser_mail() {
-		return user_mail;
+	public String getMail() {
+		return mail;
 	}
 
-	public void setUser_mail(String user_mail) {
-		this.user_mail = user_mail;
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
-	public boolean getActive() {
-		return active;
+	public boolean isActive() {
+		return isActive;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
+
+	public String getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
+	}
+
+	
+
+
 
 
 }
