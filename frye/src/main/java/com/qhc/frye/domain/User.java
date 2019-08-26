@@ -19,8 +19,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "b_users")
 public class User {
-	
-	
 
 	@Id
     @NotNull

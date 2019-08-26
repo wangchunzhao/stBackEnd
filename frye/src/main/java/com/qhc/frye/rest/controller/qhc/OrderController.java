@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.qhc.frye.rest.controller.entity.Order;
 import com.qhc.frye.service.ConfirugrableService;
 import com.qhc.frye.service.OrderService;
 
@@ -26,8 +26,8 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/iws/order")
-@Api(value = "order", description = "order process")
+@RequestMapping("order")
+@Api(value = "Order management in Frye")
 public class OrderController {
 	
 	@Autowired
@@ -39,19 +39,27 @@ public class OrderController {
 	@ApiOperation(value="Get material by configurable", notes="Get material by configurable Json string")
     @GetMapping(value = "/Materinal/{configurable}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getMaterial(@PathVariable("configurable") List<String> configurable) throws Exception
+    public void submit(@PathVariable("configurable") List<String> configurable) throws Exception
     {	
 		
-		return configService.findMaterial(configurable);
+		configService.findMaterial(configurable);
     }
 	
 	@ApiOperation(value="Looking for the newest order", notes="Looking fro the newest order from cloud")
     @GetMapping(value = "/order/{configurable}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getNestOrder() throws Exception
+    public void  save() throws Exception
     {	
 		
-		return orderService.findNewestOrder();
+		orderService.findNewestOrder();
+    }
+	@ApiOperation(value="Looking for the newest order", notes="Looking fro the newest order from cloud")
+    @GetMapping(value = "/order/{configurable}")
+    @ResponseStatus(HttpStatus.OK)
+    public Order getByCode() throws Exception
+    {	
+		
+		return new Order();
     }
 	
 
