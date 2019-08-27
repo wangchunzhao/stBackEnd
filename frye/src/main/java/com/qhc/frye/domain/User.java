@@ -31,9 +31,9 @@ public class User {
 	@Column(length = 64)
     private String user_mail;
 	
-	@NotNull
-	@Column(length = 1)
-    private boolean active;
+//	@NotNull
+//	@Column(length = 1)
+//    private boolean active;
 	
 	
 	
@@ -53,13 +53,6 @@ public class User {
 		this.user_mail = user_mail;
 	}
 
-	public boolean getActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 
 
 }
