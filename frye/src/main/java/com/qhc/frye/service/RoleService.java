@@ -55,9 +55,9 @@ public class RoleService {
 	 * 新增，修改角色
 	 * @param role
 	 */
-	public void createOrUpdateRole(Role role) {
+	public Role createOrUpdateRole(Role role) {
 		
-		roleRepository.save(role);
+		return roleRepository.save(role);
 	}
 
 }

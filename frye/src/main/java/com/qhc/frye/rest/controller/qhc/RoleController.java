@@ -55,15 +55,15 @@ public class RoleController {
 	@ApiOperation(value=" add role", notes="add role")
 	@RequestMapping(value = "/addRole")
     @ResponseStatus(HttpStatus.OK)
-    public String addRole(HttpServletRequest request) throws Exception
+    public Object addRole(HttpServletRequest request) throws Exception
     {	
 		Integer id = Integer.valueOf(request.getParameter("id"));
         String name = request.getParameter("name");
 		Role role = new Role();
 		role.setId(id);
 		role.setName(name);
-		roleService.createOrUpdateRole(role);
-		return "success";
+		return roleService.createOrUpdateRole(role);
+		
     }
 
 }

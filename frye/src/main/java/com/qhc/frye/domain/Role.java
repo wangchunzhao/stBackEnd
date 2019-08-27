@@ -22,7 +22,8 @@ public class Role {
 	
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)  
+  //  @GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Column(name="id",columnDefinition="CHAR",length = 32)
     private Integer id;
 	
 	@NotNull
