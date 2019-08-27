@@ -56,8 +56,9 @@ CREATE UNIQUE INDEX `user_identity_UNIQUE` ON `bohemian`.`b_users` (`user_identi
 DROP TABLE IF EXISTS `bohemian`.`b_roles` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_roles` (
-  `id` INT NOT NULL,
+  `id` INT ZEROFILL UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` TEXT NOT NULL,
+  `isActive` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -81,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_application_of_rolechange` (
   `b_users_id` INT(10) UNSIGNED NOT NULL,
   `isActive` TINYINT(1) NOT NULL,
   `attached_code` CHAR(32) NULL,
-  `b_roles_id` INT NOT NULL,
+  `b_roles_id` INT ZEROFILL UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_b_applicaation_of_rolechange_b_users1`
     FOREIGN KEY (`b_users_id`)
@@ -147,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_operation2role` (
   `opt_time` DATETIME NOT NULL,
   `isActive` TINYINT(1) NOT NULL,
   `b_operations_id` CHAR(4) NOT NULL,
-  `b_roles_id` INT NOT NULL,
+  `b_roles_id` INT ZEROFILL UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_b_operation2role_b_operations1`
     FOREIGN KEY (`b_operations_id`)
@@ -166,29 +167,6 @@ CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`b_operation2role` (`id` ASC) VISI
 CREATE INDEX `fk_b_operation2role_b_operations1_idx` ON `bohemian`.`b_operation2role` (`b_operations_id` ASC) VISIBLE;
 
 CREATE INDEX `fk_b_operation2role_b_roles1_idx` ON `bohemian`.`b_operation2role` (`b_roles_id` ASC) VISIBLE;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`b_operation2role_history`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`b_operation2role_history` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`b_operation2role_history` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `opt_time` DATETIME NOT NULL,
-  `opt_admin` TEXT NOT NULL,
-  `b_operation2role_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_b_operation2role_history_b_operation2role1`
-    FOREIGN KEY (`b_operation2role_id`)
-    REFERENCES `bohemian`.`b_operation2role` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`b_operation2role_history` (`id` ASC) VISIBLE;
-
-CREATE INDEX `fk_b_operation2role_history_b_operation2role1_idx` ON `bohemian`.`b_operation2role_history` (`b_operation2role_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -694,16 +672,3 @@ CREATE INDEX `fk_k_speical_order_application_k_order_version1_idx` ON `kost`.`k_
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
--- -----------------------------------------------------
--- Data for table `bohemian`.`b_roles`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `bohemian`;
-INSERT INTO `bohemian`.`b_roles` (`id`, `name`) VALUES (1, 'OrderPlacing');
-INSERT INTO `bohemian`.`b_roles` (`id`, `name`) VALUES (2, 'OrderChanging');
-INSERT INTO `bohemian`.`b_roles` (`id`, `name`) VALUES (3, 'B2CCost');
-INSERT INTO `bohemian`.`b_roles` (`id`, `name`) VALUES (4, 'EnginingCost');
-
-COMMIT;
-
