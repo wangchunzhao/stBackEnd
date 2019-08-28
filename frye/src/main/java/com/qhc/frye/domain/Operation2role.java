@@ -24,7 +24,7 @@ public class Operation2role {
     private Date optTime;
 	
 	@NotNull
-	@Column(name="isActive")
+	@Column(name="isActive",columnDefinition="BIT")
     private int isActive;
 	
 	@NotNull
