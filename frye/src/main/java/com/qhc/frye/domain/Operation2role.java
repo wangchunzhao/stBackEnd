@@ -32,7 +32,7 @@ public class Operation2role {
     private String operationId;
 	
 	@NotNull
-	@Column(name="b_roles_id",columnDefinition="datetime")
+	@Column(name="b_roles_id")
     private int roleId;
 
 	public int getId() {
