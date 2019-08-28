@@ -65,5 +65,15 @@ public class RoleController {
 		return roleService.createOrUpdateRole(role);
 		
     }
+	
+	@ApiOperation(value="修改角色", notes="修改角色")
+	@PostMapping(value = "/update")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public Role update(@RequestBody(required=true) Role role) throws Exception
+    {	
+		return roleService.createOrUpdateRole(role);
+		
+    }
 
 }
