@@ -29,9 +29,9 @@ public class RelationService {
 	 * @return
 	 * @throws NoSuchElementException
 	 */
-	public List<Operation2role> getByRoleId(int id,int isActive) {
+	public List<Operation2role> findByRoleId(int roleId,int isActive) {
 		
-		return orRepository.getOperation2roleByRoleIdAndIsActive(id,isActive);
+		return orRepository.getOperation2roleByRoleIdAndIsActive(roleId,isActive);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class RelationService {
 	 * @param operationId,isActive
 	 * @return
 	 */
-	public List<Operation2role> getByOperationId(String operationId,int isActive) {
+	public List<Operation2role> findByOperationId(String operationId,int isActive) {
 		return orRepository.getOperation2roleByOperationIdAndIsActive(operationId, isActive);
 	}
 

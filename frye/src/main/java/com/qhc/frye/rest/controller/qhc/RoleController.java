@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,12 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.Role;
+import com.qhc.frye.rest.controller.entity.Order;
 import com.qhc.frye.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,39 +32,36 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("role")
-@Api(value = "Role", description = "role info")
+@Api(value = "Role", description = "角色信息")
 public class RoleController {
 	
 	@Autowired
 	private RoleService roleService;
 	
-	@ResponseBody
-	@ApiOperation(value=" looking for role info by id", notes="looking for role info by id")
-	@GetMapping(value = "/roleList/{id}")
+	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
+	@GetMapping(value = "/findAll")
     @ResponseStatus(HttpStatus.OK)
-    public Object getRoles(@PathVariable("id") String strid) throws Exception
+	@ResponseBody
+    public List<Role> findAll() throws Exception
     {	
-		List<Role> list = new ArrayList<Role>();
-		int id = Integer.valueOf(strid);
-		if(id==0) {
-			list = roleService.getRoleList();
-		}else {
-			list.add(roleService.getRole(id));
-		}
-		return list;
+		return roleService.getRoleList();
     }
 	
-	
-	@ApiOperation(value=" add role", notes="add role")
-	@RequestMapping(value = "/addRole")
+	@ApiOperation(value=" 根据id查询角色信息", notes="根据id查询角色信息")
+	@GetMapping(value = "/findById")
     @ResponseStatus(HttpStatus.OK)
-    public Object addRole(HttpServletRequest request) throws Exception
+	@ResponseBody
+    public Object findById(@PathVariable("id") Integer id) throws Exception
     {	
-		Integer id = Integer.valueOf(request.getParameter("id"));
-        String name = request.getParameter("name");
-		Role role = new Role();
-		role.setId(id);
-		role.setName(name);
+		return roleService.getRole(id);
+    }
+	
+	@ApiOperation(value="新增角色", notes="新增角色")
+	@PostMapping(value = "/add")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public Role add(@RequestBody(required=true) @Valid Role role) throws Exception
+    {	
 		return roleService.createOrUpdateRole(role);
 		
     }
