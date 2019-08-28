@@ -17,7 +17,7 @@ public class Operation2role {
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private String id;
+    private int id;
 	
 	@NotNull
 	@Column(name="opt_time",columnDefinition="datetime")
@@ -35,11 +35,11 @@ public class Operation2role {
 	@Column(name="b_roles_id",columnDefinition="datetime")
     private int roleId;
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
