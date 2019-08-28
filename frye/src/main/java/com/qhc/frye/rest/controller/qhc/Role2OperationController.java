@@ -34,8 +34,8 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("role")
-@Api(value = "Role", description = "role info")
+@RequestMapping("rRole2Operation")
+@Api(value = "Role2Operation", description = "Role2Operation info")
 public class Role2OperationController {
 	
 	@Autowired
@@ -43,9 +43,9 @@ public class Role2OperationController {
 	
 	@ResponseBody
 	@ApiOperation(value=" looking for role info by id", notes="looking for role info by id")
-	@GetMapping(value = "/roleList/{id}")
+	@GetMapping(value = "/rRole2OperationList")
     @ResponseStatus(HttpStatus.OK)
-    public Object queryRealation(@PathVariable("id") String id,@PathVariable("type") String type) throws Exception
+    public Object rRole2OperationList(@PathVariable("id") String id,@PathVariable("type") String type) throws Exception
     {	
 		List<Operation2role> list = new ArrayList<Operation2role>();
 		//角色
