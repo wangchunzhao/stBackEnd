@@ -28,12 +28,16 @@ public class User {
     private int id;
 	
 	@NotNull
-	@Column(length = 64)
-    private String user_mail;
+	@Column(name = "user_mail",length = 45)
+    private String userMail;
 	
-//	@NotNull
-//	@Column(length = 1)
-//    private boolean active;
+	@NotNull
+	@Column(name = "user_identity",length = 45)
+    private String userIdentity;
+	
+	@NotNull
+	@Column(name="isActive",columnDefinition = "INTEGER",length = 1)
+    private int isActive;
 	
 	
 	
@@ -45,13 +49,30 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUser_mail() {
-		return user_mail;
+	public String getUserMail() {
+		return userMail;
 	}
 
-	public void setUser_mail(String user_mail) {
-		this.user_mail = user_mail;
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
 	}
+
+	public String getUserIdentity() {
+		return userIdentity;
+	}
+
+	public void setUserIdentity(String userIdentity) {
+		this.userIdentity = userIdentity;
+	}
+
+	public int getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
+	}
+
 
 
 
