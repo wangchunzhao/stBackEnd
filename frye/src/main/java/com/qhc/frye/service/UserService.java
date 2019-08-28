@@ -70,7 +70,7 @@ public class UserService {
 	 */
 	public User notAvailable(Integer id) {
 		User user = userRepository.findById(id).get();
-		user.setIsActive(0);;
+		user.setIsActive(0);
 		
 		return userRepository.save(user);
 	}
