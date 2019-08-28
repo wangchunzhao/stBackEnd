@@ -13,7 +13,7 @@ import com.qhc.frye.dao.UserRepository;
 import com.qhc.frye.domain.User;
 
 /**
- * @author wang@dxc.com
+ * @author lizuoshan
  *
  */
 @Service
@@ -35,9 +35,21 @@ public class UserService {
 	}
 
 
+	/**
+	 * 查询所有用户
+	 * @return
+	 */
 	public List<User> getUserList() {
-		// TODO Auto-generated method stub
 		return userRepository.findAll();
+	}
+	
+	/**
+	 * 新增修改用户
+	 * @param user
+	 * @return
+	 */
+	public User createOrUpdateRole(User user) {
+		return userRepository.save(user);
 	}
 
 }
