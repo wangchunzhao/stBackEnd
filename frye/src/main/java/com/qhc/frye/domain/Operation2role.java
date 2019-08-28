@@ -24,8 +24,8 @@ public class Operation2role {
     private Date optTime;
 	
 	@NotNull
-	@Column(name="isActive",columnDefinition="BIT")
-    private boolean isActive;
+	@Column(name="isActive",columnDefinition="BIT")//设置成boolean类型存在序列化问题
+    private int isActive;
 	
 	@NotNull
 	@Column(name="b_operations_id",columnDefinition="CHAR",length = 32)
@@ -51,14 +51,6 @@ public class Operation2role {
 		this.optTime = optTime;
 	}
 
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-
 	public String getOperationId() {
 		return operationId;
 	}
@@ -73,6 +65,14 @@ public class Operation2role {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	public int getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
 	}
 	
 

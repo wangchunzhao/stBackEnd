@@ -25,19 +25,19 @@ public class User {
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
-    private int id;
+	public int id;
 	
 	@NotNull
 	@Column(name = "user_mail",length = 45)
-    private String userMail;
+	public String userMail;
 	
 	@NotNull
 	@Column(name = "user_identity",length = 45)
-    private String userIdentity;
+	public String userIdentity;
 	
 	@NotNull
 	@Column(name="isActive",columnDefinition ="BIT")
-    private boolean isActive;
+	public int isActive;
 	
 	
 	
@@ -65,14 +65,13 @@ public class User {
 		this.userIdentity = userIdentity;
 	}
 
-	public boolean isActive() {
+	public int getIsActive() {
 		return isActive;
 	}
 
-	public void setActive(boolean isActive) {
+	public void setIsActive(int isActive) {
 		this.isActive = isActive;
 	}
-
 
 
 
