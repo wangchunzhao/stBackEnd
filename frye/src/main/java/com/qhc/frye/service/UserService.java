@@ -58,4 +58,21 @@ public class UserService {
 		return userRepository.findById(id).get();
 	}
 
+	public void delete(Integer id) {
+		User user = userRepository.findById(id).get();
+		userRepository.delete(user);
+	}
+
+	/**
+	 * 使用户不可用
+	 * @param id
+	 * @return
+	 */
+	public User notAvailable(Integer id) {
+		User user = userRepository.findById(id).get();
+		user.setActive(false);;
+		
+		return userRepository.save(user);
+	}
+
 }

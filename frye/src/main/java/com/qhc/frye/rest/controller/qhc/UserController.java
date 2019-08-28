@@ -58,5 +58,15 @@ public class UserController {
 		return userService.createOrUpdateUser(user);
 		
     }
+	
+	@ApiOperation(value="删除用户", notes="删除用户")
+	@GetMapping(value = "/delete")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public User delete(@PathVariable("id") Integer id) throws Exception
+    {	
+		return userService.notAvailable(id);
+		
+    }
 
 }

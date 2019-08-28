@@ -22,5 +22,7 @@ public interface Operation2roleRepository extends JpaRepository<Operation2role, 
 	 * @return
 	 */
 	List<Operation2role> getOperation2roleByOperationIdAndIsActive(String operationId,int isActive);
+	List<Operation2role> getOperation2roleByRoleId(int roleId);
+	List<Operation2role> getOperation2roleByOperationId(String operationId);
 
 }

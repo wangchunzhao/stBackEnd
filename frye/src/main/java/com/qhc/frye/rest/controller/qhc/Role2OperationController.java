@@ -46,6 +46,14 @@ public class Role2OperationController {
 		return relationService.findByOperationId(operationId, 1);
     }
 	
-	
+	@ApiOperation(value=" 根据权限id删除", notes="根据权限id删除")
+	@GetMapping(value = "/delete")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public Operation2role delete(@PathVariable("id") int id) throws Exception
+    {	
+		return relationService.delete(id);
+		
+    }
 
 }

@@ -60,4 +60,13 @@ public class RoleService {
 		return roleRepository.save(role);
 	}
 
+	/**
+	 * 删除角色
+	 * @param role
+	 */
+	public void remove(int id) {
+		
+		roleRepository.deleteById(id);
+	}
+
 }

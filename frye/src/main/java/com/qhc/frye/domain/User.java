@@ -36,8 +36,8 @@ public class User {
     private String userIdentity;
 	
 	@NotNull
-	@Column(name="isActive",columnDefinition = "INTEGER",length = 1)
-    private int isActive;
+	@Column(name="isActive",columnDefinition ="BIT")
+    private boolean isActive;
 	
 	
 	
@@ -65,11 +65,11 @@ public class User {
 		this.userIdentity = userIdentity;
 	}
 
-	public int getIsActive() {
+	public boolean isActive() {
 		return isActive;
 	}
 
-	public void setIsActive(int isActive) {
+	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 

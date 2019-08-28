@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.Role;
+import com.qhc.frye.service.RelationService;
 import com.qhc.frye.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,9 @@ public class RoleController {
 	
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private RelationService relationService;
+	
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
 	@GetMapping(value = "/findAll")
@@ -66,6 +70,24 @@ public class RoleController {
     public Role update(@RequestBody(required=true) Role role) throws Exception
     {	
 		return roleService.createOrUpdateRole(role);
+		
+    }
+	
+	@ApiOperation(value="删除角色", notes="删除角色")
+	@GetMapping(value = "/delete")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public String delete(@PathVariable("id") Integer id) throws Exception
+    {	
+		List list = relationService.findByRoleId(id);
+		
+		if(list!=null&&list.size()>0) {
+			return "false";
+		}else {
+			
+			roleService.remove(id);
+			return "success";
+		}
 		
     }
 

@@ -33,6 +33,17 @@ public class RelationService {
 		
 		return orRepository.getOperation2roleByRoleIdAndIsActive(roleId,isActive);
 	}
+	
+	/**
+	 * 通过id查询角色
+	 * @param id
+	 * @return
+	 * @throws NoSuchElementException
+	 */
+	public List<Operation2role> findByRoleId(int roleId) {
+		
+		return orRepository.getOperation2roleByRoleId(roleId);
+	}
 
 	/**
 	 * 通过权限id查询
@@ -41,6 +52,25 @@ public class RelationService {
 	 */
 	public List<Operation2role> findByOperationId(String operationId,int isActive) {
 		return orRepository.getOperation2roleByOperationIdAndIsActive(operationId, isActive);
+	}
+	
+	/**
+	 * 通过权限id查询
+	 * @param operationId
+	 * @return
+	 */
+	public List<Operation2role> findByOperationId(String operationId) {
+		return orRepository.getOperation2roleByOperationId(operationId);
+	}
+	
+	/**
+	 * 通过权限id删除
+	 * @param operationId,isActive
+	 * @return
+	 */
+	public Operation2role delete(int id) {
+		orRepository.deleteById(id);
+		return orRepository.getOne(id);
 	}
 
 }

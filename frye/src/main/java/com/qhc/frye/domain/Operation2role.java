@@ -25,7 +25,7 @@ public class Operation2role {
 	
 	@NotNull
 	@Column(name="isActive",columnDefinition="BIT")
-    private int isActive;
+    private boolean isActive;
 	
 	@NotNull
 	@Column(name="b_operations_id",columnDefinition="CHAR",length = 32)
@@ -51,11 +51,11 @@ public class Operation2role {
 		this.optTime = optTime;
 	}
 
-	public int getIsActive() {
+	public boolean isActive() {
 		return isActive;
 	}
 
-	public void setIsActive(int isActive) {
+	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
