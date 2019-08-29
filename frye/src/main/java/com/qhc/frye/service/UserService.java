@@ -5,14 +5,9 @@ package com.qhc.frye.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.qhc.frye.dao.UserRepository;
-import com.qhc.frye.domain.Role;
 import com.qhc.frye.domain.User;
 
 /**
@@ -70,9 +65,21 @@ public class UserService {
 	 */
 	public User notAvailable(Integer id) {
 		User user = userRepository.findById(id).get();
-		user.setIsActive(0);
+		user.setIsActive(1);
 		
 		return userRepository.save(user);
+	}
+
+	public List<User> findByUserMailAndIsActive(String userMail, Integer isActive) {
+		return userRepository.findByUserMailLikeAndIsActive(userMail,isActive);
+	}
+
+	public List<User> findByUserMail(String userMail) {
+		return userRepository.findByUserMailLike(userMail);
+	}
+
+	public List<User> findByIsActive(Integer isActive) {
+		return userRepository.findByIsActive(isActive);
 	}
 
 }

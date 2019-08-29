@@ -37,7 +37,7 @@ public class RoleService {
 	 * 查询角色列表
 	 * @return
 	 */
-	public List<Role> getRoleList() {
+	public List<Role> findAll() {
 		return roleRepository.findAll();
 	}
 	
@@ -67,6 +67,11 @@ public class RoleService {
 	public void remove(int id) {
 		
 		roleRepository.deleteById(id);
+	}
+
+
+	public List<Role> findByNameLike(String name) {
+		return roleRepository.findByNameLike("%"+name+"%");
 	}
 
 }
