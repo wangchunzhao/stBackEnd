@@ -22,9 +22,8 @@ public class Role {
 	
 	@Id
     @NotNull
-  //  @GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name="id",columnDefinition="CHAR",length = 32)
-    private Integer id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int id;
 	
 	@NotNull
 	@Column(name="name",columnDefinition="TEXT",length = 64)
@@ -32,11 +31,11 @@ public class Role {
 	
 	
 	
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
