@@ -41,7 +41,7 @@ public class RoleController {
 	
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
-	@RequestMapping(value = "/findAll/{name}")
+	@RequestMapping(value = "/findAll")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<Role> findAll(/* @RequestParam("name") String name */) throws Exception
