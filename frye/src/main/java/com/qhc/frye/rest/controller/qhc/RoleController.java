@@ -1,6 +1,9 @@
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.Role;
+import com.qhc.frye.domain.User;
 import com.qhc.frye.service.RelationService;
 import com.qhc.frye.service.RoleService;
 import io.swagger.annotations.Api;
@@ -36,16 +41,22 @@ public class RoleController {
 	
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
-	@GetMapping(value = "/findAll")
+	@RequestMapping(value = "/findAll/{name}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public List<Role> findAll() throws Exception
-    {	
-		return roleService.getRoleList();
+	public List<Role> findAll(/* @RequestParam("name") String name */) throws Exception
+    {	//String name = request.getParameter("name");
+		List<Role> list = new ArrayList<Role>();
+//		if(name!=null) {
+//			list =  roleService.findByNameLike(name);
+//		}else {
+			list = roleService.findAll();
+//		}
+		return list;
     }
 	
 	@ApiOperation(value=" 根据id查询角色信息", notes="根据id查询角色信息")
-	@GetMapping(value = "/findById")
+	@GetMapping(value = "/findById/{id}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public Object findById(@PathVariable("id") Integer id) throws Exception
@@ -74,7 +85,7 @@ public class RoleController {
     }
 	
 	@ApiOperation(value="删除角色", notes="删除角色")
-	@GetMapping(value = "/delete")
+	@GetMapping(value = "/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public String delete(@PathVariable("id") Integer id) throws Exception
@@ -84,7 +95,6 @@ public class RoleController {
 		if(list!=null&&list.size()>0) {
 			return "false";
 		}else {
-			
 			roleService.remove(id);
 			return "success";
 		}

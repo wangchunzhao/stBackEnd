@@ -1,5 +1,6 @@
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,19 +34,41 @@ public class UserController {
 	private UserService userService;
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
-	@GetMapping(value = "/findAll")
+	@RequestMapping(value = "/findAll")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public List<User> findAll() throws Exception
+    public List<User> findAll(@RequestParam("userIdentity") String userIdentity,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
     {	
-		return userService.findAll();
+		List<User> list = new ArrayList<User>();
+		if("flag".equals(userIdentity)) {
+			if(!"".equals(userMail)&&null!=userMail) {
+				if(isActive!=null) {
+					if(!"2".equals(isActive)) {
+						list = userService.findByUserMailAndIsActive("%"+userMail+"%",Integer.valueOf(isActive));
+					}else {
+						list = userService.findByUserMail("%"+userMail+"%");
+					}
+				}else {
+					list = userService.findByUserMail("%"+userMail+"%");
+				}
+			}else{
+				if(!"2".equals(isActive)) {
+					list = userService.findByIsActive(Integer.valueOf(isActive));
+				}else {
+					list = userService.findAll();
+				}
+			}
+		} else {
+			list = userService.findAll();
+		}
+		return list;
     }
 	
 	@ApiOperation(value=" 根据id查询用户信息", notes="根据id查询用户信息")
 	@GetMapping(value = "/findById")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public Object findById(@PathVariable("id") Integer id) throws Exception
+    public Object findById(@RequestParam("id") Integer id) throws Exception
     {	
 		return userService.findById(id);
     }
@@ -60,13 +84,17 @@ public class UserController {
     }
 	
 	@ApiOperation(value="删除用户", notes="删除用户")
-	@GetMapping(value = "/delete")
+	@RequestMapping(value = "/delete")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public User delete(@PathVariable("id") Integer id) throws Exception
+    public String delete(@RequestParam("id") Integer id) throws Exception
     {	
-		return userService.notAvailable(id);
-		
+		User u = userService.notAvailable(id);
+		if(u!=null&&u.getIsActive()==1) {
+			return "success";
+		}else {
+			return "false";
+		}
     }
 
 }

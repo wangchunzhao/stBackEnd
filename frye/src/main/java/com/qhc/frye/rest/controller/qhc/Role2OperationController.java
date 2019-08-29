@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class Role2OperationController {
 	@GetMapping(value = "/findByRoleId")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public List<Operation2role> findByRoleId(@PathVariable("roleId") Integer roleId) throws Exception
+    public List<Operation2role> findByRoleId(@RequestParam("roleId") Integer roleId) throws Exception
     {	
 		return relationService.findByRoleId(roleId, 1);
     }
@@ -41,7 +42,7 @@ public class Role2OperationController {
 	@GetMapping(value = "/findByOperationId")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public List<Operation2role> findByOperationId(@PathVariable("operationId") String operationId) throws Exception
+    public List<Operation2role> findByOperationId(@RequestParam("operationId") String operationId) throws Exception
     {	
 		return relationService.findByOperationId(operationId, 1);
     }
@@ -50,7 +51,7 @@ public class Role2OperationController {
 	@GetMapping(value = "/delete")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public Operation2role delete(@PathVariable("id") int id) throws Exception
+    public Operation2role delete(@RequestParam("id") int id) throws Exception
     {	
 		return relationService.delete(id);
 		
