@@ -39,7 +39,14 @@ public class User {
 	@Column(name="isActive",columnDefinition ="BIT")
 	public Integer isActive;
 	
+	@Column(name = "user_name",length = 45)
+	public String userName;
 	
+	@Column(name = "region",length = 45)
+    public String region;
+    
+	@Column(name = "roleNames",length = 45)
+    public String roleNames;
 	
 	public int getId() {
 		return id;
@@ -71,6 +78,30 @@ public class User {
 
 	public void setIsActive(Integer isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getRoleNames() {
+		return roleNames;
+	}
+
+	public void setRoleNames(String roleNames) {
+		this.roleNames = roleNames;
 	}
 
 
