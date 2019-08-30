@@ -68,9 +68,18 @@ public class UserController {
 	@GetMapping(value = "/findById")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public Object findById(@RequestParam("id") Integer id) throws Exception
+    public User findById(@RequestParam("id") Integer id) throws Exception
     {	
 		return userService.findById(id);
+    }
+	
+	@ApiOperation(value=" 根据userName查询角色信息", notes="根据userName查询角色信息")
+	@GetMapping(value = "/findByUserName/{userName}")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public User findByUserName(@PathVariable("userName") String userName) throws Exception
+    {	
+		return userService.findByUserName(userName);
     }
 	
 	@ApiOperation(value="新增用户", notes="新增用户")
