@@ -1,10 +1,13 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +29,8 @@ public class SapSalesOffice implements Serializable{
 	@Column(name="name",columnDefinition="TEXT")
     private String name;
 	
+//	@OneToMany(mappedBy = "code",cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<ApplicationOfRolechange> apps;
 
 	public String getCode() {
 		return code;
@@ -42,6 +47,14 @@ public class SapSalesOffice implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+//	public Set<ApplicationOfRolechange> getApps() {
+//		return apps;
+//	}
+//
+//	public void setApps(Set<ApplicationOfRolechange> apps) {
+//		this.apps = apps;
+//	}
 	
 	
 	
