@@ -4,14 +4,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.Operation2roleRepository;
-import com.qhc.frye.dao.RoleRepository;
 import com.qhc.frye.domain.Operation2role;
-import com.qhc.frye.domain.Role;
 
 /**
  * query role info

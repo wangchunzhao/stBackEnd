@@ -82,4 +82,8 @@ public class UserService {
 		return userRepository.findByIsActive(isActive);
 	}
 
+	public User findByUserName(String userName) {
+		return userRepository.findByUserName(userName);
+	}
+
 }

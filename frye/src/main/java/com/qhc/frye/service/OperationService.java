@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.OperationRepository;
 import com.qhc.frye.domain.Operations;
-import com.qhc.frye.domain.User;
 
 /**
  * query operation info

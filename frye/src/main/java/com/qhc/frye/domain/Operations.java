@@ -1,5 +1,7 @@
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "b_operations")
-public class Operations {
+public class Operations implements Serializable{
 	
 	@Id
     @NotNull

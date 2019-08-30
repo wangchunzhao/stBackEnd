@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.User;
+import com.qhc.frye.service.ApplicationOfRolechangeService;
+import com.qhc.frye.service.SapSalesOfficeService;
 import com.qhc.frye.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,6 +63,25 @@ public class UserController {
 		} else {
 			list = userService.findAll();
 		}
+		
+		/*
+		if(list!=null&&list.size()>0){
+			for(User user:list) {
+				List<ApplicationOfRolechange> apps = applicationService.findByBUsersId(user.getId());
+				String roles="";
+				if(apps!=null&&apps.size()>0) {
+					for(ApplicationOfRolechange app:apps) {
+						roles = roles+app.getRole().getName()+",";
+					}
+				}
+				if(!"".equals(roles)) {
+					roles = roles.substring(0, roles.length()-1);
+				}
+				user.set
+				user.setRegion(region);
+			}
+		}
+		*/
 		return list;
     }
 	
@@ -68,9 +89,18 @@ public class UserController {
 	@GetMapping(value = "/findById")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public Object findById(@RequestParam("id") Integer id) throws Exception
+    public User findById(@RequestParam("id") Integer id) throws Exception
     {	
 		return userService.findById(id);
+    }
+	
+	@ApiOperation(value=" 根据UserIdentity查询角色信息", notes="根据UserIdentity查询角色信息")
+	@GetMapping(value = "/findByUserIdentity/{userIdentity}")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public User findByUserName(@PathVariable("userIdentity") String userIdentity) throws Exception
+    {	
+		return userService.findByUserName(userIdentity);
     }
 	
 	@ApiOperation(value="新增用户", notes="新增用户")
