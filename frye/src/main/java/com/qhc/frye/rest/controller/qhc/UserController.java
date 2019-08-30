@@ -94,7 +94,7 @@ public class UserController {
 		return userService.findById(id);
     }
 	
-	@ApiOperation(value=" 根据UserIdentity查询角色信息", notes="根据UserIdentity查询角色信息")
+	@ApiOperation(value=" find by UserIdentity", notes="find by UserIdentity")
 	@GetMapping(value = "/findByUserIdentity/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody

@@ -92,6 +92,7 @@ public class UserService {
 	 * @return
 	 */
 	public User findByUserIdentity(String userIdentity) {
+		
 		return userRepository.findByUserIdentity(userIdentity);
 	}
 
