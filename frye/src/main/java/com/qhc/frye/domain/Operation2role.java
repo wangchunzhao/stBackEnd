@@ -1,5 +1,6 @@
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "b_operation2role")
-public class Operation2role {
+public class Operation2role implements Serializable{
 	
 	@Id
     @NotNull

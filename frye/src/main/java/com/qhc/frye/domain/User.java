@@ -3,11 +3,16 @@
  */
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -18,10 +23,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "b_users")
-public class User {
+public class User implements Serializable{
 	
-	
-
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
@@ -39,15 +42,18 @@ public class User {
 	@Column(name="isActive",columnDefinition ="BIT")
 	public Integer isActive;
 	
-	@Column(name = "user_name",length = 45)
+	@Column(name = "name",length = 45)
 	public String userName;
 	
-	@Column(name = "region",length = 45)
-    public String region;
-    
-	@Column(name = "roleNames",length = 45)
-    public String roleNames;
 	
+	@OneToMany(mappedBy = "id",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ApplicationOfRolechange> apps;
+	
+	
+	public String rolesName;
+	public String region;
+    
+    
 	public int getId() {
 		return id;
 	}
@@ -88,21 +94,53 @@ public class User {
 		this.userName = userName;
 	}
 
+	public Set<ApplicationOfRolechange> getApps() {
+		return apps;
+	}
+
+	public void setApps(Set<ApplicationOfRolechange> apps) {
+		this.apps = apps;
+	}
+
+	public String getRolesName() {
+		String roles="";
+		if(apps!=null&&apps.size()>0){
+			for(ApplicationOfRolechange app:apps) {
+				roles = roles+app.getRole().getName()+",";
+			}
+			if(!"".equals(roles)) {
+				roles = roles.substring(0, roles.length()-1);
+			}
+		}
+		return roles;
+	}
+
+	public void setRolesName(String rolesName) {
+		this.rolesName = rolesName;
+	}
+
 	public String getRegion() {
-		return region;
+		Iterator<ApplicationOfRolechange> it = apps.iterator();	
+		ApplicationOfRolechange app=new ApplicationOfRolechange();
+		if(it.hasNext()) {
+			app = it.next();
+		}	
+		return app.getSapSales().getName();
 	}
 
 	public void setRegion(String region) {
 		this.region = region;
 	}
+//
+//	public String getRolesName() {
+//		return rolesName;
+//	}
+//
+//	public void setRolesName(String rolesName) {
+//		this.rolesName = rolesName;
+//	}
 
-	public String getRoleNames() {
-		return roleNames;
-	}
 
-	public void setRoleNames(String roleNames) {
-		this.roleNames = roleNames;
-	}
 
 
 

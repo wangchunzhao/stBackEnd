@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.User;
+import com.qhc.frye.service.ApplicationOfRolechangeService;
+import com.qhc.frye.service.SapSalesOfficeService;
 import com.qhc.frye.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +34,10 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ApplicationOfRolechangeService applicationService;
+	@Autowired
+	private SapSalesOfficeService sapSalesOfficeService;
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
 	@RequestMapping(value = "/findAll")
@@ -61,6 +67,25 @@ public class UserController {
 		} else {
 			list = userService.findAll();
 		}
+		
+		/*
+		if(list!=null&&list.size()>0){
+			for(User user:list) {
+				List<ApplicationOfRolechange> apps = applicationService.findByBUsersId(user.getId());
+				String roles="";
+				if(apps!=null&&apps.size()>0) {
+					for(ApplicationOfRolechange app:apps) {
+						roles = roles+app.getRole().getName()+",";
+					}
+				}
+				if(!"".equals(roles)) {
+					roles = roles.substring(0, roles.length()-1);
+				}
+				user.set
+				user.setRegion(region);
+			}
+		}
+		*/
 		return list;
     }
 	
