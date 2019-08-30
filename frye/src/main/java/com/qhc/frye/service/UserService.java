@@ -86,6 +86,11 @@ public class UserService {
 		return userRepository.findByUserName(userName);
 	}
 
+	/**
+	 * find by identity
+	 * @param userIdentity
+	 * @return
+	 */
 	public User findByUserIdentity(String userIdentity) {
 		return userRepository.findByUserIdentity(userIdentity);
 	}

@@ -29,8 +29,6 @@ public class SapSalesOffice implements Serializable{
 	@Column(name="name",columnDefinition="TEXT")
     private String name;
 	
-//	@OneToMany(mappedBy = "code",cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<ApplicationOfRolechange> apps;
 
 	public String getCode() {
 		return code;
@@ -48,14 +46,7 @@ public class SapSalesOffice implements Serializable{
 		this.name = name;
 	}
 
-//	public Set<ApplicationOfRolechange> getApps() {
-//		return apps;
-//	}
-//
-//	public void setApps(Set<ApplicationOfRolechange> apps) {
-//		this.apps = apps;
-//	}
-	
+
 	
 	
 
