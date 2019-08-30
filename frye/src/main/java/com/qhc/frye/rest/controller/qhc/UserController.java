@@ -98,7 +98,7 @@ public class UserController {
 	@GetMapping(value = "/findByUserIdentity/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public User findByUserName(@PathVariable("userIdentity") String userIdentity) throws Exception
+    public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
     {	
 		return userService.findByUserName(userIdentity);
     }
