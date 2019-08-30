@@ -3,6 +3,8 @@ package com.qhc.frye.rest.controller.qhc;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,10 +97,10 @@ public class UserController {
     }
 	
 	@ApiOperation(value=" find by UserIdentity", notes="find by UserIdentity")
-	@GetMapping(value = "/findByUserIdentity/{userIdentity}")
+	@GetMapping(value = "/findByUserIdentity")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
+    public User findByUserIdentity(@RequestParam("userIdentity") String userIdentity) throws Exception
     {	
 		return userService.findByUserIdentity(userIdentity);
     }
