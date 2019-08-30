@@ -14,9 +14,6 @@ public class MaterialService {
 	
 	public String findMaterial(List<String> config) {
 		
-		Thread thread = Thread.currentThread();
-	    
-	    //LockSupport.unpark(thread);
 		return null;
 	}
 
