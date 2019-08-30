@@ -10,7 +10,7 @@ import com.qhc.frye.domain.ApplicationOfRolechange;
 @Repository
 public interface ApplicationRepository extends JpaRepository<ApplicationOfRolechange, Integer> {
 
-	List<ApplicationOfRolechange> findByBUsersId(int userId);
+	List<ApplicationOfRolechange> findByBusersId(int userId);
 
 
 }
