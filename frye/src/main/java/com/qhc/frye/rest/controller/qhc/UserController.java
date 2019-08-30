@@ -103,7 +103,7 @@ public class UserController {
 		return userService.findByUserIdentity(userIdentity);
     }
 	
-	@ApiOperation(value="新增用户", notes="新增用户")
+	@ApiOperation(value="add user", notes="add user")
 	@PostMapping(value = "/add")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody

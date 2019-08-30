@@ -56,11 +56,6 @@ public class ApplicationOfRolechange implements Serializable{
 	@Column(name="b_roles_id",length = 10)
     private Integer bRolesId;
 	
-//	@Transient
-//	private String attachedCode;
-	 
-	 
-	 
 
     public String getCreator() {
         return creator;

@@ -127,7 +127,6 @@ public class User implements Serializable{
 	}
 
 	public String getRegion() {
-		
 		Iterator<ApplicationOfRolechange> it = apps.iterator();	
 		ApplicationOfRolechange app=new ApplicationOfRolechange();
 		if(it.hasNext()) {
