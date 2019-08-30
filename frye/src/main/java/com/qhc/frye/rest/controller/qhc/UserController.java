@@ -101,7 +101,7 @@ public class UserController {
     public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
     {	
 		
-		return userService.findByUserName(userIdentity);
+		return userService.findByUserIdentity(userIdentity);
     }
 	
 	@ApiOperation(value="新增用户", notes="新增用户")

@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 
@@ -55,6 +56,11 @@ public class ApplicationOfRolechange implements Serializable{
 	@Column(name="b_roles_id",length = 10)
     private Integer bRolesId;
 	
+//	@Transient
+//	private String attachedCode;
+	 
+	 
+	 
 
     public String getCreator() {
         return creator;

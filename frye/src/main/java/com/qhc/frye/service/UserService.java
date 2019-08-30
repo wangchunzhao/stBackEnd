@@ -86,4 +86,8 @@ public class UserService {
 		return userRepository.findByUserName(userName);
 	}
 
+	public User findByUserIdentity(String userIdentity) {
+		return userRepository.findByUserIdentity(userIdentity);
+	}
+
 }
