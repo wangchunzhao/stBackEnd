@@ -4,6 +4,7 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,6 +38,12 @@ public class Role implements Serializable{
 	@Column(name="isActive",columnDefinition ="BIT")
 	public Integer isActive;
 	
+	
+	@OneToMany(mappedBy = "id",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ApplicationOfRolechange> apps;
+	
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -51,6 +58,22 @@ public class Role implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Integer isActive) {
+		this.isActive = isActive;
+	}
+
+	public Set<ApplicationOfRolechange> getApps() {
+		return apps;
+	}
+
+	public void setApps(Set<ApplicationOfRolechange> apps) {
+		this.apps = apps;
 	}
 
 

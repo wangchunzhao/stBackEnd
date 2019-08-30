@@ -19,7 +19,7 @@ public class ApplicationOfRolechangeService {
 
 
 	public List<ApplicationOfRolechange> findByBUsersId(int userId) {
-		return applicationRepository.findByBUsersId(userId);
+		return applicationRepository.findByBusersId(userId);
 	}
 
 }

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -42,7 +41,7 @@ public class ApplicationOfRolechange implements Serializable{
 	
 	@NotNull
 	@Column(name="b_users_id",length = 10)
-    private Integer bUsersId;
+    private Integer busersId;
 
 	@NotNull
 	@Column(name="isactive",columnDefinition="BIT")
@@ -56,15 +55,6 @@ public class ApplicationOfRolechange implements Serializable{
     private Integer bRolesId;
 	
 
-    
-	 @JoinColumn(name = "b_users_id")   // 外键关联
-	 private User user = new User();
-	 
-	 @JoinColumn(name = "b_roles_id")   // 外键关联
-	 private Role role = new Role();
-	 
-	 @JoinColumn(name = "attached_code")   // 外键关联
-	 private SapSalesOffice sapSales = new SapSalesOffice();
     
 
     public String getCreator() {
@@ -115,15 +105,16 @@ public class ApplicationOfRolechange implements Serializable{
         this.approvalTime = approvalTime;
     }
 
-    public Integer getbUsersId() {
-        return bUsersId;
-    }
 
-    public void setbUsersId(Integer bUsersId) {
-        this.bUsersId = bUsersId;
-    }
+    public Integer getBusersId() {
+		return busersId;
+	}
 
-    public String getAttachedCode() {
+	public void setBusersId(Integer busersId) {
+		this.busersId = busersId;
+	}
+
+	public String getAttachedCode() {
         return attachedCode;
     }
 
@@ -147,29 +138,5 @@ public class ApplicationOfRolechange implements Serializable{
 		this.isactive = isactive;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public SapSalesOffice getSapSales() {
-		return sapSales;
-	}
-
-	public void setSapSales(SapSalesOffice sapSales) {
-		this.sapSales = sapSales;
-	}
-    
     
 }

@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -40,20 +41,26 @@ public class User implements Serializable{
 	
 	@NotNull
 	@Column(name="isActive",columnDefinition ="BIT")
-	public Integer isActive;
+	public int isActive;
 	
-	@Column(name = "name",length = 45)
+	@Column(name = "name",columnDefinition ="TEXT",length = 45)
 	public String userName;
 	
-	
+	@Transient
 	@OneToMany(mappedBy = "id",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ApplicationOfRolechange> apps;
 	
-	
+	@Transient
 	public String rolesName;
+	
+	@Transient
 	public String region;
     
     
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -106,7 +113,7 @@ public class User implements Serializable{
 		String roles="";
 		if(apps!=null&&apps.size()>0){
 			for(ApplicationOfRolechange app:apps) {
-				roles = roles+app.getRole().getName()+",";
+				roles = roles+app.getbRolesId()+",";
 			}
 			if(!"".equals(roles)) {
 				roles = roles.substring(0, roles.length()-1);
@@ -125,7 +132,7 @@ public class User implements Serializable{
 		if(it.hasNext()) {
 			app = it.next();
 		}	
-		return app.getSapSales().getName();
+		return app.getAttachedCode();
 	}
 
 	public void setRegion(String region) {
