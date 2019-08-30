@@ -100,6 +100,7 @@ public class UserController {
 	@ResponseBody
     public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
     {	
+		
 		return userService.findByUserName(userIdentity);
     }
 	
