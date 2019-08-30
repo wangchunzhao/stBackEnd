@@ -34,10 +34,6 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private ApplicationOfRolechangeService applicationService;
-	@Autowired
-	private SapSalesOfficeService sapSalesOfficeService;
 	
 	@ApiOperation(value=" 查询所有用户信息", notes="查询所有用户信息")
 	@RequestMapping(value = "/findAll")
