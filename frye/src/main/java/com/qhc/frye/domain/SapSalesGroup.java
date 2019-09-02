@@ -9,8 +9,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
-@Entity
-@Table(name = "sap_sales_group")
 public class SapSalesGroup implements Serializable {
 	
 	/**
