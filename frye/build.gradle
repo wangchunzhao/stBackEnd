@@ -31,9 +31,7 @@ dependencies {
 	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	//implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	//implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	//for thymeleaf
-	//implementation 'net.sourceforge.nekohtml:nekohtml:1.9.22'
+
 	//hot deployment
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	
