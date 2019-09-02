@@ -35,10 +35,12 @@ public class LocationController {
 	
 	
 	@ApiOperation(value = "update a sales group with sales office to DB.")
-	@PostMapping(value = "/uploadSalesOffice", produces = "application/json;charset=UTF-8")
+	@PostMapping(value = "uploadSalesOffice", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void uploadSalesOffice(@RequestBody(required = true) @Valid List<SalesGroup> groups) throws Exception {
-
+			for(SalesGroup sg :groups) {
+				System.out.println(sg.getCode());
+			}
 	}
 
 }
