@@ -47,18 +47,10 @@ public class SapSalesOffice implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
-//	public Set<ApplicationOfRolechange> getApps() {
-//		return apps;
-//	}
-//
-//	public void setApps(Set<ApplicationOfRolechange> apps) {
-//		this.apps = apps;
-//	}
-	
-	
-	
-
+	@Override
+	public boolean equals(Object obj) {
+		return false;
+	}
 
 
 }

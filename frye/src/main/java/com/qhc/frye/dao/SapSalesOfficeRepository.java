@@ -9,5 +9,6 @@ import com.qhc.frye.domain.SapSalesOffice;
 public interface SapSalesOfficeRepository extends JpaRepository<SapSalesOffice, Integer> {
 
 	SapSalesOffice findByCode(String code);
+	
 
 }
