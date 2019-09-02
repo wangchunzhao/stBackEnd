@@ -4,6 +4,7 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -39,9 +41,12 @@ public class Role implements Serializable{
 	public Integer isActive;
 	
 	
-	@OneToMany(mappedBy = "id",cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "id")
     private Set<ApplicationOfRolechange> apps;
 	
+	
+	@Transient
+	private Set<Operations> operations;
 	
 	
 	public int getId() {
@@ -75,6 +80,15 @@ public class Role implements Serializable{
 	public void setApps(Set<ApplicationOfRolechange> apps) {
 		this.apps = apps;
 	}
+
+	public Set<Operations> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(Set<Operations> operations) {
+		this.operations = operations;
+	}
+
 
 
 

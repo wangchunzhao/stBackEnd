@@ -43,6 +43,15 @@ public class UserService {
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
+	
+	/**
+	  *  查询所有用户
+	 * @param user
+	 * @return
+	 */
+	public List<User> findByMultipleConditions(int isActice,String userName,String userMail,String userIdentity) {
+		return userRepository.findByMultipleConditions(isActice, userName, userMail, userIdentity);
+	}
 
 	/**
 	  * 通过id查询用户

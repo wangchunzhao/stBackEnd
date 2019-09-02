@@ -49,7 +49,7 @@ public class OperationController {
 	@GetMapping(value = "/findById")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public Operations findById(@PathVariable("id") Integer id) throws Exception
+    public Operations findById(@PathVariable("id") String id) throws Exception
     {	
 		return operationService.findById(id);
     }
