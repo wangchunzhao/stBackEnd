@@ -6,7 +6,6 @@ package com.qhc.frye.domain;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,9 +45,8 @@ public class User implements Serializable{
 	@Column(name = "name",columnDefinition ="TEXT",length = 45)
 	public String userName;
 	
-	@Transient
-	@OneToMany(mappedBy = "id",cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ApplicationOfRolechange> apps;
+	@OneToMany(mappedBy = "id")
+    public Set<ApplicationOfRolechange> apps;
 	
 	@Transient
 	public String rolesName;
@@ -109,6 +107,7 @@ public class User implements Serializable{
 		this.apps = apps;
 	}
 
+
 	public String getRolesName() {
 		String roles="";
 		if(apps!=null&&apps.size()>0){
@@ -122,32 +121,18 @@ public class User implements Serializable{
 		return roles;
 	}
 
-	public void setRolesName(String rolesName) {
-		this.rolesName = rolesName;
-	}
-
 	public String getRegion() {
-		Iterator<ApplicationOfRolechange> it = apps.iterator();	
-		ApplicationOfRolechange app=new ApplicationOfRolechange();
-		if(it.hasNext()) {
-			app = it.next();
-		}	
-		return app.getAttachedCode();
+		String region="";
+		if(apps!=null&&apps.size()>0){
+			Iterator<ApplicationOfRolechange> it = apps.iterator();	
+			ApplicationOfRolechange app=new ApplicationOfRolechange();
+			if(it.hasNext()) {
+				app = it.next();
+				region = app.getAttachedCode();
+			}	
+		}
+		return region;
 	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-//
-//	public String getRolesName() {
-//		return rolesName;
-//	}
-//
-//	public void setRolesName(String rolesName) {
-//		this.rolesName = rolesName;
-//	}
-
-
 
 
 

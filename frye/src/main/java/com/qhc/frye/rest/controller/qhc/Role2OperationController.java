@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,31 +28,34 @@ public class Role2OperationController {
 	@Autowired
 	private RelationService relationService;
 	
-	@ApiOperation(value=" 根据权角色id查询所拥有的权限", notes="根据权角色id查询所拥有的权限")
+	@ApiOperation(value=" Find role Operations by role id", notes="Find role Operations by role id")
 	@GetMapping(value = "/findByRoleId")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public List<Operation2role> findByRoleId(@RequestParam("roleId") Integer roleId) throws Exception
     {	
-		return relationService.findByRoleId(roleId, 1);
+		return relationService.findByRoleId(roleId, 0);
     }
 	
-	@ApiOperation(value=" 根据权限id查询所属角色", notes="根据权限id查询所属角色")
+	@ApiOperation(value=" Find relationShip by Operations id", notes="Find realationShip by Operations id")
 	@GetMapping(value = "/findByOperationId")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public List<Operation2role> findByOperationId(@RequestParam("operationId") String operationId) throws Exception
     {	
-		return relationService.findByOperationId(operationId, 1);
+		return relationService.findByOperationId(operationId, 0);
     }
 	
-	@ApiOperation(value=" 根据权限id删除", notes="根据权限id删除")
+	@ApiOperation(value=" Delete relationShip by relation id", notes="Delete relationShip by relation id")
 	@GetMapping(value = "/delete")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public Operation2role delete(@RequestParam("id") int id) throws Exception
     {	
-		return relationService.delete(id);
+		Operation2role or = new Operation2role();
+		or.setId(id);
+		relationService.delete(id);
+		return or;
 		
     }
 

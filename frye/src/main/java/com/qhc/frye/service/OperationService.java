@@ -1,5 +1,6 @@
 package com.qhc.frye.service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -15,7 +16,7 @@ import com.qhc.frye.domain.Operations;
  * 查询权限信息
  */
 @Service
-public class OperationService {
+public class OperationService implements Serializable{
 
 	@Autowired
 	private OperationRepository operationRepository;
@@ -34,8 +35,8 @@ public class OperationService {
 	 * @return
 	 * @throws NoSuchElementException
 	 */
-	public Operations findById(Integer id) {
-		return operationRepository.findById(id).get();
+	public Operations findById(String id) {
+		return operationRepository.findById(id);
 	}
 
 	public Operations createOrUpdateOperations(@Valid Operations operations) {

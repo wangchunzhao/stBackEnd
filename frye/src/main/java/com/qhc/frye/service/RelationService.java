@@ -1,7 +1,10 @@
 package com.qhc.frye.service;
 
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,9 +67,39 @@ public class RelationService {
 	 * @param operationId,isActive
 	 * @return
 	 */
-	public Operation2role delete(int id) {
+	public void delete(int id) {
 		orRepository.deleteById(id);
-		return orRepository.getOne(id);
 	}
+	
+	/**
+	 *  remove relationShip by role id
+	 * @param operationId,isActive
+	 * @return
+	 */
+	public void remove(int id) {
+		//通过角色id查询所有的关系
+		List<Operation2role> ors = orRepository.getOperation2roleByRoleIdAndIsActive(id,0);
+		for(Operation2role or :ors) {
+//			or.setIsActive(1);
+//			orRepository.save(or);
+			orRepository.delete(or);
+		}
+	}
+	
+	public List<Operation2role> saveRelation(int roleId,String[] operations) {
+		
+		Set<Operation2role> set = new HashSet<Operation2role>();
+		for(String opId : operations) {
+			Operation2role or = new Operation2role();
+			or.setIsActive(0);
+			or.setOperationId(opId);
+			or.setRoleId(roleId);
+			or.setOptTime(new Date());
+			set.add(or);
+		}
+		return orRepository.saveAll(set);
+	}
+
+
 
 }
