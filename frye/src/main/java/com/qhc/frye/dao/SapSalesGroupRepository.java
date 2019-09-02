@@ -3,10 +3,8 @@
  */
 package com.qhc.frye.dao;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
@@ -15,8 +13,7 @@ import com.qhc.frye.domain.SapSalesOffice;
  * @author wang@dxc.com
  *
  */
-@Entity
-@Table(name = "sap_sales_group")
+@Repository
 public interface SapSalesGroupRepository extends JpaRepository<SapSalesGroup, String> {
 	SapSalesOffice findByCode(String code);
 	

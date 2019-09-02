@@ -3,9 +3,14 @@ package com.qhc.frye.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+
+@Entity
+@Table(name = "sap_sales_group")
 public class SapSalesGroup implements Serializable {
 	
 	/**
@@ -23,7 +28,7 @@ public class SapSalesGroup implements Serializable {
     private String name;
 	
 	@NotNull
-	@Column(name="officeCode",columnDefinition="CHAR",length=4)
+	@Column(name="sap_sales_office_code",columnDefinition="CHAR",length=4)
     private String officeCode;
 
 	public String getCode() {
