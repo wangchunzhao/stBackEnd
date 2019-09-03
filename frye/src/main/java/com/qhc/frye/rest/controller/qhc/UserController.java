@@ -3,22 +3,18 @@ package com.qhc.frye.rest.controller.qhc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.validation.Valid;
-
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.qhc.frye.domain.ApplicationOfRolechange;
 import com.qhc.frye.domain.User;
 import com.qhc.frye.service.UserService;
@@ -32,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 @Api(value = "User", description = "User info")
 public class UserController {
 	
@@ -40,9 +36,8 @@ public class UserController {
 	private UserService userService;
 	
 	@ApiOperation(value=" Find all user info ", notes="Find all user info")
-	@RequestMapping(value = "/findAll")
+	@GetMapping
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
     public List<User> findAll(@RequestParam("userIdentity") String userIdentity,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
     {	
 		List<User> list = new ArrayList<User>();
@@ -68,32 +63,13 @@ public class UserController {
 			list = userService.findAll();
 		}
 		
-		/*
-		if(list!=null&&list.size()>0){
-			for(User user:list) {
-				List<ApplicationOfRolechange> apps = applicationService.findByBUsersId(user.getId());
-				String roles="";
-				if(apps!=null&&apps.size()>0) {
-					for(ApplicationOfRolechange app:apps) {
-						roles = roles+app.getRole().getName()+",";
-					}
-				}
-				if(!"".equals(roles)) {
-					roles = roles.substring(0, roles.length()-1);
-				}
-				user.set
-				user.setRegion(region);
-			}
-		}
-		*/
 		return list;
     }
 	
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
-	@RequestMapping(value = "/findByMultipleConditions")
+	@GetMapping(value = "/{isActive}/{userName}/{rolesName}/{userMail}")
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-    public List<User> findByMultipleConditions(@RequestParam("userName") String userName,@RequestParam("rolesName") String rolesName,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
+    public List<User> findByMultipleConditions(@PathVariable("userName") String userName,@PathVariable("rolesName") String rolesName,@PathVariable("userMail") String userMail,@PathVariable("isActive") String isActive) throws Exception
     {	
 		List<User> list =  userService.findByMultipleConditions(Integer.valueOf(isActive),userName,userMail,"");
 		List<User> newList = new ArrayList<User>();
@@ -121,40 +97,50 @@ public class UserController {
     }
 	
 	@ApiOperation(value=" Find user by id", notes="Find user by id")
-	@GetMapping(value = "/findById")
+	@GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-    public User findById(@RequestParam("id") Integer id) throws Exception
+    public User findById(@PathVariable("id") Integer id) throws Exception
     {	
 		return userService.findById(id);
     }
 	
 	@ApiOperation(value=" Find user by UserIdentity", notes="Find user by UserIdentity")
-	@GetMapping(value = "/findByUserIdentity")
+	@GetMapping(value = "/users/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-    public User findByUserIdentity(@RequestParam("userIdentity") String userIdentity) throws Exception
+    public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
     {	
 		return userService.findByUserIdentity(userIdentity);
     }
 	
 	@ApiOperation(value="Add user", notes="Add user")
-	@PostMapping(value = "/add")
+	@PostMapping
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
     public User add(@RequestBody(required=true) User user) throws Exception
     {	
 		return userService.createOrUpdateUser(user);
 		
     }
 	
-	@ApiOperation(value="Delete user", notes="Delete user")
-	@RequestMapping(value = "/delete")
+	@ApiOperation(value="Update user", notes="Update user")
+	@PutMapping
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-    public String delete(@RequestParam("id") Integer id) throws Exception
+    public String update(@RequestBody User user) throws Exception
     {	
-		User u = userService.notAvailable(id);
+		User u = userService.notAvailable(user.getId());
+		if(u!=null&&u.getIsActive()==1) {
+			return "success";
+		}else {
+			return "false";
+		}
+    }
+	
+	@ApiOperation(value="Update user isActive status", notes="Update user isActive status")
+	@PutMapping(value="/isActive")
+    @ResponseStatus(HttpStatus.OK)
+    public String delete(@RequestBody User user) throws Exception
+    {	
+		User u = userService.notAvailable(user.getId());
 		if(u!=null&&u.getIsActive()==1) {
 			return "success";
 		}else {
