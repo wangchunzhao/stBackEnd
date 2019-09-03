@@ -89,6 +89,10 @@ public class RoleService {
 	public List<Role> findByNameLike(String name) {
 		return roleRepository.findByNameLike("%"+name+"%");
 	}
+	
+	public Role findByName(String name) {
+		return roleRepository.findByName(name);
+	}
 
 	public Page<Role> getByConditions(Role role, Pageable pageRequest) {	
 		if(role.getIsActive()==2) {

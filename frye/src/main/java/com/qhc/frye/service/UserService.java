@@ -19,7 +19,7 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-
+	
 	public User getUser(String mail) throws NoSuchElementException{
 		User u = new User();
 		return u;

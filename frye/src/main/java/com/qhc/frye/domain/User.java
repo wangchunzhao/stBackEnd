@@ -109,20 +109,36 @@ public class User implements Serializable{
 
 
 	public String getRolesName() {
-		String roles="";
-		if(apps!=null&&apps.size()>0){
-			for(ApplicationOfRolechange app:apps) {
-				roles = roles+app.getbRolesId()+",";
-			}
-			if(!"".equals(roles)) {
-				roles = roles.substring(0, roles.length()-1);
+		String roles=this.rolesName;
+		if(null==rolesName) {
+			if(apps!=null&&apps.size()>0){
+				for(ApplicationOfRolechange app:apps) {
+					if(rolesName!=null) {
+						roles = roles+app.getbRolesId()+",";
+					}else {
+						roles = app.getbRolesId()+",";
+					}
+				}
+				if(!"".equals(roles)&&null!=roles) {
+					roles = roles.substring(0, roles.length()-1);
+				}
 			}
 		}
 		return roles;
 	}
+	
+	
+
+	public void setRolesName(String rolesName) {
+		this.rolesName = rolesName;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
 
 	public String getRegion() {
-		String region="";
+		String region=this.region;
 		if(apps!=null&&apps.size()>0){
 			Iterator<ApplicationOfRolechange> it = apps.iterator();	
 			ApplicationOfRolechange app=new ApplicationOfRolechange();

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,17 +40,36 @@ public class RoleController {
 	private RelationService relationService;
 	
 	
-	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
+//	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
+//	@GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//	public RestPageRole findPagingAll(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,
+//			@RequestParam("isActive") int isActive) throws Exception{
+//		
+//		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+//		Role role = new Role();
+//		role.setIsActive(isActive);
+//		Page<Role> page = roleService.getByConditions(role,pageable);
+//        return new RestPageRole(page);
+//    }
+	
+	@ApiOperation(value=" Find all role info", notes="Find all role info")
 	@GetMapping
     @ResponseStatus(HttpStatus.OK)
-	public RestPageRole findPagingAll(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,
-			@RequestParam("isActive") int isActive) throws Exception{
+	public List<Role> findAll(@RequestParam Integer isActive) throws Exception{
 		
-		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-		Role role = new Role();
-		role.setIsActive(isActive);
-		Page<Role> page = roleService.getByConditions(role,pageable);
-        return new RestPageRole(page);
+			List<Role> list = roleService.findAll();
+			List<Role> result = new ArrayList<Role>();
+			if(isActive==2) {
+				result = list;
+			}else {
+				for(Role r :list) {
+					if(isActive==r.getIsActive()) {
+						result.add(r);
+					}
+				}
+			}
+			return result;
     }
 	
 	@ApiOperation(value=" Find role by id", notes="Find role by id")
@@ -61,8 +81,8 @@ public class RoleController {
     }
 	
 	
-	@ApiOperation(value="Update role", notes="Update role")
-	@PutMapping
+	@ApiOperation(value="Create role", notes="Create role")
+	@PostMapping
     @ResponseStatus(HttpStatus.OK)
     public Role update(@RequestBody(required=true) Role role) throws Exception
     {	
@@ -72,7 +92,7 @@ public class RoleController {
 	
 	
 	@ApiOperation(value="Modify the permissions of roles ", notes="Modify the permissions of roles")
-	@PutMapping(value="/permessions/")
+	@PutMapping(value="/permessions")
     @ResponseStatus(HttpStatus.OK)
     public Role updateRoleOperations(@RequestBody(required=true) Role role) throws Exception
     {	
