@@ -18,7 +18,7 @@ public class ApplicationOfRolechange implements Serializable{
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
 	@NotNull
 	@Column(name="creator",columnDefinition="TEXT")
@@ -40,7 +40,7 @@ public class ApplicationOfRolechange implements Serializable{
 	
 	@NotNull
 	@Column(name="b_users_id",length = 10)
-    private Integer busersId;
+    private int busersId;
 
 	@NotNull
 	@Column(name="isactive",columnDefinition="BIT")
@@ -51,7 +51,7 @@ public class ApplicationOfRolechange implements Serializable{
 
 	@NotNull
 	@Column(name="b_roles_id",length = 10)
-    private Integer bRolesId;
+    private int bRolesId;
 	
 
     public String getCreator() {
@@ -78,11 +78,11 @@ public class ApplicationOfRolechange implements Serializable{
         this.approverFact = approverFact == null ? null : approverFact.trim();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -103,11 +103,11 @@ public class ApplicationOfRolechange implements Serializable{
     }
 
 
-    public Integer getBusersId() {
+    public int getBusersId() {
 		return busersId;
 	}
 
-	public void setBusersId(Integer busersId) {
+	public void setBusersId(int busersId) {
 		this.busersId = busersId;
 	}
 
@@ -119,11 +119,11 @@ public class ApplicationOfRolechange implements Serializable{
         this.attachedCode = attachedCode == null ? null : attachedCode.trim();
     }
 
-    public Integer getbRolesId() {
+    public int getbRolesId() {
         return bRolesId;
     }
 
-    public void setbRolesId(Integer bRolesId) {
+    public void setbRolesId(int bRolesId) {
         this.bRolesId = bRolesId;
     }
 
