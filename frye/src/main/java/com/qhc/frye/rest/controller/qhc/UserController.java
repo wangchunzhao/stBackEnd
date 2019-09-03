@@ -96,19 +96,19 @@ public class UserController {
 		return newList;
     }
 	
-	@ApiOperation(value=" Find user by id", notes="Find user by id")
-	@GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-    public User findById(@PathVariable("id") Integer id) throws Exception
-    {	
-		return userService.findById(id);
-    }
+//	@ApiOperation(value=" Find user by id", notes="Find user by id")
+//	@GetMapping(value = "/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//	@ResponseBody
+//    public User findById(@PathVariable("id") Integer id) throws Exception
+//    {	
+//		return userService.findById(id);
+//    }
 	
 	@ApiOperation(value=" Find user by UserIdentity", notes="Find user by UserIdentity")
-	@GetMapping(value = "/user/{userIdentity}")
+	@GetMapping(value = "/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
-    public User findByUserIdentity(@PathVariable("userIdentity") String userIdentity) throws Exception
+    public User findByUserIdentity(@PathVariable String userIdentity) throws Exception
     {	
 		return userService.findByUserIdentity(userIdentity);
     }
