@@ -39,7 +39,7 @@ public class User implements Serializable{
 	public String userIdentity;
 	
 	@NotNull
-	@Column(name="isActive",columnDefinition ="BIT")
+	@Column(name="isActive",columnDefinition ="TINYINT",length=1)
 	public int isActive;
 	
 	@Column(name = "name",columnDefinition ="TEXT",length = 45)

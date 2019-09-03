@@ -9,12 +9,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.frye.dao.RoleRepository;
 import com.qhc.frye.dao.SapSalesGroupRepository;
 import com.qhc.frye.dao.SapSalesOfficeRepository;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
-import com.qhc.frye.domain.User;
+
 import com.qhc.frye.rest.controller.entity.SalesGroup;
 
 /**
@@ -44,13 +43,13 @@ public class LocationService {
 		
 		this.clean();
 		//
-		List<SapSalesGroup> gs = new ArrayList();
-		List<SapSalesOffice> os = new ArrayList();
+//		List<SapSalesGroup> gs = new ArrayList();
+//		List<SapSalesOffice> os = new ArrayList();
 		//
 		
 		//
-		officeRepo.saveAll(os);
-		groupRepo.saveAll(gs);
+//		officeRepo.saveAll(os);
+//		groupRepo.saveAll(gs);
 		
 	}
 	
