@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.ApplicationRepository;
 import com.qhc.frye.domain.ApplicationOfRolechange;
+import com.qhc.frye.domain.User;
 
 /**
  */
@@ -20,6 +21,10 @@ public class ApplicationOfRolechangeService {
 
 	public List<ApplicationOfRolechange> findByBUsersId(int userId) {
 		return applicationRepository.findByBusersId(userId);
+	}
+	
+	public ApplicationOfRolechange add(ApplicationOfRolechange applicationOfRolechange) {
+		return applicationRepository.save(applicationOfRolechange);
 	}
 
 }
