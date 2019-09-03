@@ -53,7 +53,10 @@ public class LocationService {
 			
 			SapSalesOffice sso = new SapSalesOffice();
 			sso.setCode(sg.getOfficeCode());
-			sso.setName(sg.getOfficeName());			
+			sso.setName(sg.getOfficeName());	
+			
+			groups.add(ssg);
+			offices.add(sso);
 		}
 		officeRepo.saveAll(offices);
 		groupRepo.saveAll(groups);
