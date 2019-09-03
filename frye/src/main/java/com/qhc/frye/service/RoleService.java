@@ -4,12 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.qhc.frye.dao.RoleRepository;
 import com.qhc.frye.domain.Operation2role;
 import com.qhc.frye.domain.Operations;
@@ -91,4 +90,20 @@ public class RoleService {
 		return roleRepository.findByNameLike("%"+name+"%");
 	}
 
+	public Page<Role> getByConditions(Role role, Pageable pageRequest) {	
+		if(role.getIsActive()==2) {
+			//查询全部
+			return roleRepository.findAll(pageRequest);
+		
+		}else {
+			//查询启用或禁用的
+//			return roleRepository.findByIsActive(role.getIsActive(),pageRequest);
+			
+			List<Role> roleList = roleRepository.findByIsActive(role.getIsActive());
+			return new PageImpl<Role>(roleList,pageRequest,roleList.size());
+			
+		}
+    }
+
+	
 }
