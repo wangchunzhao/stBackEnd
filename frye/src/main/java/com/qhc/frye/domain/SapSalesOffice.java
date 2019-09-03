@@ -43,6 +43,9 @@ public class SapSalesOffice implements Serializable{
 	}
 	@Override
 	public boolean equals(Object obj) {
+		SapSalesOffice sa = (SapSalesOffice)obj;
+		if(sa.code.equals(this.getCode()))
+			return true;
 		return false;
 	}
 

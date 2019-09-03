@@ -4,7 +4,9 @@
 package com.qhc.frye.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,24 +34,29 @@ public class LocationService {
 	/**
 	 * delete all data in DB table
 	 */
-	private void clean() {
+	public void clean() {
 		groupRepo.deleteAll();
 		officeRepo.deleteAll();
 	}
 	/**
-	 * 
+	 * put data to db table , please clean it before this.
 	 */
-	public void refersh(List<SalesGroup> groups) {
+	public void put(List<SalesGroup> salesGroups) {
 		
-		this.clean();
-		//
-//		List<SapSalesGroup> gs = new ArrayList();
-//		List<SapSalesOffice> os = new ArrayList();
-		//
-		
-		//
-//		officeRepo.saveAll(os);
-//		groupRepo.saveAll(gs);
+		List<SapSalesGroup> groups = new ArrayList();
+		Set<SapSalesOffice> offices = new HashSet();
+		for (SalesGroup sg : salesGroups) {
+			SapSalesGroup ssg = new SapSalesGroup();
+			ssg.setCode(sg.getCode());
+			ssg.setName(sg.getName());
+			ssg.setOfficeCode(sg.getOfficeCode());
+			
+			SapSalesOffice sso = new SapSalesOffice();
+			sso.setCode(sg.getOfficeCode());
+			sso.setName(sg.getOfficeName());			
+		}
+		officeRepo.saveAll(offices);
+		groupRepo.saveAll(groups);
 		
 	}
 	

@@ -58,7 +58,13 @@ public class SapSalesGroup implements Serializable {
 		return serialVersionUID;
 	}
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		SapSalesGroup sg = (SapSalesGroup)obj;
+		if(sg.code.equals(this.getCode()))
+			return true;
+		return false;
+	}
 	
 	
 
