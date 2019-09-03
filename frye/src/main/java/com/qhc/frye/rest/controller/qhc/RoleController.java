@@ -92,7 +92,7 @@ public class RoleController {
 	
 	
 	@ApiOperation(value="Modify the permissions of roles ", notes="Modify the permissions of roles")
-	@PutMapping(value="/permessions")
+	@PostMapping(value="/permessions")
     @ResponseStatus(HttpStatus.OK)
     public Role updateRoleOperations(@RequestBody(required=true) Role role) throws Exception
     {	
