@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,18 +57,18 @@ public class RoleController {
     @ResponseStatus(HttpStatus.OK)
 	public List<Role> findAll(@RequestParam Integer isActive) throws Exception{
 		
-			List<Role> list = roleService.findAll();
-			List<Role> result = new ArrayList<Role>();
-			if(isActive==2) {
-				result = list;
-			}else {
-				for(Role r :list) {
-					if(isActive==r.getIsActive()) {
-						result.add(r);
-					}
+		List<Role> list = roleService.findAll();
+		List<Role> result = new ArrayList<Role>();
+		if(isActive==2) {
+			result = list;
+		}else {
+			for(Role r :list) {
+				if(isActive==r.getIsActive()) {
+					result.add(r);
 				}
 			}
-			return result;
+		}
+		return result;
     }
 	
 	@ApiOperation(value=" Find role by id", notes="Find role by id")

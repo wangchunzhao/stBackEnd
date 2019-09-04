@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.ApplicationOfRolechange;
-import com.qhc.frye.domain.Role;
 import com.qhc.frye.domain.User;
 import com.qhc.frye.service.ApplicationOfRolechangeService;
-import com.qhc.frye.service.RoleService;
 import com.qhc.frye.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,8 +38,6 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private RoleService roleService;
 	@Autowired 
 	private ApplicationOfRolechangeService appService;
 	
