@@ -41,8 +41,8 @@ public class LocationController {
 	@Autowired
 	private LocationService localService;
 
-	@ApiOperation(value = "update a sales group with sales office to DB.")
-	@PutMapping(value = "salesOffices", produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "update sales groups with sales offices to DB.")
+	@PutMapping(value = "salesOffice", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public void uploadSalesOffice(@RequestBody(required = true) @Valid List<SalesGroup> salesGroups) throws Exception {
@@ -50,12 +50,4 @@ public class LocationController {
 		localService.put(salesGroups);
 	}
 
-	@ApiOperation(value = "test")
-	@GetMapping(value = "test")
-	@ResponseStatus(HttpStatus.OK)
-	public void getup(@RequestParam("test") String test) throws Exception {
-
-		System.out.println(test);
-
-	}
 }
