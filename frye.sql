@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_application_of_rolechange` (
   `b_users_id` INT(10) UNSIGNED NOT NULL,
   `isActive` TINYINT(1) NOT NULL DEFAULT 1,
   `attached_code` CHAR(32) NULL,
-  `b_roles_id` INT ZEROFILL UNSIGNED NOT NULL,
+  `b_roles_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_b_applicaation_of_rolechange_b_users1`
     FOREIGN KEY (`b_users_id`)
@@ -253,7 +253,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_update_his` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_update_his` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `interface_code` CHAR(4) NOT NULL,
+  `interface_code` CHAR(36) NOT NULL,
   `update_date` DATE NOT NULL,
   `update_time` TIME NULL,
   PRIMARY KEY (`id`))
@@ -262,6 +262,8 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
 
 CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_update_his` (`id` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `interface_code_UNIQUE` ON `bohemian`.`sap_update_his` (`interface_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
