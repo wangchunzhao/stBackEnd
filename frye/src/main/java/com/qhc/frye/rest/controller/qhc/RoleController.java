@@ -40,18 +40,18 @@ public class RoleController {
 	private RelationService relationService;
 	
 	
-//	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
-//	@GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//	public RestPageRole findPagingAll(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,
-//			@RequestParam("isActive") int isActive) throws Exception{
-//		
-//		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-//		Role role = new Role();
-//		role.setIsActive(isActive);
-//		Page<Role> page = roleService.getByConditions(role,pageable);
-//        return new RestPageRole(page);
-//    }
+	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
+	@GetMapping("/paging")
+    @ResponseStatus(HttpStatus.OK)
+	public RestPageRole findPagingList(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,
+			@RequestParam("isActive") int isActive) throws Exception{
+		
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Role role = new Role();
+		role.setIsActive(isActive);
+		Page<Role> page = roleService.getByConditions(role,pageable);
+        return new RestPageRole(page);
+    }
 	
 	@ApiOperation(value=" Find all role info", notes="Find all role info")
 	@GetMapping
