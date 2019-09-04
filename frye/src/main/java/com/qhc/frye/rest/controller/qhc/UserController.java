@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 @Api(value = "User", description = "User info")
 public class UserController {
 	
@@ -46,43 +46,20 @@ public class UserController {
 	@Autowired 
 	private ApplicationOfRolechangeService appService;
 	
-//	@ApiOperation(value=" Find all user info ", notes="Find all user info")
-//	@GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<User> findAll(@RequestParam("userIdentity") String userIdentity,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
-//    {	
-//		List<User> list = new ArrayList<User>();
-//		if("flag".equals(userIdentity)) {
-//			if(!"".equals(userMail)&&null!=userMail) {
-//				if(isActive!=null) {
-//					if(!"2".equals(isActive)) {
-//						list = userService.findByUserMailAndIsActive("%"+userMail+"%",Integer.valueOf(isActive));
-//					}else {
-//						list = userService.findByUserMail("%"+userMail+"%");
-//					}
-//				}else {
-//					list = userService.findByUserMail("%"+userMail+"%");
-//				}
-//			}else{
-//				if(!"2".equals(isActive)) {
-//					list = userService.findByIsActive(Integer.valueOf(isActive));
-//				}else {
-//					list = userService.findAll();
-//				}
-//			}
-//		} else {
-//			list = userService.findAll();
-//		}
-//		
-//		return list;
-//    }
+	@ApiOperation(value=" Find all user info ", notes="Find all user info")
+	@GetMapping(value="/paging")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> findAll() throws Exception
+    {	
+		return userService.findAll();
+    }
 	
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
 	@GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findByMultipleConditions(@RequestParam("userName") String userName,@RequestParam("rolesName") String rolesName,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
+    public List<User> findByMultipleConditions(@RequestParam("userIdentity") String userIdentity,@RequestParam("rolesName") String rolesName,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
     {	
-		List<User> list =  userService.findByMultipleConditions(Integer.valueOf(isActive),userName,userMail,"");
+		List<User> list =  userService.findByMultipleConditions(Integer.valueOf(isActive),userIdentity,userMail,"");
 		List<User> newList = new ArrayList<User>();
 		if(rolesName!=null) {
 			if(list!=null&&list.size()>0) {
@@ -107,14 +84,6 @@ public class UserController {
 		return newList;
     }
 	
-//	@ApiOperation(value=" Find user by id", notes="Find user by id")
-//	@GetMapping(value = "/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//	@ResponseBody
-//    public User findById(@PathVariable("id") Integer id) throws Exception
-//    {	
-//		return userService.findById(id);
-//    }
 	
 	@ApiOperation(value=" Find user by UserIdentity", notes="Find user by UserIdentity")
 	@GetMapping(value = "/{userIdentity}")
@@ -153,6 +122,8 @@ public class UserController {
 				ApplicationOfRolechange ap =appService.add(applicationOfRolechange);
 				set.add(ap);
 				user.setApps(set);
+			}else {
+				user = userService.createOrUpdateUser(user);
 			}
 		}
 		

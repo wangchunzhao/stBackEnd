@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("roles")
+@RequestMapping("role")
 @Api(value = "Role", description = "Role info")
 public class RoleController {
 	
