@@ -45,10 +45,15 @@ public class CustomerController {
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
 		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
-		System.out.println(date.toString());
 		return date;
 	}
 	
+	@ApiOperation(value = "put the customers data to DB.")
+	@PutMapping(value = "/")
+	@ResponseStatus(HttpStatus.OK)
+	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
+		
 	
+	}
 
 }
