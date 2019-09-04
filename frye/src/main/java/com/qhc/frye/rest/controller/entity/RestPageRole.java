@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.qhc.frye.domain.Role;
  
 
@@ -16,7 +14,9 @@ import com.qhc.frye.domain.Role;
  * @Author lizuoshan
  */
 public class RestPageRole implements Iterable<Role>, Serializable {
+	
     private static final long serialVersionUID = -3720998571176536865L;
+    
     private List<Role> content = new ArrayList<>();
     private long totalElements;
     private int pageNumber;
