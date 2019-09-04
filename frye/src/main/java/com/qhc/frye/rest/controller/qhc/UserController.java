@@ -83,8 +83,8 @@ public class UserController {
 	@ApiOperation(value=" Find user by UserIdentity", notes="Find user by UserIdentity")
 	@GetMapping(value = "/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
-    public User findByUserIdentity(@PathVariable String userIdentity) throws Exception
-    {	
+    public User findByUserIdentity(@PathVariable String userIdentity) throws Exception{	
+		
 		return userService.findByUserIdentity(userIdentity);
     }
 	

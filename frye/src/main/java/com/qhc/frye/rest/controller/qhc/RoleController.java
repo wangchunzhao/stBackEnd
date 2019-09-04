@@ -74,8 +74,8 @@ public class RoleController {
 	@ApiOperation(value=" Find role by id", notes="Find role by id")
 	@GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Object findById(@PathVariable("id") Integer id) throws Exception
-    {	
+    public Object findById(@PathVariable("id") Integer id) throws Exception {	
+		
 		return roleService.findById(id);
     }
 	
