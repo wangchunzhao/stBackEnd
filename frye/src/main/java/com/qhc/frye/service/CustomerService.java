@@ -1,0 +1,37 @@
+/**
+ * 
+ */
+package com.qhc.frye.service;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.qhc.frye.dao.SapLastUpdatedRepository;
+import com.qhc.frye.dao.SapSalesGroupRepository;
+import com.qhc.frye.domain.LastUpdated;
+
+/**
+ * @author wang@dxc.com
+ *
+ */
+@Service
+public class CustomerService {
+	
+	@Autowired
+	SapLastUpdatedRepository lastUpdate;
+	
+	public Date getLastUpdated(String code) {
+		Optional<LastUpdated> lu = lastUpdate.findById(code);
+		if(lu.isPresent()) {
+			return lu.get().getLastUpdate();
+		}
+		
+		return new Date();
+	}
+	
+}
