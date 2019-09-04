@@ -25,6 +25,11 @@ import javax.validation.constraints.NotNull;
 @Table(name = "b_users")
 public class User implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1429807827446950753L;
+
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
