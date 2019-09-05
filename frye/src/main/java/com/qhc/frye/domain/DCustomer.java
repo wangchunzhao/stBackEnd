@@ -23,9 +23,7 @@ public class DCustomer implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9169262959918008183L;
-	public final static String CODE_CUSTOMER = "59870645008146f9938f7e8818031778";
-	public final static String NAME_CUSTOMER = "Customer master date";
+	
 	
 	@Id
     @NotNull
@@ -52,7 +50,7 @@ public class DCustomer implements Serializable{
 	private String clazzCode;
 	
 	@NotNull
-	@Column(name="sap_account_level_code",columnDefinition="CHAR",length=4)
+	@Column(name="sap_customer_level_code",columnDefinition="CHAR",length=4)
 	private String levelCode;
 	
 	public Date getChangedDate() {

@@ -45,7 +45,7 @@ public class CustomerController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
-		Date date = customerService.getLastUpdated(DCustomer.CODE_CUSTOMER);
+		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
 		return date;
 	}
 	
@@ -53,7 +53,8 @@ public class CustomerController {
 	@PutMapping(value = "/")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
-		customerService.save(customers);
+		
+		//customerService.save((List<DCustomer>)customers);
 	
 	}
 
