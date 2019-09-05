@@ -9,11 +9,12 @@ import com.qhc.frye.domain.DCustomer;
  * @author wang@dxc.com
  *
  */
-public class Customer extends DCustomer {
+public class Customer extends DCustomer implements InterEntityToDao {
 	private static final long serialVersionUID = -9169262959918008183L;
 	public final static String CODE_CUSTOMER = "59870645008146f9938f7e8818031778";
 	public final static String NAME_CUSTOMER = "Customer master date";
 	
+	@Override
 	public DCustomer toDao() {
 		DCustomer dc = new DCustomer();
 		dc.setCode(this.getCode());

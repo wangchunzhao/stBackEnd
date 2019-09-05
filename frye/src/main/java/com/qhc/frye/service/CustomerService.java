@@ -4,6 +4,7 @@
 package com.qhc.frye.service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,10 @@ public class CustomerService {
 	}
 	
 	public void save(List<Customer> customers) {
+		List<DCustomer> dcList = new ArrayList<DCustomer>();
+		for(Customer cus:customers) {
+			dcList.add(cus.toDao());
+		}
 		customerRepo.saveAll(customers);
 	}
 	

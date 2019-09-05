@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,8 +55,7 @@ public class CustomerController {
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
-		//customerService.save((List<DCustomer>)customers);
-	
+		customerService.save(customers);
 	}
 
 }
