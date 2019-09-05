@@ -91,9 +91,17 @@ public class UserController {
 	@ApiOperation(value="Add user", notes="Add user")
 	@PostMapping
     @ResponseStatus(HttpStatus.OK)
-	@Transactional
     public User add(@RequestBody(required=true) User user) throws Exception
     {	
+		return userService.createOrUpdateUser(user);
+    }
+	
+	@ApiOperation(value="Update user", notes="Update user")
+	@PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public User update(@RequestBody User user) throws Exception
+    {	
+		
 		//得到application信息
 		List<ApplicationOfRolechange> apps = appService.findByBUsersId(user.getId());
 		//得到角色id
@@ -121,21 +129,8 @@ public class UserController {
 				user = userService.createOrUpdateUser(user);
 			}
 		}
-		
+				
 		return user;
-    }
-	
-	@ApiOperation(value="Update user", notes="Update user")
-	@PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public String update(@RequestBody User user) throws Exception
-    {	
-		User u = userService.notAvailable(user.getId());
-		if(u!=null&&u.getIsActive()==1) {
-			return "success";
-		}else {
-			return "false";
-		}
     }
 	
 	@ApiOperation(value="Update user isActive status", notes="Update user isActive status")
