@@ -644,7 +644,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
   `address` TEXT NULL,
   `sap_customer_class_code` CHAR(2) NOT NULL,
   `sap_account_group_code` CHAR(4) NOT NULL,
-  `sap_customer_level_code` CHAR(1) NOT NULL,
+  `sap_customer_level_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
   CONSTRAINT `fk_sap_customer_sap_customer_class1`
     FOREIGN KEY (`sap_customer_class_code`)
