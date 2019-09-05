@@ -4,7 +4,7 @@
 package com.qhc.frye.rest.controller.entity;
 
 /**
- * @author wwang67
+ * @author wang@dxc.com
  *
  */
 public class Configurable {

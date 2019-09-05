@@ -3,7 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,18 +12,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.rest.controller.entity.Customer;
-import com.qhc.frye.rest.controller.entity.SalesGroup;
 import com.qhc.frye.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -51,7 +48,7 @@ public class CustomerController {
 	}
 	
 	@ApiOperation(value = "put the customers data to DB.")
-	@PutMapping(value = "/")
+	@PutMapping(value = "a", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		

@@ -48,7 +48,7 @@ public class CustomerService {
 		for(Customer cus:customers) {
 			dcList.add(cus.toDao());
 		}
-		customerRepo.saveAll(customers);
+		customerRepo.saveAll(dcList);
 	}
 	
 }

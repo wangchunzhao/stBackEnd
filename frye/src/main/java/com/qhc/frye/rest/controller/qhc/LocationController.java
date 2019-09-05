@@ -44,7 +44,6 @@ public class LocationController {
 	@ApiOperation(value = "update sales groups with sales offices to DB.")
 	@PutMapping(value = "salesOffice", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	public void uploadSalesOffice(@RequestBody(required = true) @Valid List<SalesGroup> salesGroups) throws Exception {
 		localService.clean();
 		localService.put(salesGroups);
