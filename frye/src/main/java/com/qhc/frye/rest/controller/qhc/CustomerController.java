@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("customer")
+
 @Api(value = "Customer Management in Frye")
 public class CustomerController {
 	
@@ -39,7 +39,7 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@ApiOperation(value = "update customers data to DB.")
-	@GetMapping(value = "lastUpdateDate")
+	@GetMapping(value = "customer/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
@@ -48,7 +48,7 @@ public class CustomerController {
 	}
 	
 	@ApiOperation(value = "put the customers data to DB.")
-	@PutMapping(value = "", produces = "application/json;charset=UTF-8")
+	@PutMapping(value = "customer", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
