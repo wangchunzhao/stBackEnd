@@ -48,11 +48,11 @@ public class CustomerController {
 	}
 	
 	@ApiOperation(value = "put the customers data to DB.")
-	@PutMapping(value = "a", produces = "application/json;charset=UTF-8")
+	@PutMapping(value = "", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
-		customerService.save(customers);
+		customerService.put(customers);
 	}
 
 }

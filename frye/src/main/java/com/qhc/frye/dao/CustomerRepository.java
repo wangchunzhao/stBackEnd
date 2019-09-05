@@ -14,6 +14,6 @@ import com.qhc.frye.domain.User;
  *
  */
 @Repository
-public interface CustomerReopsitory extends JpaRepository<DCustomer, Integer>{
+public interface CustomerRepository extends JpaRepository<DCustomer, Integer>{
 
 }

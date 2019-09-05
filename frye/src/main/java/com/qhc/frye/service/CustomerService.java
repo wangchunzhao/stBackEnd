@@ -12,9 +12,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.frye.dao.CustomerReopsitory;
+import com.qhc.frye.dao.CustomerAffiliationRepository;
+import com.qhc.frye.dao.CustomerIndustryRepository;
+import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
+import com.qhc.frye.domain.CustomerAffiliation;
 import com.qhc.frye.domain.DCustomer;
+import com.qhc.frye.domain.Industry;
 import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.rest.controller.entity.Customer;
 
@@ -31,7 +35,13 @@ public class CustomerService {
 	private SapLastUpdatedRepository lastUpdate;
 	
 	@Autowired
-	private CustomerReopsitory customerRepo;
+	private CustomerRepository customerRepo;
+	
+	@Autowired
+	private CustomerIndustryRepository industryRepo;
+	
+	@Autowired
+	private CustomerAffiliationRepository affilitionRepo;
 	
 	public Date getLastUpdated(String code) {
 		Optional<LastUpdated> lu = lastUpdate.findById(code);
@@ -43,12 +53,25 @@ public class CustomerService {
 		return d;
 	}
 	
-	public void save(List<Customer> customers) {
+	public void put(List<Customer> customers) {
 		List<DCustomer> dcList = new ArrayList<DCustomer>();
+		List<Industry> induList = new ArrayList<Industry>();
+		List<CustomerAffiliation> caList = new ArrayList<CustomerAffiliation>();
 		for(Customer cus:customers) {
-			dcList.add(cus.toDao());
+			List<Object> objs = cus.toDaos();
+			for(Object obj:objs) {
+				if( obj instanceof Industry) {
+					induList.add((Industry)obj);
+				}else if (obj instanceof CustomerAffiliation) {
+					caList.add((CustomerAffiliation)obj);
+				}else if (obj instanceof DCustomer){
+					dcList.add((DCustomer)obj);
+				}			
+			}
 		}
 		customerRepo.saveAll(dcList);
+		industryRepo.saveAll(induList);
+		affilitionRepo.saveAll(caList);
 	}
 	
 }

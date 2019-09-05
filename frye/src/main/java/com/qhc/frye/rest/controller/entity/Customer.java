@@ -3,9 +3,13 @@
  */
 package com.qhc.frye.rest.controller.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.qhc.frye.domain.CustomerAffiliation;
 import com.qhc.frye.domain.DCustomer;
+import com.qhc.frye.domain.Industry;
 
 /**
  * @author wang@dxc.com
@@ -23,6 +27,9 @@ public class Customer implements InterEntityToDao {
 	private String groupCode;
 	private String clazzCode;
 	private String levelCode;
+	private String affiliationCode;
+	private String affiliationName;
+	
 	public Date getChangedDate() {
 		return changedDate;
 	}
@@ -67,8 +74,23 @@ public class Customer implements InterEntityToDao {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+		
+	public String getAffiliationCode() {
+		return affiliationCode;
+	}
+	public void setAffiliationCode(String affiliationCode) {
+		this.affiliationCode = affiliationCode;
+	}
+	public String getAffiliationName() {
+		return affiliationName;
+	}
+	public void setAffiliationName(String affiliationName) {
+		this.affiliationName = affiliationName;
+	}
 	@Override
-	public DCustomer toDao() {
+	public List<Object> toDaos() {
+		List<Object> objs = new ArrayList<Object>();
 		DCustomer dc = new DCustomer();
 		dc.setCode(this.getCode());
 		dc.setName(this.getName());
@@ -77,6 +99,17 @@ public class Customer implements InterEntityToDao {
 		dc.setClazzCode(this.getClazzCode());
 		dc.setGroupCode(this.getGroupCode());
 		dc.setLevelCode(this.getLevelCode());
-		return dc;
+		//
+		if(!this.getAffiliationCode().isEmpty()) {
+			Industry indu = new Industry();
+			indu.setCode(this.getAffiliationCode());
+			indu.setName(this.getAffiliationName());
+			objs.add(indu);
+			CustomerAffiliation ca= new CustomerAffiliation();
+			ca.setCustomerCode(this.getCode());
+			ca.setIndustryCode(this.getAffiliationCode());
+			objs.add(ca);
+		}
+		return objs;
 	}
 }
