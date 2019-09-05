@@ -16,9 +16,9 @@ public interface ParameterSettingsRepository extends JpaRepository<Parameter, In
 	Parameter findEnabledInfo(String code);
 	
 	@Query(value="select * from b_settings where code=?1 and enable_date> curdate() limit 1;" ,nativeQuery=true)
-	Parameter findPreInfo(String code);
+	Parameter findAfterInfo(String code);
 	
 	@Query(value="select * from b_settings where code=?1 and enable_date< ?2  limit 1;" ,nativeQuery=true)
-	Parameter findAfterInfo(String code,Date date);
+	Parameter findPreInfo(String code,Date date);
 
 }
