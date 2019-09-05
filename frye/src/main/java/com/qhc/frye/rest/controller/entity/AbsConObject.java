@@ -23,4 +23,6 @@ public abstract class AbsConObject {
 		this.name = name;
 	}
 	
+	//public abstract Object toDao();
+	
 }

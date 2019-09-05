@@ -1,28 +1,58 @@
 /**
  * 
  */
-package com.qhc.frye.rest.controller.entity;
+package com.qhc.frye.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import com.qhc.frye.domain.DCustomer;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author wang@dxc.com
  *
  */
-public class Customer implements InterEntityToDao {
-	private static final long serialVersionUID = -9169262959918008183L;
-	public final static String CODE_CUSTOMER = "59870645008146f9938f7e8818031778";
-	public final static String NAME_CUSTOMER = "Customer master date";
+@Entity
+@Table(name = "sap_customer")
+public class DCustomer implements Serializable{
 
+	/**
+	 * 
+	 */
+	
+	
+	@Id
+    @NotNull
+    @Column(name="code",columnDefinition="CHAR",length=32)
 	private String code;
+	
+	@NotNull
+	@Column(name="name",columnDefinition="TEXT")
 	private String name;
+	
+	@NotNull
+	@Column(name="change_date",columnDefinition="DATETIME")
 	private Date changedDate;
+	
+	@Column(name="address",columnDefinition="TEXT")
 	private String address;
+	
+	@NotNull
+	@Column(name="sap_account_group_code",columnDefinition="CHAR",length=4)
 	private String groupCode;
+	
+	@NotNull
+	@Column(name="sap_customer_class_code",columnDefinition="CHAR",length=2)
 	private String clazzCode;
+	
+	@NotNull
+	@Column(name="sap_customer_level_code",columnDefinition="CHAR",length=4)
 	private String levelCode;
+	
 	public Date getChangedDate() {
 		return changedDate;
 	}
@@ -53,8 +83,6 @@ public class Customer implements InterEntityToDao {
 	public void setLevelCode(String levelCode) {
 		this.levelCode = levelCode;
 	}
-	
-	
 	public String getCode() {
 		return code;
 	}
@@ -67,16 +95,6 @@ public class Customer implements InterEntityToDao {
 	public void setName(String name) {
 		this.name = name;
 	}
-	@Override
-	public DCustomer toDao() {
-		DCustomer dc = new DCustomer();
-		dc.setCode(this.getCode());
-		dc.setName(this.getName());
-		dc.setAddress(this.getAddress());
-		dc.setChangedDate(this.getChangedDate());
-		dc.setClazzCode(this.getClazzCode());
-		dc.setGroupCode(this.getGroupCode());
-		dc.setLevelCode(this.getLevelCode());
-		return dc;
-	}
+
+
 }
