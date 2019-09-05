@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.rest.controller.entity.Customer;
 import com.qhc.frye.rest.controller.entity.SalesGroup;
 import com.qhc.frye.service.CustomerService;
@@ -44,7 +45,7 @@ public class CustomerController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
-		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
+		Date date = customerService.getLastUpdated(DCustomer.CODE_CUSTOMER);
 		return date;
 	}
 	
@@ -52,7 +53,7 @@ public class CustomerController {
 	@PutMapping(value = "/")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
-		
+		customerService.save(customers);
 	
 	}
 

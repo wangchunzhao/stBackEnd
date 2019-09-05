@@ -3,17 +3,17 @@
  */
 package com.qhc.frye.service;
 
-import java.text.DateFormat;
+
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.CustomerReopsitory;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
-import com.qhc.frye.dao.SapSalesGroupRepository;
+import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.rest.controller.entity.Customer;
 
@@ -27,7 +27,10 @@ public class CustomerService {
 	public final static long DEFAULT_DATE = 1008005271098L;
 	
 	@Autowired
-	SapLastUpdatedRepository lastUpdate;
+	private SapLastUpdatedRepository lastUpdate;
+	
+	@Autowired
+	private CustomerReopsitory customerRepo;
 	
 	public Date getLastUpdated(String code) {
 		Optional<LastUpdated> lu = lastUpdate.findById(code);
@@ -40,7 +43,7 @@ public class CustomerService {
 	}
 	
 	public void save(List<Customer> customers) {
-		
+		customerRepo.saveAll(customers);
 	}
 	
 }
