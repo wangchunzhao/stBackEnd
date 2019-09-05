@@ -128,7 +128,6 @@ public class UserController {
 				user = userService.createOrUpdateUser(user);
 			}
 		}
-				
 		return user;
     }
 	
