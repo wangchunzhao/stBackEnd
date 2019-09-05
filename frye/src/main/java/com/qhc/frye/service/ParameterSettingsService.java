@@ -39,9 +39,9 @@ public class ParameterSettingsService {
 			 //找到当前生效的
 			 Parameter p = parameterSettingsRepository.findEnabledInfo(code);
 			 if(p!=null) {
-				 Parameter preInfo = parameterSettingsRepository.findPreInfo(code);
+				 Parameter preInfo = parameterSettingsRepository.findPreInfo(code,p.getEnableDate());
 				 
-				 Parameter afterInfo = parameterSettingsRepository.findAfterInfo(code,p.getEnableDate());
+				 Parameter afterInfo = parameterSettingsRepository.findAfterInfo(code);
 				 
 				 if(preInfo!=null) {
 					 p.setPreValue(preInfo.getsValue());
