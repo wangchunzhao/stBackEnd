@@ -25,7 +25,7 @@ public class ApplicationOfRoleChangeController {
 	private ApplicationOfRolechangeService applicationOfRolechangeService;
 	
 	@ApiOperation(value="Add applicationOfRolechange", notes="Add applicationOfRolechange")
-	@PostMapping(value = "/add")
+	@PostMapping
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
     public ApplicationOfRolechange add(@RequestBody(required=true) ApplicationOfRolechange applicationOfRolechange) throws Exception
