@@ -101,7 +101,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User update(@RequestBody User user) throws Exception
     {	
-		
 		//得到application信息
 		List<ApplicationOfRolechange> apps = appService.findByBUsersId(user.getId());
 		//得到角色id
