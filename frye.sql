@@ -176,7 +176,8 @@ CREATE INDEX `fk_b_operation2role_b_roles1_idx` ON `bohemian`.`b_operation2role`
 DROP TABLE IF EXISTS `bohemian`.`b_settings` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
-  `id` CHAR(32) NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` CHAR(32) NOT NULL,
   `s_value` TEXT NOT NULL,
   `enable_date` DATE NOT NULL,
   `comment` TEXT NULL DEFAULT NULL,
@@ -186,6 +187,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
+
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`b_settings` (`code` ASC) VISIBLE;
 
 CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`b_settings` (`id` ASC) VISIBLE;
 
@@ -247,23 +250,20 @@ CREATE INDEX `fk_sap_sales_group_sap_sales_office1_idx` ON `bohemian`.`sap_sales
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`sap_update_his`
+-- Table `bohemian`.`sap_last_updated`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_update_his` ;
+DROP TABLE IF EXISTS `bohemian`.`sap_last_updated` ;
 
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_update_his` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `interface_code` CHAR(36) NOT NULL,
-  `update_date` DATE NOT NULL,
-  `update_time` TIME NULL,
-  PRIMARY KEY (`id`))
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_last_updated` (
+  `code` CHAR(32) NOT NULL,
+  `name` TEXT NOT NULL,
+  `update_date` DATETIME NOT NULL DEFAULT '2000-01-01',
+  PRIMARY KEY (`code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_update_his` (`id` ASC) VISIBLE;
-
-CREATE UNIQUE INDEX `interface_code_UNIQUE` ON `bohemian`.`sap_update_his` (`interface_code` ASC) VISIBLE;
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_last_updated` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -642,7 +642,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
   `change_date` DATE NOT NULL,
   `name` TEXT NOT NULL,
   `address` TEXT NULL,
-  `sap_account_group_id` INT UNSIGNED NOT NULL,
   `sap_customer_class_code` CHAR(2) NOT NULL,
   `sap_account_group_code` CHAR(4) NOT NULL,
   `sap_customer_level_code` CHAR(1) NOT NULL,
