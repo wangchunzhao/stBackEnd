@@ -58,6 +58,9 @@ public class User implements Serializable{
 	
 	@Transient
 	public String region;
+	
+	@Transient
+	public String operationNames;
     
     
 	public void setIsActive(int isActive) {
@@ -153,6 +156,14 @@ public class User implements Serializable{
 			}	
 		}
 		return region;
+	}
+
+	public String getOperationNames() {
+		return operationNames;
+	}
+
+	public void setOperationNames(String operationNames) {
+		this.operationNames = operationNames;
 	}
 
 
