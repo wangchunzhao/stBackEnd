@@ -19,9 +19,11 @@ import com.qhc.frye.dao.CustomerIndustryRepository;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CustomerAffiliation;
+import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.Industry;
 import com.qhc.frye.domain.LastUpdated;
+import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Customer;
 
 /**
@@ -55,7 +57,7 @@ public class CustomerService {
 		return d;
 	}
 	
-	public void put(List<Customer> customers) {
+	public void saveCustomers(List<Customer> customers) {
 		Set<DCustomer> dcList = new HashSet<DCustomer>();
 		Set<Industry> induList = new HashSet<Industry>();
 		Set<CustomerAffiliation> caList = new HashSet<CustomerAffiliation>();
@@ -75,5 +77,7 @@ public class CustomerService {
 		industryRepo.saveAll(induList);
 		affilitionRepo.saveAll(caList);
 	}
+	
+	
 	
 }

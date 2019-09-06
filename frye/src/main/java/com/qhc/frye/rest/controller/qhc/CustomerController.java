@@ -52,7 +52,7 @@ public class CustomerController {
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
-		customerService.put(customers);
+		customerService.saveCustomers(customers);
 	}
 
 }
