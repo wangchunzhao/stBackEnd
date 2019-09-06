@@ -10,6 +10,7 @@ import java.util.List;
 import com.qhc.frye.domain.CustomerAffiliation;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.Industry;
+import com.qhc.frye.domain.identity.CustomerIndustryIdentity;
 
 /**
  * @author wang@dxc.com
@@ -105,9 +106,13 @@ public class Customer implements InterEntityToDao {
 			indu.setCode(this.getAffiliationCode());
 			indu.setName(this.getAffiliationName());
 			objs.add(indu);
+			//
 			CustomerAffiliation ca= new CustomerAffiliation();
-			ca.setCustomerCode(this.getCode());
-			ca.setIndustryCode(this.getAffiliationCode());
+			CustomerIndustryIdentity cii = new CustomerIndustryIdentity();
+			cii.setCustomerCode(this.getCode());
+			cii.setIndustryCode(this.getAffiliationCode());
+			ca.setCii(cii);
+			//
 			objs.add(ca);
 		}
 		return objs;
