@@ -680,9 +680,8 @@ DROP TABLE IF EXISTS `bohemian`.`sap_currency` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_currency` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
-  `rate` FLOAT NOT NULL,
-  `effective_date` DATE NULL,
-  `is_reserved` TINYINT(1) NOT NULL,
+  `rate` DOUBLE(10,5) NOT NULL,
+  `is_reserved` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`code`))
 ENGINE = InnoDB;
 
@@ -1224,7 +1223,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_currency` (`code`, `name`, `rate`, `effective_date`, `is_reserved`) VALUES ('CNY', '人民币', 1, NULL, 1);
+INSERT INTO `bohemian`.`sap_currency` (`code`, `name`, `rate`, `is_reserved`) VALUES ('CNY', '人民币', 1, 1);
 
 COMMIT;
 

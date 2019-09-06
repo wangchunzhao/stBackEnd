@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +39,7 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 	
 	@ApiOperation(value = "update currency data to DB.")
-	@GetMapping(value = "currency")
+	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
 		currencyService.saveCurrency(currency);

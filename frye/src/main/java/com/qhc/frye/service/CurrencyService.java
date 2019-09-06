@@ -27,7 +27,7 @@ public class CurrencyService {
 			DCurrency dc = new DCurrency();
 			dc.setCode(cur.getCode());
 			dc.setName(cur.getName());
-			dc.setRate(cur.getRate()*100);
+			dc.setRate(cur.getRate());
 			dcs.add(dc);
 		}
 		currencyRepo.saveAll(dcs);
