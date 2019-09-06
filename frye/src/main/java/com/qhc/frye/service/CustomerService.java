@@ -6,8 +6,10 @@ package com.qhc.frye.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,9 +56,9 @@ public class CustomerService {
 	}
 	
 	public void put(List<Customer> customers) {
-		List<DCustomer> dcList = new ArrayList<DCustomer>();
-		List<Industry> induList = new ArrayList<Industry>();
-		List<CustomerAffiliation> caList = new ArrayList<CustomerAffiliation>();
+		Set<DCustomer> dcList = new HashSet<DCustomer>();
+		Set<Industry> induList = new HashSet<Industry>();
+		Set<CustomerAffiliation> caList = new HashSet<CustomerAffiliation>();
 		for(Customer cus:customers) {
 			List<Object> objs = cus.toDaos();
 			for(Object obj:objs) {

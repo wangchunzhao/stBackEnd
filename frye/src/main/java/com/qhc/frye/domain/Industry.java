@@ -36,4 +36,19 @@ public class Industry {
 		this.name = name;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(o.getClass().equals(this.getClass()) ) {
+			Industry obj = (Industry)o;
+			if(obj.getCode().equals(this.getCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
+	public int hashCode() {
+		return this.getCode().hashCode();
+	}
+	
 }

@@ -95,6 +95,19 @@ public class DCustomer implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	@Override
+	public boolean equals(Object o) {
+		if(o.getClass().equals(this.getClass()) ) {
+			DCustomer obj = (DCustomer)o;
+			if(obj.getCode().equals(this.getCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
+	public int hashCode() {
+		return this.getCode().hashCode();
+	}
 
 }

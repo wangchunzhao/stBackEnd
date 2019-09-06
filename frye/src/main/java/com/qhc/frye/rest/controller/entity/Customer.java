@@ -100,8 +100,9 @@ public class Customer implements InterEntityToDao {
 		dc.setClazzCode(this.getClazzCode());
 		dc.setGroupCode(this.getGroupCode());
 		dc.setLevelCode(this.getLevelCode());
+		objs.add(dc);
 		//
-		if(!this.getAffiliationCode().isEmpty()) {
+		if(this.getAffiliationCode()!=null && !this.getAffiliationCode().isEmpty()) {
 			Industry indu = new Industry();
 			indu.setCode(this.getAffiliationCode());
 			indu.setName(this.getAffiliationName());
