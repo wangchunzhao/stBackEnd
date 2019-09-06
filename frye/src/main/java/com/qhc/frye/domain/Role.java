@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+
 /**
  * 
  * @author lizuoshan
@@ -42,11 +43,17 @@ public class Role implements Serializable{
 	
 	
 	@OneToMany(mappedBy = "id")
-    private Set<ApplicationOfRolechange> apps;
+	public Set<ApplicationOfRolechange> apps;
 	
 	
 	@Transient
-	private Set<Operations> operations;
+	public Set<Operations> operations;
+	
+	@Transient
+	public String operationIds;
+	
+	@Transient
+	public boolean selected;
 	
 	
 	public int getId() {
@@ -87,6 +94,22 @@ public class Role implements Serializable{
 
 	public void setOperations(Set<Operations> operations) {
 		this.operations = operations;
+	}
+
+	public String getOperationIds() {
+		return operationIds;
+	}
+
+	public void setOperationIds(String operationIds) {
+		this.operationIds = operationIds;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 
