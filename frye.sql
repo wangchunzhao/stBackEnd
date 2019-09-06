@@ -737,27 +737,26 @@ CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_industry` (`code` ASC) VISI
 DROP TABLE IF EXISTS `bohemian`.`sap_industry_and_customer` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_and_customer` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sap_industry_code` VARCHAR(4) NOT NULL,
   `sap_customer_code` VARCHAR(16) NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_sap_industry_and_customer_sap_industry1`
-    FOREIGN KEY (`sap_industry_code`)
-    REFERENCES `bohemian`.`sap_industry` (`code`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  `sap_industry_code` VARCHAR(4) NOT NULL,
+  PRIMARY KEY (`sap_customer_code`, `sap_industry_code`),
   CONSTRAINT `fk_sap_industry_and_customer_sap_customer1`
     FOREIGN KEY (`sap_customer_code`)
     REFERENCES `bohemian`.`sap_customer` (`code`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_industry_and_customer_sap_industry1`
+    FOREIGN KEY (`sap_industry_code`)
+    REFERENCES `bohemian`.`sap_industry` (`code`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_industry_and_customer` (`id` ASC) VISIBLE;
+CREATE INDEX `fk_sap_industry_and_customer_sap_customer1_idx` ON `bohemian`.`sap_industry_and_customer` (`sap_customer_code` ASC) VISIBLE;
 
 CREATE INDEX `fk_sap_industry_and_customer_sap_industry1_idx` ON `bohemian`.`sap_industry_and_customer` (`sap_industry_code` ASC) VISIBLE;
 
-CREATE INDEX `fk_sap_industry_and_customer_sap_customer1_idx` ON `bohemian`.`sap_industry_and_customer` (`sap_customer_code` ASC) VISIBLE;
+CREATE UNIQUE INDEX `sap_customer_code_and_industry_code_UNIQUE` ON `bohemian`.`sap_industry_and_customer` (`sap_customer_code` ASC, `sap_industry_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
