@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.ApplicationOfRolechange;
+import com.qhc.frye.domain.Operation2role;
+import com.qhc.frye.domain.Operations;
 import com.qhc.frye.domain.User;
 import com.qhc.frye.service.ApplicationOfRolechangeService;
+import com.qhc.frye.service.OperationService;
+import com.qhc.frye.service.RelationService;
 import com.qhc.frye.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +44,12 @@ public class UserController {
 	private UserService userService;
 	@Autowired 
 	private ApplicationOfRolechangeService appService;
+	
+	@Autowired
+	private RelationService relationService;
+	
+	@Autowired
+	private OperationService operationService;
 	
 	@ApiOperation(value=" Find all user info ", notes="Find all user info")
 	@GetMapping(value="/paging")
@@ -85,7 +95,24 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User findByUserIdentity(@PathVariable String userIdentity) throws Exception{	
 		
-		return userService.findByUserIdentity(userIdentity);
+		User user = userService.findByUserIdentity(userIdentity);
+		
+		String[] roles = user.getRolesName().split(",");
+		
+		String operationStr="";
+		for(String str :roles) {
+			List<Operation2role> relations = relationService.findByRoleId(Integer.valueOf(str), 1);
+			for(Operation2role r:relations) {
+				String operationId = r.getOperationId();
+				Operations op = operationService.findById(operationId);
+				operationStr = operationStr+op.getName()+",";
+			}
+		}
+		user.setOperationNames(operationStr);
+		return user;
+		
+		
+		
     }
 	
 	@ApiOperation(value="Add user", notes="Add user")
