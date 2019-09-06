@@ -36,7 +36,7 @@ public class RoleService {
 	 */
 	public Role findById(int id) throws NoSuchElementException{
 		Role role = roleRepository.findById(id).get();
-		List<Operation2role> relationList= relationService.findByRoleId(id,0);
+		List<Operation2role> relationList= relationService.findByRoleId(id,1);
 		Set<Operations> operations = new HashSet<Operations>();
 		if(relationList!=null&&relationList.size()>0) {
 			for(Operation2role or:relationList) {

@@ -78,7 +78,7 @@ public class RelationService {
 	 */
 	public void remove(int id) {
 		//通过角色id查询所有的关系
-		List<Operation2role> ors = orRepository.getOperation2roleByRoleIdAndIsActive(id,0);
+		List<Operation2role> ors = orRepository.getOperation2roleByRoleIdAndIsActive(id,1);
 		for(Operation2role or :ors) {
 //			or.setIsActive(1);
 //			orRepository.save(or);
@@ -91,7 +91,7 @@ public class RelationService {
 		Set<Operation2role> set = new HashSet<Operation2role>();
 		for(String opId : operations) {
 			Operation2role or = new Operation2role();
-			or.setIsActive(0);
+			or.setIsActive(1);
 			or.setOperationId(opId);
 			or.setRoleId(roleId);
 			or.setOptTime(new Date());
