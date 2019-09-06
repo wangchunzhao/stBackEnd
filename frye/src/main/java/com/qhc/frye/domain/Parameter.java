@@ -46,7 +46,7 @@ public class Parameter implements Serializable{
 	
 	@NotNull
 	@Column(name="opt_time",columnDefinition="datetime")
-	private Date optTime;
+	private String optTime;
 	
 	
 	@Transient
@@ -99,10 +99,11 @@ public class Parameter implements Serializable{
 	public void setOperater(String operater) {
 		this.operater = operater;
 	}
-	public Date getOptTime() {
+	
+	public String getOptTime() {
 		return optTime;
 	}
-	public void setOptTime(Date optTime) {
+	public void setOptTime(String optTime) {
 		this.optTime = optTime;
 	}
 	public int getId() {
