@@ -42,7 +42,7 @@ public class ParameterSettingsController {
 	@ApiOperation(value="Update parameters info and add a new value", notes="Update parameters info and add a new value")
 	@PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public Parameter update(@RequestBody Parameter p) throws Exception
+    public Parameter update(@RequestBody Parameter p)
     {	
 		return settingService.updateParameter(p);
     }

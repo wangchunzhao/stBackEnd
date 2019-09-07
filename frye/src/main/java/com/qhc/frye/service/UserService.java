@@ -5,7 +5,16 @@ package com.qhc.frye.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.UserRepository;
 import com.qhc.frye.domain.User;
@@ -102,6 +111,47 @@ public class UserService {
 	 */
 	public User findByUserIdentity(String userIdentity) {
 		return userRepository.findByUserIdentity(userIdentity);
+	}
+
+	public Page<User> getByConditions(User user, Pageable pageable) {
+		 Specification<User> specification = new Specification<User>() {
+	            @Override
+	            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+	                //增加筛选条件
+	                Predicate predicate = cb.conjunction();
+	                if(user.getIsActive()==2) {
+	                	
+	                	predicate.getExpressions().add(cb.notEqual(root.get("isActive").as(Integer.class), user.getIsActive()));
+	                }else {
+	                	predicate.getExpressions().add(cb.equal(root.get("isActive").as(Integer.class), user.getIsActive()));
+	                }
+	                 //模糊查找
+	                if(!"".equals(user.getUserIdentity())&&user.getUserIdentity()!=null) {
+	                	
+	                	predicate.getExpressions().add(cb.like(root.get("userIdentity").as(String.class), "%" + user.getUserIdentity() + "%"));
+	                }
+                    if(!"".equals(user.getUserName())&&user.getUserName()!=null) {
+                    	
+                    	predicate.getExpressions().add(cb.like(root.get("name").as(String.class), "%" + user.getUserName() + "%"));
+                    }
+                    if(!"".equals(user.getUserMail())&&user.getUserMail()!=null) {
+                    	
+                    	predicate.getExpressions().add(cb.like(root.get("userMail").as(String.class), "%" + user.getUserMail() + "%"));
+                    }
+
+//	    		   //起始日期
+//	                if (startTime != null && !startTime.trim().equals("")) {
+//	                    predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime").as(String.class), startTime));
+//	                }
+//	                //结束日期
+//	                if (endTime != null && !endTime.trim().equals("")) {
+//	                    predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime").as(String.class), endTime));
+//	                }
+	                return predicate;
+	            }
+	       };
+
+		return userRepository.findAll(specification,pageable);
 	}
 
 }

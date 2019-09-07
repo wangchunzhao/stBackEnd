@@ -94,17 +94,14 @@ public class RoleService {
 		return roleRepository.findByName(name);
 	}
 
-	public Page<Role> getByConditions(Role role, Pageable pageRequest) {	
+	public Page<Role> getByConditions(Role role, Pageable pageable) {	
 		if(role.getIsActive()==2) {
 			//查询全部
-			return roleRepository.findAll(pageRequest);
+			return roleRepository.findAll(pageable);
 		
 		}else {
 			//查询启用或禁用的
-//			return roleRepository.findByIsActive(role.getIsActive(),pageRequest);
-			
-			List<Role> roleList = roleRepository.findByIsActive(role.getIsActive());
-			return new PageImpl<Role>(roleList,pageRequest,roleList.size());
+			return roleRepository.findByIsActive(role.getIsActive(),pageable);
 			
 		}
     }

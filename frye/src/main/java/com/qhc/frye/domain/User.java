@@ -57,7 +57,7 @@ public class User implements Serializable{
 	public String rolesName;
 	
 	@Transient
-	public String region;
+	public SapSalesOffice region;
 	
 	@Transient
 	public String operationNames;
@@ -141,21 +141,14 @@ public class User implements Serializable{
 		this.rolesName = rolesName;
 	}
 
-	public void setRegion(String region) {
-		this.region = region;
+	
+
+	public SapSalesOffice getRegion() {
+		return region;
 	}
 
-	public String getRegion() {
-		String region=this.region;
-		if(apps!=null&&apps.size()>0){
-			Iterator<ApplicationOfRolechange> it = apps.iterator();	
-			ApplicationOfRolechange app=new ApplicationOfRolechange();
-			if(it.hasNext()) {
-				app = it.next();
-				region = app.getAttachedCode();
-			}	
-		}
-		return region;
+	public void setRegion(SapSalesOffice region) {
+		this.region = region;
 	}
 
 	public String getOperationNames() {

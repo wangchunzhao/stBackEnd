@@ -1,5 +1,6 @@
 package com.qhc.frye.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ public class ParameterSettingsService {
 	}
 	
 	public List<Parameter> findDistinctInfo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		List<Parameter> list = parameterSettingsRepository.findAll();
 		 Set<String> set = new HashSet<String>();
 		 if(list!=null&&list.size()>0) {
@@ -51,8 +53,8 @@ public class ParameterSettingsService {
 					 p.setAfterValue(afterInfo.getsValue());
 					 p.setAfterEnableDate(afterInfo.getEnableDate());
 				 }
+				 ps.add(p);
 			 }
-			 ps.add(p);
 		 }
 		 
 		 return ps;

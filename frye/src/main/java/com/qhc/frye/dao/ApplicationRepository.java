@@ -12,5 +12,7 @@ public interface ApplicationRepository extends JpaRepository<ApplicationOfRolech
 
 	List<ApplicationOfRolechange> findByBusersId(int userId);
 
+	void deleteByBusersId(Integer id);
+
 
 }

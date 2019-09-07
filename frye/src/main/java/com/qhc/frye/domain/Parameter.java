@@ -1,7 +1,7 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,44 +22,44 @@ public class Parameter implements Serializable{
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-	private int id;
+	public Integer id;
 	
 	@NotNull
 	@Column(name="code",columnDefinition="CHAR")
-	private String code;
+	public String code;
 	
 	@NotNull
 	@Column(name="s_value",columnDefinition="TEXT")
-	private String sValue;
+	public String sValue;
 	
 	
 	@NotNull
 	@Column(name="enable_date")
-	private Date enableDate;
+	public Date enableDate;
 	
 	@Column(name="comment",columnDefinition="TEXT")
-	private String comment;
+	public String comment;
 	
 	@NotNull
 	@Column(name="operater",columnDefinition="TEXT")
-	private String operater;
+	public String operater;
 	
 	@NotNull
 	@Column(name="opt_time",columnDefinition="datetime")
-	private String optTime;
+	public String optTime;
 	
 	
 	@Transient
-	private String preValue;
+	public String preValue;
 	
 	@Transient
-	private String afterValue;
+	public String afterValue;
 	
 	@Transient
-	private Date preEnableDate;
+	public Date preEnableDate;
 	
 	@Transient
-	private Date afterEnableDate;
+	public Date afterEnableDate;
 	
 	
 	public String getPreValue() {
@@ -106,12 +106,6 @@ public class Parameter implements Serializable{
 	public void setOptTime(String optTime) {
 		this.optTime = optTime;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getCode() {
 		return code;
 	}
@@ -129,6 +123,12 @@ public class Parameter implements Serializable{
 	}
 	public void setAfterEnableDate(Date afterEnableDate) {
 		this.afterEnableDate = afterEnableDate;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	

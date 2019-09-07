@@ -47,10 +47,12 @@ public class RoleController {
 	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
 	@GetMapping("/paging")
     @ResponseStatus(HttpStatus.OK)
-	public RestPageRole findPagingList(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,
+	public RestPageRole findPagingList(
+			@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize,
 			@RequestParam("isActive") int isActive) throws Exception{
 		
-		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Role role = new Role();
 		role.setIsActive(isActive);
 		Page<Role> page = roleService.getByConditions(role,pageable);
