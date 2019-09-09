@@ -159,14 +159,6 @@ public class UserController {
 		return userService.createOrUpdateUser(user);
     }
 	
-	
-	public RestPageUser refushPageUser( RestPageUser pu) throws Exception {
-		if(pu.getContent()!=null&&pu.getContent().size()>0) {
-			for(User u :pu.getContent()) {
-				u = this.findByUserIdentity(u.getUserIdentity());
-			}
-		}
-		return pu;
-	}
+
 
 }
