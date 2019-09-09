@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Currency;
-import com.qhc.frye.service.ClassService;
+import com.qhc.frye.service.CharacteristicService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,17 +27,24 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Clazz Management in Frye")
-public class ClazzController {
+@Api(value = "Clazz, Characteristic and its value Management in Frye")
+public class CharacteristicController {
 	
 	@Autowired
-	private ClassService classService;
+	private CharacteristicService characteristicService;
 	
-	@ApiOperation(value = "update class and characteristic data to DB.")
+	@ApiOperation(value = "update class to DB.")
 	@PutMapping(value = "class")
 	@ResponseStatus(HttpStatus.OK)
-	public void putClassAndCharacteristic(@RequestBody(required = true) @Valid List<Clazz> clazz) {
-		classService.saveClassAndCharacteristic(clazz);
+	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
+		characteristicService.saveClass(clazz);
+	}
+
+	@ApiOperation(value = "update characteristic and corresponding data to DB.")
+	@PutMapping(value = "class")
+	@ResponseStatus(HttpStatus.OK)
+	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
+		characteristicService.saveCharacteristicValue(chaValues);
 	}
 
 }

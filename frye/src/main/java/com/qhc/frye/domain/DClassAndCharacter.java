@@ -15,7 +15,7 @@ import com.qhc.frye.domain.identity.ClassCharacterIdentity;
  */
 @Entity
 @Table(name="sap_clazz_and_character")
-public class ClassAndCharacter {
+public class DClassAndCharacter {
 	
 	@EmbeddedId
 	private ClassCharacterIdentity cci;

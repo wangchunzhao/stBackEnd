@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="sap_characteristic")
-public class Characteristic {
+public class DCharacteristic {
 	@Id
     @NotNull
     @Column(name="code",length=30)

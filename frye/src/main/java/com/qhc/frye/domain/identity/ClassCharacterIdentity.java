@@ -22,17 +22,19 @@ public class ClassCharacterIdentity implements Serializable{
 	private static final long serialVersionUID = 7675567765392676052L;
 
 	@Column(name = "sap_clazz_code", nullable = false, length = 18)
-	private String classCode;
+	private String clazzCode;
 
 	@Column(name = "sap_characteristic_code", nullable = false, length = 30)
 	private String characterCode;
 
-	public String getClassCode() {
-		return classCode;
+	
+
+	public String getClazzCode() {
+		return clazzCode;
 	}
 
-	public void setClassCode(String classCode) {
-		this.classCode = classCode;
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
 	}
 
 	public String getCharacterCode() {
@@ -49,7 +51,7 @@ public class ClassCharacterIdentity implements Serializable{
 		if (this.getClass() == o.getClass()) {
 
 			ClassCharacterIdentity obj = (ClassCharacterIdentity) o;
-			if (obj.getClassCode().equals(this.getClassCode()))
+			if (obj.getClazzCode().equals(this.getClazzCode()))
 				if (obj.getCharacterCode().equals(this.getCharacterCode()))
 					return true;
 		}
@@ -60,7 +62,7 @@ public class ClassCharacterIdentity implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return this.getClassCode().hashCode() * FACTOR + this.getCharacterCode().hashCode();
+		return this.getClazzCode().hashCode() * FACTOR + this.getCharacterCode().hashCode();
 	}
 
 }
