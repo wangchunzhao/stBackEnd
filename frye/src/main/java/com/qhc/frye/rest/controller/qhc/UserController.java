@@ -75,7 +75,7 @@ public class UserController {
 		user.setUserIdentity(userIdentity);
 		user.setUserMail(userMail);
 		Page<User> page = userService.getByConditions(user,pageable);
-        return refushPageUser(new RestPageUser(page));
+        return new RestPageUser(page);
     }
 	
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
@@ -89,7 +89,7 @@ public class UserController {
 			if(list!=null&&list.size()>0) {
 				for(User user : list) {
 					boolean flag = true;
-					Set<ApplicationOfRolechange> apps = user.getApps();
+					Set<ApplicationOfRolechange> apps = new HashSet<>(user.getApps());
 					if(!apps.isEmpty()) {
 						for(ApplicationOfRolechange app:apps) {
 							if(app.getAttachedCode().equals(rolesName)) {
@@ -115,29 +115,27 @@ public class UserController {
     public User findByUserIdentity(@PathVariable String userIdentity) throws Exception{	
 		User user = userService.findByUserIdentity(userIdentity);
 		List<ApplicationOfRolechange> appList = appService.findByBUsersId(user.getId());
-		Set<ApplicationOfRolechange> set = new HashSet<ApplicationOfRolechange>();
+		Set<Operations> operationSet = new HashSet<Operations>();
+		List<Role> roleList = new ArrayList<Role>();
 		String region ="";
 		if(appList!=null&&appList.size()>0) {
-			String rolesStr = "";
-			String operationStr="";
 			for(ApplicationOfRolechange app:appList) {
-				set.add(app);
+				region = app.getAttachedCode();
 				Role role = roleService.findById(app.getbRolesId());
-				rolesStr =rolesStr+role.getName()+",";
-				region =app.getAttachedCode();
-				
+				roleList.add(role);
 				List<Operation2role> relations = relationService.findByRoleId(app.getbRolesId(), 1);
 				for(Operation2role r:relations) {
 					String operationId = r.getOperationId();
 					Operations op = operationService.findById(operationId);
-					operationStr = operationStr+op.getName()+",";
+					if(op!=null) {
+						operationSet.add(op);
+					}
 				}
 			}
 			SapSalesOffice office = officeService.findByCode(region);
-			user.setOperationNames(operationStr);
-			user.setRolesName(rolesStr.substring(0, rolesStr.length()-1));
-			user.setApps(set);
 			user.setRegion(office);
+			user.setRoles(roleList);
+			user.setOperations(new ArrayList<Operations>(operationSet));
 		}
 		return user;
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.Operation2roleRepository;
 import com.qhc.frye.domain.Operation2role;
+import com.qhc.frye.domain.Operations;
 import com.qhc.frye.domain.Role;
 
 /**
@@ -106,14 +107,13 @@ public class RelationService {
 		List<Operation2role> list = new ArrayList<Operation2role>();
 		//删除所有权限关系
 		remove(role.getId());
-		String operationIds = role.getOperationIds();
+		List<Operations> operations = role.getOperations();
 		Set<Operation2role> orset = new HashSet<Operation2role>();
-		if(operationIds!=null) {
-			String[] operations = operationIds.split(",");
-			for(String opId : operations) {
+		if(operations!=null&&operations.size()>0) {
+			for(Operations op : operations) {
 				Operation2role or = new Operation2role();
 				or.setIsActive(1);
-				or.setOperationId(opId);
+				or.setOperationId(op.getId());
 				or.setRoleId(role.getId());
 				or.setOptTime(new Date());
 				orset.add(or);

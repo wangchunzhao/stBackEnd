@@ -47,10 +47,8 @@ public class Role implements Serializable{
 	
 	
 	@Transient
-	public Set<Operations> operations;
+	public List<Operations> operations;
 	
-	@Transient
-	public String operationIds;
 	
 	@Transient
 	public boolean selected;
@@ -88,21 +86,6 @@ public class Role implements Serializable{
 		this.apps = apps;
 	}
 
-	public Set<Operations> getOperations() {
-		return operations;
-	}
-
-	public void setOperations(Set<Operations> operations) {
-		this.operations = operations;
-	}
-
-	public String getOperationIds() {
-		return operationIds;
-	}
-
-	public void setOperationIds(String operationIds) {
-		this.operationIds = operationIds;
-	}
 
 	public boolean isSelected() {
 		return selected;
@@ -110,6 +93,14 @@ public class Role implements Serializable{
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public List<Operations> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operations> operations) {
+		this.operations = operations;
 	}
 
 

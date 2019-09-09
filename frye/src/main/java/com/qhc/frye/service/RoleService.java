@@ -1,5 +1,6 @@
 package com.qhc.frye.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -43,7 +44,7 @@ public class RoleService {
 				operations.add(operationService.findById(or.getOperationId()));
 			}
 		}
-			role.setOperations(operations);
+			role.setOperations(new ArrayList<Operations>(operations));
 		return role;	
 		
 	}

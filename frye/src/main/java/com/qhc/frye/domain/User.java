@@ -1,25 +1,17 @@
-/**
- * 
- */
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-/**
- * @author wang@dxc.com
- *
- */
+
 
 @Entity
 @Table(name = "b_users")
@@ -50,17 +42,18 @@ public class User implements Serializable{
 	@Column(name = "name",columnDefinition ="TEXT",length = 45)
 	public String userName;
 	
-	@OneToMany(mappedBy = "id")
-    public Set<ApplicationOfRolechange> apps;
-	
 	@Transient
-	public String rolesName;
+    public List<ApplicationOfRolechange> apps;
 	
 	@Transient
 	public SapSalesOffice region;
 	
 	@Transient
-	public String operationNames;
+	public List<Role> roles;
+	
+	@Transient
+	public List<Operations> operations;
+	
     
     
 	public void setIsActive(int isActive) {
@@ -107,42 +100,6 @@ public class User implements Serializable{
 		this.userName = userName;
 	}
 
-	public Set<ApplicationOfRolechange> getApps() {
-		return apps;
-	}
-
-	public void setApps(Set<ApplicationOfRolechange> apps) {
-		this.apps = apps;
-	}
-
-
-	public String getRolesName() {
-		String roles=this.rolesName;
-		if(null==rolesName) {
-			if(apps!=null&&apps.size()>0){
-				for(ApplicationOfRolechange app:apps) {
-					if(rolesName!=null) {
-						roles = roles+app.getbRolesId()+",";
-					}else {
-						roles = app.getbRolesId()+",";
-					}
-				}
-				if(!"".equals(roles)&&null!=roles) {
-					roles = roles.substring(0, roles.length()-1);
-				}
-			}
-		}
-		return roles;
-	}
-	
-	
-
-	public void setRolesName(String rolesName) {
-		this.rolesName = rolesName;
-	}
-
-	
-
 	public SapSalesOffice getRegion() {
 		return region;
 	}
@@ -151,12 +108,28 @@ public class User implements Serializable{
 		this.region = region;
 	}
 
-	public String getOperationNames() {
-		return operationNames;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
-	public void setOperationNames(String operationNames) {
-		this.operationNames = operationNames;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public List<ApplicationOfRolechange> getApps() {
+		return apps;
+	}
+
+	public void setApps(List<ApplicationOfRolechange> apps) {
+		this.apps = apps;
+	}
+
+	public List<Operations> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operations> operations) {
+		this.operations = operations;
 	}
 
 
