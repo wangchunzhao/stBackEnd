@@ -449,15 +449,12 @@ CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_customer_class` (`code` ASC
 DROP TABLE IF EXISTS `bohemian`.`sap_material_type` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_type` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `number` VARCHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`number`))
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `number_UNIQUE` ON `bohemian`.`sap_material_type` (`number` ASC) VISIBLE;
-
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_material_type` (`id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -466,13 +463,10 @@ CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_material_type` (`id` ASC) VIS
 DROP TABLE IF EXISTS `bohemian`.`sap_unit_of_measurement` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_unit_of_measurement` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`code`))
 ENGINE = InnoDB;
-
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_unit_of_measurement` (`id` ASC) VISIBLE;
 
 CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_unit_of_measurement` (`code` ASC) VISIBLE;
 
@@ -483,37 +477,33 @@ CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_unit_of_measurement` (`code
 DROP TABLE IF EXISTS `bohemian`.`sap_materials` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `number` VARCHAR(18) NOT NULL,
+  `code` VARCHAR(18) NOT NULL,
   `Description` TEXT NULL,
   `is_configurable` TINYINT(1) NOT NULL,
   `moving_average_price` DECIMAL(13,2) NOT NULL,
   `transfer_price` DECIMAL(13,2) NOT NULL,
   `marketing_price` DECIMAL(13,2) NOT NULL,
   `opt_time` DATETIME NOT NULL,
-  `clazz_code` VARCHAR(4) NULL,
-  `sap_material_type_id` INT UNSIGNED NOT NULL,
-  `sap_unit_of_measurement_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_sap_fert_materials_sap_material_type1`
-    FOREIGN KEY (`sap_material_type_id`)
-    REFERENCES `bohemian`.`sap_material_type` (`id`)
+  `sap_material_type_number` VARCHAR(4) NOT NULL,
+  `sap_unit_of_measurement_code` VARCHAR(3) NOT NULL,
+  PRIMARY KEY (`code`),
+  CONSTRAINT `fk_sap_materials_sap_material_type1`
+    FOREIGN KEY (`sap_material_type_number`)
+    REFERENCES `bohemian`.`sap_material_type` (`number`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_sap_fert_materials_sap_unit_of_measurement1`
-    FOREIGN KEY (`sap_unit_of_measurement_id`)
-    REFERENCES `bohemian`.`sap_unit_of_measurement` (`id`)
+  CONSTRAINT `fk_sap_materials_sap_unit_of_measurement1`
+    FOREIGN KEY (`sap_unit_of_measurement_code`)
+    REFERENCES `bohemian`.`sap_unit_of_measurement` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_materials` (`id` ASC) VISIBLE;
+CREATE INDEX `fk_sap_materials_sap_material_type1_idx` ON `bohemian`.`sap_materials` (`sap_material_type_number` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_materials` (`number` ASC) VISIBLE;
+CREATE INDEX `fk_sap_materials_sap_unit_of_measurement1_idx` ON `bohemian`.`sap_materials` (`sap_unit_of_measurement_code` ASC) VISIBLE;
 
-CREATE INDEX `fk_sap_fert_materials_sap_material_type1_idx` ON `bohemian`.`sap_materials` (`sap_material_type_id` ASC) VISIBLE;
-
-CREATE INDEX `fk_sap_fert_materials_sap_unit_of_measurement1_idx` ON `bohemian`.`sap_materials` (`sap_unit_of_measurement_id` ASC) VISIBLE;
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_materials` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -522,15 +512,12 @@ CREATE INDEX `fk_sap_fert_materials_sap_unit_of_measurement1_idx` ON `bohemian`.
 DROP TABLE IF EXISTS `bohemian`.`sap_clazz` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `number` VARCHAR(18) NOT NULL,
+  `code` VARCHAR(18) NOT NULL,
   `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`code`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_clazz` (`id` ASC) VISIBLE;
-
-CREATE UNIQUE INDEX `number_UNIQUE` ON `bohemian`.`sap_clazz` (`number` ASC) VISIBLE;
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_clazz` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -539,15 +526,12 @@ CREATE UNIQUE INDEX `number_UNIQUE` ON `bohemian`.`sap_clazz` (`number` ASC) VIS
 DROP TABLE IF EXISTS `bohemian`.`sap_characteristic` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `number` VARCHAR(30) NOT NULL,
-  `description` TEXT NULL,
-  PRIMARY KEY (`id`))
+  `code` VARCHAR(30) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_characteristic` (`id` ASC) VISIBLE;
-
-CREATE UNIQUE INDEX `number_UNIQUE` ON `bohemian`.`sap_characteristic` (`number` ASC) VISIBLE;
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_characteristic` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -559,11 +543,11 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   `description` TEXT NULL,
-  `sap_characteristic_id` INT UNSIGNED NOT NULL,
+  `sap_characteristic_code` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_sap_characteristic_value_sap_characteristic1`
-    FOREIGN KEY (`sap_characteristic_id`)
-    REFERENCES `bohemian`.`sap_characteristic` (`id`)
+    FOREIGN KEY (`sap_characteristic_code`)
+    REFERENCES `bohemian`.`sap_characteristic` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -572,7 +556,7 @@ CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_characteristic_value` (`id` A
 
 CREATE UNIQUE INDEX `name_UNIQUE` ON `bohemian`.`sap_characteristic_value` (`name` ASC) VISIBLE;
 
-CREATE INDEX `fk_sap_characteristic_value_sap_characteristic1_idx` ON `bohemian`.`sap_characteristic_value` (`sap_characteristic_id` ASC) VISIBLE;
+CREATE INDEX `fk_sap_characteristic_value_sap_characteristic1_idx` ON `bohemian`.`sap_characteristic_value` (`sap_characteristic_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -581,27 +565,22 @@ CREATE INDEX `fk_sap_characteristic_value_sap_characteristic1_idx` ON `bohemian`
 DROP TABLE IF EXISTS `bohemian`.`sap_clazz_and_chart` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz_and_chart` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sap_clazz_id` INT UNSIGNED NOT NULL,
-  `sap_characteristic_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
+  `sap_clazz_code` VARCHAR(18) NOT NULL,
+  `sap_characteristic_code` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`sap_clazz_code`, `sap_characteristic_code`),
   CONSTRAINT `fk_sap_clazz_and_chart_sap_clazz1`
-    FOREIGN KEY (`sap_clazz_id`)
-    REFERENCES `bohemian`.`sap_clazz` (`id`)
+    FOREIGN KEY (`sap_clazz_code`)
+    REFERENCES `bohemian`.`sap_clazz` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_sap_clazz_and_chart_sap_characteristic1`
-    FOREIGN KEY (`sap_characteristic_id`)
-    REFERENCES `bohemian`.`sap_characteristic` (`id`)
+    FOREIGN KEY (`sap_characteristic_code`)
+    REFERENCES `bohemian`.`sap_characteristic` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_clazz_and_chart` (`id` ASC) VISIBLE;
-
-CREATE INDEX `fk_sap_clazz_and_chart_sap_clazz1_idx` ON `bohemian`.`sap_clazz_and_chart` (`sap_clazz_id` ASC) VISIBLE;
-
-CREATE INDEX `fk_sap_clazz_and_chart_sap_characteristic1_idx` ON `bohemian`.`sap_clazz_and_chart` (`sap_characteristic_id` ASC) VISIBLE;
+CREATE INDEX `fk_sap_clazz_and_chart_sap_characteristic1_idx` ON `bohemian`.`sap_clazz_and_chart` (`sap_characteristic_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -821,11 +800,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
   `sap_materials_id` INT UNSIGNED NOT NULL,
   `sap_price_type_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_sap_materials_price_sap_materials1`
-    FOREIGN KEY (`sap_materials_id`)
-    REFERENCES `bohemian`.`sap_materials` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_sap_materials_price_sap_price_type1`
     FOREIGN KEY (`sap_price_type_code`)
     REFERENCES `bohemian`.`sap_price_type` (`code`)
@@ -834,8 +808,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_materials_price` (`id` ASC) VISIBLE;
-
-CREATE INDEX `fk_sap_materials_price_sap_materials1_idx` ON `bohemian`.`sap_materials_price` (`sap_materials_id` ASC) VISIBLE;
 
 CREATE INDEX `fk_sap_materials_price_sap_price_type1_idx` ON `bohemian`.`sap_materials_price` (`sap_price_type_code` ASC) VISIBLE;
 
@@ -911,6 +883,33 @@ ENGINE = InnoDB;
 CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`b_area` (`code` ASC) VISIBLE;
 
 CREATE INDEX `fk_b_area_b_city1_idx` ON `bohemian`.`b_area` (`b_city_code` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_material_clazz`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_material_clazz` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_clazz` (
+  `sap_materials_id` INT UNSIGNED NOT NULL,
+  `sap_clazz_code` VARCHAR(18) NOT NULL,
+  `sap_materials_code` VARCHAR(18) NOT NULL,
+  PRIMARY KEY (`sap_materials_id`, `sap_clazz_code`, `sap_materials_code`),
+  CONSTRAINT `fk_sap_material_clazz_sap_clazz1`
+    FOREIGN KEY (`sap_clazz_code`)
+    REFERENCES `bohemian`.`sap_clazz` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_material_clazz_sap_materials1`
+    FOREIGN KEY (`sap_materials_code`)
+    REFERENCES `bohemian`.`sap_materials` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_sap_material_clazz_sap_clazz1_idx` ON `bohemian`.`sap_material_clazz` (`sap_clazz_code` ASC) VISIBLE;
+
+CREATE INDEX `fk_sap_material_clazz_sap_materials1_idx` ON `bohemian`.`sap_material_clazz` (`sap_materials_code` ASC) VISIBLE;
 
 USE `kost` ;
 
@@ -1158,9 +1157,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_material_type` (`id`, `number`, `name`) VALUES (1, 'FERT', '成品');
-INSERT INTO `bohemian`.`sap_material_type` (`id`, `number`, `name`) VALUES (2, 'HALB', '半成品');
-INSERT INTO `bohemian`.`sap_material_type` (`id`, `number`, `name`) VALUES (3, 'ROH', '原材料');
+INSERT INTO `bohemian`.`sap_material_type` (`number`, `name`) VALUES ('FERT', '成品');
+INSERT INTO `bohemian`.`sap_material_type` (`number`, `name`) VALUES ('HALB', '半成品');
+INSERT INTO `bohemian`.`sap_material_type` (`number`, `name`) VALUES ('ROH', '原材料');
 
 COMMIT;
 
@@ -1170,20 +1169,20 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (1, 'BOT', '瓶');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (2, 'EA', '个/卷/件');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (3, 'G', '克');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (4, 'KG', '公斤');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (5, 'TO', '吨');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (6, 'CM', '厘米');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (7, 'M', '米');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (8, 'KM', '千米');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (9, 'M2', '平方米');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (10, 'ML', '毫升');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (11, 'L', '升');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (12, 'M3', '立方米');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (13, 'ZA', '个/卷/件  小数点');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`id`, `code`, `name`) VALUES (14, 'Z1', '套');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('BOT', '瓶');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('EA', '个/卷/件');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('G', '克');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('KG', '公斤');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('TO', '吨');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('CM', '厘米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M', '米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('KM', '千米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M2', '平方米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ML', '毫升');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('L', '升');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M3', '立方米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ZA', '个/卷/件  小数点');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Z1', '套');
 
 COMMIT;
 
