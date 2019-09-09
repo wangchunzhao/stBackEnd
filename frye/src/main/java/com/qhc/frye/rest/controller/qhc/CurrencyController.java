@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Currency Management in Frye")
+@Api(value = "Currency and Incoterm management in Frye")
 public class CurrencyController {
 	
 
