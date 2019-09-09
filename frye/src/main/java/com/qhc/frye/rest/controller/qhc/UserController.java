@@ -81,31 +81,17 @@ public class UserController {
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
 	@GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findByMultipleConditions(@RequestParam("userIdentity") String userIdentity,@RequestParam("rolesName") String rolesName,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
+    public List<User> findByMultipleConditions(@RequestParam("userIdentity") String userIdentity,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
     {	
-		List<User> list =  userService.findByMultipleConditions(Integer.valueOf(isActive),userIdentity,userMail,"");
-		List<User> newList = new ArrayList<User>();
-		if(rolesName!=null) {
-			if(list!=null&&list.size()>0) {
-				for(User user : list) {
-					boolean flag = true;
-					Set<ApplicationOfRolechange> apps = new HashSet<>(user.getApps());
-					if(!apps.isEmpty()) {
-						for(ApplicationOfRolechange app:apps) {
-							if(app.getAttachedCode().equals(rolesName)) {
-								flag = true;
-							}
-						}
-					}
-					if(flag) {
-						newList.add(user);
-					}
-				}
+		List<User> users = userService.findByMultipleConditions(Integer.valueOf(isActive),userIdentity,userMail,"");
+		List<User> userList = new ArrayList<User>();
+		if(users!=null&&users.size()>0) {
+			for(User u:users) {
+				User user = findByUserIdentity(u.getUserIdentity());
+				userList.add(user);
 			}
-		}else {
-			newList = list;
 		}
-		return newList;
+		return userList;
     }
 	
 	
