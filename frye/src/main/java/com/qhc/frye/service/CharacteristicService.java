@@ -10,15 +10,14 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.hash.HashCode;
 import com.qhc.frye.dao.CharacteristicRepository;
 import com.qhc.frye.dao.CharacteristicValueRepository;
 import com.qhc.frye.dao.ClassAndCharacter;
 import com.qhc.frye.dao.ClazzRepository;
-import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.domain.DCharacteristic;
 import com.qhc.frye.domain.DCharacteristicValue;
 import com.qhc.frye.domain.DClassAndCharacter;
+import com.qhc.frye.domain.DClazz;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 
@@ -44,8 +43,15 @@ public class CharacteristicService {
 	 * @param clazz
 	 */
 	public void saveClass(List<Clazz> clazz) {
-		clazzRepo.deleteAll();
-		clazzRepo.saveAll(clazz);
+		Set<DClazz> dcs = new HashSet<DClazz>();
+		for(Clazz cl:clazz) {
+			DClazz dc = new DClazz();
+			dc.setCode(cl.getCode());
+			dc.setName(cl.getName());
+			dcs.add(dc);
+		}
+		
+		clazzRepo.saveAll(dcs);
 				
 	}
 	/**
@@ -60,13 +66,13 @@ public class CharacteristicService {
 		for(CharacteristicValue cv: chaValues) {
 			List<Object> objs =  cv.toDaos();
 			for(Object obj:objs) {
-				if(obj instanceof ClassAndCharacter) {
+				if(obj.getClass().equals(DClassAndCharacter.class)) {
 					cacs.add((DClassAndCharacter)obj);
 										
-				}else if(obj instanceof DCharacteristic) {
+				}else if(obj.getClass().equals(DCharacteristic.class)) {
 					dcs.add((DCharacteristic)obj);
 					
-				}else if(obj instanceof CharacteristicValue) {
+				}else if(obj.getClass().equals(DCharacteristicValue.class)) {
 					dcvs.add((DCharacteristicValue)obj);
 					
 				}

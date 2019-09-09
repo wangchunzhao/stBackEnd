@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
-import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.service.CharacteristicService;
 
 import io.swagger.annotations.Api;
@@ -40,8 +39,8 @@ public class CharacteristicController {
 		characteristicService.saveClass(clazz);
 	}
 
-	@ApiOperation(value = "update characteristic and corresponding data to DB.")
-	@PutMapping(value = "class")
+	@ApiOperation(value = "update characteristic and corresponding value data to DB.")
+	@PutMapping(value = "characteristic")
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
 		characteristicService.saveCharacteristicValue(chaValues);
