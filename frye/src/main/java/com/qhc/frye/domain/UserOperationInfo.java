@@ -25,6 +25,15 @@ public class UserOperationInfo implements Serializable{
 	@Column(name="user_id")
     private Integer userId;
 	
+	@Column(name="user_mail")
+    private String userMail;
+	
+	@Column(name="user_identity")
+    private String userIdentity;
+	
+	@Column(name="user_isActive",columnDefinition ="TINYINT")
+	private Integer userIsActive;
+	
 	@Column(name="role_id")
     private Integer roleId;
 	
@@ -97,6 +106,30 @@ public class UserOperationInfo implements Serializable{
 
 	public void setOperationName(String operationName) {
 		this.operationName = operationName;
+	}
+
+	public String getUserMail() {
+		return userMail;
+	}
+
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
+	}
+
+	public String getUserIdentity() {
+		return userIdentity;
+	}
+
+	public void setUserIdentity(String userIdentity) {
+		this.userIdentity = userIdentity;
+	}
+
+	public Integer getUserIsActive() {
+		return userIsActive;
+	}
+
+	public void setUserIsActive(Integer userIsActive) {
+		this.userIsActive = userIsActive;
 	}
 	
 
