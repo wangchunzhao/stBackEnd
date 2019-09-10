@@ -13,11 +13,11 @@ import com.qhc.frye.domain.Role;
 /**
  * @Author lizuoshan
  */
-public class RestPageRole implements Iterable<Role>, Serializable {
+public class RestPage<T> implements Serializable {
 	
     private static final long serialVersionUID = -3720998571176536865L;
     
-    private List<Role> content = new ArrayList<>();
+    private List<T> content = new ArrayList<>();
     private long totalElements;
     private int pageNumber;
     private int pageSize;
@@ -27,11 +27,11 @@ public class RestPageRole implements Iterable<Role>, Serializable {
     private int totalPages;
     private int numberOfElements;
  
-    public RestPageRole() {
+    public RestPage() {
     }
  
     //只用把原来的page类放进来即可
-    public RestPageRole(Page<Role> page) {
+    public RestPage(Page<T> page) {
         this.content = page.getContent();
         this.totalElements = page.getTotalElements();
         this.pageNumber = page.getPageable().getPageNumber();
@@ -60,12 +60,12 @@ public class RestPageRole implements Iterable<Role>, Serializable {
     }
  
     //获取内容
-    public List<Role> getContent() {
+    public List<T> getContent() {
         return Collections.unmodifiableList(content);
     }
  
     //设置内容
-    public void setContent(List<Role> content) {
+    public void setContent(List<T> content) {
         this.content = content;
     }
  
@@ -144,10 +144,10 @@ public class RestPageRole implements Iterable<Role>, Serializable {
         this.empty = empty;
     }
  
-    //迭代器
-    @Override
-    public Iterator<Role> iterator() {
-        return getContent().iterator();
-    }
+//    //迭代器
+//    @Override
+//    public Iterator<Role> iterator() {
+//        return getContent().iterator();
+//    }
 
 }
