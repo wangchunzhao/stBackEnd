@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.Role;
-import com.qhc.frye.rest.controller.entity.RestPageRole;
+import com.qhc.frye.rest.controller.entity.RestPage;
 import com.qhc.frye.service.RelationService;
 import com.qhc.frye.service.RoleService;
 import io.swagger.annotations.Api;
@@ -47,7 +47,7 @@ public class RoleController {
 	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
 	@GetMapping("/paging")
     @ResponseStatus(HttpStatus.OK)
-	public RestPageRole findPagingList(
+	public RestPage<Role> findPagingList(
 			@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize,
 			@RequestParam("isActive") int isActive) throws Exception{
@@ -56,7 +56,7 @@ public class RoleController {
 		Role role = new Role();
 		role.setIsActive(isActive);
 		Page<Role> page = roleService.getByConditions(role,pageable);
-        return new RestPageRole(page);
+        return new RestPage(page);
     }
 	
 	@ApiOperation(value=" Find all role info", notes="Find all role info")

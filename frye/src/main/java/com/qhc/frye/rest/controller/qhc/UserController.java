@@ -25,7 +25,7 @@ import com.qhc.frye.domain.Operations;
 import com.qhc.frye.domain.Role;
 import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.User;
-import com.qhc.frye.rest.controller.entity.RestPageUser;
+import com.qhc.frye.rest.controller.entity.RestPage;
 import com.qhc.frye.service.ApplicationOfRolechangeService;
 import com.qhc.frye.service.OperationService;
 import com.qhc.frye.service.RelationService;
@@ -62,7 +62,7 @@ public class UserController {
 	@ApiOperation(value=" Find all user info ", notes="Find all user info")
 	@GetMapping(value="/paging")
     @ResponseStatus(HttpStatus.OK)
-    public RestPageUser findAll(
+    public RestPage findAll(
     		@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize,
 			@RequestParam("isActive") int isActive,
@@ -75,7 +75,7 @@ public class UserController {
 		user.setUserIdentity(userIdentity);
 		user.setUserMail(userMail);
 		Page<User> page = userService.getByConditions(user,pageable);
-        return new RestPageUser(page);
+        return new RestPage(page);
     }
 	
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
