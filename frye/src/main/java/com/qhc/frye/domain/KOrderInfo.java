@@ -47,15 +47,17 @@ public class KOrderInfo {
 	@Column(name="sap_status",length = 10)
 	private int sapStatus;
 	
-	
+	@Column(name="createId",length = 10)
+	private int createId;
 
+	
 	public KOrderInfo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public KOrderInfo(@NotNull int id, String contractNo, String contractUnit, int area, int orderType, int b2c,
-			int specialDiscount, Date createTime, int status, int sapStatus) {
+			int specialDiscount, Date createTime, int status, int sapStatus, int createId) {
 		super();
 		this.id = id;
 		this.contractNo = contractNo;
@@ -67,6 +69,7 @@ public class KOrderInfo {
 		this.createTime = createTime;
 		this.status = status;
 		this.sapStatus = sapStatus;
+		this.createId = createId;
 	}
 
 	public int getId() {
@@ -147,6 +150,14 @@ public class KOrderInfo {
 
 	public void setSapStatus(int sapStatus) {
 		this.sapStatus = sapStatus;
+	}
+
+	public int getCreateId() {
+		return createId;
+	}
+
+	public void setCreateId(int createId) {
+		this.createId = createId;
 	}
 	
 	
