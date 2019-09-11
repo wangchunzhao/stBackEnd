@@ -34,7 +34,9 @@ public class KOrderInfoController {
 			@RequestParam("pageSize") int pageSize,
 			@RequestParam("contractNo") String contractNo,
 			@RequestParam("contractUnit") String contractUnit,
-			@RequestParam("b2c") int b2c) throws Exception{
+			@RequestParam("b2c") int b2c,
+			@RequestParam("createId") int createId,
+			@RequestParam("area") int area) throws Exception{
 		
 		PageHelper<KOrderInfo> pageHelper = new PageHelper<KOrderInfo>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -42,6 +44,8 @@ public class KOrderInfoController {
 		kOrderInfo.setContractNo(contractNo);
 		kOrderInfo.setB2c(b2c);
 		kOrderInfo.setContractUnit(contractUnit);
+		kOrderInfo.setCreateId(createId);
+		kOrderInfo.setArea(area);
 		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions(kOrderInfo, pageable);
 
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));

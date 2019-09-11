@@ -27,8 +27,8 @@ public class KOrderInfoService {
 	            @Override
 	            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
 	            	SimpleDateFormat sdfmat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	            	String startTime = "2019-09-10";
-	            	String endTime = "2019-09-11";
+	            	String startTime = "2019-09-01";
+	            	String endTime = "2019-09-19";
 	                //增加筛选条件
 	                Predicate predicate = cb.conjunction();
 
@@ -38,8 +38,14 @@ public class KOrderInfoService {
 	                if(endTime != null && !endTime.trim().equals("")) {
 	                	predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime").as(String.class), endTime));
 	                }
-	                if(kOrderInfo.getB2c()!=-1) {
+	                if(kOrderInfo.getB2c()>-1) {
 	                	predicate.getExpressions().add(cb.equal(root.get("b2c").as(Integer.class), kOrderInfo.getB2c()));
+	                }
+	                if(kOrderInfo.getArea()>-1) {
+	                	predicate.getExpressions().add(cb.equal(root.get("area").as(Integer.class), kOrderInfo.getArea()));
+	                }
+	                if(kOrderInfo.getCreateId()>-1) {
+	                	predicate.getExpressions().add(cb.equal(root.get("createId").as(Integer.class), kOrderInfo.getCreateId()));
 	                }
 	                 //模糊查找
 	                if(kOrderInfo.getContractNo()!=null&&!"".equals(kOrderInfo.getContractNo())) {
