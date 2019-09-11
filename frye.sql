@@ -131,6 +131,7 @@ DROP TABLE IF EXISTS `bohemian`.`b_operations` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_operations` (
   `id` CHAR(32) NOT NULL,
   `name` TEXT NOT NULL,
+  `description` TEXT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -540,11 +541,10 @@ CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_characteristic` (`code` ASC
 DROP TABLE IF EXISTS `bohemian`.`sap_characteristic_value` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(30) NOT NULL,
-  `description` TEXT NULL,
+  `code` VARCHAR(30) NOT NULL,
+  `name` TEXT NOT NULL,
   `sap_characteristic_code` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`code`),
   CONSTRAINT `fk_sap_characteristic_value_sap_characteristic1`
     FOREIGN KEY (`sap_characteristic_code`)
     REFERENCES `bohemian`.`sap_characteristic` (`code`)
@@ -552,19 +552,17 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_characteristic_value` (`id` ASC) VISIBLE;
-
-CREATE UNIQUE INDEX `name_UNIQUE` ON `bohemian`.`sap_characteristic_value` (`name` ASC) VISIBLE;
+CREATE UNIQUE INDEX `name_UNIQUE` ON `bohemian`.`sap_characteristic_value` (`code` ASC) VISIBLE;
 
 CREATE INDEX `fk_sap_characteristic_value_sap_characteristic1_idx` ON `bohemian`.`sap_characteristic_value` (`sap_characteristic_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`sap_clazz_and_chart`
+-- Table `bohemian`.`sap_clazz_and_character`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_clazz_and_chart` ;
+DROP TABLE IF EXISTS `bohemian`.`sap_clazz_and_character` ;
 
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz_and_chart` (
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz_and_character` (
   `sap_clazz_code` VARCHAR(18) NOT NULL,
   `sap_characteristic_code` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`sap_clazz_code`, `sap_characteristic_code`),
@@ -580,7 +578,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz_and_chart` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_sap_clazz_and_chart_sap_characteristic1_idx` ON `bohemian`.`sap_clazz_and_chart` (`sap_characteristic_code` ASC) VISIBLE;
+CREATE INDEX `fk_sap_clazz_and_chart_sap_characteristic1_idx` ON `bohemian`.`sap_clazz_and_character` (`sap_characteristic_code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -1124,6 +1122,72 @@ CREATE UNIQUE INDEX `id_UNIQUE` ON `kost`.`k_speical_order_application` (`id` AS
 
 CREATE INDEX `fk_k_speical_order_application_k_order_version1_idx` ON `kost`.`k_speical_order_application` (`k_order_version_id` ASC) VISIBLE;
 
+USE `bohemian` ;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`user_operation_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`user_id` INT, `user_mail` INT, `user_identity` INT, `user_isActive` INT, `role_id` INT, `role_name` INT, `attached_code` INT, `attached_name` INT, `operation_id` INT, `operation_name` INT);
+
+-- -----------------------------------------------------
+-- View `bohemian`.`user_operation_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
+DROP VIEW IF EXISTS `bohemian`.`user_operation_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW user_operation_view AS 
+SELECT
+	user_id,
+	u.user_mail AS user_mail,
+	u.user_identity AS user_identity,
+	u.isActive AS user_isActive,
+	role_id,
+	role_name,
+	attached_code,
+	attached_name,
+	operation_id,
+	operation_name
+FROM
+	(
+		SELECT
+			bo.b_users_id AS user_id,
+			bo.b_roles_id AS role_id,
+			r. NAME AS role_name,
+			bo.attached_code AS attached_code,
+			bo.attached_name AS attached_name
+		FROM
+			(
+				SELECT
+					b.id AS id,
+					b.b_roles_id AS b_roles_id,
+					b.b_users_id AS b_users_id,
+					s. CODE AS attached_code,
+					s. NAME AS attached_name
+				FROM
+					b_application_of_rolechange b
+				LEFT JOIN sap_sales_office s ON b.attached_code = s. CODE
+			) bo
+		LEFT JOIN b_roles r ON bo.b_roles_id = r.id
+	) ars,
+	(
+		SELECT
+			r1.id AS id,
+			o1.id AS operation_id,
+			o1. NAME AS operation_name
+		FROM
+			b_roles r1,
+			b_operation2role x1,
+			b_operations o1
+		WHERE
+			r1.id = x1.b_roles_id
+		AND x1.b_operations_id = o1.id
+	) rxo,
+	b_users u
+WHERE
+	ars.role_id = rxo.id
+AND ars.user_id = u.id
+ORDER BY
+	user_id,role_id,operation_id ASC;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
