@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.IncotermRepository;
+import com.qhc.frye.dao.PriceRepository;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DIncoterm;
+import com.qhc.frye.domain.DPrice;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Incoterm;
+import com.qhc.frye.rest.controller.entity.Price;
 
 /**
  * 
@@ -25,6 +28,9 @@ public class CurrencyService {
 	private CurrencyRepository currencyRepo;
 	@Autowired
 	private IncotermRepository incotermRepo;
+	
+	@Autowired
+	private PriceRepository priceRepo;
 	
 	public void saveCurrency(List<Currency> currency) {
 		Set<DCurrency> dcs = new HashSet<DCurrency>();
@@ -48,5 +54,15 @@ public class CurrencyService {
 			incos.add(temp);
 		}
 		incotermRepo.saveAll(incos);
+	}
+	
+	public void savePrice(List<Price> price) {
+		Set<DPrice> dps = new HashSet<DPrice>();
+		for(Price inco:price) {
+			DPrice temp = new DPrice();
+	
+			dps.add(temp);
+		}
+		priceRepo.saveAll(dps);
 	}
 }
