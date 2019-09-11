@@ -103,7 +103,9 @@ public class RoleController {
 	@Transactional
     public Role updateRoleOperations(@RequestBody(required=true) Role role) throws Exception
     {	
-		relationService.saveRelation(role);
+		if(role.getIsActive()==1) {
+			relationService.saveRelation(role);
+		}
 		return roleService.createOrUpdateRole(role);
 		
     }
