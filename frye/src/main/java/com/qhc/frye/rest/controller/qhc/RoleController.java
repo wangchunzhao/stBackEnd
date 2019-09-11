@@ -92,8 +92,7 @@ public class RoleController {
 //    @ResponseStatus(HttpStatus.OK)
 //    public Role update(@RequestBody(required=true) Role role) throws Exception
 //    {	
-//		return roleService.createOrUpdateRole(role);
-//		
+//		return roleService.createOrUpdateRole(role);	
 //    }
 	
 	
