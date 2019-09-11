@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.rest.controller.entity.Incoterm;
+import com.qhc.frye.rest.controller.entity.Price;
 import com.qhc.frye.service.CurrencyService;
 import com.qhc.frye.service.CustomerService;
 
@@ -38,11 +40,26 @@ public class CurrencyController {
 	@Autowired
 	private CurrencyService currencyService;
 	
+
 	@ApiOperation(value = "update currency data to DB.")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
 		currencyService.saveCurrency(currency);
+	}
+	
+	@ApiOperation(value = "update currency data to DB.")
+	@PutMapping(value = "incoterms")
+	@ResponseStatus(HttpStatus.OK)
+	public void putIncoterm(@RequestBody(required = true) @Valid List<Incoterm> incoterm) {
+		currencyService.saveIncoterm(incoterm);
+	}
+	
+	@ApiOperation(value = "update currency data to DB.")
+	@PutMapping(value = "price")
+	@ResponseStatus(HttpStatus.OK)
+	public void putPrice(@RequestBody(required = true) @Valid List<Price> price) {
+		currencyService.savePrice(price);
 	}
 
 }
