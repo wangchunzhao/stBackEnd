@@ -16,6 +16,7 @@ import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.MaterialClazz;
+import com.qhc.frye.domain.identity.MaterialClazzIdentity;
 
 
 
@@ -33,11 +34,22 @@ public class MaterialService {
 		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
 		for(Material ma: materials){
 			DMaterial dm = new DMaterial();
-			//**
-			
+			dm.setCode(ma.getCode());
+			dm.setConfigurable(ma.isConfigurable());
+			dm.setDescription(ma.getDescription());
+			dm.setMkPrice(ma.getMkPrice());
+			dm.setMvPrice(ma.getMvPrice());
+			dm.setOptTime(ma.getOptTime());
+			dm.setTrPrice(ma.getTrPrice());
+			dm.setType(ma.getType());
+			dm.setUnit(ma.getUnit());
 			mset.add(dm);
 			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {
 				MaterialClazz mc = new MaterialClazz();
+				MaterialClazzIdentity mci = new MaterialClazzIdentity();
+				mci.setClazzCode(ma.getClazz());
+				mci.setMaterialCode(ma.getCode());
+				mc.setMci(mci);
 				mcset.add(mc);
 			}
 		}

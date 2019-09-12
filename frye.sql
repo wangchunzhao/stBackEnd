@@ -479,7 +479,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_materials` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `code` VARCHAR(18) NOT NULL,
-  `Description` TEXT NULL,
+  `description` TEXT NULL,
   `is_configurable` TINYINT(1) NOT NULL,
   `moving_average_price` DECIMAL(13,2) NOT NULL,
   `transfer_price` DECIMAL(13,2) NOT NULL,
@@ -795,33 +795,42 @@ DROP TABLE IF EXISTS `bohemian`.`sap_materials_price` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `price` DECIMAL(13,2) NOT NULL,
-  `sap_materials_id` INT UNSIGNED NOT NULL,
   `sap_price_type_code` CHAR(4) NOT NULL,
+  `sap_materials_code` VARCHAR(18) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_sap_materials_price_sap_price_type1`
     FOREIGN KEY (`sap_price_type_code`)
     REFERENCES `bohemian`.`sap_price_type` (`code`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_materials_price_sap_materials1`
+    FOREIGN KEY (`sap_materials_code`)
+    REFERENCES `bohemian`.`sap_materials` (`code`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_materials_price` (`id` ASC) VISIBLE;
+CREATE UNIQUE INDEX `id_UNIQUE` ON `bohemian`.`sap_materials_price` (`id` ASC) INVISIBLE;
 
 CREATE INDEX `fk_sap_materials_price_sap_price_type1_idx` ON `bohemian`.`sap_materials_price` (`sap_price_type_code` ASC) VISIBLE;
 
+CREATE INDEX `fk_sap_materials_price_sap_materials1_idx` ON `bohemian`.`sap_materials_price` (`sap_materials_code` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `material_price` ON `bohemian`.`sap_materials_price` (`sap_price_type_code` ASC, `sap_materials_code` ASC) VISIBLE;
+
 
 -- -----------------------------------------------------
--- Table `bohemian`.`sap_incoterns`
+-- Table `bohemian`.`sap_incoterms`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_incoterns` ;
+DROP TABLE IF EXISTS `bohemian`.`sap_incoterms` ;
 
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_incoterns` (
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_incoterms` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
   PRIMARY KEY (`code`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_incoterns` (`code` ASC) VISIBLE;
+CREATE UNIQUE INDEX `code_UNIQUE` ON `bohemian`.`sap_incoterms` (`code` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -889,10 +898,9 @@ CREATE INDEX `fk_b_area_b_city1_idx` ON `bohemian`.`b_area` (`b_city_code` ASC) 
 DROP TABLE IF EXISTS `bohemian`.`sap_material_clazz` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_clazz` (
-  `sap_materials_id` INT UNSIGNED NOT NULL,
   `sap_clazz_code` VARCHAR(18) NOT NULL,
   `sap_materials_code` VARCHAR(18) NOT NULL,
-  PRIMARY KEY (`sap_materials_id`, `sap_clazz_code`, `sap_materials_code`),
+  PRIMARY KEY (`sap_clazz_code`, `sap_materials_code`),
   CONSTRAINT `fk_sap_material_clazz_sap_clazz1`
     FOREIGN KEY (`sap_clazz_code`)
     REFERENCES `bohemian`.`sap_clazz` (`code`)
@@ -907,7 +915,7 @@ ENGINE = InnoDB;
 
 CREATE INDEX `fk_sap_material_clazz_sap_clazz1_idx` ON `bohemian`.`sap_material_clazz` (`sap_clazz_code` ASC) VISIBLE;
 
-CREATE INDEX `fk_sap_material_clazz_sap_materials1_idx` ON `bohemian`.`sap_material_clazz` (`sap_materials_code` ASC) VISIBLE;
+CREATE INDEX `fk_sap_material_clazz_sap_materials1_idx` ON `bohemian`.`sap_material_clazz` (`sap_materials_code` ASC) INVISIBLE;
 
 USE `kost` ;
 

@@ -8,7 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+
 @Entity
 @Table(name = "k_order_info")
 public class KOrderInfo {
@@ -49,6 +52,12 @@ public class KOrderInfo {
 	
 	@Column(name="createId",length = 10)
 	private int createId;
+	
+	@Transient
+	private String startTime;
+	
+	@Transient
+	private String endTime;
 
 	
 	public KOrderInfo() {
@@ -158,6 +167,22 @@ public class KOrderInfo {
 
 	public void setCreateId(int createId) {
 		this.createId = createId;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 	
 	
