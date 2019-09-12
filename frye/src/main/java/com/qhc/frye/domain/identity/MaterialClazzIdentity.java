@@ -26,7 +26,7 @@ public class MaterialClazzIdentity implements Serializable{
 	@Column(name = "sap_clazz_code", nullable = false, length = 18)
 	private String clazzCode;
 
-	@Column(name = "sap_material_code", nullable = false, length = 18)
+	@Column(name = "sap_materials_code", nullable = false, length = 18)
 	private String materialCode;
 	
 	
