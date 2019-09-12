@@ -1138,7 +1138,7 @@ USE `bohemian`;
 CREATE VIEW user_operation_view AS 
 
 SELECT
-	CONCAT(user_id,role_id,operation_id) as id,
+	CONCAT(user_id,'_',role_id,'_',operation_id) as id,
 	user_id,
 	u.user_mail AS user_mail,
 	u.user_identity AS user_identity,
@@ -1190,7 +1190,6 @@ WHERE
 AND ars.user_id = u.id
 ORDER BY
 	user_id,role_id,operation_id ASC;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
