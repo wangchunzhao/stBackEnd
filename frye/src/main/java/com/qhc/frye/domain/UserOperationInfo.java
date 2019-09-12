@@ -22,8 +22,11 @@ public class UserOperationInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name="id")
+    private String id;
+	
 	@Column(name="user_id")
-    private Integer userId;
+	private Integer userId;
 	
 	@Column(name="user_mail")
     private String userMail;
@@ -130,6 +133,14 @@ public class UserOperationInfo implements Serializable{
 
 	public void setUserIsActive(Integer userIsActive) {
 		this.userIsActive = userIsActive;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 
