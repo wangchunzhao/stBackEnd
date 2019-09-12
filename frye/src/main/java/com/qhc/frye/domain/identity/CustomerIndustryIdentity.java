@@ -15,6 +15,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class CustomerIndustryIdentity implements Serializable {
+	private static final int FACTOR = 17;
 	/**
 	 * 
 	 */
@@ -60,6 +61,6 @@ public class CustomerIndustryIdentity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return this.getCustomerCode().hashCode() * 31 + this.getIndustryCode().hashCode();
+		return this.getCustomerCode().hashCode() * FACTOR + this.getIndustryCode().hashCode();
 	}
 }
