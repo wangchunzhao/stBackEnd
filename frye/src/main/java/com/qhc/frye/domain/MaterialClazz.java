@@ -5,6 +5,7 @@ package com.qhc.frye.domain;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.qhc.frye.domain.identity.CustomerIndustryIdentity;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
@@ -14,6 +15,7 @@ import com.qhc.frye.domain.identity.MaterialClazzIdentity;
  *
  */
 @Entity
+@Table(name = "sap_material_clazz")
 public class MaterialClazz {
 	
 	@EmbeddedId
