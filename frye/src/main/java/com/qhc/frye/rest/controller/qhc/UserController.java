@@ -37,9 +37,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 /**
- * 
  * @author lizuoshan
- *
  */
 @RestController
 @RequestMapping("user")
