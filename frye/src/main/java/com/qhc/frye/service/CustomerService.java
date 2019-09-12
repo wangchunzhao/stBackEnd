@@ -53,7 +53,7 @@ public class CustomerService {
 			return lu.get().getLastUpdate();
 		}
 		Date d = new Date(DEFAULT_DATE);
-		System.out.println(d);
+
 		return d;
 	}
 	
