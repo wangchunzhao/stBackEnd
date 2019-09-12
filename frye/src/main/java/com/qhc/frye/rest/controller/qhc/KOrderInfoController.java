@@ -34,6 +34,8 @@ public class KOrderInfoController {
 			@RequestParam("pageSize") int pageSize,
 			@RequestParam("contractNo") String contractNo,
 			@RequestParam("contractUnit") String contractUnit,
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
 			@RequestParam("b2c") int b2c,
 			@RequestParam("createId") int createId,
 			@RequestParam("area") int area) throws Exception{
@@ -46,6 +48,8 @@ public class KOrderInfoController {
 		kOrderInfo.setContractUnit(contractUnit);
 		kOrderInfo.setCreateId(createId);
 		kOrderInfo.setArea(area);
+		kOrderInfo.setStartTime(startTime);
+		kOrderInfo.setEndTime(endTime);
 		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions(kOrderInfo, pageable);
 
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
