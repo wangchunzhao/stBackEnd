@@ -1136,7 +1136,6 @@ DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
 DROP VIEW IF EXISTS `bohemian`.`user_operation_view` ;
 USE `bohemian`;
 CREATE VIEW user_operation_view AS 
-CREATE VIEW user_operation_view AS 
 
 SELECT
 	CONCAT(user_id,'_',role_id,'_',operation_id) as id,
