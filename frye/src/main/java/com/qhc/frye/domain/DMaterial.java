@@ -27,7 +27,7 @@ public class DMaterial {
 	private String description;
 	
 	@NotNull
-    @Column(name="is_configurable",columnDefinition="TINYINT")
+    @Column(name="is_configurable",columnDefinition="BIT")
 	private boolean isConfigurable;
 	
 	@NotNull
@@ -50,8 +50,8 @@ public class DMaterial {
     @Column(name="sap_material_type_number",length=4)
 	private String type;
 	
-	@NotNull
-    @Column(name="sap_unit_of_measuresment_code",length=3)
+	@NotNull      
+    @Column(name="sap_unit_of_measurement_code",length=3)
 	private String unit;
 
 	public String getCode() {

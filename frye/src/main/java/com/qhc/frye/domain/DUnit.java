@@ -21,7 +21,7 @@ public class DUnit {
 
 	@Id
     @NotNull
-    @Column(name="code",length=3)
+    @Column(name="code",columnDefinition="VARCHAR",length=3)
     private int String;
 	
 	@NotNull

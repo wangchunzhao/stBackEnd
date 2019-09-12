@@ -28,11 +28,11 @@ public class DPrice {
 	private double price;
 	
 	@NotNull
-	@Column(name="sap_price_type_code",length=3)
+	@Column(name="sap_price_type_code",columnDefinition ="CHAR",length=4)
 	private String type;
 	
-	@NotNull
-	@Column(name="sap_material_code",length=18)
+	@NotNull      
+	@Column(name="sap_materials_code",length=18)
 	private String materialCode;
 	
 	public int getId() {
