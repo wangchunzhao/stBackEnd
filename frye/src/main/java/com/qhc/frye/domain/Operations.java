@@ -26,8 +26,11 @@ public class Operations implements Serializable{
     private String id;
 	
 	@NotNull
-	@Column(name="name",columnDefinition="TEXT",length = 64)
+	@Column(name="name",columnDefinition="TEXT")
     private String name;
+	
+	@Column(name="description",columnDefinition="TEXT")
+	private String description;
 	
 	@Transient
 	public boolean selected;
@@ -54,6 +57,14 @@ public class Operations implements Serializable{
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 

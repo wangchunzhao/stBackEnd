@@ -1143,8 +1143,10 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`user_id` INT, `use
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
 DROP VIEW IF EXISTS `bohemian`.`user_operation_view` ;
 USE `bohemian`;
-CREATE  OR REPLACE VIEW user_operation_view AS 
+CREATE VIEW user_operation_view AS 
+
 SELECT
+	CONCAT(user_id,'_',role_id,'_',operation_id) as id,
 	user_id,
 	u.user_mail AS user_mail,
 	u.user_identity AS user_identity,
