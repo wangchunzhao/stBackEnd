@@ -37,9 +37,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 /**
- * 
  * @author lizuoshan
- *
  */
 @RestController
 @RequestMapping("user")
@@ -75,7 +73,7 @@ public class UserController {
 		user.setUserIdentity(userIdentity);
 		user.setUserMail(userMail);
 		Page<User> page = userService.getByConditions(user,pageable);
-        return new RestPage(page);
+		return new RestPage(refushPageUser(page));
     }
 	
 	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
@@ -145,6 +143,13 @@ public class UserController {
 		return userService.createOrUpdateUser(user);
     }
 	
-
+	public Page<User> refushPageUser( Page<User> pu) throws Exception {
+		if(pu.getContent()!=null&&pu.getContent().size()>0) {
+			for(User u :pu.getContent()) {
+				u = this.findByUserIdentity(u.getUserIdentity());
+			}
+		}
+		return pu;
+	}
 
 }
