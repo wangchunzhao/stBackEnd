@@ -31,7 +31,10 @@ public class CurrencyService {
 	
 	@Autowired
 	private PriceRepository priceRepo;
-	
+	/**
+	 * 
+	 * @param currency
+	 */
 	public void saveCurrency(List<Currency> currency) {
 		Set<DCurrency> dcs = new HashSet<DCurrency>();
 		for(Currency cur:currency) {
@@ -43,6 +46,22 @@ public class CurrencyService {
 		}
 		currencyRepo.saveAll(dcs);
 		
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<Currency> getCurrency(){
+		Set<Currency> cs = new HashSet<Currency>();
+		List<DCurrency> dcs=currencyRepo.findAll();
+		for(DCurrency cur:dcs) {
+			Currency dc = new Currency();
+			dc.setCode(cur.getCode());
+			dc.setName(cur.getName());
+			dc.setRate(cur.getRate());
+			cs.add(dc);
+		}
+		return cs;
 	}
 	/**
 	 * 
@@ -76,9 +95,11 @@ public class CurrencyService {
 	
 	public void savePrice(List<Price> price) {
 		Set<DPrice> dps = new HashSet<DPrice>();
-		for(Price inco:price) {
+		for(Price pri:price) {
 			DPrice temp = new DPrice();
-	
+			/**
+			 * 
+			 */
 			dps.add(temp);
 		}
 		priceRepo.saveAll(dps);
