@@ -44,7 +44,10 @@ public class CurrencyService {
 		currencyRepo.saveAll(dcs);
 		
 	}
-	
+	/**
+	 * 
+	 * @param incoterm
+	 */
 	public void saveIncoterm(List<Incoterm> incoterm) {
 		Set<DIncoterm> incos = new HashSet<DIncoterm>();
 		for(Incoterm inco:incoterm) {
@@ -54,6 +57,21 @@ public class CurrencyService {
 			incos.add(temp);
 		}
 		incotermRepo.saveAll(incos);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<Incoterm> getIncoterms(){
+		Set<Incoterm> incos = new HashSet<Incoterm>();
+		List<DIncoterm> dincos = incotermRepo.findAll();
+		for(DIncoterm di:dincos) {
+			Incoterm temp = new Incoterm();
+			temp.setCode(di.getCode());
+			temp.setName(di.getName());
+			incos.add(temp);
+		}
+		return incos;
 	}
 	
 	public void savePrice(List<Price> price) {

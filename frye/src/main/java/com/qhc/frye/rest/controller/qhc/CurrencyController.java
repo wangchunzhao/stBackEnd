@@ -5,6 +5,7 @@ package com.qhc.frye.rest.controller.qhc;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -48,14 +49,20 @@ public class CurrencyController {
 		currencyService.saveCurrency(currency);
 	}
 	
-	@ApiOperation(value = "update currency data to DB.")
+	@ApiOperation(value = "update incoterms data to DB.")
 	@PutMapping(value = "incoterms")
 	@ResponseStatus(HttpStatus.OK)
 	public void putIncoterm(@RequestBody(required = true) @Valid List<Incoterm> incoterm) {
 		currencyService.saveIncoterm(incoterm);
 	}
+	@ApiOperation(value = "retrieve incoterms from DB.")
+	@GetMapping(value = "incoterms")
+	@ResponseStatus(HttpStatus.OK)
+	public Set<Incoterm> getIncoterms() {
+		return currencyService.getIncoterms();
+	}
 	
-	@ApiOperation(value = "update currency data to DB.")
+	@ApiOperation(value = "update price data to DB.")
 	@PutMapping(value = "price")
 	@ResponseStatus(HttpStatus.OK)
 	public void putPrice(@RequestBody(required = true) @Valid List<Price> price) {
