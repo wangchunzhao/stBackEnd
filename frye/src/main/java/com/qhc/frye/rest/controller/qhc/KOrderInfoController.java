@@ -38,7 +38,10 @@ public class KOrderInfoController {
 			@RequestParam("endTime") String endTime,
 			@RequestParam("b2c") int b2c,
 			@RequestParam("createId") int createId,
-			@RequestParam("area") int area) throws Exception{
+			@RequestParam("area") int area,
+			@RequestParam("orderType") int orderType,
+			@RequestParam("specialDiscount") int specialDiscount,
+			@RequestParam("status") int status) throws Exception{
 		
 		PageHelper<KOrderInfo> pageHelper = new PageHelper<KOrderInfo>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -50,6 +53,9 @@ public class KOrderInfoController {
 		kOrderInfo.setArea(area);
 		kOrderInfo.setStartTime(startTime);
 		kOrderInfo.setEndTime(endTime);
+		kOrderInfo.setOrderType(orderType);
+		kOrderInfo.setSpecialDiscount(specialDiscount);
+		kOrderInfo.setStatus(status);
 		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions(kOrderInfo, pageable);
 
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
