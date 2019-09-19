@@ -56,7 +56,29 @@ public class CustomerService {
 
 		return d;
 	}
-	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public List<Customer> searchCustomers(String name) {
+		List<Customer> cuList = new ArrayList<Customer>();
+		
+		List<DCustomer> dcuList = customerRepo.findByName(name);
+		for(DCustomer dc:dcuList) {
+			Customer cu = new Customer();
+			cu.setCode(dc.getCode());
+			cu.setName(dc.getName());
+			cu.setAddress(dc.getAddress());
+			cuList.add(cu);
+		}
+		
+		return cuList;
+	}
+	/**
+	 * 
+	 * @param customers
+	 */
 	public void saveCustomers(List<Customer> customers) {
 		Set<DCustomer> dcList = new HashSet<DCustomer>();
 		Set<Industry> induList = new HashSet<Industry>();

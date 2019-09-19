@@ -6,6 +6,7 @@ package com.qhc.frye.rest.controller.qhc;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,13 @@ public class CustomerController {
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
 		customerService.saveCustomers(customers);
+	}
+	@ApiOperation(value = "get the customers from DB.")
+	@GetMapping(value = "customer/{name}", produces = "application/json;charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Customer>  getCustomers(@RequestParam(required = true) String name) throws Exception {
+		
+		return customerService.searchCustomers(name);
 	}
 
 }

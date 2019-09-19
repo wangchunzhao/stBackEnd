@@ -19,50 +19,49 @@ public class KOrderInfo {
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-	private int id;
+	public int id;
 	
 	
 	@Column(name="contract_no",columnDefinition="TEXT")
-	private String contractNo;
+	public String contractNo;
 	
 	
 	@Column(name="contract_unit",columnDefinition="TEXT")
-	private String contractUnit;
+	public String contractUnit;
 	
 	@Column(name="area",length = 10)
-	private int area;
+	public int area;
 	
 	@Column(name="order_type",length = 10)
-	private int orderType;
+	public int orderType;
 	
 	@Column(name="b2c",length = 10)
-	private int b2c;
+	public int b2c;
 	
 	@Column(name="special_discount",length = 10)
-	private int specialDiscount;
+	public int specialDiscount;
 	
 	@Column(name="create_time",columnDefinition="datetime")
-	private Date createTime;
+	public Date createTime;
 	
 	@Column(name="status",length = 10)
-	private int status;
+	public int status;
 	
 	@Column(name="sap_status",length = 10)
-	private int sapStatus;
+	public int sapStatus;
 	
 	@Column(name="createId",length = 10)
-	private int createId;
+	public int createId;
 	
 	@Transient
-	private String startTime;
+	public String startTime;
 	
 	@Transient
-	private String endTime;
+	public String endTime;
 
 	
 	public KOrderInfo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public KOrderInfo(@NotNull int id, String contractNo, String contractUnit, int area, int orderType, int b2c,

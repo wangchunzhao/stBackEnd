@@ -11,8 +11,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.frye.dao.SapSalesGroupRepository;
-import com.qhc.frye.dao.SapSalesOfficeRepository;
+import com.qhc.frye.dao.SalesGroupRepository;
+import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
 
@@ -26,10 +26,10 @@ import com.qhc.frye.rest.controller.entity.SalesGroup;
 public class LocationService {
 
 	@Autowired
-	private SapSalesGroupRepository groupRepo;
+	private SalesGroupRepository groupRepo;
 
 	@Autowired
-	private SapSalesOfficeRepository officeRepo;
+	private SalesOfficeRepository officeRepo;
 
 	/**
 	 * delete all data in DB table

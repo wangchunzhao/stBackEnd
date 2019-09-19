@@ -48,6 +48,12 @@ public class CurrencyController {
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
 		currencyService.saveCurrency(currency);
 	}
+	@ApiOperation(value = "update currency data to DB.")
+	@GetMapping(value = "currency")
+	@ResponseStatus(HttpStatus.OK)
+	public Set<Currency> getCurrency() {
+		return currencyService.getCurrency();
+	}
 	
 	@ApiOperation(value = "update incoterms data to DB.")
 	@PutMapping(value = "incoterms")
