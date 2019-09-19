@@ -31,6 +31,9 @@ public class KOrderInfoService {
 	                //增加筛选条件
 	                Predicate predicate = cb.conjunction();
 
+	                if(kOrderInfo.getStatus()>-1) {
+	                	predicate.getExpressions().add(cb.equal(root.get("status").as(Integer.class), kOrderInfo.getStatus()));
+	                }
 	                if (kOrderInfo.getStartTime() != null && !kOrderInfo.getStartTime().trim().equals("")) {
 	                	predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime").as(String.class), kOrderInfo.getStartTime()));
 	                }
