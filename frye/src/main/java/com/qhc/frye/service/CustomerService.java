@@ -15,14 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.CustomerAffiliationRepository;
+import com.qhc.frye.dao.CustomerClassRepository;
 import com.qhc.frye.dao.CustomerIndustryRepository;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CustomerAffiliation;
+import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.domain.DClazzOfMaterial;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.Industry;
 import com.qhc.frye.domain.LastUpdated;
+import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Customer;
 
@@ -46,6 +50,10 @@ public class CustomerService {
 	
 	@Autowired
 	private CustomerAffiliationRepository affilitionRepo;
+	
+	@Autowired
+	private CustomerClassRepository customerClassRepo;
+	
 	
 	public Date getLastUpdated(String code) {
 		Optional<LastUpdated> lu = lastUpdate.findById(code);
@@ -75,6 +83,15 @@ public class CustomerService {
 		
 		return cuList;
 	}
+	/**
+	 * 
+	 * @return customer class in the db table sap_customer_class
+	 */
+	public List<CustomerClass> getCustomerClasses(){
+		List<CustomerClass> cucList = customerClassRepo.findAll();
+		return cucList;
+	}
+	
 	/**
 	 * 
 	 * @param customers

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="sap_clazz")
-public class DClazz {
+public class DClazzOfMaterial {
 	@Id
     @NotNull
     @Column(name="code",length=18)

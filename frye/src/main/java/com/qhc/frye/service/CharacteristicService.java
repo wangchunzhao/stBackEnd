@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.CharacteristicRepository;
 import com.qhc.frye.dao.CharacteristicValueRepository;
 import com.qhc.frye.dao.ClassAndCharacter;
-import com.qhc.frye.dao.ClazzRepository;
+import com.qhc.frye.dao.ClazzOfMaterialRepository;
 import com.qhc.frye.domain.DCharacteristic;
 import com.qhc.frye.domain.DCharacteristicValue;
 import com.qhc.frye.domain.DClassAndCharacter;
-import com.qhc.frye.domain.DClazz;
+import com.qhc.frye.domain.DClazzOfMaterial;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 
@@ -28,7 +28,7 @@ import com.qhc.frye.rest.controller.entity.Clazz;
 @Service
 public class CharacteristicService {
 	@Autowired
-	private ClazzRepository clazzRepo;
+	private ClazzOfMaterialRepository clazzRepo;
 	
 	@Autowired
 	private CharacteristicRepository characterRepo;
@@ -43,9 +43,9 @@ public class CharacteristicService {
 	 * @param clazz
 	 */
 	public void saveClass(List<Clazz> clazz) {
-		Set<DClazz> dcs = new HashSet<DClazz>();
+		Set<DClazzOfMaterial> dcs = new HashSet<DClazzOfMaterial>();
 		for(Clazz cl:clazz) {
-			DClazz dc = new DClazz();
+			DClazzOfMaterial dc = new DClazzOfMaterial();
 			dc.setCode(cl.getCode());
 			dc.setName(cl.getName());
 			dcs.add(dc);
