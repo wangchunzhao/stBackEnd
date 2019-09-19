@@ -62,7 +62,6 @@ public class KOrderInfo {
 	
 	public KOrderInfo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public KOrderInfo(@NotNull int id, String contractNo, String contractUnit, int area, int orderType, int b2c,
