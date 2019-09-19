@@ -10,6 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema bohemian
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `bohemian` ;
 
 -- -----------------------------------------------------
 -- Schema bohemian
@@ -20,6 +21,8 @@ USE `bohemian` ;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_users`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_users` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_users` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_identity` VARCHAR(45) NOT NULL COMMENT 'the user id of domain in loccal LDAP',
@@ -39,6 +42,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_roles`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_roles` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_roles` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` TEXT NOT NULL,
@@ -53,6 +58,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_application_of_rolechange`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_application_of_rolechange` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_application_of_rolechange` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `creator` TEXT NOT NULL COMMENT 'domain id of create user',
@@ -82,6 +89,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_province`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_province` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_province` (
   `code` VARCHAR(6) NOT NULL,
   `name` TEXT NOT NULL,
@@ -95,6 +104,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_city`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_city` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_city` (
   `code` VARCHAR(6) NOT NULL,
   `name` TEXT NOT NULL,
@@ -113,6 +124,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_area`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_area` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_area` (
   `code` VARCHAR(6) NOT NULL,
   `name` TEXT NOT NULL,
@@ -132,8 +145,10 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_notify_infor`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_notify_infor` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_notify_infor` (
-  `id` BIGINT(20) UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL,
   `hasSend` TINYINT(1) UNSIGNED ZEROFILL NOT NULL,
   `msg_to` TEXT NOT NULL,
   `msg_from` TEXT NOT NULL,
@@ -148,6 +163,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_operations`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_operations` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_operations` (
   `id` CHAR(32) NOT NULL,
   `name` TEXT NOT NULL,
@@ -162,6 +179,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_operation2role`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_operation2role` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_operation2role` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `opt_time` DATETIME NOT NULL,
@@ -186,6 +205,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`b_settings`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_settings` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` CHAR(32) NOT NULL,
@@ -205,6 +226,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_account_group`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_account_group` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_account_group` (
   `code` CHAR(4) NOT NULL,
   `description` TEXT NULL DEFAULT NULL,
@@ -218,6 +241,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_characteristic`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_characteristic` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic` (
   `code` VARCHAR(30) NOT NULL,
   `name` TEXT NOT NULL,
@@ -231,6 +256,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_characteristic_value`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_characteristic_value` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
   `code` VARCHAR(30) NOT NULL,
   `name` TEXT NOT NULL,
@@ -249,6 +276,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_clazz`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_clazz` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz` (
   `code` VARCHAR(18) NOT NULL,
   `name` TEXT NOT NULL,
@@ -262,6 +291,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_clazz_and_character`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_clazz_and_character` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz_and_character` (
   `sap_clazz_code` VARCHAR(18) NOT NULL,
   `sap_characteristic_code` VARCHAR(30) NOT NULL,
@@ -281,6 +312,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_currency`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_currency` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_currency` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
@@ -296,6 +329,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_customer_class`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_customer_class` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer_class` (
   `code` CHAR(2) NOT NULL,
   `name` TEXT NOT NULL,
@@ -309,6 +344,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_industry_code`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_industry_code` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_code` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -322,6 +359,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_customer`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_customer` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
   `code` VARCHAR(16) NOT NULL,
   `change_date` DATE NOT NULL,
@@ -352,6 +391,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_incoterms`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_incoterms` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_incoterms` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
@@ -365,6 +406,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_industry`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_industry` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry` (
   `code` VARCHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -378,6 +421,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_industry_and_customer`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_industry_and_customer` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_and_customer` (
   `sap_customer_code` VARCHAR(16) NOT NULL,
   `sap_industry_code` VARCHAR(4) NOT NULL,
@@ -399,6 +444,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_item_category`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_item_category` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_item_category` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -413,6 +460,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_item_category_plan`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_item_category_plan` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_item_category_plan` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -432,6 +481,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_last_updated`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_last_updated` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_last_updated` (
   `code` CHAR(32) NOT NULL,
   `name` TEXT NOT NULL,
@@ -446,6 +497,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_material_type`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_material_type` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_type` (
   `number` VARCHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -459,6 +512,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_unit_of_measurement`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_unit_of_measurement` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_unit_of_measurement` (
   `code` VARCHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
@@ -472,6 +527,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_materials`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_materials` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `code` VARCHAR(18) NOT NULL,
   `description` TEXT NULL DEFAULT NULL,
@@ -500,6 +557,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_material_clazz`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_material_clazz` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_clazz` (
   `sap_clazz_code` VARCHAR(18) NOT NULL,
   `sap_materials_code` VARCHAR(18) NOT NULL,
@@ -520,6 +579,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_price_type`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_price_type` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_price_type` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -533,6 +594,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_materials_price`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_materials_price` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `price` DECIMAL(13,2) NOT NULL,
@@ -557,6 +620,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_order_type`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_order_type` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_order_type` (
   `id` CHAR(4) NOT NULL,
   `name` TEXT NULL DEFAULT NULL,
@@ -570,6 +635,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_sales_office`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_sales_office` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_office` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -583,6 +650,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_sales_group`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_sales_group` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_group` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
@@ -601,6 +670,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_sales_type`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_sales_type` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_type` (
   `code` CHAR(2) NOT NULL,
   `name` TEXT NOT NULL,
@@ -614,6 +685,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`sap_shipping_type`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_shipping_type` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_shipping_type` (
   `code` CHAR(2) NOT NULL,
   `name` TEXT NOT NULL,
@@ -627,6 +700,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_acceptance_approch`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_acceptance_approch` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_acceptance_approch` (
   `id` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -640,6 +715,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_b2c`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_b2c` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_b2c` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `opterator` VARCHAR(128) NOT NULL,
@@ -655,6 +732,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_orders`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sequence_number` CHAR(12) NOT NULL,
@@ -675,6 +754,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_receive_confirm`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_receive_confirm` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_receive_confirm` (
   `id` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
@@ -688,6 +769,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_contract`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_contract` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sequence_number` CHAR(12) NOT NULL,
@@ -734,6 +817,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_contacter`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_contacter` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_contacter` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `linkman` TEXT NOT NULL,
@@ -754,6 +839,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_order_version`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `version` CHAR(2) NOT NULL,
@@ -775,6 +862,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_engining`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_engining` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_engining` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `operator` VARCHAR(128) NOT NULL,
@@ -796,6 +885,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_items_form`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_items_form` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_items_form` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `k_form_id` INT(10) UNSIGNED NOT NULL,
@@ -817,6 +908,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_order_info`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `contract_no` VARCHAR(40) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
@@ -841,6 +934,8 @@ ROW_FORMAT = DYNAMIC;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_product_b2c`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_product_b2c` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_product_b2c` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `k_productions_id` INT(10) UNSIGNED NOT NULL,
@@ -866,19 +961,23 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_speical_order_application`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_speical_order_application` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_application` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `applyer` VARCHAR(128) NOT NULL,
   `approver` VARCHAR(128) NULL DEFAULT NULL,
   `apply_time` DATETIME NOT NULL,
   `approval_time` DATETIME NULL DEFAULT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
+  `k_orders_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_speical_order_application_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_speical_order_application_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `bohemian`.`k_order_version` (`id`))
+  INDEX `fk_k_speical_order_application_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_speical_order_application_k_orders1`
+    FOREIGN KEY (`k_orders_id`)
+    REFERENCES `bohemian`.`k_orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -887,6 +986,8 @@ COLLATE = utf8mb4_bin;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_item_details`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` INT UNSIGNED NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
@@ -905,6 +1006,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `bohemian`.`k_order_and_cost`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_and_cost` ;
+
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_and_cost` (
   `k_order_info_id` INT(10) UNSIGNED NOT NULL,
   `k_order_version_id` INT(10) UNSIGNED NOT NULL,
@@ -933,62 +1036,53 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id`
 -- View `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
+DROP VIEW IF EXISTS `bohemian`.`user_operation_view` ;
 USE `bohemian`;
-CREATE  OR REPLACE VIEW user_operation_view AS 
-
-SELECT
-	CONCAT(user_id,'_',role_id,'_',operation_id) as id,
-	user_id,
-	u.user_mail AS user_mail,
-	u.user_identity AS user_identity,
-	u.isActive AS user_isActive,
-	role_id,
-	role_name,
-	attached_code,
-	attached_name,
-	operation_id,
-	operation_name
-FROM
-	(
-		SELECT
-			bo.b_users_id AS user_id,
-			bo.b_roles_id AS role_id,
-			r. NAME AS role_name,
-			bo.attached_code AS attached_code,
-			bo.attached_name AS attached_name
-		FROM
-			(
-				SELECT
-					b.id AS id,
-					b.b_roles_id AS b_roles_id,
-					b.b_users_id AS b_users_id,
-					s. CODE AS attached_code,
-					s. NAME AS attached_name
-				FROM
-					b_application_of_rolechange b
-				LEFT JOIN sap_sales_office s ON b.attached_code = s. CODE
-			) bo
-		LEFT JOIN b_roles r ON bo.b_roles_id = r.id
-	) ars,
-	(
-		SELECT
-			r1.id AS id,
-			o1.id AS operation_id,
-			o1. NAME AS operation_name
-		FROM
-			b_roles r1,
-			b_operation2role x1,
-			b_operations o1
-		WHERE
-			r1.id = x1.b_roles_id
-		AND x1.b_operations_id = o1.id
-	) rxo,
-	b_users u
-WHERE
-	ars.role_id = rxo.id
-AND ars.user_id = u.id
-ORDER BY
-	user_id,role_id,operation_id ASC;
+CREATE  OR REPLACE VIEW user_operation_view AS
+    SELECT 
+        CONCAT(user_id, '_', role_id, '_', operation_id) AS id,
+        user_id,
+        u.user_mail AS user_mail,
+        u.user_identity AS user_identity,
+        u.isActive AS user_isActive,
+        role_id,
+        role_name,
+        attached_code,
+        attached_name,
+        operation_id,
+        operation_name
+    FROM
+        (SELECT 
+            bo.b_users_id AS user_id,
+                bo.b_roles_id AS role_id,
+                r.NAME AS role_name,
+                bo.attached_code AS attached_code,
+                bo.attached_name AS attached_name
+        FROM
+            (SELECT 
+            b.id AS id,
+                b.b_roles_id AS b_roles_id,
+                b.b_users_id AS b_users_id,
+                s.CODE AS attached_code,
+                s.NAME AS attached_name
+        FROM
+            b_application_of_rolechange b
+        LEFT JOIN sap_sales_office s ON b.attached_code = s.CODE) bo
+        LEFT JOIN b_roles r ON bo.b_roles_id = r.id) ars,
+        (SELECT 
+            r1.id AS id,
+                o1.id AS operation_id,
+                o1.NAME AS operation_name
+        FROM
+            b_roles r1, b_operation2role x1, b_operations o1
+        WHERE
+            r1.id = x1.b_roles_id
+                AND x1.b_operations_id = o1.id) rxo,
+        b_users u
+    WHERE
+        ars.role_id = rxo.id
+            AND ars.user_id = u.id
+    ORDER BY user_id , role_id , operation_id ASC;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
