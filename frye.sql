@@ -8,14 +8,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema kost
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema kost
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `kost` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ;
--- -----------------------------------------------------
 -- Schema bohemian
 -- -----------------------------------------------------
 
@@ -23,260 +15,6 @@ CREATE SCHEMA IF NOT EXISTS `kost` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4
 -- Schema bohemian
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `bohemian` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ;
-USE `kost` ;
-
--- -----------------------------------------------------
--- Table `kost`.`k_acceptance_approch`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_acceptance_approch` (
-  `id` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_b2c`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_b2c` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `opterator` VARCHAR(128) NOT NULL,
-  `opt_time` DATETIME NOT NULL,
-  `statius` TINYINT(2) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_orders`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_orders` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sequence_number` CHAR(12) NOT NULL,
-  `create_time` DATETIME NOT NULL,
-  `creator` VARCHAR(128) NOT NULL,
-  `contract_number` CHAR(10) NULL DEFAULT NULL,
-  `order_type` CHAR(4) NOT NULL,
-  `origal_code` VARCHAR(4) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `number_UNIQUE` (`sequence_number` ASC) VISIBLE,
-  UNIQUE INDEX `order_type_UNIQUE` (`order_type` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_receive_confirm`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_receive_confirm` (
-  `id` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_contract`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_contract` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sequence_number` CHAR(12) NOT NULL,
-  `PartyA_code` CHAR(10) NOT NULL,
-  `PartyA_name` TEXT NOT NULL,
-  `partyA_mail` TEXT NULL DEFAULT NULL,
-  `amount_on_contract` DECIMAL(10,2) NOT NULL,
-  `delivery_days_after_prepay` SMALLINT(6) NULL DEFAULT NULL,
-  `client_name` TEXT NOT NULL,
-  `install_location` TEXT NOT NULL,
-  `quality_stand` VARCHAR(45) NULL DEFAULT NULL,
-  `k_receive_confirm_id` CHAR(4) NULL DEFAULT NULL,
-  `k_acceptance_approch_id` CHAR(4) NULL DEFAULT NULL,
-  `settlement` TEXT NULL DEFAULT NULL,
-  `paryA_address` TEXT NULL DEFAULT NULL,
-  `invoice_address` TEXT NULL DEFAULT NULL,
-  `broker` TEXT NULL DEFAULT NULL,
-  `invoice_receiver` TEXT NULL DEFAULT NULL,
-  `invoice_tel` TEXT NULL DEFAULT NULL,
-  `invoice_post_code` CHAR(6) NULL DEFAULT NULL,
-  `company_tel` TEXT NULL DEFAULT NULL,
-  `bank_name` TEXT NULL DEFAULT NULL,
-  `account_number` TEXT NULL DEFAULT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_receive_confirm1_idx` (`k_receive_confirm_id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_acceptance_approch1_idx` (`k_acceptance_approch_id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_contract_k_acceptance_approch1`
-    FOREIGN KEY (`k_acceptance_approch_id`)
-    REFERENCES `kost`.`k_acceptance_approch` (`id`),
-  CONSTRAINT `fk_k_contract_k_orders1`
-    FOREIGN KEY (`k_orders_id`)
-    REFERENCES `kost`.`k_orders` (`id`),
-  CONSTRAINT `fk_k_contract_k_receive_confirm1`
-    FOREIGN KEY (`k_receive_confirm_id`)
-    REFERENCES `kost`.`k_receive_confirm` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_contacter`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_contacter` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `linkman` TEXT NOT NULL,
-  `tel_number` TEXT NOT NULL,
-  `id_number` VARCHAR(18) NULL DEFAULT NULL,
-  `k_contract_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_contact_k_contract1_idx` (`k_contract_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_contact_k_contract1`
-    FOREIGN KEY (`k_contract_id`)
-    REFERENCES `kost`.`k_contract` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_order_version`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_order_version` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `version` CHAR(2) NOT NULL,
-  `status` TINYINT(2) NOT NULL,
-  `last_opt_time` DATETIME NOT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
-  INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_order_version_k_orders1`
-    FOREIGN KEY (`k_orders_id`)
-    REFERENCES `kost`.`k_orders` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_engining`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_engining` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `operator` VARCHAR(128) NOT NULL,
-  `opt_time` DATETIME NOT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
-  `status` TINYINT(2) NOT NULL,
-  `cost` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_engining_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_engining_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `kost`.`k_order_version` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_materials`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_materials` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `k_form_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_materials_k_form1_idx` (`k_form_id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_order_info`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_order_info` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `contract_no` VARCHAR(40) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
-  `contract_unit` VARCHAR(200) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
-  `order_type` INT(10) NULL DEFAULT NULL,
-  `b2c` INT(10) NULL DEFAULT NULL,
-  `special_discount` INT(10) NULL DEFAULT NULL,
-  `create_time` DATETIME NULL DEFAULT NULL,
-  `status` INT(10) NULL DEFAULT NULL,
-  `sap_status` INT(10) NULL DEFAULT NULL,
-  `area` INT(10) NULL DEFAULT NULL,
-  `createId` INT(10) NULL DEFAULT NULL,
-  PRIMARY KEY USING BTREE (`id`),
-  UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin
-ROW_FORMAT = DYNAMIC;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_product_b2c`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_product_b2c` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `k_productions_id` INT(10) UNSIGNED NOT NULL,
-  `k_b2c_id` INT(10) UNSIGNED NOT NULL,
-  `cost` DECIMAL(10,2) NOT NULL,
-  `comment` TEXT NULL DEFAULT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_table1_k_b2c1_idx` (`k_b2c_id` ASC) VISIBLE,
-  INDEX `fk_k_product_b2c_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_product_b2c_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `kost`.`k_order_version` (`id`),
-  CONSTRAINT `fk_table1_k_b2c1`
-    FOREIGN KEY (`k_b2c_id`)
-    REFERENCES `kost`.`k_b2c` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `kost`.`k_speical_order_application`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `kost`.`k_speical_order_application` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `applyer` VARCHAR(128) NOT NULL,
-  `approver` VARCHAR(128) NULL DEFAULT NULL,
-  `apply_time` DATETIME NOT NULL,
-  `approval_time` DATETIME NULL DEFAULT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_speical_order_application_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_speical_order_application_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `kost`.`k_order_version` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
 USE `bohemian` ;
 
 -- -----------------------------------------------------
@@ -1189,14 +927,68 @@ USE `bohemian` ;
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`user_id` INT, `user_mail` INT, `user_identity` INT, `user_isActive` INT, `role_id` INT, `role_name` INT, `attached_code` INT, `attached_name` INT, `operation_id` INT, `operation_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id` INT, `user_mail` INT, `user_identity` INT, `user_isActive` INT, `role_id` INT, `role_name` INT, `attached_code` INT, `attached_name` INT, `operation_id` INT, `operation_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
 USE `bohemian`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `bohemian`.`user_operation_view` AS select `ars`.`user_id` AS `user_id`,`u`.`user_mail` AS `user_mail`,`u`.`user_identity` AS `user_identity`,`u`.`isActive` AS `user_isActive`,`ars`.`role_id` AS `role_id`,`ars`.`role_name` AS `role_name`,`ars`.`attached_code` AS `attached_code`,`ars`.`attached_name` AS `attached_name`,`rxo`.`operation_id` AS `operation_id`,`rxo`.`operation_name` AS `operation_name` from (((select `bo`.`b_users_id` AS `user_id`,`bo`.`b_roles_id` AS `role_id`,`r`.`name` AS `role_name`,`bo`.`attached_code` AS `attached_code`,`bo`.`attached_name` AS `attached_name` from ((select `b`.`id` AS `id`,`b`.`b_roles_id` AS `b_roles_id`,`b`.`b_users_id` AS `b_users_id`,`s`.`code` AS `attached_code`,`s`.`name` AS `attached_name` from (`bohemian`.`b_application_of_rolechange` `b` left join `bohemian`.`sap_sales_office` `s` on((`b`.`attached_code` = `s`.`code`)))) `bo` left join `bohemian`.`b_roles` `r` on((`bo`.`b_roles_id` = `r`.`id`)))) `ars` join (select `r1`.`id` AS `id`,`o1`.`id` AS `operation_id`,`o1`.`name` AS `operation_name` from ((`bohemian`.`b_roles` `r1` join `bohemian`.`b_operation2role` `x1`) join `bohemian`.`b_operations` `o1`) where ((`r1`.`id` = `x1`.`b_roles_id`) and (`x1`.`b_operations_id` = `o1`.`id`))) `rxo`) join `bohemian`.`b_users` `u`) where ((`ars`.`role_id` = `rxo`.`id`) and (`ars`.`user_id` = `u`.`id`)) order by `ars`.`user_id`,`ars`.`role_id`,`rxo`.`operation_id`;
+CREATE  OR REPLACE VIEW user_operation_view AS 
+
+SELECT
+	CONCAT(user_id,'_',role_id,'_',operation_id) as id,
+	user_id,
+	u.user_mail AS user_mail,
+	u.user_identity AS user_identity,
+	u.isActive AS user_isActive,
+	role_id,
+	role_name,
+	attached_code,
+	attached_name,
+	operation_id,
+	operation_name
+FROM
+	(
+		SELECT
+			bo.b_users_id AS user_id,
+			bo.b_roles_id AS role_id,
+			r. NAME AS role_name,
+			bo.attached_code AS attached_code,
+			bo.attached_name AS attached_name
+		FROM
+			(
+				SELECT
+					b.id AS id,
+					b.b_roles_id AS b_roles_id,
+					b.b_users_id AS b_users_id,
+					s. CODE AS attached_code,
+					s. NAME AS attached_name
+				FROM
+					b_application_of_rolechange b
+				LEFT JOIN sap_sales_office s ON b.attached_code = s. CODE
+			) bo
+		LEFT JOIN b_roles r ON bo.b_roles_id = r.id
+	) ars,
+	(
+		SELECT
+			r1.id AS id,
+			o1.id AS operation_id,
+			o1. NAME AS operation_name
+		FROM
+			b_roles r1,
+			b_operation2role x1,
+			b_operations o1
+		WHERE
+			r1.id = x1.b_roles_id
+		AND x1.b_operations_id = o1.id
+	) rxo,
+	b_users u
+WHERE
+	ars.role_id = rxo.id
+AND ars.user_id = u.id
+ORDER BY
+	user_id,role_id,operation_id ASC;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

@@ -49,7 +49,7 @@ public class CurrencyController {
 		currencyService.saveCurrency(currency);
 	}
 	@ApiOperation(value = "update currency data to DB.")
-	@PutMapping(value = "currency")
+	@GetMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public Set<Currency> getCurrency() {
 		return currencyService.getCurrency();
