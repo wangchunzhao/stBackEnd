@@ -22,8 +22,6 @@ public class KOrderInfoService {
 	@Autowired
 	private KOrderInfoRepository kOrderInfoRepository;
 
-	public static int K_ORDER_INFO_STATUS_FINISH_6 = 6;//
-	public static int K_ORDER_INFO_STATUS_FINISH_7 = 7;//
 
 	public Page<KOrderInfo> getKOrdersByConditions(KOrderInfo kOrderInfo, Pageable pageable) {
 		Specification<KOrderInfo> specification = new Specification<KOrderInfo>() {
@@ -69,23 +67,5 @@ public class KOrderInfoService {
 		return kOrderInfoRepository.findAll(specification, pageable);
 	}
 	
-
-	/**
-	 * 特批申请按状态查询
-	 * @param arr
-	 * @param pageable
-	 * @return
-	 */
-	public Page<KOrderInfo> getKOrdersByStatus(Pageable pageable) {
-		Specification<KOrderInfo> specification = new Specification<KOrderInfo>() {
-			@Override
-			public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-				Predicate p1 = cb.equal(root.get("status").as(Integer.class), K_ORDER_INFO_STATUS_FINISH_6);
-				Predicate p2 = cb.equal(root.get("status").as(Integer.class), K_ORDER_INFO_STATUS_FINISH_7);
-				Predicate predicate = cb.or(p1, p2);
-				return predicate;
-			}
-		};
-		return kOrderInfoRepository.findAll(specification, pageable);
-	}
+	
 }
