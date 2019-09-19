@@ -69,6 +69,8 @@ public class CustomerService {
 			Customer cu = new Customer();
 			cu.setCode(dc.getCode());
 			cu.setName(dc.getName());
+			cu.setAddress(dc.getAddress());
+			cuList.add(cu);
 		}
 		
 		return cuList;
