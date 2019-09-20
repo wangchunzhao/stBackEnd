@@ -5,7 +5,9 @@ package com.qhc.frye.rest.controller.qhc;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -64,9 +66,13 @@ public class CustomerController {
 	@ApiOperation(value = "get the customer classes from DB.")
 	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public List<CustomerClass>  getCustomerClazz() throws Exception {
-		
-		return customerService.getCustomerClasses();
+	public Map<String,String>  getCustomerClazz() throws Exception {
+		Map<String,String> cClazz = new HashMap<String,String>();
+		List<CustomerClass> ccl =  customerService.getCustomerClasses();
+		for(CustomerClass cc:ccl) {
+			cClazz.put(cc.getCode(), cc.getName());
+		}
+		return cClazz;
 	}
 	
 	

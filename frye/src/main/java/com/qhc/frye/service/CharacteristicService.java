@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.CharacteristicRepository;
 import com.qhc.frye.dao.CharacteristicValueRepository;
-import com.qhc.frye.dao.ClassAndCharacter;
+import com.qhc.frye.dao.ClassAndCharacterRepository;
 import com.qhc.frye.dao.ClazzOfMaterialRepository;
 import com.qhc.frye.domain.DCharacteristic;
 import com.qhc.frye.domain.DCharacteristicValue;
@@ -37,7 +37,7 @@ public class CharacteristicService {
 	private CharacteristicValueRepository charaValueRepo;
 	
 	@Autowired
-	private ClassAndCharacter classAndCharaRepo;
+	private ClassAndCharacterRepository classAndCharaRepo;
 	/**
 	 * 
 	 * @param clazz

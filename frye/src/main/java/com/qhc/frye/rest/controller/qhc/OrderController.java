@@ -3,7 +3,9 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.rest.controller.entity.Order;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
@@ -53,7 +57,6 @@ public class OrderController {
     public void  save(@RequestBody(required=true) @Valid Order order) throws Exception
     {	
 		
-		orderService.findNewestOrder();
     }
 	
 	@ApiOperation(value="Looking for the newest order", notes="Looking fro the newest order from cloud")
@@ -62,6 +65,19 @@ public class OrderController {
     public void  update(@RequestBody(required=true) @Valid Order order) throws Exception
     {	
 		
+    }
+	
+	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
+    @GetMapping(value = "salesType")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String,String> getOrderType() throws Exception
+    {	
+		Map<String,String> saleTypes = new HashMap<String,String>();
+		List<DSalesType> dsl =  orderService.getSalesTypes();
+		for(DSalesType ds:dsl) {
+			saleTypes.put(ds.getCode(), ds.getName());
+		}
+		return saleTypes;
 		
     }
 	

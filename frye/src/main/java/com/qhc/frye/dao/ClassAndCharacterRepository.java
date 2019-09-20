@@ -13,6 +13,6 @@ import com.qhc.frye.domain.DClassAndCharacter;
  *
  */
 @Repository
-public interface ClassAndCharacter extends JpaRepository<DClassAndCharacter, String>{
+public interface ClassAndCharacterRepository extends JpaRepository<DClassAndCharacter, String>{
 
 }
