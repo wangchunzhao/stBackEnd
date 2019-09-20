@@ -1,5 +1,6 @@
 package com.qhc.frye.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,8 +52,8 @@ public class CurrencyService {
 	 * 
 	 * @return
 	 */
-	public Set<Currency> getCurrency(){
-		Set<Currency> cs = new HashSet<Currency>();
+	public List<Currency> getCurrency(){
+		List<Currency> cs = new ArrayList<Currency>();
 		List<DCurrency> dcs=currencyRepo.findAll();
 		for(DCurrency cur:dcs) {
 			Currency dc = new Currency();

@@ -4,7 +4,9 @@
 package com.qhc.frye.rest.controller.qhc;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -48,11 +50,17 @@ public class CurrencyController {
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
 		currencyService.saveCurrency(currency);
 	}
-	@ApiOperation(value = "update currency data to DB.")
+	
+	@ApiOperation(value = "get currency map from DB.")
 	@GetMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
-	public Set<Currency> getCurrency() {
-		return currencyService.getCurrency();
+	public Map<String,String> getCurrency() {
+		Map<String,String> currencies = new HashMap<String,String>();
+		List<Currency> curList = currencyService.getCurrency();
+		for(Currency cur:curList) {
+			currencies.put(cur.getCode(),cur.getName());
+		}
+		return currencies;
 	}
 	
 	@ApiOperation(value = "update incoterms data to DB.")
