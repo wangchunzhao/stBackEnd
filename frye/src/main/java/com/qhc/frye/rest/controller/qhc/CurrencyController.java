@@ -3,11 +3,9 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -16,13 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.rest.controller.entity.Currency;
-import com.qhc.frye.rest.controller.entity.Customer;
 import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.Price;
 import com.qhc.frye.service.CurrencyService;
@@ -72,7 +67,7 @@ public class CurrencyController {
 	@ApiOperation(value = "retrieve incoterms from DB.")
 	@GetMapping(value = "incoterms")
 	@ResponseStatus(HttpStatus.OK)
-	public Set<Incoterm> getIncoterms() {
+	public Map<String,String> getIncoterms() {
 		return currencyService.getIncoterms();
 	}
 	

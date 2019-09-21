@@ -1,8 +1,10 @@
 package com.qhc.frye.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,16 +82,13 @@ public class CurrencyService {
 	}
 	/**
 	 * 
-	 * @return
+	 * @return international trade
 	 */
-	public Set<Incoterm> getIncoterms(){
-		Set<Incoterm> incos = new HashSet<Incoterm>();
+	public Map<String,String> getIncoterms(){
+		Map<String,String> incos = new HashMap<String,String>();
 		List<DIncoterm> dincos = incotermRepo.findAll();
 		for(DIncoterm di:dincos) {
-			Incoterm temp = new Incoterm();
-			temp.setCode(di.getCode());
-			temp.setName(di.getName());
-			incos.add(temp);
+			incos.put(di.getCode(), di.getName());
 		}
 		return incos;
 	}
