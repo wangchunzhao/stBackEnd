@@ -48,5 +48,12 @@ public class LocationController {
 		localService.clean();
 		localService.put(salesGroups);
 	}
+	
+	@ApiOperation(value = "get destination for freight calculation from DB.")
+	@GetMapping(value = "destination", produces = "application/json;charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
+	public void getDestination() throws Exception {
+		
+	}
 
 }
