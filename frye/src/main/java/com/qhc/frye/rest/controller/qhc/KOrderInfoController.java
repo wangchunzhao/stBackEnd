@@ -71,5 +71,31 @@ public class KOrderInfoController {
 		
         return kOrderInfoService.findById(orderId);
     }
+	
+	@ApiOperation(value=" Find all kOrderInfo paging info for specialDelivery ", notes="Find all kOrderInfo paging info for specialDelivery")
+	@GetMapping("/pagingForSpecial")
+    @ResponseStatus(HttpStatus.OK)
+	public PageHelper<KOrderInfo> findPagingList(
+			@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize,
+			@RequestParam("contractNo") String contractNo,
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
+			@RequestParam("status") int status) throws Exception{
+		
+		PageHelper<KOrderInfo> pageHelper = new PageHelper<KOrderInfo>();
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		KOrderInfo kOrderInfo = new KOrderInfo();
+		kOrderInfo.setContractNo(contractNo);
+		kOrderInfo.setStartTime(startTime);
+		kOrderInfo.setEndTime(endTime);
+		kOrderInfo.setStatus(status);
+		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions2(kOrderInfo, pageable);
+
+		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
+		pageHelper.setRows(page.getContent());
+        return pageHelper;
+    }
+	
 
 }
