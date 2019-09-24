@@ -1,6 +1,7 @@
 package com.qhc.frye.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "k_order_info")
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
 public class KOrderInfo {
 	
 	@Id
@@ -58,27 +62,24 @@ public class KOrderInfo {
 	
 	@Transient
 	public String endTime;
+	
+	@Transient
+	public List<SpecialDelivery> applyList;
 
 	
 	public KOrderInfo() {
 		super();
 	}
 
-	public KOrderInfo(@NotNull int id, String contractNo, String contractUnit, int area, int orderType, int b2c,
-			int specialDiscount, Date createTime, int status, int sapStatus, int createId) {
-		super();
-		this.id = id;
-		this.contractNo = contractNo;
-		this.contractUnit = contractUnit;
-		this.area = area;
-		this.orderType = orderType;
-		this.b2c = b2c;
-		this.specialDiscount = specialDiscount;
-		this.createTime = createTime;
-		this.status = status;
-		this.sapStatus = sapStatus;
-		this.createId = createId;
-	}
+	/*
+	 * public KOrderInfo(@NotNull int id, String contractNo, String contractUnit,
+	 * int area, int orderType, int b2c, int specialDiscount, Date createTime, int
+	 * status, int sapStatus, int createId) { super(); this.id = id; this.contractNo
+	 * = contractNo; this.contractUnit = contractUnit; this.area = area;
+	 * this.orderType = orderType; this.b2c = b2c; this.specialDiscount =
+	 * specialDiscount; this.createTime = createTime; this.status = status;
+	 * this.sapStatus = sapStatus; this.createId = createId; }
+	 */
 
 	public int getId() {
 		return id;
@@ -182,6 +183,14 @@ public class KOrderInfo {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public List<SpecialDelivery> getApplyList() {
+		return applyList;
+	}
+
+	public void setApplyList(List<SpecialDelivery> applyList) {
+		this.applyList = applyList;
 	}
 	
 	
