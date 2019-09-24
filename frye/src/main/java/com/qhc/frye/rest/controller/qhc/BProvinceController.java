@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.frye.domain.BCityFreight;
 import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.service.BProvinceService;
 
