@@ -49,7 +49,7 @@ public class SpecialDelivery implements Serializable{
 	public Integer ordersId;
 	
 //	@Transient
-	@Column(name="apply_status")
+	@Column(name="apply_status",columnDefinition ="TINYINT",length=1)
 	public Integer applyStatus;
 
 
