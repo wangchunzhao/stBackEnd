@@ -136,5 +136,4 @@ public class ItemDetails implements Serializable{
 	}
 
 
-
 }
