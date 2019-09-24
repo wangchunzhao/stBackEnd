@@ -333,25 +333,10 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_customer_class` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer_class` (
-  `code` CHAR(2) NOT NULL,
+  `code` CHAR(2) NOT NULL COMMENT '01:直销\n02:经销商',
   `name` TEXT NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) INVISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`sap_industry_code`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_industry_code` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_code` (
-  `code` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -369,21 +354,16 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
   `address` TEXT NULL DEFAULT NULL,
   `sap_customer_class_code` CHAR(2) NOT NULL,
   `sap_account_group_code` CHAR(4) NOT NULL,
-  `sap_customer_level_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `number_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_sap_customer_sap_customer_class1_idx` (`sap_customer_class_code` ASC) VISIBLE,
   INDEX `fk_sap_customer_sap_account_group1_idx` (`sap_account_group_code` ASC) VISIBLE,
-  INDEX `fk_sap_customer_sap_customer_level1_idx` (`sap_customer_level_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_customer_sap_account_group1`
     FOREIGN KEY (`sap_account_group_code`)
     REFERENCES `bohemian`.`sap_account_group` (`code`),
   CONSTRAINT `fk_sap_customer_sap_customer_class1`
     FOREIGN KEY (`sap_customer_class_code`)
-    REFERENCES `bohemian`.`sap_customer_class` (`code`),
-  CONSTRAINT `fk_sap_customer_sap_customer_level1`
-    FOREIGN KEY (`sap_customer_level_code`)
-    REFERENCES `bohemian`.`sap_industry_code` (`code`))
+    REFERENCES `bohemian`.`sap_customer_class` (`code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -437,6 +417,21 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_and_customer` (
   CONSTRAINT `fk_sap_industry_and_customer_sap_industry1`
     FOREIGN KEY (`sap_industry_code`)
     REFERENCES `bohemian`.`sap_industry` (`code`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_industry_code`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_industry_code` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_code` (
+  `code` VARCHAR(10) NOT NULL COMMENT 'terminal shop level: incustry code',
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -731,28 +726,6 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`k_orders`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `sequence_number` CHAR(12) NOT NULL,
-  `create_time` DATETIME NOT NULL,
-  `creator` VARCHAR(128) NOT NULL,
-  `contract_number` CHAR(10) NULL DEFAULT NULL,
-  `order_type` CHAR(4) NOT NULL,
-  `origal_code` VARCHAR(4) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `number_UNIQUE` (`sequence_number` ASC) VISIBLE,
-  UNIQUE INDEX `order_type_UNIQUE` (`order_type` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
 -- Table `bohemian`.`k_receive_confirm`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_receive_confirm` ;
@@ -762,6 +735,52 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_receive_confirm` (
   `name` TEXT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_orders`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `create_time` DATETIME NOT NULL,
+  `creator` VARCHAR(128) NOT NULL,
+  `order_type` CHAR(4) NOT NULL,
+  `customer_code` VARCHAR(4) NOT NULL,
+  `customer_name` TEXT NOT NULL,
+  `customer_class_code` CHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
+  `customer_class_name` TEXT NOT NULL,
+  `office_code` CHAR(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `order_type_UNIQUE` (`order_type` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_order_version`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `version` CHAR(2) NOT NULL,
+  `status` TINYINT(2) NOT NULL,
+  `last_opt_time` DATETIME NOT NULL,
+  `k_orders_id` INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
+  INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_order_version_k_orders1`
+    FOREIGN KEY (`k_orders_id`)
+    REFERENCES `bohemian`.`k_orders` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -795,21 +814,23 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `company_tel` TEXT NULL DEFAULT NULL,
   `bank_name` TEXT NULL DEFAULT NULL,
   `account_number` TEXT NULL DEFAULT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
+  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_acceptance_approch1_idx` (`k_acceptance_approch_id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_receive_confirm1_idx` (`k_receive_confirm_id` ASC) VISIBLE,
+  INDEX `fk_k_contract_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_contract_k_acceptance_approch1`
     FOREIGN KEY (`k_acceptance_approch_id`)
     REFERENCES `bohemian`.`k_acceptance_approch` (`id`),
-  CONSTRAINT `fk_k_contract_k_orders1`
-    FOREIGN KEY (`k_orders_id`)
-    REFERENCES `bohemian`.`k_orders` (`id`),
   CONSTRAINT `fk_k_contract_k_receive_confirm1`
     FOREIGN KEY (`k_receive_confirm_id`)
-    REFERENCES `bohemian`.`k_receive_confirm` (`id`))
+    REFERENCES `bohemian`.`k_receive_confirm` (`id`),
+  CONSTRAINT `fk_k_contract_k_order_version1`
+    FOREIGN KEY (`k_order_version_id`)
+    REFERENCES `bohemian`.`k_order_version` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -832,29 +853,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contacter` (
   CONSTRAINT `fk_k_contact_k_contract1`
     FOREIGN KEY (`k_contract_id`)
     REFERENCES `bohemian`.`k_contract` (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`k_order_version`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `version` CHAR(2) NOT NULL,
-  `status` TINYINT(2) NOT NULL,
-  `last_opt_time` DATETIME NOT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
-  INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_order_version_k_orders1`
-    FOREIGN KEY (`k_orders_id`)
-    REFERENCES `bohemian`.`k_orders` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -891,6 +889,9 @@ DROP TABLE IF EXISTS `bohemian`.`k_forms` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `k_form_number` VARCHAR(45) NOT NULL,
+  `earliest_delivery_date` DATE NOT NULL,
+  `earliest_product_date` DATE NOT NULL,
+  `comments` TEXT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_materials_k_form1_idx` (`k_form_number` ASC) VISIBLE,
@@ -907,16 +908,43 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `contract_no` VARCHAR(40) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
-  `contract_unit` VARCHAR(200) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
-  `order_type` INT(10) NULL DEFAULT NULL,
+  `contract_no` CHAR(10) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
   `b2c` INT(10) NULL DEFAULT NULL,
   `special_discount` INT(10) NULL DEFAULT NULL,
-  `create_time` DATETIME NULL DEFAULT NULL,
-  `status` INT(10) NULL DEFAULT NULL,
-  `sap_status` INT(10) NULL DEFAULT NULL,
-  `area` INT(10) NULL DEFAULT NULL,
-  `createId` INT(10) NULL DEFAULT NULL,
+  `create_time` DATETIME NOT NULL,
+  `sequence_number` CHAR(12) NOT NULL,
+  `shop_name` TEXT NOT NULL,
+  `is_reformedShop` TINYINT(1) NOT NULL,
+  `is_newCustomer` TINYINT(1) NOT NULL,
+  `terminal_industry_code` VARCHAR(10) NOT NULL,
+  `terminal_industry_code_name` TEXT NULL,
+  `body_discount` DOUBLE NULL,
+  `main_discount` DOUBLE NULL,
+  `approved_discount` VARCHAR(45) NULL,
+  `province_code` VARCHAR(6) NOT NULL,
+  `province_name` TEXT NOT NULL,
+  `city_code` VARCHAR(6) NOT NULL,
+  `city_name` TEXT NOT NULL,
+  `distince_code` VARCHAR(6) NOT NULL,
+  `distince_name` TEXT NOT NULL,
+  `address` TEXT NOT NULL,
+  `install_term_code` VARCHAR(4) NOT NULL,
+  `install_term_name` TEXT NOT NULL,
+  `receive_term_code` VARCHAR(4) NOT NULL,
+  `receive_term_name` TEXT NOT NULL,
+  `contactor_1_id` VARCHAR(18) NOT NULL,
+  `contactor_1_tel` VARCHAR(16) NOT NULL,
+  `contactor_2_id` VARCHAR(18) NULL,
+  `contactor_2_tel` VARCHAR(16) NULL,
+  `contactor_3_id` VARCHAR(18) NULL,
+  `contactor_3_tel` VARCHAR(16) NULL,
+  `freight` DOUBLE NOT NULL,
+  `warranty` INT NOT NULL,
+  `currency_code` VARCHAR(3) NOT NULL,
+  `currency_name` TEXT NOT NULL,
+  `exchange` DOUBLE NOT NULL,
+  `contract_amount` DOUBLE NOT NULL,
+  `contract_rmb_amount` DOUBLE NOT NULL,
   PRIMARY KEY USING BTREE (`id`),
   UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
 ENGINE = InnoDB
@@ -993,7 +1021,14 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` INT UNSIGNED NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
+  `material_name` TEXT NOT NULL,
   `k_forms_id` INT(10) UNSIGNED NOT NULL,
+  `material_specific_Number` VARCHAR(45) NOT NULL,
+  `material_attribute` VARCHAR(45) NOT NULL,
+  `quantity` INT NOT NULL,
+  `price` DOUBLE NOT NULL,
+  `measure_unit_code` VARCHAR(3) NOT NULL,
+  `measure_unit_name` TEXT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
@@ -1159,3 +1194,14 @@ CREATE  OR REPLACE VIEW user_operation_view AS
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_customer_class`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_customer_class` (`code`, `name`) VALUES ('01', '直销');
+INSERT INTO `bohemian`.`sap_customer_class` (`code`, `name`) VALUES ('02', '经销商');
+
+COMMIT;
+
