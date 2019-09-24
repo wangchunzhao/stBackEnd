@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "k_item_details")
-public class ItemsDetails implements Serializable{
+public class ItemDetails implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
 
@@ -22,6 +22,11 @@ public class ItemsDetails implements Serializable{
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
 	public int id;
+	
+	@NotNull
+	@Column(name = "k_from_id")
+	public Integer kFormId;
+
 	
 	//产品规格型号
 	@NotNull
@@ -120,6 +125,14 @@ public class ItemsDetails implements Serializable{
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public Integer getkFormId() {
+		return kFormId;
+	}
+
+	public void setkFormId(Integer kFormId) {
+		this.kFormId = kFormId;
 	}
 
 
