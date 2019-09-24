@@ -45,7 +45,7 @@ public class SpecialDelivery implements Serializable{
 	@Column(name = "k_orders_id")
 	public Integer ordersId;
 	
-	@Column(name="apply_status",columnDefinition ="TINYINT",length=1)
+	@Column(name="apply_status",columnDefinition ="BIT",length=1)
 	public Integer applyStatus;
 
 
