@@ -884,23 +884,17 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`k_items_form`
+-- Table `bohemian`.`k_forms`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_items_form` ;
+DROP TABLE IF EXISTS `bohemian`.`k_forms` ;
 
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_items_form` (
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `k_form_id` INT(10) UNSIGNED NOT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
+  `k_form_number` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_materials_k_form1_idx` (`k_form_id` ASC) VISIBLE,
-  INDEX `fk_k_items_form_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_items_form_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `bohemian`.`k_order_version` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  INDEX `fk_k_materials_k_form1_idx` (`k_form_number` ASC) VISIBLE,
+  UNIQUE INDEX `k_form_number_UNIQUE` (`k_form_number` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -999,13 +993,13 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` INT UNSIGNED NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
-  `k_items_form_id` INT(10) UNSIGNED NOT NULL,
+  `k_forms_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_item_details_k_items_form1_idx` (`k_items_form_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_item_details_k_items_form1`
-    FOREIGN KEY (`k_items_form_id`)
-    REFERENCES `bohemian`.`k_items_form` (`id`)
+  INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_item_details_k_forms1`
+    FOREIGN KEY (`k_forms_id`)
+    REFERENCES `bohemian`.`k_forms` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1032,6 +1026,76 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_and_cost` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_installation_terms`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_installation_terms` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_installation_terms` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_receive_terms`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_receive_terms` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_receive_terms` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_transfer_terms`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_transfer_terms` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_transfer_terms` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_form_order_version`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_form_order_version` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_form_order_version` (
+  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
+  `k_forms_id` INT(10) UNSIGNED NOT NULL,
+  INDEX `fk_k_form_order_version_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
+  INDEX `fk_k_form_order_version_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_form_order_version_k_order_version1`
+    FOREIGN KEY (`k_order_version_id`)
+    REFERENCES `bohemian`.`k_order_version` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_k_form_order_version_k_forms1`
+    FOREIGN KEY (`k_forms_id`)
+    REFERENCES `bohemian`.`k_forms` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
 
 USE `bohemian` ;
 
