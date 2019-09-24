@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,7 +34,6 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("order")
 @Api(value = "Order management in Frye")
 public class OrderController {
 	
@@ -43,32 +44,25 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
-    @GetMapping(value = "submit")
+    @PostMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
-    public void submit(@RequestBody(required=true) @Valid Order order) throws Exception
+    public void submitOrder(@RequestBody(required=true) @Valid Order order) throws Exception
     {	
-		
-		
+		System.out.println("submitOrder");
+		orderService.save(order);
     }
-	
-	@ApiOperation(value="Save order as draft", notes="Looking fro the newest order from cloud")
-    @GetMapping(value = "save")
-    @ResponseStatus(HttpStatus.OK)
-    public void  save(@RequestBody(required=true) @Valid Order order) throws Exception
-    {	
-		
-    }
-	
+
 	@ApiOperation(value="Looking for the newest order", notes="Looking fro the newest order from cloud")
-    @GetMapping(value = "update")
+    @PutMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
-    public void  update(@RequestBody(required=true) @Valid Order order) throws Exception
+    public void  updateOrder(@RequestBody(required=true) @Valid Order order) throws Exception
     {	
-		
+		System.out.println("updateOrder");
+		orderService.update(order);
     }
 	
 	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")
-    @GetMapping(value = "salesType")
+    @GetMapping(value = "order/salesType")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getOrderType() throws Exception
     {	
