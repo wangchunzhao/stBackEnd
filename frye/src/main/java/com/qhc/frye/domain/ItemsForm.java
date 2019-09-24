@@ -42,7 +42,6 @@ public class ItemsForm implements Serializable{
 	
 	
 	
-	
 	public int getId() {
 		return id;
 	}

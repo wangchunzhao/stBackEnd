@@ -16,9 +16,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "k_items_details")
 public class ItemsDetails implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1429807827446950753L;
 
 	@Id
