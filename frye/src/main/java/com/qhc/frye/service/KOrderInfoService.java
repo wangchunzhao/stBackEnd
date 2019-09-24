@@ -95,6 +95,9 @@ public class KOrderInfoService {
 				if (kOrderInfo.getStatus() > -1) {
 					list.add(cb.equal(root.get("status").as(Integer.class), kOrderInfo.getStatus()));
 				}
+				if (kOrderInfo.getCreateId() > -1) {
+					list.add(cb.equal(root.get("createId").as(Integer.class), kOrderInfo.getCreateId()));
+				}
 				
 				In<Integer> in = cb.in(root.get("status"));
 			    for (Integer id : ids) {
