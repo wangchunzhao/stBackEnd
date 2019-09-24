@@ -41,14 +41,10 @@ public class SpecialDelivery implements Serializable{
 	@Column(name="approval_time",columnDefinition = "datetime")
     public Date approvalTime;//通过时间
     
-//	@Column(name="k_order_version_id")
-//    public Integer kOrderVersionId;//版本id
-	
 	@NotNull
 	@Column(name = "k_orders_id")
 	public Integer ordersId;
 	
-//	@Transient
 	@Column(name="apply_status",columnDefinition ="TINYINT",length=1)
 	public Integer applyStatus;
 
