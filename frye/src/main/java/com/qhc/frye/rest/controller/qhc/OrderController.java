@@ -67,7 +67,7 @@ public class OrderController {
 		
     }
 	
-	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
+	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")
     @GetMapping(value = "salesType")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getOrderType() throws Exception
