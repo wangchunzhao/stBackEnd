@@ -65,7 +65,35 @@ public class KOrderInfo {
 	
 	@Transient
 	public List<SpecialDelivery> applyList;
-
+	
+	
+	@Column(name="order_number")
+	private String orderNumber;//流水号
+	
+	@Column(name="customer_manager")
+	private String	customerManager	;//	签约人//客户经理
+	
+	@Column(name="customer_type")
+	private Integer	customerType	;//	客户性质
+	
+	@Column(name="shop_name")
+	private String	shopName	;//	店名
+	
+	@Column(name="terminal_customers")
+	private String	terminalCustomers	;//	终端客户性质
+	
+	@Column(name="is_reform_shop")
+	private Integer	isReformShop	;//	是否改造店
+	
+	@Column(name="settlement_method")
+	private String	settlementMethod	;//	结算方式
+	
+	@Column(name="is_new_customer",columnDefinition ="TINYINT",length=1)
+	private Integer	isNewCustomer	;//是否新客户
+	
+	
+	
+	
 	
 	public KOrderInfo() {
 		super();
@@ -192,6 +220,71 @@ public class KOrderInfo {
 	public void setApplyList(List<SpecialDelivery> applyList) {
 		this.applyList = applyList;
 	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	public String getCustomerManager() {
+		return customerManager;
+	}
+
+	public void setCustomerManager(String customerManager) {
+		this.customerManager = customerManager;
+	}
+
+	public Integer getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Integer customerType) {
+		this.customerType = customerType;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getTerminalCustomers() {
+		return terminalCustomers;
+	}
+
+	public void setTerminalCustomers(String terminalCustomers) {
+		this.terminalCustomers = terminalCustomers;
+	}
+
+	public Integer getIsReformShop() {
+		return isReformShop;
+	}
+
+	public void setIsReformShop(Integer isReformShop) {
+		this.isReformShop = isReformShop;
+	}
+
+	public String getSettlementMethod() {
+		return settlementMethod;
+	}
+
+	public void setSettlementMethod(String settlementMethod) {
+		this.settlementMethod = settlementMethod;
+	}
+
+	public Integer getIsNewCustomer() {
+		return isNewCustomer;
+	}
+
+	public void setIsNewCustomer(Integer isNewCustomer) {
+		this.isNewCustomer = isNewCustomer;
+	}
+
 	
 	
 }
