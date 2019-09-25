@@ -40,27 +40,20 @@ public class SpecialDelivery implements Serializable{
     
 	@Column(name="approval_time",columnDefinition = "datetime")
     public Date approvalTime;//通过时间
-    
+	
 	@NotNull
-	@Column(name = "k_orders_id")
-	public Integer ordersId;
-	
-	@Column(name="apply_status",columnDefinition ="BIT",length=1)
-	public Integer applyStatus;
-
-
-	@Transient
-	public String startTime;
-	
-	@Transient
-	public String endTime;
-	
 	@Column(name="receive_mail_time",columnDefinition = "text")
 	private String receiveMailTime;
 	
+	@NotNull
+	@Column(name="apply_status",columnDefinition = "tinyint")
+	private int applyStatus;
+	
+	@NotNull
 	@Column(name="contract_time",columnDefinition = "text")
 	private String contractTime;
 	
+	@NotNull
 	@Column(name="pay_advance_payment_time",columnDefinition = "text")
 	private String payAdvancePaymentTime;
 	
@@ -72,6 +65,24 @@ public class SpecialDelivery implements Serializable{
 	
 	@Column(name="enclosure_name",columnDefinition = "text")
 	private String enclosureName;
+    
+	@NotNull
+	@Column(name = "k_order_version_id")
+	public Integer kOrderVersionId;
+	
+
+	@Transient
+	public String startTime;
+	
+	@Transient
+	public String endTime;
+	
+	
+	
+	
+	
+	
+	
 	
 
 	public Integer getApplyId() {
@@ -140,14 +151,6 @@ public class SpecialDelivery implements Serializable{
 		this.endTime = endTime;
 	}
 
-	public Integer getOrdersId() {
-		return ordersId;
-	}
-
-	public void setOrdersId(Integer ordersId) {
-		this.ordersId = ordersId;
-	}
-
 	public String getReceiveMailTime() {
 		return receiveMailTime;
 	}
@@ -194,6 +197,18 @@ public class SpecialDelivery implements Serializable{
 
 	public void setEnclosureName(String enclosureName) {
 		this.enclosureName = enclosureName;
+	}
+
+	public Integer getkOrderVersionId() {
+		return kOrderVersionId;
+	}
+
+	public void setkOrderVersionId(Integer kOrderVersionId) {
+		this.kOrderVersionId = kOrderVersionId;
+	}
+
+	public void setApplyStatus(int applyStatus) {
+		this.applyStatus = applyStatus;
 	}
 
 

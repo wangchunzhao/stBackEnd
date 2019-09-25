@@ -16,7 +16,7 @@ import javax.persistence.Transient;
  *
  */
 @Entity
-@Table(name = "report_info_view")
+@Table(name = "report_forms_info_view")
 public class ReportFormsInfo implements Serializable {
 	
 	@Id
@@ -121,6 +121,29 @@ public class ReportFormsInfo implements Serializable {
 	
 	@Column(name="settlement_method")
 	private String	settlementMethod	;//	结算方式
+	
+	
+	@Column(name="freight",columnDefinition = "DECIMAL")
+	private BigDecimal	freight	;//运费
+	
+	@Column(name="warranty_period",columnDefinition = "Double")
+	private Double	warrantyPeriod	;//保修期限（年）
+	
+	@Column(name="currency")
+	private Integer	currency	;//币别
+	
+
+	@Column(name="contract_curreny_amount",columnDefinition = "DECIMAL")
+	private BigDecimal	contractCurrenyAmount	;//原币合同金额
+	
+	@Column(name="exchange_rate",columnDefinition = "DECIMAL")
+	private BigDecimal	exchangeRate	;//汇率
+	
+	@Column(name="is_new_customer",columnDefinition ="TINYINT",length=1)
+	private Integer	isNewCustomer	;//是否新客户
+	
+	
+	
 	
 	@Column(name="area_name")
 	private String areaName;//大区名称 

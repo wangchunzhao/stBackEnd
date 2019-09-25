@@ -24,29 +24,23 @@ public class KOrderInfo {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
 	public int id;
 	
-	@Column(name="contract_no",columnDefinition="CHAR")
-	public String contractNo;
+	@Column(name="last_operator")
+	public String lastOperator;
 	
-	@Column(name="b2c",length = 10)
-	public int b2c;
+	@Column(name="last_opt_time",columnDefinition="datetime")
+	public Date lastOptTime;
 	
-	@Column(name="special_discount",length = 10)
-	public int specialDiscount;
+	@Column(name="customer_name")
+	public String customerName;//店名
 	
-	@Column(name="create_time",columnDefinition="DATETIME")
-	public Date createTime;
+	@Column(name="is_reformed",columnDefinition ="TINYINT",length=1)
+	private Integer	isReformed	;//	是否改造店
 	
-	@Column(name="sequence_number",columnDefinition="CHAR")
-	private String sequenceNumber;//流水号
+	@Column(name="is_convenient_store",columnDefinition ="TINYINT",length=1)
+	private Integer	isConvenientStore	;//	是否便利店
 	
-	@Column(name="shop_name",columnDefinition="TEXT")
-	private String	shopName	;//	店名
-	
-	@Column(name="is_reformedShop",columnDefinition ="TINYINT",length=1)
-	private Integer	isReformShop	;//	是否改造店
-	
-	@Column(name="is_newCustomer",columnDefinition ="TINYINT",length=1)
-	private Integer	isNewCustomer	;//是否新客户
+	@Column(name="is_new",columnDefinition ="TINYINT",length=1)
+	private Integer	isNew	;//	是不是新店
 	
 	@Column(name="terminal_industry_code")
 	private String	terminalIndustryCode;
@@ -54,39 +48,12 @@ public class KOrderInfo {
 	@Column(name="terminal_industry_code_name",columnDefinition="TEXT")
 	private String	terminalIndustryCodeName	;//	终端客户性质
 	
-	@Column(name="dicount",columnDefinition="BOUBLE")
-	private Double	discount	;//	折扣
-	
-	@Column(name="main_discount",columnDefinition="BOUBLE")
-	private Double	mainDiscount	;//	
 	
 	@Column(name="body_discount",columnDefinition="BOUBLE")
 	private Double	bodyDiscount	;//	
 	
-	
-	
-	@Column(name="province_code")
-	private String	provinceCode	;//
-	
-	@Column(name="province_name",columnDefinition="TEXT")
-	private String	provinceName	;//
-	
-	@Column(name="city_code")
-	private String	cityCode	;//	
-	
-	@Column(name="city_name",columnDefinition="TEXT")
-	private String	cityName	;//	
-	
-	@Column(name="distince_code")
-	private String	distinceCode	;//
-	
-	@Column(name="distince_name",columnDefinition="TEXT")
-	private String	distinceName	;//
-	
-	@Column(name="address",columnDefinition="TEXT")
-	private String	address	;//	到货地址
-	
-	
+	@Column(name="main_discount",columnDefinition="BOUBLE")
+	private Double	mainDiscount	;//	
 	
 	@Column(name="install_term_code")
 	private String	installTermCode	;//	
@@ -100,8 +67,6 @@ public class KOrderInfo {
 	@Column(name="receive_term_name",columnDefinition="TEXT")
 	private String	receiveTermName	;//	
 
-	
-	
 	@Column(name="contactor_1_id")
 	private String	contactor1Id	;//	授权人及身份证号
 	@Column(name="contactor_1_tel")
@@ -117,8 +82,6 @@ public class KOrderInfo {
 	@Column(name="contactor_3_tel")
 	private String	contactor3Tel	;//
 	
-	
-	
 	@Column(name="freight",columnDefinition = "DOUBLE")
 	private Double	freight	;//运费
 	
@@ -127,10 +90,10 @@ public class KOrderInfo {
 	
 	
 	@Column(name="currency_code")
-	private Integer	currencyCode	;//币别
+	private String	currencyCode	;//币别
 	
 	@Column(name="currency_name",columnDefinition = "TEXT")
-	private Integer	currencyName	;//币别
+	private String	currencyName	;//币别
 	
 	@Column(name="exchange",columnDefinition = "DOUBLE")
 	private Double	exchange	;//汇率
@@ -142,8 +105,56 @@ public class KOrderInfo {
 	@Column(name="contract_rmb_amount",columnDefinition = "DOUBLE")
 	private Double	contractRmbAmount	;//
 	
-	@Column(name="k_order_version_id",length = 10)
-	public int kOrderVersionId;
+	
+	@Column(name="sales_type",columnDefinition = "char")
+	private String	salesType	;//
+	
+	
+	@Column(name="tax_rate",columnDefinition = "DOUBLE")
+	private Double	taxRate	;//
+	
+	
+	
+	@Column(name="incoterm_code")
+	private String incotermCode;//
+	
+	@Column(name="incoterm_name",columnDefinition="TEXT")
+	private String	incotermName	;//	
+	
+	@Column(name="incoterm_contect",columnDefinition="TEXT")
+	private String	incotermContect	;//	
+	
+	
+	@Column(name="office_code")
+	private String officeCode;//
+	
+	@Column(name="office_name",columnDefinition="TEXT")
+	private String	officeName	;//	
+	
+	@Column(name="group_code")
+	private String groupCode;//
+	
+	@Column(name="group_name",columnDefinition="TEXT")
+	private String	groupName	;//	
+	
+	@Column(name="transfer_type_code")
+	private String transferTypeCode;//
+	
+	@Column(name="transfer_type_name",columnDefinition="TEXT")
+	private String	transferTypeName	;//	
+	
+	@Column(name="is_term1",columnDefinition ="TINYINT",length=1)
+	private Integer	isTerm1	;//
+	
+	@Column(name="is_term2",columnDefinition ="TINYINT",length=1)
+	private Integer	isTerm2	;//
+	
+	@Column(name="is_term3",columnDefinition ="TINYINT",length=1)
+	private Integer	isTerm3	;//
+	
+	@Column(name="comments",columnDefinition="TEXT")
+	private String	comments	;
+	
 	
 	@Transient
 	public String startTime;
@@ -153,6 +164,16 @@ public class KOrderInfo {
 	
 	@Transient
 	public List<SpecialDelivery> applyList;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	public KOrderInfo() {
@@ -170,83 +191,63 @@ public class KOrderInfo {
 	}
 
 
-	public String getContractNo() {
-		return contractNo;
+	public String getLastOperator() {
+		return lastOperator;
 	}
 
 
-	public void setContractNo(String contractNo) {
-		this.contractNo = contractNo;
+	public void setLastOperator(String lastOperator) {
+		this.lastOperator = lastOperator;
 	}
 
 
-	public int getB2c() {
-		return b2c;
+	public Date getLastOptTime() {
+		return lastOptTime;
 	}
 
 
-	public void setB2c(int b2c) {
-		this.b2c = b2c;
+	public void setLastOptTime(Date lastOptTime) {
+		this.lastOptTime = lastOptTime;
 	}
 
 
-	public int getSpecialDiscount() {
-		return specialDiscount;
+	public String getCustomerName() {
+		return customerName;
 	}
 
 
-	public void setSpecialDiscount(int specialDiscount) {
-		this.specialDiscount = specialDiscount;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 
-	public Date getCreateTime() {
-		return createTime;
+	public Integer getIsReformed() {
+		return isReformed;
 	}
 
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setIsReformed(Integer isReformed) {
+		this.isReformed = isReformed;
 	}
 
 
-	public String getSequenceNumber() {
-		return sequenceNumber;
+	public Integer getIsConvenientStore() {
+		return isConvenientStore;
 	}
 
 
-	public void setSequenceNumber(String sequenceNumber) {
-		this.sequenceNumber = sequenceNumber;
+	public void setIsConvenientStore(Integer isConvenientStore) {
+		this.isConvenientStore = isConvenientStore;
 	}
 
 
-	public String getShopName() {
-		return shopName;
+	public Integer getIsNew() {
+		return isNew;
 	}
 
 
-	public void setShopName(String shopName) {
-		this.shopName = shopName;
-	}
-
-
-	public Integer getIsReformShop() {
-		return isReformShop;
-	}
-
-
-	public void setIsReformShop(Integer isReformShop) {
-		this.isReformShop = isReformShop;
-	}
-
-
-	public Integer getIsNewCustomer() {
-		return isNewCustomer;
-	}
-
-
-	public void setIsNewCustomer(Integer isNewCustomer) {
-		this.isNewCustomer = isNewCustomer;
+	public void setIsNew(Integer isNew) {
+		this.isNew = isNew;
 	}
 
 
@@ -270,26 +271,6 @@ public class KOrderInfo {
 	}
 
 
-	public Double getDiscount() {
-		return discount;
-	}
-
-
-	public void setDiscount(Double discount) {
-		this.discount = discount;
-	}
-
-
-	public Double getMainDiscount() {
-		return mainDiscount;
-	}
-
-
-	public void setMainDiscount(Double mainDiscount) {
-		this.mainDiscount = mainDiscount;
-	}
-
-
 	public Double getBodyDiscount() {
 		return bodyDiscount;
 	}
@@ -300,73 +281,13 @@ public class KOrderInfo {
 	}
 
 
-	public String getProvinceCode() {
-		return provinceCode;
+	public Double getMainDiscount() {
+		return mainDiscount;
 	}
 
 
-	public void setProvinceCode(String provinceCode) {
-		this.provinceCode = provinceCode;
-	}
-
-
-	public String getProvinceName() {
-		return provinceName;
-	}
-
-
-	public void setProvinceName(String provinceName) {
-		this.provinceName = provinceName;
-	}
-
-
-	public String getCityCode() {
-		return cityCode;
-	}
-
-
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
-
-
-	public String getCityName() {
-		return cityName;
-	}
-
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-
-	public String getDistinceCode() {
-		return distinceCode;
-	}
-
-
-	public void setDistinceCode(String distinceCode) {
-		this.distinceCode = distinceCode;
-	}
-
-
-	public String getDistinceName() {
-		return distinceName;
-	}
-
-
-	public void setDistinceName(String distinceName) {
-		this.distinceName = distinceName;
-	}
-
-
-	public String getAddress() {
-		return address;
-	}
-
-
-	public void setAddress(String address) {
-		this.address = address;
+	public void setMainDiscount(Double mainDiscount) {
+		this.mainDiscount = mainDiscount;
 	}
 
 
@@ -490,22 +411,22 @@ public class KOrderInfo {
 	}
 
 
-	public Integer getCurrencyCode() {
+	public String getCurrencyCode() {
 		return currencyCode;
 	}
 
 
-	public void setCurrencyCode(Integer currencyCode) {
+	public void setCurrencyCode(String currencyCode) {
 		this.currencyCode = currencyCode;
 	}
 
 
-	public Integer getCurrencyName() {
+	public String getCurrencyName() {
 		return currencyName;
 	}
 
 
-	public void setCurrencyName(Integer currencyName) {
+	public void setCurrencyName(String currencyName) {
 		this.currencyName = currencyName;
 	}
 
@@ -540,13 +461,153 @@ public class KOrderInfo {
 	}
 
 
-	public int getkOrderVersionId() {
-		return kOrderVersionId;
+	public String getSalesType() {
+		return salesType;
 	}
 
 
-	public void setkOrderVersionId(int kOrderVersionId) {
-		this.kOrderVersionId = kOrderVersionId;
+	public void setSalesType(String salesType) {
+		this.salesType = salesType;
+	}
+
+
+	public Double getTaxRate() {
+		return taxRate;
+	}
+
+
+	public void setTaxRate(Double taxRate) {
+		this.taxRate = taxRate;
+	}
+
+
+	public String getIncotermCode() {
+		return incotermCode;
+	}
+
+
+	public void setIncotermCode(String incotermCode) {
+		this.incotermCode = incotermCode;
+	}
+
+
+	public String getIncotermName() {
+		return incotermName;
+	}
+
+
+	public void setIncotermName(String incotermName) {
+		this.incotermName = incotermName;
+	}
+
+
+	public String getIncotermContect() {
+		return incotermContect;
+	}
+
+
+	public void setIncotermContect(String incotermContect) {
+		this.incotermContect = incotermContect;
+	}
+
+
+	public String getOfficeCode() {
+		return officeCode;
+	}
+
+
+	public void setOfficeCode(String officeCode) {
+		this.officeCode = officeCode;
+	}
+
+
+	public String getOfficeName() {
+		return officeName;
+	}
+
+
+	public void setOfficeName(String officeName) {
+		this.officeName = officeName;
+	}
+
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+
+	public String getTransferTypeCode() {
+		return transferTypeCode;
+	}
+
+
+	public void setTransferTypeCode(String transferTypeCode) {
+		this.transferTypeCode = transferTypeCode;
+	}
+
+
+	public String getTransferTypeName() {
+		return transferTypeName;
+	}
+
+
+	public void setTransferTypeName(String transferTypeName) {
+		this.transferTypeName = transferTypeName;
+	}
+
+
+	public Integer getIsTerm1() {
+		return isTerm1;
+	}
+
+
+	public void setIsTerm1(Integer isTerm1) {
+		this.isTerm1 = isTerm1;
+	}
+
+
+	public Integer getIsTerm2() {
+		return isTerm2;
+	}
+
+
+	public void setIsTerm2(Integer isTerm2) {
+		this.isTerm2 = isTerm2;
+	}
+
+
+	public Integer getIsTerm3() {
+		return isTerm3;
+	}
+
+
+	public void setIsTerm3(Integer isTerm3) {
+		this.isTerm3 = isTerm3;
+	}
+
+
+	public String getComments() {
+		return comments;
+	}
+
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
 

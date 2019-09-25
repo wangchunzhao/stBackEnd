@@ -41,8 +41,21 @@ public class ItemsForm implements Serializable{
 	@Column(name = "k_order_info_id")
 	public int kOrderInfoId;
 
+	@NotNull
+	@Column(name = "operator")
+	public String operator;//
 
+	@NotNull
+	@Column(name = "type",columnDefinition ="tinyint")
+	public int type;
 	
+	@NotNull
+	@Column(name="opt_time",columnDefinition="datetime")
+	public Date optTime;
+	
+	@NotNull
+	@Column(name = "is_ready",columnDefinition ="tinyint")
+	public int isReady;
 	
 	
 	public int getId() {
@@ -101,6 +114,46 @@ public class ItemsForm implements Serializable{
 
 	public void setkOrderInfoId(int kOrderInfoId) {
 		this.kOrderInfoId = kOrderInfoId;
+	}
+
+
+	public String getOperator() {
+		return operator;
+	}
+
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+
+	public int getType() {
+		return type;
+	}
+
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+
+	public Date getOptTime() {
+		return optTime;
+	}
+
+
+	public void setOptTime(Date optTime) {
+		this.optTime = optTime;
+	}
+
+
+	public int getIsReady() {
+		return isReady;
+	}
+
+
+	public void setIsReady(int isReady) {
+		this.isReady = isReady;
 	}
 
 

@@ -73,6 +73,19 @@ public class ItemDetails implements Serializable{
 	@NotNull
 	@Column(name = "cost")
 	public Double cost;
+	
+	@Column(name = "b2c_cost")
+	public Double b2cCost;
+	
+	@Column(name = "b2c_comments")
+	public String b2cComments;
+	
+	@Column(name = "type")
+	public String type;
+	
+	
+	
+	
 
 	public int getId() {
 		return id;
@@ -168,6 +181,30 @@ public class ItemDetails implements Serializable{
 
 	public void setCost(Double cost) {
 		this.cost = cost;
+	}
+
+	public Double getB2cCost() {
+		return b2cCost;
+	}
+
+	public void setB2cCost(Double b2cCost) {
+		this.b2cCost = b2cCost;
+	}
+
+	public String getB2cComments() {
+		return b2cComments;
+	}
+
+	public void setB2cComments(String b2cComments) {
+		this.b2cComments = b2cComments;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	
