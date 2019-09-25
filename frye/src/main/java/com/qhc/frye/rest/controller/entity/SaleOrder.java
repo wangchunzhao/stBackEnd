@@ -9,7 +9,7 @@ import java.util.List;
  * @author wang@dxc.com
  *
  */
-public class Order {
+public class SaleOrder {
 	private String orderType;//dealer or keyaccount or bulk
 	/**
 	 * 客户基本信息 Basic information
@@ -17,8 +17,8 @@ public class Order {
 	private String contracterCode;//签约单位 Contract unit
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
-	//private String salesCode;//客户经理 Customer manager
-	//private String salesName;//客户经理 Customer manager
+	
+	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
 	private int isNew;//是否新客户 new customer
 	/**
@@ -75,6 +75,11 @@ public class Order {
 	 * 附件信息 Attachment information
 	 */
 	private List<String> attachedFileName;
+	
+	/**
+	 * from session
+	 */
+	private String salesCode;//客户经理 Customer manager
 	//
 	private boolean isSubmit;
 	
@@ -314,6 +319,24 @@ public class Order {
 	}
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+	public String getSalesCode() {
+		return salesCode;
+	}
+	public void setSalesCode(String salesCode) {
+		this.salesCode = salesCode;
+	}
+	public String getSalesName() {
+		return salesName;
+	}
+	public void setSalesName(String salesName) {
+		this.salesName = salesName;
+	}
+	public double getCurrencyExchange() {
+		return currencyExchange;
+	}
+	public void setCurrencyExchange(double currencyExchange) {
+		this.currencyExchange = currencyExchange;
 	}
 	
 }

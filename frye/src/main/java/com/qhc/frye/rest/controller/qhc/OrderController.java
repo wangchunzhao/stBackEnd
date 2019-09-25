@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.CustomerClass;
 import com.qhc.frye.domain.DSalesType;
-import com.qhc.frye.rest.controller.entity.Order;
+import com.qhc.frye.rest.controller.entity.SaleOrder;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
 
@@ -46,19 +46,19 @@ public class OrderController {
 	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
     @PostMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
-    public void submitOrder(@RequestBody(required=true) @Valid Order order) throws Exception
+    public void submitOrder(@RequestBody(required=true) @Valid SaleOrder saleOrder) throws Exception
     {	
 		System.out.println("submitOrder");
-		orderService.save(order);
+		orderService.save(saleOrder);
     }
 
 	@ApiOperation(value="Looking for the newest order", notes="Looking fro the newest order from cloud")
     @PutMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
-    public void  updateOrder(@RequestBody(required=true) @Valid Order order) throws Exception
+    public void  updateOrder(@RequestBody(required=true) @Valid SaleOrder saleOrder) throws Exception
     {	
 		System.out.println("updateOrder");
-		orderService.update(order);
+		orderService.update(saleOrder);
     }
 	
 	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.SalesTypeRepository;
 import com.qhc.frye.domain.DSalesType;
 
-import com.qhc.frye.rest.controller.entity.Order;
+import com.qhc.frye.rest.controller.entity.SaleOrder;
 
 @Service
 public class OrderService {
@@ -23,11 +23,18 @@ public class OrderService {
 	public List<DSalesType> getSalesTypes(){
 		return salesTypeRepo.findAll();
 	}
-	
-	public void save(Order order){
+	/**
+	 * 
+	 * @param saleOrder
+	 */
+	public void save(SaleOrder saleOrder){
 		
 	}
-	public void update(Order order){
+	/**
+	 * 
+	 * @param saleOrder
+	 */
+	public void update(SaleOrder saleOrder){
 		
 	}
 
