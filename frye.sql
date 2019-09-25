@@ -1222,6 +1222,30 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
 
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_attached_info`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_attached_info` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_attached_info` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `start_date_of_production` DATE NULL,
+  `date_of_on_store` DATE NULL,
+  `k_item_details_id` INT UNSIGNED NOT NULL,
+  `opt_time` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_k_attached_info_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_attached_info_k_item_details1`
+    FOREIGN KEY (`k_item_details_id`)
+    REFERENCES `bohemian`.`k_item_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
 USE `bohemian` ;
 
 -- -----------------------------------------------------
