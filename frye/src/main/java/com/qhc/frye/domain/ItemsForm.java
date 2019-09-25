@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "k_items_form")
+@Table(name = "k_forms")
 public class ItemsForm implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
@@ -23,17 +23,23 @@ public class ItemsForm implements Serializable{
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
 	public int id;
 	
+	@NotNull
+	@Column(name = "k_form_number")
+	public String kFormNumber;//
 	
 	@NotNull
-	@Column(name = "earliest_delivery_date",columnDefinition ="datetime")
-	public Date earliestDeliveryDate;//最早交货时间
+	@Column(name = "earliest_product_date")
+	public Date earliestProductDate;//最早交货时间
 	
 	@NotNull
-	@Column(name = "earliest_send_date",columnDefinition ="datetime")
-	public Date earliestSendDate;//最早发货时间
+	@Column(name = "earliest_delivery_date")
+	public Date earliestDeliveryDate;//最早发货时间
 	
-	@Column(name = "remark",columnDefinition ="TEXT")
-	public String remark;
+	@Column(name = "comments",columnDefinition ="TEXT")
+	public String comments;
+	
+	@Column(name = "k_order_info_id")
+	public int kOrderInfoId;
 
 
 	
@@ -58,26 +64,47 @@ public class ItemsForm implements Serializable{
 	}
 
 
-	public Date getEarliestSendDate() {
-		return earliestSendDate;
+	public String getkFormNumber() {
+		return kFormNumber;
 	}
 
 
-	public void setEarliestSendDate(Date earliestSendDate) {
-		this.earliestSendDate = earliestSendDate;
+	public void setkFormNumber(String kFormNumber) {
+		this.kFormNumber = kFormNumber;
 	}
 
 
-	public String getRemark() {
-		return remark;
+	public Date getEarliestProductDate() {
+		return earliestProductDate;
 	}
 
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setEarliestProductDate(Date earliestProductDate) {
+		this.earliestProductDate = earliestProductDate;
 	}
-	
-    
+
+
+	public String getComments() {
+		return comments;
+	}
+
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+
+	public int getkOrderInfoId() {
+		return kOrderInfoId;
+	}
+
+
+	public void setkOrderInfoId(int kOrderInfoId) {
+		this.kOrderInfoId = kOrderInfoId;
+	}
+
+
+
 
 
 
