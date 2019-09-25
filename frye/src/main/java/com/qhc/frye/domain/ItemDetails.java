@@ -24,7 +24,7 @@ public class ItemDetails implements Serializable{
 	public int id;
 	
 	@NotNull
-	@Column(name = "k_froms_id")
+	@Column(name = "k_forms_id")
 	public Integer kFormsId;
 
 	
