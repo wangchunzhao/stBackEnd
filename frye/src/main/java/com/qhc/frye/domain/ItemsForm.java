@@ -25,7 +25,7 @@ public class ItemsForm implements Serializable{
 	
 	@NotNull
 	@Column(name = "k_form_number")
-	public Date kFormNumber;//
+	public String kFormNumber;//
 	
 	@NotNull
 	@Column(name = "earliest_product_date")
@@ -64,12 +64,12 @@ public class ItemsForm implements Serializable{
 	}
 
 
-	public Date getkFormNumber() {
+	public String getkFormNumber() {
 		return kFormNumber;
 	}
 
 
-	public void setkFormNumber(Date kFormNumber) {
+	public void setkFormNumber(String kFormNumber) {
 		this.kFormNumber = kFormNumber;
 	}
 
