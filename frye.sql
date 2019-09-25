@@ -941,7 +941,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_application` (
   `approver` VARCHAR(128) NULL DEFAULT NULL,
   `apply_time` DATETIME NOT NULL,
   `approval_time` DATETIME NULL,
-  `apply_status` TINYINT(1) NOT NULL COMMENT '申请状态',
+  `approved_status` TINYINT(1) NULL COMMENT 'null: 新建\n0：驳回\n1：同意',
   `receive_mail_time` TEXT NOT NULL,
   `contract_time` TEXT NOT NULL,
   `pay_advance_payment_time` TEXT NOT NULL,
