@@ -19,39 +19,52 @@ public class Orders {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
 	public int id;
 	
+	@NotNull
 	@Column(name="sequence_number",columnDefinition="char")
 	public String sequenceNumber;
 	
+	@NotNull
 	@Column(name="order_type_code",columnDefinition="char")
 	public String orderTypeCode;
 	
+	@NotNull
 	@Column(name="create_time",columnDefinition="datetime")
 	public Date createTime;
 	
+	@NotNull
 	@Column(name="owner_domain_id")
 	public String ownerDomainId;
 	
+	@NotNull
 	@Column(name="owner_name",columnDefinition="TEXT")
 	private String	ownerName;
 	
 	@Column(name="sales_tel")
 	private String	salesTel;
 	
-	
+	@NotNull
 	@Column(name="contractor_code")
 	private String	contractorCode;
 	
+	@NotNull
 	@Column(name="contractor_name",columnDefinition="TEXT")
 	private String	contractorName;
 	
+	@NotNull
 	@Column(name="contractor_class_code",columnDefinition="char")
 	private String	contractorClassCode;
 	
+	@NotNull
 	@Column(name="contractor_class_name",columnDefinition="TEXT")
 	private String	contractorClassName;
 	
+	@NotNull
 	@Column(name="office_code",columnDefinition="char")
 	private String	officeCode;
+	
+	
+	
+	
 
 	public int getId() {
 		return id;

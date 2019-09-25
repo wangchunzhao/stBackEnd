@@ -87,6 +87,7 @@ public class ItemDetails implements Serializable{
 	
 	
 
+	
 	public int getId() {
 		return id;
 	}

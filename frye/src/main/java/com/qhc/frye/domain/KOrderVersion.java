@@ -42,8 +42,6 @@ public class KOrderVersion {
 	
 	
 	
-	
-	
 
 	public int getId() {
 		return id;

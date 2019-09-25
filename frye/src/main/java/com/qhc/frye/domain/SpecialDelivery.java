@@ -211,8 +211,6 @@ public class SpecialDelivery implements Serializable{
 		this.applyStatus = applyStatus;
 	}
 
-
-	
 	
 	
 

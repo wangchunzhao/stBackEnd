@@ -144,7 +144,6 @@ public class ReportFormsInfo implements Serializable {
 	
 	
 	
-	
 	@Column(name="area_name")
 	private String areaName;//大区名称 
 	@Column(name="status_name")
@@ -158,6 +157,12 @@ public class ReportFormsInfo implements Serializable {
 	
 	@Transient
 	public String endTime;
+	
+	
+	
+	
+	
+	
 	
 	public String getId() {
 		return id;

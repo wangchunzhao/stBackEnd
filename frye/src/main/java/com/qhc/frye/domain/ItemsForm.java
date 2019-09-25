@@ -43,7 +43,7 @@ public class ItemsForm implements Serializable{
 
 	@NotNull
 	@Column(name = "operator")
-	public String operator;//
+	public String operator;
 
 	@NotNull
 	@Column(name = "type",columnDefinition ="tinyint")

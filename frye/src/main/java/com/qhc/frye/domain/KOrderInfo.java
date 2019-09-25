@@ -50,13 +50,13 @@ public class KOrderInfo {
 	
 	
 	@Column(name="body_discount",columnDefinition="BOUBLE")
-	private Double	bodyDiscount	;//	
+	private Double	bodyDiscount;//	
 	
 	@Column(name="main_discount",columnDefinition="BOUBLE")
-	private Double	mainDiscount	;//	
+	private Double	mainDiscount;//	
 	
 	@Column(name="install_term_code")
-	private String	installTermCode	;//	
+	private String	installTermCode;//	
 	
 	@Column(name="install_term_name",columnDefinition="TEXT")
 	private String	installTermName	;//	
@@ -68,46 +68,46 @@ public class KOrderInfo {
 	private String	receiveTermName	;//	
 
 	@Column(name="contactor_1_id")
-	private String	contactor1Id	;//	授权人及身份证号
+	private String	contactor1Id;//	授权人及身份证号
 	@Column(name="contactor_1_tel")
-	private String	contactor1Tel	;//
+	private String	contactor1Tel;//
 	
 	@Column(name="contactor_2_id")
-	private String	contactor2Id	;//	授权人及身份证号
+	private String	contactor2Id;//	授权人及身份证号
 	@Column(name="contactor_2_tel")
-	private String	contactor2Tel	;//
+	private String	contactor2Tel;//
 	
 	@Column(name="contactor_3_id")
-	private String	contactor3Id	;//	授权人及身份证号
+	private String	contactor3Id;//	授权人及身份证号
 	@Column(name="contactor_3_tel")
-	private String	contactor3Tel	;//
+	private String	contactor3Tel;//
 	
 	@Column(name="freight",columnDefinition = "DOUBLE")
 	private Double	freight	;//运费
 	
 	@Column(name="warranty")
-	private int	warranty	;//保修期限（年）
+	private int	warranty;//保修期限（年）
 	
 	
 	@Column(name="currency_code")
-	private String	currencyCode	;//币别
+	private String	currencyCode;//币别
 	
 	@Column(name="currency_name",columnDefinition = "TEXT")
-	private String	currencyName	;//币别
+	private String	currencyName;//币别
 	
 	@Column(name="exchange",columnDefinition = "DOUBLE")
-	private Double	exchange	;//汇率
+	private Double	exchange;//汇率
 	
 	
 	@Column(name="contract_amount",columnDefinition = "DOUBLE")
 	private Double	contractAmount	;//原币合同金额
 	
 	@Column(name="contract_rmb_amount",columnDefinition = "DOUBLE")
-	private Double	contractRmbAmount	;//
+	private Double	contractRmbAmount;//
 	
 	
 	@Column(name="sales_type",columnDefinition = "char")
-	private String	salesType	;//
+	private String	salesType;//
 	
 	
 	@Column(name="tax_rate",columnDefinition = "DOUBLE")
@@ -119,29 +119,29 @@ public class KOrderInfo {
 	private String incotermCode;//
 	
 	@Column(name="incoterm_name",columnDefinition="TEXT")
-	private String	incotermName	;//	
+	private String	incotermName;//	
 	
 	@Column(name="incoterm_contect",columnDefinition="TEXT")
-	private String	incotermContect	;//	
+	private String	incotermContect;//	
 	
 	
 	@Column(name="office_code")
 	private String officeCode;//
 	
 	@Column(name="office_name",columnDefinition="TEXT")
-	private String	officeName	;//	
+	private String	officeName;//	
 	
 	@Column(name="group_code")
 	private String groupCode;//
 	
 	@Column(name="group_name",columnDefinition="TEXT")
-	private String	groupName	;//	
+	private String	groupName;//	
 	
 	@Column(name="transfer_type_code")
 	private String transferTypeCode;//
 	
 	@Column(name="transfer_type_name",columnDefinition="TEXT")
-	private String	transferTypeName	;//	
+	private String	transferTypeName;//	
 	
 	@Column(name="is_term1",columnDefinition ="TINYINT",length=1)
 	private Integer	isTerm1	;//
@@ -153,7 +153,7 @@ public class KOrderInfo {
 	private Integer	isTerm3	;//
 	
 	@Column(name="comments",columnDefinition="TEXT")
-	private String	comments	;
+	private String	comments;
 	
 	
 	@Transient
