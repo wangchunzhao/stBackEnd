@@ -18,6 +18,7 @@ public class Order {
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
 	//private String salesCode;//客户经理 Customer manager
+	//private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
 	private int isNew;//是否新客户 new customer
 	/**
@@ -26,13 +27,13 @@ public class Order {
 	private String sequenceNumber;//流水号 code
 	private String contractNumber;//合同号 contract no
 	private String saleType;//销售类型 Sales type
-	private String taxRate;//税率 Rate
+	private int taxRate;//税率 Rate
 	private String incoterm;//国际贸易条件 international trade
 	private String incotermContect;//国际贸易条件 international trade
 	private double contractValue;//原币合同金额 Contract amount
 	private double contractRMBValue;//合同金额 Contract amount
 	private String currency;//币种 currency
-	private double currencyRate;//汇率 exchange rate
+	private double currencyExchange;//汇率 exchange rate
 	//public abstract double getItemsAmount();//购销明细金额合计 Aggregate amount
 	/*
 	 * 合同详细信息 Contract details
@@ -54,7 +55,7 @@ public class Order {
 	private String confirmTypeCode;//收货方式 Receiving way
 	private String transferTypeCode;//运输类型 Type of transportation
 	private double freight;//运费
-	private int isAllinBulk;//是否全部为散件
+	//private int isAllinBulk;//是否全部为散件
 	/**
 	 * 结算方式 Method of payment
 	 */
@@ -132,10 +133,10 @@ public class Order {
 	public void setSaleType(String saleType) {
 		this.saleType = saleType;
 	}
-	public String getTaxRate() {
+	public int getTaxRate() {
 		return taxRate;
 	}
-	public void setTaxRate(String taxRate) {
+	public void setTaxRate(int taxRate) {
 		this.taxRate = taxRate;
 	}
 	public String getIncoterm() {
@@ -169,10 +170,10 @@ public class Order {
 		this.currency = currency;
 	}
 	public double getCurrencyRate() {
-		return currencyRate;
+		return currencyExchange;
 	}
 	public void setCurrencyRate(double currencyRate) {
-		this.currencyRate = currencyRate;
+		this.currencyExchange = currencyRate;
 	}
 	public String getOfficeCode() {
 		return officeCode;
@@ -301,12 +302,6 @@ public class Order {
 	}
 	public void setAddress(String address) {
 		this.address = address;
-	}
-	public int getIsAllinBulk() {
-		return isAllinBulk;
-	}
-	public void setIsAllinBulk(int isAllinBulk) {
-		this.isAllinBulk = isAllinBulk;
 	}
 	public double getFreight() {
 		return freight;
