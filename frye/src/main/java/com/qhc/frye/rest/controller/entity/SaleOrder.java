@@ -3,13 +3,16 @@
  */
 package com.qhc.frye.rest.controller.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.qhc.frye.domain.DOrder;
 
 /**
  * @author wang@dxc.com
  *
  */
-public class SaleOrder {
+public class SaleOrder implements InterEntityToDao{
 	private String orderType;//dealer or keyaccount or bulk
 	/**
 	 * 客户基本信息 Basic information
@@ -337,6 +340,16 @@ public class SaleOrder {
 	}
 	public void setCurrencyExchange(double currencyExchange) {
 		this.currencyExchange = currencyExchange;
+	}
+	@Override
+	public List<Object> toDaos() {
+		List<Object> objs = new ArrayList<Object>();
+		DOrder dorder = new DOrder();
+		
+		
+		
+		objs.add(dorder);
+		return objs;
 	}
 	
 }
