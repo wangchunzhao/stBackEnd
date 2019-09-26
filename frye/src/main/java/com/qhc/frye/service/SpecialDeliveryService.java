@@ -19,9 +19,9 @@ public class SpecialDeliveryService {
 		return specialDeliveryRepository.save(sd);
 	}
 
-	public List<SpecialDelivery> findByOrdersId(Integer kOrdersId) {
-		return specialDeliveryRepository.findByOrdersId(kOrdersId);
-	}
+//	public List<SpecialDelivery> findByOrdersId(Integer kOrdersId) {
+//		return specialDeliveryRepository.findByOrdersId(kOrdersId);
+//	}
 
 	public SpecialDelivery findById(Integer applyId) {
 		return specialDeliveryRepository.getOne(applyId);

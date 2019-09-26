@@ -10,5 +10,5 @@ import com.qhc.frye.domain.SpecialDelivery;
 @Repository
 public interface SpecialDeliveryRepository extends JpaRepository<SpecialDelivery, Integer>,JpaSpecificationExecutor<SpecialDelivery> {
 
-	List<SpecialDelivery> findByOrdersId(Integer kOrdersId);
+//	List<SpecialDelivery> findByOrdersId(Integer kOrdersId);
 }
