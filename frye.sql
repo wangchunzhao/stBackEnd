@@ -496,10 +496,10 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_material_type` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_type` (
-  `number` VARCHAR(4) NOT NULL,
+  `code` VARCHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
-  PRIMARY KEY (`number`),
-  UNIQUE INDEX `number_UNIQUE` (`number` ASC) VISIBLE)
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `number_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -521,6 +521,19 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
+-- Table `bohemian`.`sap_material_groups`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_material_groups` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_groups` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `bohemian`.`sap_materials`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`sap_materials` ;
@@ -535,16 +548,23 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `opt_time` DATETIME NOT NULL,
   `sap_material_type_number` VARCHAR(4) NOT NULL,
   `sap_unit_of_measurement_code` VARCHAR(3) NOT NULL,
+  `sap_material_groups_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_sap_materials_sap_material_type1_idx` (`sap_material_type_number` ASC) VISIBLE,
   INDEX `fk_sap_materials_sap_unit_of_measurement1_idx` (`sap_unit_of_measurement_code` ASC) VISIBLE,
+  INDEX `fk_sap_materials_sap_material_groups1_idx` (`sap_material_groups_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_materials_sap_material_type1`
     FOREIGN KEY (`sap_material_type_number`)
-    REFERENCES `bohemian`.`sap_material_type` (`number`),
+    REFERENCES `bohemian`.`sap_material_type` (`code`),
   CONSTRAINT `fk_sap_materials_sap_unit_of_measurement1`
     FOREIGN KEY (`sap_unit_of_measurement_code`)
-    REFERENCES `bohemian`.`sap_unit_of_measurement` (`code`))
+    REFERENCES `bohemian`.`sap_unit_of_measurement` (`code`),
+  CONSTRAINT `fk_sap_materials_sap_material_groups1`
+    FOREIGN KEY (`sap_material_groups_code`)
+    REFERENCES `bohemian`.`sap_material_groups` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -883,7 +903,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `incoterm_code` VARCHAR(45) NULL,
   `incoterm_name` TEXT NULL,
   `incoterm_contect` TEXT NULL,
-  `office_ode` VARCHAR(45) NULL,
+  `office_code` VARCHAR(45) NULL,
   `office_name` TEXT NULL,
   `group_code` VARCHAR(45) NULL,
   `group_name` TEXT NULL,
@@ -971,6 +991,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` INT UNSIGNED NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
   `material_name` TEXT NOT NULL,
+  `group_code` VARCHAR(45) NOT NULL,
   `k_forms_id` INT(10) UNSIGNED NOT NULL,
   `material_specific_Number` VARCHAR(45) NOT NULL,
   `material_attribute` VARCHAR(45) NOT NULL,
