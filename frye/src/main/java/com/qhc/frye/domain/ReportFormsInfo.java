@@ -16,7 +16,6 @@ import javax.persistence.Transient;
  *
  */
 @Entity
-@Table(name = "report_forms_info_view")
 public class ReportFormsInfo implements Serializable {
 	
 	@Id

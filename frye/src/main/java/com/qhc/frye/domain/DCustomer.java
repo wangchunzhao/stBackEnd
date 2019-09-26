@@ -48,10 +48,10 @@ public class DCustomer implements Serializable{
 	@NotNull
 	@Column(name="sap_customer_class_code",columnDefinition="CHAR",length=2)
 	private String clazzCode;
-	
+/*	
 	@NotNull
 	@Column(name="sap_customer_level_code",columnDefinition="CHAR",length=4)
-	private String levelCode;
+	private String levelCode;*/
 	
 	public Date getChangedDate() {
 		return changedDate;
@@ -77,12 +77,12 @@ public class DCustomer implements Serializable{
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
 	}
-	public String getLevelCode() {
+/*	public String getLevelCode() {
 		return levelCode;
 	}
 	public void setLevelCode(String levelCode) {
 		this.levelCode = levelCode;
-	}
+	}*/
 	public String getCode() {
 		return code;
 	}

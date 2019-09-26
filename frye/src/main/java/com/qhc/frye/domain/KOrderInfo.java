@@ -30,17 +30,17 @@ public class KOrderInfo {
 	@Column(name="last_opt_time",columnDefinition="datetime")
 	public Date lastOptTime;
 	
-	@Column(name="customer_name")
+	@Column(name="customer_name",columnDefinition="TEXT")
 	public String customerName;//店名
 	
-	@Column(name="is_reformed",columnDefinition ="TINYINT",length=1)
-	private Integer	isReformed	;//	是否改造店
+	@Column(name="is_reformed",columnDefinition ="bit",length=1)
+	private int	isReformed	;//	是否改造店
 	
-	@Column(name="is_convenient_store",columnDefinition ="TINYINT",length=1)
-	private Integer	isConvenientStore	;//	是否便利店
+	@Column(name="is_convenient_store",columnDefinition ="bit",length=1)
+	public int	isConvenientStore;//	是否便利店
 	
-	@Column(name="is_new",columnDefinition ="TINYINT",length=1)
-	private Integer	isNew	;//	是不是新店
+	@Column(name="is_new",columnDefinition ="bit",length=1)
+	private int	isNew	;//	是不是新店
 	
 	@Column(name="terminal_industry_code")
 	private String	terminalIndustryCode;
@@ -49,10 +49,10 @@ public class KOrderInfo {
 	private String	terminalIndustryCodeName	;//	终端客户性质
 	
 	
-	@Column(name="body_discount",columnDefinition="BOUBLE")
+	@Column(name="body_discount",columnDefinition="DECIMAL")
 	private Double	bodyDiscount;//	
 	
-	@Column(name="main_discount",columnDefinition="BOUBLE")
+	@Column(name="main_discount",columnDefinition="DECIMAL")
 	private Double	mainDiscount;//	
 	
 	@Column(name="install_term_code")
@@ -82,7 +82,7 @@ public class KOrderInfo {
 	@Column(name="contactor_3_tel")
 	private String	contactor3Tel;//
 	
-	@Column(name="freight",columnDefinition = "DOUBLE")
+	@Column(name="freight",columnDefinition = "DECIMAL")
 	private Double	freight	;//运费
 	
 	@Column(name="warranty")
@@ -99,21 +99,21 @@ public class KOrderInfo {
 	private Double	exchange;//汇率
 	
 	
-	@Column(name="contract_amount",columnDefinition = "DOUBLE")
+	@Column(name="contract_amount",columnDefinition = "DECIMAL")
 	private Double	contractAmount	;//原币合同金额
 	
-	@Column(name="contract_rmb_amount",columnDefinition = "DOUBLE")
+	@Column(name="contract_rmb_amount",columnDefinition = "DECIMAL")
 	private Double	contractRmbAmount;//
 	
 	
 	@Column(name="sales_type",columnDefinition = "char")
 	private String	salesType;//
 	
-	
-	@Column(name="tax_rate",columnDefinition = "DOUBLE")
+/*	
+	@Column(name="tax_rate",columnDefinition = "DECIMAL")
 	private Double	taxRate	;//
 	
-	
+*/	
 	
 	@Column(name="incoterm_code")
 	private String incotermCode;//
@@ -143,14 +143,14 @@ public class KOrderInfo {
 	@Column(name="transfer_type_name",columnDefinition="TEXT")
 	private String	transferTypeName;//	
 	
-	@Column(name="is_term1",columnDefinition ="TINYINT",length=1)
-	private Integer	isTerm1	;//
+	@Column(name="is_term1",columnDefinition ="bit",length=1)
+	private int	isTerm1	;//
 	
-	@Column(name="is_term2",columnDefinition ="TINYINT",length=1)
-	private Integer	isTerm2	;//
+	@Column(name="is_term2",columnDefinition ="bit",length=1)
+	private int	isTerm2	;//
 	
-	@Column(name="is_term3",columnDefinition ="TINYINT",length=1)
-	private Integer	isTerm3	;//
+	@Column(name="is_term3",columnDefinition ="bit",length=1)
+	private int	isTerm3	;//
 	
 	@Column(name="comments",columnDefinition="TEXT")
 	private String	comments;
@@ -164,16 +164,6 @@ public class KOrderInfo {
 	
 	@Transient
 	public List<SpecialDelivery> applyList;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 	public KOrderInfo() {
@@ -221,32 +211,32 @@ public class KOrderInfo {
 	}
 
 
-	public Integer getIsReformed() {
+	public int getIsReformed() {
 		return isReformed;
 	}
 
 
-	public void setIsReformed(Integer isReformed) {
+	public void setIsReformed(int isReformed) {
 		this.isReformed = isReformed;
 	}
 
-
-	public Integer getIsConvenientStore() {
+/*
+	public int getIsConvenientStore() {
 		return isConvenientStore;
 	}
 
 
-	public void setIsConvenientStore(Integer isConvenientStore) {
+	public void setIsConvenientStore(int isConvenientStore) {
 		this.isConvenientStore = isConvenientStore;
 	}
 
-
-	public Integer getIsNew() {
+*/
+	public int getIsNew() {
 		return isNew;
 	}
 
 
-	public void setIsNew(Integer isNew) {
+	public void setIsNew(int isNew) {
 		this.isNew = isNew;
 	}
 
@@ -470,7 +460,7 @@ public class KOrderInfo {
 		this.salesType = salesType;
 	}
 
-
+/*
 	public Double getTaxRate() {
 		return taxRate;
 	}
@@ -480,7 +470,7 @@ public class KOrderInfo {
 		this.taxRate = taxRate;
 	}
 
-
+*/
 	public String getIncotermCode() {
 		return incotermCode;
 	}
@@ -571,32 +561,32 @@ public class KOrderInfo {
 	}
 
 
-	public Integer getIsTerm1() {
+	public int getIsTerm1() {
 		return isTerm1;
 	}
 
 
-	public void setIsTerm1(Integer isTerm1) {
+	public void setIsTerm1(int isTerm1) {
 		this.isTerm1 = isTerm1;
 	}
 
 
-	public Integer getIsTerm2() {
+	public int getIsTerm2() {
 		return isTerm2;
 	}
 
 
-	public void setIsTerm2(Integer isTerm2) {
+	public void setIsTerm2(int isTerm2) {
 		this.isTerm2 = isTerm2;
 	}
 
 
-	public Integer getIsTerm3() {
+	public int getIsTerm3() {
 		return isTerm3;
 	}
 
 
-	public void setIsTerm3(Integer isTerm3) {
+	public void setIsTerm3(int isTerm3) {
 		this.isTerm3 = isTerm3;
 	}
 
@@ -640,8 +630,6 @@ public class KOrderInfo {
 		this.applyList = applyList;
 	}
 
-
-	
 	
 	
 }

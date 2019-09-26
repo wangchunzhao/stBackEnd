@@ -47,7 +47,7 @@ public class KOrderInfoController {
 		PageHelper<KOrderInfo> pageHelper = new PageHelper<KOrderInfo>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		KOrderInfo kOrderInfo = new KOrderInfo();
-		kOrderInfo.setContractNo(contractNo);
+/*		kOrderInfo.setContractNo(contractNo);
 		kOrderInfo.setB2c(b2c);
 		kOrderInfo.setContractUnit(contractUnit);
 		kOrderInfo.setCreateId(createId);
@@ -56,7 +56,7 @@ public class KOrderInfoController {
 		kOrderInfo.setEndTime(endTime);
 		kOrderInfo.setOrderType(1);
 		kOrderInfo.setSpecialDiscount(specialDiscount);
-		kOrderInfo.setStatus(status);
+		kOrderInfo.setStatus(status);*/
 		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions(kOrderInfo, pageable);
 
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
@@ -87,10 +87,10 @@ public class KOrderInfoController {
 		PageHelper<KOrderInfo> pageHelper = new PageHelper<KOrderInfo>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		KOrderInfo kOrderInfo = new KOrderInfo();
-		kOrderInfo.setContractNo(contractNo);
+/*		kOrderInfo.setContractNo(contractNo);
 		kOrderInfo.setStartTime(startTime);
 		kOrderInfo.setEndTime(endTime);
-		kOrderInfo.setStatus(status);
+		kOrderInfo.setStatus(status);*/
 		Page<KOrderInfo> page = kOrderInfoService.getKOrdersByConditions2(kOrderInfo, pageable);
 
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));

@@ -22,7 +22,7 @@ public class ItemDetails implements Serializable{
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
 	public int id;
-	
+/*	
 	@NotNull
 	@Column(name = "k_forms_id")
 	public Integer kFormsId;
@@ -87,7 +87,7 @@ public class ItemDetails implements Serializable{
 	
 	
 
-	
+*/	
 	public int getId() {
 		return id;
 	}
@@ -95,7 +95,7 @@ public class ItemDetails implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-
+/*
 	public Integer getkFormsId() {
 		return kFormsId;
 	}
@@ -209,7 +209,7 @@ public class ItemDetails implements Serializable{
 	}
 	
 	
-	
+*/	
 	
 	
 }

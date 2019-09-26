@@ -92,7 +92,7 @@ public class Contract implements Serializable{
 	@Column(name = "account_number",columnDefinition="TEXT")
 	private String		accountNumber;
 	
-	@Column(name = "k_orders_id")
+	@Column(name = "k_order_version_id")
 	private Integer		kOrdersId;
 
 	public int getId() {

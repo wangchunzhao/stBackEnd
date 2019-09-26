@@ -22,7 +22,7 @@ public class ItemsForm implements Serializable{
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)  
 	public int id;
-	
+	/*	
 	@NotNull
 	@Column(name = "k_form_number")
 	public String kFormNumber;//
@@ -55,7 +55,7 @@ public class ItemsForm implements Serializable{
 	
 	@NotNull
 	@Column(name = "is_ready",columnDefinition ="tinyint")
-	public int isReady;
+	public int isReady;*/
 	
 	
 	public int getId() {
@@ -66,7 +66,7 @@ public class ItemsForm implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-
+/*
 	public Date getEarliestDeliveryDate() {
 		return earliestDeliveryDate;
 	}
@@ -157,7 +157,7 @@ public class ItemsForm implements Serializable{
 	}
 
 
-
+*/
 
 
 
