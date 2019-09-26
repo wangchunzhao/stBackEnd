@@ -7,6 +7,7 @@ package com.qhc.frye.rest.controller.qhc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class DOrderController {
 	@ApiOperation(value="Get DOrder by id", notes="Get DOrder by id")
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DOrder findByKOrderVersionId(Integer id) throws Exception
+    public DOrder findByKOrderVersionId(@PathVariable Integer id) throws Exception
     {	
 		
 		return orderService.findByKOrderVersionId(id);
