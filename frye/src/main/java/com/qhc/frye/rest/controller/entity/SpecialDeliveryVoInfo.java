@@ -1,209 +1,221 @@
 package com.qhc.frye.rest.controller.entity;
-//
+
 import java.io.Serializable;
-//import java.util.Date;
-//
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-//import javax.persistence.Transient;
-//
-///**
-// * @author lizuoshan
-// *
-// */
-//@Entity
-//@Table(name = "k_speical_order_vo_view")
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import com.qhc.frye.domain.SpecialDelivery;
+
+/**
+ * @author lizuoshan
+ *
+ */
+@Entity
+@Table(name = "k_speical_order_vo_view")
 public class SpecialDeliveryVoInfo implements Serializable{
-//	
-//    
-//	@Id
-//	@Column(name="id")
-//	public String id;
-//	
-//	@Column(name="apply_id")
-//	public Integer applyId;
-//    
-//	@Column(name="applyer")
-//	public String applyer;//申请人
-//    
-//	@Column(name="approver")
-//    public String approver;//通过人
-//    
-//	@Column(name="apply_time",columnDefinition = "datetime")
-//    public Date applyTime;//申请时间
-//    
-//	@Column(name="approval_time",columnDefinition = "datetime")
-//    public Date approvalTime;//通过时间
-//	
-//	@Column(name="receive_mail_time",columnDefinition = "text")
-//	private String receiveMailTime;
-//	
-//	@Column(name="apply_status",columnDefinition = "tinyint")
-//	private int applyStatus;
-//	
-//	@Column(name="contract_time",columnDefinition = "text")
-//	private String contractTime;
-//	
-//	@Column(name="pay_advance_payment_time",columnDefinition = "text")
-//	private String payAdvancePaymentTime;
-//	
-//	@Column(name="remark",columnDefinition = "text")
-//	private String remark;
-//	
-//	@Column(name="enclosure_path",columnDefinition = "text")
-//	private String enclosurePath;
-//	
-//	@Column(name="enclosure_name",columnDefinition = "text")
-//	private String enclosureName;
-//    
-//	@Column(name = "k_order_version_id")
-//	public Integer kOrderVersionId;
-//	
-//
-//	@Transient
-//	public String startTime;
-//	
-//	@Transient
-//	public String endTime;
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//
-//	public Integer getApplyId() {
-//		return applyId;
-//	}
-//
-//	public void setApplyId(Integer applyId) {
-//		this.applyId = applyId;
-//	}
-//
-//	public Integer getApplyStatus() {
-//		return applyStatus;
-//	}
-//
-//	public void setApplyStatus(Integer applyStatus) {
-//		this.applyStatus = applyStatus;
-//	}
-//
-//	public String getApplyer() {
-//		return applyer;
-//	}
-//
-//	public void setApplyer(String applyer) {
-//		this.applyer = applyer;
-//	}
-//
-//	public String getApprover() {
-//		return approver;
-//	}
-//
-//	public void setApprover(String approver) {
-//		this.approver = approver;
-//	}
-//
-//
-//
-//	public Date getApplyTime() {
-//		return applyTime;
-//	}
-//
-//	public void setApplyTime(Date applyTime) {
-//		this.applyTime = applyTime;
-//	}
-//
-//	public Date getApprovalTime() {
-//		return approvalTime;
-//	}
-//
-//	public void setApprovalTime(Date approvalTime) {
-//		this.approvalTime = approvalTime;
-//	}
-//
-//	public String getStartTime() {
-//		return startTime;
-//	}
-//
-//	public void setStartTime(String startTime) {
-//		this.startTime = startTime;
-//	}
-//
-//	public String getEndTime() {
-//		return endTime;
-//	}
-//
-//	public void setEndTime(String endTime) {
-//		this.endTime = endTime;
-//	}
-//
-//	public String getReceiveMailTime() {
-//		return receiveMailTime;
-//	}
-//
-//	public void setReceiveMailTime(String receiveMailTime) {
-//		this.receiveMailTime = receiveMailTime;
-//	}
-//
-//	public String getContractTime() {
-//		return contractTime;
-//	}
-//
-//	public void setContractTime(String contractTime) {
-//		this.contractTime = contractTime;
-//	}
-//
-//	public String getPayAdvancePaymentTime() {
-//		return payAdvancePaymentTime;
-//	}
-//
-//	public void setPayAdvancePaymentTime(String payAdvancePaymentTime) {
-//		this.payAdvancePaymentTime = payAdvancePaymentTime;
-//	}
-//
-//	public String getRemark() {
-//		return remark;
-//	}
-//
-//	public void setRemark(String remark) {
-//		this.remark = remark;
-//	}
-//
-//	public String getEnclosurePath() {
-//		return enclosurePath;
-//	}
-//
-//	public void setEnclosurePath(String enclosurePath) {
-//		this.enclosurePath = enclosurePath;
-//	}
-//
-//	public String getEnclosureName() {
-//		return enclosureName;
-//	}
-//
-//	public void setEnclosureName(String enclosureName) {
-//		this.enclosureName = enclosureName;
-//	}
-//
-//	public Integer getkOrderVersionId() {
-//		return kOrderVersionId;
-//	}
-//
-//	public void setkOrderVersionId(Integer kOrderVersionId) {
-//		this.kOrderVersionId = kOrderVersionId;
-//	}
-//
-//	public void setApplyStatus(int applyStatus) {
-//		this.applyStatus = applyStatus;
-//	}
-//
-//	
-//	
-//
-//
+ 
+	@Id
+	@Column(name="id")
+	public String id;
+	
+	@Column(name="k_orders_id")
+	public Integer kOrderId;
+	
+	@Column(name="sequence_number",columnDefinition="char")
+	public String sequenceNumber;
+	
+	@Column(name="order_type_code",columnDefinition="char")
+	public String orderTypeCode;
+	
+	@Column(name="create_time",columnDefinition="datetime")
+	public Date createTime;
+	
+	@Column(name="owner_domain_id")
+	public String ownerDomainId;
+	
+	@Column(name="owner_name",columnDefinition="TEXT")
+	private String	ownerName;
+	
+	@Column(name="sales_tel")
+	private String	salesTel;
+	
+	@Column(name="contractor_code")
+	private String	contractorCode;
+	
+	@Column(name="contractor_name",columnDefinition="TEXT")
+	private String	contractorName;
+	
+	@Column(name="contractor_class_code",columnDefinition="char")
+	private String	contractorClassCode;
+	
+	@Column(name="contractor_class_name",columnDefinition="TEXT")
+	private String	contractorClassName;
+	
+	@Column(name="office_code",columnDefinition="char")
+	private String	officeCode;
+	
+	
+	
+	@Column(name="k_order_version_id")
+	public Integer kOrderVersionId;
+	
+	@Transient
+	public Double distcount;
+
+	@Transient
+	public String startTime;
+	
+	@Transient
+	public String endTime;
+	
+	
+	
+	
+
+	public Double getDistcount() {
+		return distcount;
+	}
+
+	public void setDistcount(Double distcount) {
+		this.distcount = distcount;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	public void setSequenceNumber(String sequenceNumber) {
+		this.sequenceNumber = sequenceNumber;
+	}
+
+	public String getOrderTypeCode() {
+		return orderTypeCode;
+	}
+
+	public void setOrderTypeCode(String orderTypeCode) {
+		this.orderTypeCode = orderTypeCode;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getOwnerDomainId() {
+		return ownerDomainId;
+	}
+
+	public void setOwnerDomainId(String ownerDomainId) {
+		this.ownerDomainId = ownerDomainId;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getSalesTel() {
+		return salesTel;
+	}
+
+	public void setSalesTel(String salesTel) {
+		this.salesTel = salesTel;
+	}
+
+	public String getContractorCode() {
+		return contractorCode;
+	}
+
+	public void setContractorCode(String contractorCode) {
+		this.contractorCode = contractorCode;
+	}
+
+	public String getContractorName() {
+		return contractorName;
+	}
+
+	public void setContractorName(String contractorName) {
+		this.contractorName = contractorName;
+	}
+
+	public String getContractorClassCode() {
+		return contractorClassCode;
+	}
+
+	public void setContractorClassCode(String contractorClassCode) {
+		this.contractorClassCode = contractorClassCode;
+	}
+
+	public String getContractorClassName() {
+		return contractorClassName;
+	}
+
+	public void setContractorClassName(String contractorClassName) {
+		this.contractorClassName = contractorClassName;
+	}
+
+	public String getOfficeCode() {
+		return officeCode;
+	}
+
+	public void setOfficeCode(String officeCode) {
+		this.officeCode = officeCode;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public Integer getkOrderVersionId() {
+		return kOrderVersionId;
+	}
+
+	public void setkOrderVersionId(Integer kOrderVersionId) {
+		this.kOrderVersionId = kOrderVersionId;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
 }
