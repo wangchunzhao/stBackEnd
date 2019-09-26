@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.KOrderInfoRepository;
+import com.qhc.frye.dao.SalesOrderRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
+import com.qhc.frye.dao.SalesorderVersionRepository;
 import com.qhc.frye.domain.DSalesType;
 
 import com.qhc.frye.rest.controller.entity.SaleOrder;
@@ -15,6 +18,16 @@ public class OrderService {
 	
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
+	
+	
+	@Autowired
+	private SalesOrderRepository orderRepo;
+	
+	@Autowired
+	private SalesorderVersionRepository versionRepo;
+	
+	@Autowired
+	private KOrderInfoRepository orderInfoRepo; 
 	
 	/**
 	 * 
