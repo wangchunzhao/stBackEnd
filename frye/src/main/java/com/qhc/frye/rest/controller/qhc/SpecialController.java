@@ -39,7 +39,7 @@ public class SpecialController {
 		return specialDeliveryService.saveOrUpdate(sd);
 		
     }
-	
+/*	
 	@ApiOperation(value="Find the SpecialDelivery by orderId ", notes="Find the SpecialDelivery by orderId")
 	@GetMapping("/order/{ordersId}")
     @ResponseStatus(HttpStatus.OK)
@@ -49,7 +49,7 @@ public class SpecialController {
 		return specialDeliveryService.findByOrdersId(ordersId);
 		
     }
-	
+	*/
 	@ApiOperation(value="Find the SpecialDelivery by id ", notes="Find the SpecialDelivery by id")
 	@GetMapping("/{applyId}")
     @ResponseStatus(HttpStatus.OK)
