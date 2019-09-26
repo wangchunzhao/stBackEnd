@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qhc.frye.domain.DOrder;
+import com.qhc.frye.domain.KOrderVersion;
 
 /**
  * @author wang@dxc.com
@@ -344,11 +345,13 @@ public class SaleOrder implements InterEntityToDao{
 	@Override
 	public List<Object> toDaos() {
 		List<Object> objs = new ArrayList<Object>();
+		KOrderVersion orderVer = new KOrderVersion();
 		DOrder dorder = new DOrder();
 		
 		
 		
 		objs.add(dorder);
+		objs.add(orderVer);
 		return objs;
 	}
 	
