@@ -42,6 +42,9 @@ public class User implements Serializable{
 	@Column(name = "name",columnDefinition ="TEXT",length = 45)
 	public String userName;
 	
+	@Column(name = "tel",length = 16)
+	public String tel;
+	
 	@Transient
     public List<ApplicationOfRolechange> apps;
 	
@@ -132,6 +135,14 @@ public class User implements Serializable{
 		this.operations = operations;
 	}
 
+	public String getTel() {
+		return tel;
+	}
 
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	
 
 }
