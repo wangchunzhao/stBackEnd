@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "k_orders")
-public class Orders {
+public class DOrder {
 	
 	@Id
     @NotNull
