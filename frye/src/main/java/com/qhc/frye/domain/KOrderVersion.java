@@ -24,7 +24,7 @@ public class KOrderVersion {
 	public String version;
 	 
 	@NotNull
-	@Column(name="status")
+	@Column(name="status",columnDefinition="enum")
 	private String	status;
 	
 	@NotNull

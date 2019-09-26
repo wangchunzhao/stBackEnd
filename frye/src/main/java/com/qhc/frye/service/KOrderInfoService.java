@@ -40,7 +40,7 @@ public class KOrderInfoService {
 					predicate.getExpressions().add(
 							cb.lessThanOrEqualTo(root.get("createTime").as(String.class), kOrderInfo.getEndTime()));
 				}
-				if (kOrderInfo.getB2c() > -1) {
+/*				if (kOrderInfo.getB2c() > -1) {
 					predicate.getExpressions().add(cb.equal(root.get("b2c").as(Integer.class), kOrderInfo.getB2c()));
 				}
 				if (kOrderInfo.getArea() > -1) {
@@ -68,7 +68,7 @@ public class KOrderInfoService {
 				if (kOrderInfo.getContractUnit() != null && !"".equals(kOrderInfo.getContractUnit())) {
 					predicate.getExpressions().add(cb.like(root.get("contractUnit").as(String.class),
 							"%" + kOrderInfo.getContractUnit() + "%"));
-				}
+				}*/
 				return predicate;
 			}
 		};
@@ -82,7 +82,7 @@ public class KOrderInfoService {
 			@Override
 			public Predicate toPredicate(Root<KOrderInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> list = new ArrayList<Predicate>();
-				if (kOrderInfo.getContractNo() != null && !"".equals(kOrderInfo.getContractNo())) {
+/*				if (kOrderInfo.getContractNo() != null && !"".equals(kOrderInfo.getContractNo())) {
 					Predicate p1 = cb.and(cb.like(root.get("contractNo").as(String.class), "%" + kOrderInfo.getContractNo() + "%"));	
 					list.add(p1);
 				}
@@ -103,7 +103,7 @@ public class KOrderInfoService {
 			    for (Integer id : ids) {
 			        in.value(id);
 			    }
-			    list.add(in);
+			    list.add(in);*/
 			    Predicate[] p = new Predicate[list.size()];
 				return cb.and(list.toArray(p));
 			} 

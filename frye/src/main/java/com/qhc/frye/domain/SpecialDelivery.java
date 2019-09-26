@@ -46,7 +46,7 @@ public class SpecialDelivery implements Serializable{
 	private String receiveMailTime;
 	
 	@NotNull
-	@Column(name="apply_status",columnDefinition = "tinyint")
+	@Column(name="approved_status",columnDefinition = "enum")
 	private int applyStatus;
 	
 	@NotNull
