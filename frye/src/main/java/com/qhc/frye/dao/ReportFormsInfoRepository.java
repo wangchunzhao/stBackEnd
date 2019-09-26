@@ -13,5 +13,4 @@ import com.qhc.frye.domain.ReportFormsInfo;
 //@Repository
 public interface ReportFormsInfoRepository extends JpaRepository<ReportFormsInfo, String>,JpaSpecificationExecutor<ReportFormsInfo>{
 //
-//
 }
