@@ -99,7 +99,7 @@ public class Customer implements InterEntityToDao {
 		dc.setChangedDate(this.getChangedDate());
 		dc.setClazzCode(this.getClazzCode());
 		dc.setGroupCode(this.getGroupCode());
-		dc.setLevelCode(this.getLevelCode());
+//		dc.setLevelCode(this.getLevelCode());
 		objs.add(dc);
 		//
 		if(this.getAffiliationCode()!=null && !this.getAffiliationCode().isEmpty()) {
