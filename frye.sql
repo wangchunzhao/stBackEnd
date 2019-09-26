@@ -777,7 +777,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `version` VARCHAR(45) NOT NULL,
-  `status` ENUM('0', '1', '2', '3') NOT NULL COMMENT '0:saved\n1:draft:submit to headquater\n2.approving:BPM\n3.approved',
+  `status` TINYINT(2) NOT NULL COMMENT '0:saved\n1:draft:submit to headquater\n2.approving:BPM\n3.approved',
   `create_time` DATETIME NOT NULL,
   `k_orders_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -961,7 +961,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_application` (
   `approver` VARCHAR(128) NULL DEFAULT NULL,
   `apply_time` DATETIME NOT NULL,
   `approval_time` DATETIME NULL,
-  `approved_status` ENUM('0', '1', '-1') NULL COMMENT '-1: 驳回\n0：新建\n1：同意',
+  `apply_status` TINYINT(2) NOT NULL COMMENT '0: 新建\n1：同意\n2：驳回',
   `receive_mail_time` TEXT NOT NULL,
   `contract_time` TEXT NOT NULL,
   `pay_advance_payment_time` TEXT NOT NULL,
@@ -993,6 +993,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `material_name` TEXT NOT NULL,
   `group_code` VARCHAR(45) NOT NULL,
   `k_forms_id` INT(10) UNSIGNED NOT NULL,
+  `material_type` TINYINT(2) NOT NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
   `material_specific_Number` VARCHAR(45) NOT NULL,
   `material_attribute` VARCHAR(45) NOT NULL,
   `quantity` INT NULL,
@@ -1002,7 +1003,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `b2c_estimation_cost` DOUBLE NULL,
   `b2c_estimation_amount` DECIMAL(13,2) NOT NULL,
   `b2c_comments` TEXT NULL,
-  `type` ENUM('1', '2') NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
   `row_number` INT NOT NULL,
   `special_code` VARCHAR(45) NULL,
   `material_property_code` VARCHAR(45) NOT NULL,
@@ -1132,7 +1132,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_support_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `contract_number` VARCHAR(10) NOT NULL,
+  `contract_number` VARCHAR(45) NOT NULL,
   `opterator_domain_id` VARCHAR(128) NOT NULL,
   `opt_time` DATETIME NOT NULL,
   `k_orders_id` INT(10) UNSIGNED NOT NULL,
