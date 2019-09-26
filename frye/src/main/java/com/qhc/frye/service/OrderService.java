@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.KOrderInfoRepository;
+import com.qhc.frye.dao.KParentorderVersionRepository;
 import com.qhc.frye.dao.SalesOrderRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
 import com.qhc.frye.dao.SalesorderVersionRepository;
@@ -28,6 +29,9 @@ public class OrderService {
 	
 	@Autowired
 	private KOrderInfoRepository orderInfoRepo; 
+	
+	@Autowired
+	private KParentorderVersionRepository parentVerRepo;
 	
 	/**
 	 * 
