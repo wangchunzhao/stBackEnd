@@ -1,5 +1,6 @@
 package com.qhc.frye.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -30,16 +31,16 @@ public class KOrderInfo {
 	@Column(name="last_opt_time",columnDefinition="datetime")
 	public Date lastOptTime;
 	
-	@Column(name="customer_name")
+	@Column(name="customer_name",columnDefinition="TEXT")
 	public String customerName;//店名
 	
-	@Column(name="is_reformed",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_reformed",columnDefinition ="BIT")
 	private Integer	isReformed	;//	是否改造店
 	
-	@Column(name="is_convenient_store",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_convenient_store",columnDefinition ="BIT")
 	private Integer	isConvenientStore	;//	是否便利店
 	
-	@Column(name="is_new",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_new",columnDefinition ="BIT")
 	private Integer	isNew	;//	是不是新店
 	
 	@Column(name="terminal_industry_code")
@@ -82,8 +83,8 @@ public class KOrderInfo {
 	@Column(name="contactor_3_tel")
 	private String	contactor3Tel;//
 	
-	@Column(name="freight",columnDefinition = "DOUBLE")
-	private Double	freight	;//运费
+	@Column(name = "freight"/* ,columnDefinition = "DOUBLE" */)
+	private BigDecimal	freight	;//运费
 	
 	@Column(name="warranty")
 	private int	warranty;//保修期限（年）
@@ -99,11 +100,11 @@ public class KOrderInfo {
 	private Double	exchange;//汇率
 	
 	
-	@Column(name="contract_amount",columnDefinition = "DOUBLE")
-	private Double	contractAmount	;//原币合同金额
+	@Column(name = "contract_amount"/* ,columnDefinition = "DOUBLE" */)
+	private BigDecimal	contractAmount	;//原币合同金额
 	
-	@Column(name="contract_rmb_amount",columnDefinition = "DOUBLE")
-	private Double	contractRmbAmount;//
+	@Column(name = "contract_rmb_amount"/* ,columnDefinition = "DOUBLE" */)
+	private BigDecimal	contractRmbAmount;//
 	
 	
 	@Column(name="sales_type",columnDefinition = "char")
@@ -143,13 +144,13 @@ public class KOrderInfo {
 	@Column(name="transfer_type_name",columnDefinition="TEXT")
 	private String	transferTypeName;//	
 	
-	@Column(name="is_term1",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_term1",columnDefinition ="BIT")
 	private Integer	isTerm1	;//
 	
-	@Column(name="is_term2",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_term2",columnDefinition ="BIT")
 	private Integer	isTerm2	;//
 	
-	@Column(name="is_term3",columnDefinition ="TINYINT",length=1)
+	@Column(name="is_term3",columnDefinition ="BIT")
 	private Integer	isTerm3	;//
 	
 	@Column(name="comments",columnDefinition="TEXT")
@@ -391,12 +392,13 @@ public class KOrderInfo {
 	}
 
 
-	public Double getFreight() {
+
+	public BigDecimal getFreight() {
 		return freight;
 	}
 
 
-	public void setFreight(Double freight) {
+	public void setFreight(BigDecimal freight) {
 		this.freight = freight;
 	}
 
@@ -441,22 +443,25 @@ public class KOrderInfo {
 	}
 
 
-	public Double getContractAmount() {
+	
+
+
+	public BigDecimal getContractAmount() {
 		return contractAmount;
 	}
 
 
-	public void setContractAmount(Double contractAmount) {
+	public void setContractAmount(BigDecimal contractAmount) {
 		this.contractAmount = contractAmount;
 	}
 
 
-	public Double getContractRmbAmount() {
+	public BigDecimal getContractRmbAmount() {
 		return contractRmbAmount;
 	}
 
 
-	public void setContractRmbAmount(Double contractRmbAmount) {
+	public void setContractRmbAmount(BigDecimal contractRmbAmount) {
 		this.contractRmbAmount = contractRmbAmount;
 	}
 

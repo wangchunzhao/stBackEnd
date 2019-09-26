@@ -1,6 +1,8 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,9 +55,6 @@ public class ItemDetails implements Serializable{
 	public Integer quantity;
 	
 	//销售单价
-	@NotNull
-	@Column(name = "price")
-	public Double price;
 	
 	//销售金额
 	@Transient
@@ -70,18 +69,40 @@ public class ItemDetails implements Serializable{
 	@Column(name = "measure_unit_name",columnDefinition = "TEXT")
 	public String measureUnitName;
 
-	@NotNull
-	@Column(name = "cost")
-	public Double cost;
 	
-	@Column(name = "b2c_cost")
-	public Double b2cCost;
-	
-	@Column(name = "b2c_comments")
+	@Column(name = "b2c_comments",columnDefinition = "TEXT")
 	public String b2cComments;
 	
-	@Column(name = "type")
+//	@Column(name = "type")
+	@Transient
 	public String type;
+	
+	@Column(name = "row_number")
+	public Integer rowNumber;
+	
+	@Column(name = "special_code")
+	public String specialCode;
+	
+	@Column(name = "material_property_code")
+	public String materialPropertyCode;
+	
+	@Column(name = "material_property_name",columnDefinition = "TEXT")
+	public String materialPropertyName;
+	
+	@Column(name = "transfter_price")
+	public BigDecimal transfterPrice;
+	
+	@Column(name = "discount")
+	public Double discount;
+	
+	@Column(name = "item_category")
+	public String itemCategory;
+	
+	
+	@Column(name = "item_requirement_plan")
+	public String itemRequirementPlan;
+	
+
 	
 	
 	
@@ -144,14 +165,6 @@ public class ItemDetails implements Serializable{
 		this.quantity = quantity;
 	}
 
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
 	public Double getSalesAmount() {
 		return salesAmount;
 	}
@@ -176,22 +189,6 @@ public class ItemDetails implements Serializable{
 		this.measureUnitName = measureUnitName;
 	}
 
-	public Double getCost() {
-		return cost;
-	}
-
-	public void setCost(Double cost) {
-		this.cost = cost;
-	}
-
-	public Double getB2cCost() {
-		return b2cCost;
-	}
-
-	public void setB2cCost(Double b2cCost) {
-		this.b2cCost = b2cCost;
-	}
-
 	public String getB2cComments() {
 		return b2cComments;
 	}
@@ -206,6 +203,70 @@ public class ItemDetails implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Integer getRowNumber() {
+		return rowNumber;
+	}
+
+	public void setRowNumber(Integer rowNumber) {
+		this.rowNumber = rowNumber;
+	}
+
+	public String getSpecialCode() {
+		return specialCode;
+	}
+
+	public void setSpecialCode(String specialCode) {
+		this.specialCode = specialCode;
+	}
+
+	public String getMaterialPropertyCode() {
+		return materialPropertyCode;
+	}
+
+	public void setMaterialPropertyCode(String materialPropertyCode) {
+		this.materialPropertyCode = materialPropertyCode;
+	}
+
+	public String getMaterialPropertyName() {
+		return materialPropertyName;
+	}
+
+	public void setMaterialPropertyName(String materialPropertyName) {
+		this.materialPropertyName = materialPropertyName;
+	}
+
+	public BigDecimal getTransfterPrice() {
+		return transfterPrice;
+	}
+
+	public void setTransfterPrice(BigDecimal transfterPrice) {
+		this.transfterPrice = transfterPrice;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public String getItemCategory() {
+		return itemCategory;
+	}
+
+	public void setItemCategory(String itemCategory) {
+		this.itemCategory = itemCategory;
+	}
+
+	public String getItemRequirementPlan() {
+		return itemRequirementPlan;
+	}
+
+	public void setItemRequirementPlan(String itemRequirementPlan) {
+		this.itemRequirementPlan = itemRequirementPlan;
 	}
 	
 	

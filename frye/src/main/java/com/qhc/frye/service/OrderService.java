@@ -30,8 +30,8 @@ public class OrderService {
 	@Autowired
 	private KOrderInfoRepository orderInfoRepo; 
 	
-	@Autowired
-	private KParentorderVersionRepository parentVerRepo;
+//	@Autowired
+//	private KParentorderVersionRepository parentVerRepo;
 	
 	/**
 	 * 

@@ -24,10 +24,6 @@ public class ItemsForm implements Serializable{
 	public int id;
 	
 	@NotNull
-	@Column(name = "k_form_number")
-	public String kFormNumber;//
-	
-	@NotNull
 	@Column(name = "earliest_product_date")
 	public Date earliestProductDate;//最早交货时间
 	
@@ -54,7 +50,7 @@ public class ItemsForm implements Serializable{
 	public Date optTime;
 	
 	@NotNull
-	@Column(name = "is_ready",columnDefinition ="tinyint")
+	@Column(name = "is_ready",columnDefinition ="BIT")
 	public int isReady;
 	
 	
@@ -74,16 +70,6 @@ public class ItemsForm implements Serializable{
 
 	public void setEarliestDeliveryDate(Date earliestDeliveryDate) {
 		this.earliestDeliveryDate = earliestDeliveryDate;
-	}
-
-
-	public String getkFormNumber() {
-		return kFormNumber;
-	}
-
-
-	public void setkFormNumber(String kFormNumber) {
-		this.kFormNumber = kFormNumber;
 	}
 
 

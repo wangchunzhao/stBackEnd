@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 
@@ -23,8 +24,9 @@ public class KOrderVersion {
 	@Column(name="version")
 	public String version;
 	 
-	@NotNull
-	@Column(name="status")
+//	@NotNull
+//	@Column(name="status",columnDefinition = "CHAR")
+	 @Transient
 	private String	status;
 	
 	@NotNull
