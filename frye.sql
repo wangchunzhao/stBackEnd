@@ -879,7 +879,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `contract_amount` DECIMAL(13,2) NULL,
   `contract_rmb_amount` DECIMAL(13,2) NULL,
   `sales_type` CHAR(2) NULL,
-  `tax_rate` INT NULL COMMENT '税率',
+  `tax_rate` DOUBLE NULL COMMENT '税率',
   `incoterm_code` VARCHAR(45) NULL,
   `incoterm_name` TEXT NULL,
   `incoterm_contect` TEXT NULL,
