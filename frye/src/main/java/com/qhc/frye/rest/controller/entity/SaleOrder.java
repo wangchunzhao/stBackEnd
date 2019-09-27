@@ -32,7 +32,7 @@ public class SaleOrder{
 	private String sequenceNumber;//流水号 code
 	private String contractNumber;//合同号 contract no
 	private String saleType;//销售类型 Sales type
-	private int taxRate;//税率 Rate
+	private double taxRate;//税率 Rate
 	private String incoterm;//国际贸易条件 international trade
 	private String incotermContect;//国际贸易条件 international trade
 	private double contractValue;//原币合同金额 Contract amount
@@ -87,6 +87,22 @@ public class SaleOrder{
 	private String currentUser;//当前session用户
 	
 	private boolean isSubmit;
+	//
+	private String recordCode;// 项目报备编号 report number
+	
+	private String customerNatureCode;//终端客户性质 customer nature
+	/**
+	 * 
+	 */
+	private double discount;//合并折扣
+	
+	private double bodyDiscount;//柜体折扣 standard discount
+	
+	private double mainDiscount;//机组折扣 standard discount
+	
+	private int isLongterm;//是否为长期折扣
+	
+	private double approvedDicount;//批准的折扣、标准折扣
 	//
 	public String getCurrentUser() {
 		return currentUser;
@@ -149,10 +165,10 @@ public class SaleOrder{
 	public void setSaleType(String saleType) {
 		this.saleType = saleType;
 	}
-	public int getTaxRate() {
+	public double getTaxRate() {
 		return taxRate;
 	}
-	public void setTaxRate(int taxRate) {
+	public void setTaxRate(double taxRate) {
 		this.taxRate = taxRate;
 	}
 	public String getIncoterm() {
@@ -210,6 +226,48 @@ public class SaleOrder{
 		this.warrenty = warrenty;
 	}
 	
+	public String getRecordCode() {
+		return recordCode;
+	}
+	public void setRecordCode(String recordCode) {
+		this.recordCode = recordCode;
+	}
+	public String getCustomerNatureCode() {
+		return customerNatureCode;
+	}
+	public void setCustomerNatureCode(String customerNatureCode) {
+		this.customerNatureCode = customerNatureCode;
+	}
+	public double getDiscount() {
+		return discount;
+	}
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+	public double getBodyDiscount() {
+		return bodyDiscount;
+	}
+	public void setBodyDiscount(double bodyDiscount) {
+		this.bodyDiscount = bodyDiscount;
+	}
+	public double getMainDiscount() {
+		return mainDiscount;
+	}
+	public void setMainDiscount(double mainDiscount) {
+		this.mainDiscount = mainDiscount;
+	}
+	public int getIsLongterm() {
+		return isLongterm;
+	}
+	public void setIsLongterm(int isLongterm) {
+		this.isLongterm = isLongterm;
+	}
+	public double getApprovedDicount() {
+		return approvedDicount;
+	}
+	public void setApprovedDicount(double approvedDicount) {
+		this.approvedDicount = approvedDicount;
+	}
 	public String getContactor1Id() {
 		return contactor1Id;
 	}
