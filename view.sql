@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS `bohemian`.k_report_material_view;
+
  CREATE VIEW k_report_material_view AS 
 
 SELECT
