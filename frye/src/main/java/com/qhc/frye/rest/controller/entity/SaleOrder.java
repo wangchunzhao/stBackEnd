@@ -4,10 +4,12 @@
 package com.qhc.frye.rest.controller.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.KOrderVersion;
+import com.qhc.frye.domain.OrderSupportInfo;
 
 /**
  * @author wang@dxc.com
@@ -347,11 +349,25 @@ public class SaleOrder implements InterEntityToDao{
 		List<Object> objs = new ArrayList<Object>();
 		KOrderVersion orderVer = new KOrderVersion();
 		DOrder dorder = new DOrder();
+		OrderSupportInfo osi = new OrderSupportInfo();
+		//
+		dorder.setSequenceNumber(this.getSequenceNumber());//序列号
+		dorder.setOrderTypeCode(this.getOrderType());
+		dorder.setCreateTime(new Date());
+		dorder.setOwnerDomainId(this.getSalesCode());
+		dorder.setOwnerName(this.getSalesName());
+		dorder.setSalesTel(this.getSalesTelnumber());
+		dorder.setContractorCode(this.getContracterCode());
+//		dorder.setContractorName();//name
+//		dorder.setContractorClassCode();//customer class
+//		dorder.setContractorClassName();//customer class name
+		dorder.setOfficeCode(this.getOfficeCode());
+		//
 		
-		
-		
+		//
 		objs.add(dorder);
 		objs.add(orderVer);
+		objs.add(osi);
 		return objs;
 	}
 	
