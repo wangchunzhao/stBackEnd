@@ -22,12 +22,13 @@ public class ItemDetails implements Serializable{
 
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)  
-	public int id;
+    @GeneratedValue(generator = "jpa-uuid")
+	@Column(name="id",columnDefinition="char")
+	public String id;
 	
 	@NotNull
-	@Column(name = "k_forms_id")
-	public Integer kFormsId;
+	@Column(name = "k_forms_id",columnDefinition ="char")
+	public String kFormsId;
 
 	
 	//产品规格型号
@@ -57,8 +58,8 @@ public class ItemDetails implements Serializable{
 	//销售单价
 	
 	//销售金额
-	@Transient
-	public Double salesAmount;
+	@Column(name = "amount")
+	public BigDecimal amount;
 	
 	//单位 
 	@NotNull
@@ -109,19 +110,21 @@ public class ItemDetails implements Serializable{
 	
 
 	
-	public int getId() {
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Integer getkFormsId() {
+
+	public String getkFormsId() {
 		return kFormsId;
 	}
 
-	public void setkFormsId(Integer kFormsId) {
+	public void setkFormsId(String kFormsId) {
 		this.kFormsId = kFormsId;
 	}
 
@@ -165,12 +168,12 @@ public class ItemDetails implements Serializable{
 		this.quantity = quantity;
 	}
 
-	public Double getSalesAmount() {
-		return salesAmount;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setSalesAmount(Double salesAmount) {
-		this.salesAmount = salesAmount;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
 	public String getMeasureUnitCode() {

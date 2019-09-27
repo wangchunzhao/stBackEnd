@@ -20,8 +20,9 @@ public class ItemsForm implements Serializable{
 
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)  
-	public int id;
+    @GeneratedValue(generator = "jpa-uuid")
+	@Column(name="id",columnDefinition="char")
+	public String id;
 	
 	@NotNull
 	@Column(name = "earliest_product_date")
@@ -34,8 +35,8 @@ public class ItemsForm implements Serializable{
 	@Column(name = "comments",columnDefinition ="TEXT")
 	public String comments;
 	
-	@Column(name = "k_order_info_id")
-	public int kOrderInfoId;
+	@Column(name = "k_order_info_id",columnDefinition ="char")
+	public String kOrderInfoId;
 
 	@NotNull
 	@Column(name = "operator")
@@ -52,16 +53,6 @@ public class ItemsForm implements Serializable{
 	@NotNull
 	@Column(name = "is_ready",columnDefinition ="BIT")
 	public int isReady;
-	
-	
-	public int getId() {
-		return id;
-	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public Date getEarliestDeliveryDate() {
 		return earliestDeliveryDate;
@@ -83,6 +74,16 @@ public class ItemsForm implements Serializable{
 	}
 
 
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
 	public String getComments() {
 		return comments;
 	}
@@ -91,14 +92,13 @@ public class ItemsForm implements Serializable{
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-
-
-	public int getkOrderInfoId() {
+	
+	public String getkOrderInfoId() {
 		return kOrderInfoId;
 	}
 
 
-	public void setkOrderInfoId(int kOrderInfoId) {
+	public void setkOrderInfoId(String kOrderInfoId) {
 		this.kOrderInfoId = kOrderInfoId;
 	}
 

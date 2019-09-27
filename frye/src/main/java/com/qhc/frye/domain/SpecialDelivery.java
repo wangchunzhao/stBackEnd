@@ -46,7 +46,7 @@ public class SpecialDelivery implements Serializable{
 	private String receiveMailTime;
 	
 	@NotNull
-	@Column(name="approved_status",columnDefinition = "enum")
+	@Column(name="apply_status",columnDefinition = "TINYINT")
 	private int applyStatus;
 	
 	@NotNull
@@ -67,8 +67,8 @@ public class SpecialDelivery implements Serializable{
 	private String enclosureName;
     
 	@NotNull
-	@Column(name = "k_order_version_id")
-	public Integer kOrderVersionId;
+	@Column(name = "k_order_version_id",columnDefinition = "char")
+	public String kOrderVersionId;
 	
 
 	@Transient
@@ -199,16 +199,16 @@ public class SpecialDelivery implements Serializable{
 		this.enclosureName = enclosureName;
 	}
 
-	public Integer getkOrderVersionId() {
+	public void setApplyStatus(int applyStatus) {
+		this.applyStatus = applyStatus;
+	}
+
+	public String getkOrderVersionId() {
 		return kOrderVersionId;
 	}
 
-	public void setkOrderVersionId(Integer kOrderVersionId) {
+	public void setkOrderVersionId(String kOrderVersionId) {
 		this.kOrderVersionId = kOrderVersionId;
-	}
-
-	public void setApplyStatus(int applyStatus) {
-		this.applyStatus = applyStatus;
 	}
 
 	

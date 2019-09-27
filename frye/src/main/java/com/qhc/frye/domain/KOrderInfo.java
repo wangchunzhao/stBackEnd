@@ -22,8 +22,9 @@ public class KOrderInfo {
 	
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-	public int id;
+    @GeneratedValue(generator = "jpa-uuid")
+	@Column(name="id",columnDefinition="char")
+	public String id;
 	
 	@Column(name="last_operator")
 	public String lastOperator;
@@ -173,24 +174,18 @@ public class KOrderInfo {
 	
 	
 	
-	
-	
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public KOrderInfo() {
 		super();
 	}
-
-
-	public int getId() {
-		return id;
-	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 
 	public String getLastOperator() {
 		return lastOperator;
