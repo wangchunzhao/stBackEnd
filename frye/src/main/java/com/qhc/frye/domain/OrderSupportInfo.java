@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name = "k_order_support_info")
 @EntityListeners(AuditingEntityListener.class)
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class OrderSupportInfo {
 	@Id
     @NotNull
@@ -49,7 +51,7 @@ public class OrderSupportInfo {
 	
 	
 	@NotNull
-	@Column(name="k_orders_id",columnDefinition="String",length=32)
+	@Column(name="k_orders_id",columnDefinition="CHAR",length=32)
 	private String orderId;
 
 	

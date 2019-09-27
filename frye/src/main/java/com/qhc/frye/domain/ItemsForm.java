@@ -10,18 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Entity
 @Table(name = "k_forms")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ItemsForm implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
 
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)  
-	public int id;
+    @Column(name = "id",columnDefinition ="CHAR",length=32)
+    @GeneratedValue(generator = "jpa-uuid")
+	public String id;
 	
 	@NotNull
 	@Column(name = "earliest_product_date")
@@ -34,8 +38,8 @@ public class ItemsForm implements Serializable{
 	@Column(name = "comments",columnDefinition ="TEXT")
 	public String comments;
 	
-	@Column(name = "k_order_info_id")
-	public int kOrderInfoId;
+	@Column(name = "k_order_info_id",columnDefinition ="CHAR",length=32)
+	public String kOrderInfoId;
 
 	@NotNull
 	@Column(name = "operator")
@@ -54,12 +58,12 @@ public class ItemsForm implements Serializable{
 	public int isReady;
 	
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -93,12 +97,12 @@ public class ItemsForm implements Serializable{
 	}
 
 
-	public int getkOrderInfoId() {
+	public String getkOrderInfoId() {
 		return kOrderInfoId;
 	}
 
 
-	public void setkOrderInfoId(int kOrderInfoId) {
+	public void setkOrderInfoId(String kOrderInfoId) {
 		this.kOrderInfoId = kOrderInfoId;
 	}
 

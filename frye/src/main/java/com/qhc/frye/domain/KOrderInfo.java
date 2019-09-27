@@ -12,18 +12,22 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
 @Table(name = "k_order_info")
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class KOrderInfo {
 	
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-	public int id;
+    @Column(name="id",columnDefinition="char",length=32)
+	@GeneratedValue(generator = "jpa-uuid")
+	public String id;
 	
 	@Column(name="last_operator")
 	public String lastOperator;
@@ -182,12 +186,12 @@ public class KOrderInfo {
 	}
 
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

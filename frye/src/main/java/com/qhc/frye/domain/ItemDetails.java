@@ -12,22 +12,26 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Entity
 @Table(name = "k_item_details")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ItemDetails implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
 
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)  
-	public int id;
+    @Column(name="id",columnDefinition="char",length=32)
+    @GeneratedValue(generator = "jpa-uuid")
+	public String id;
 	
 	@NotNull
-	@Column(name = "k_forms_id")
-	public Integer kFormsId;
+	@Column(name = "k_forms_id",columnDefinition="char",length=32)
+	public String kFormsId;
 
 	
 	//产品规格型号
@@ -101,27 +105,21 @@ public class ItemDetails implements Serializable{
 	
 	@Column(name = "item_requirement_plan")
 	public String itemRequirementPlan;
-	
 
 	
-	
-	
-	
-
-	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Integer getkFormsId() {
+	public String getkFormsId() {
 		return kFormsId;
 	}
 
-	public void setkFormsId(Integer kFormsId) {
+	public void setkFormsId(String kFormsId) {
 		this.kFormsId = kFormsId;
 	}
 
