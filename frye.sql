@@ -128,10 +128,21 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_area` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_area` (
-  `code` VARCHAR(6) NOT NULL,
+  `code` VARCHAR(20) NOT NULL,
   `name` TEXT NOT NULL,
   `price` DECIMAL(13,2) NOT NULL,
   `b_city_code` VARCHAR(6) NOT NULL,
+  `price1` DECIMAL(13,2) NOT NULL,
+  `price2` DECIMAL(13,2) NOT NULL,
+  `price3` DECIMAL(13,2) NOT NULL,
+  `price4` DECIMAL(13,2) NOT NULL,
+  `price5` DECIMAL(13,2) NOT NULL,
+  `price6` DECIMAL(13,2) NOT NULL,
+  `price7` DECIMAL(13,2) NOT NULL,
+  `price8` DECIMAL(13,2) NOT NULL,
+  `price9` DECIMAL(13,2) NOT NULL,
+  `price10` DECIMAL(13,2) NOT NULL,
+  `price11` DECIMAL(13,2) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_b_area_b_city1_idx` (`b_city_code` ASC) VISIBLE,
