@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.qhc.frye.domain.DOrder;
 @Repository
-public interface DOrderRepository extends JpaRepository<DOrder, Integer> ,JpaSpecificationExecutor<DOrder>{
+public interface DOrderRepository extends JpaRepository<DOrder, String> ,JpaSpecificationExecutor<DOrder>{
 
 }

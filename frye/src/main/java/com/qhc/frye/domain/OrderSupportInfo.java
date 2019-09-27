@@ -31,7 +31,7 @@ public class OrderSupportInfo {
 	@Id
     @NotNull
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private String id;
+    private int id;
 	
 	@NotNull
 	@Column(name="contract_number",columnDefinition="CHAR",length =10)
@@ -46,12 +46,27 @@ public class OrderSupportInfo {
 	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
 	@Column(name="opt_time",columnDefinition="datetime")
 	private Date operationTime;
+	
+	
+	@NotNull
+	@Column(name="k_orders_id",columnDefinition="String",length=32)
+	private String orderId;
 
-	public String getId() {
+	
+	
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

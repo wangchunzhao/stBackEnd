@@ -28,7 +28,7 @@ public class DOrder implements Serializable{
 	@Id
     @NotNull
     @GeneratedValue(generator = "jpa-uuid")
-	public int id;
+	public String id;
 	
 	@NotNull
 	@Column(name="sequence_number",columnDefinition="char")
@@ -73,15 +73,12 @@ public class DOrder implements Serializable{
 	@Column(name="office_code",columnDefinition="char")
 	private String	officeCode;
 	
-	
-	
-	
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

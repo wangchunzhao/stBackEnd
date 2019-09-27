@@ -37,7 +37,7 @@ public class DOrderController {
     public DOrder findByKOrderVersionId(@PathVariable Integer id) throws Exception
     {	
 		
-		return orderService.findByKOrderVersionId(id);
+		return orderService.findByKOrderVersionId(id.toString());
 		
     }
 	

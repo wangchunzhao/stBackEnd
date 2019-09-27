@@ -22,7 +22,7 @@ public class SaleOrder{
 	private String contracterCode;//签约单位 Contract unit
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
-	
+	private String salesCode;//客户经理 Customer manager
 	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
 	private int isNew;//是否新客户 new customer
@@ -84,10 +84,16 @@ public class SaleOrder{
 	/**
 	 * from session
 	 */
-	private String salesCode;//客户经理 Customer manager
-	//
-	private boolean isSubmit;
+	private String currentUser;//当前session用户
 	
+	private boolean isSubmit;
+	//
+	public String getCurrentUser() {
+		return currentUser;
+	}
+	public void setCurrentUser(String currentUser) {
+		this.currentUser = currentUser;
+	}
 	public boolean isSubmit() {
 		return isSubmit;
 	}
@@ -363,12 +369,15 @@ public class SaleOrder{
 	
 	public OrderSupportInfo getSupportInforOfOrder() {
 		OrderSupportInfo osi = new OrderSupportInfo();
+		osi.setContractNumber(this.getContractNumber());
 		osi.setOperationTime(new Date());
+		osi.setSupportorId(this.getCurrentUser());
 		return osi;
 	}
 	
 	public KOrderVersion getOrderVersion() {
 		KOrderVersion orderVer = new KOrderVersion();
+		orderVer.setCreateTime(new Date());
 		return orderVer;
 	}
 		
