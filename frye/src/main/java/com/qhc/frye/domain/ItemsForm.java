@@ -10,18 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Entity
 @Table(name = "k_forms")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ItemsForm implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
 
 	@Id
     @NotNull
+    @Column(name = "id",columnDefinition ="CHAR",length=32)
     @GeneratedValue(generator = "jpa-uuid")
-	@Column(name="id",columnDefinition="char")
 	public String id;
 	
 	@NotNull
@@ -35,7 +38,8 @@ public class ItemsForm implements Serializable{
 	@Column(name = "comments",columnDefinition ="TEXT")
 	public String comments;
 	
-	@Column(name = "k_order_info_id",columnDefinition ="char")
+
+	@Column(name = "k_order_info_id",columnDefinition ="CHAR",length=32)
 	public String kOrderInfoId;
 
 	@NotNull
@@ -53,6 +57,16 @@ public class ItemsForm implements Serializable{
 	@NotNull
 	@Column(name = "is_ready",columnDefinition ="BIT")
 	public int isReady;
+
+	
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public Date getEarliestDeliveryDate() {
 		return earliestDeliveryDate;
@@ -74,16 +88,6 @@ public class ItemsForm implements Serializable{
 	}
 
 
-	public String getId() {
-		return id;
-	}
-
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-
 	public String getComments() {
 		return comments;
 	}
@@ -92,7 +96,7 @@ public class ItemsForm implements Serializable{
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-	
+
 	public String getkOrderInfoId() {
 		return kOrderInfoId;
 	}

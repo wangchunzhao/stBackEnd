@@ -67,7 +67,7 @@ public class SpecialDelivery implements Serializable{
 	private String enclosureName;
     
 	@NotNull
-	@Column(name = "k_order_version_id",columnDefinition = "char")
+	@Column(name = "k_order_version_id",columnDefinition="char",length=32)
 	public String kOrderVersionId;
 	
 
@@ -202,6 +202,7 @@ public class SpecialDelivery implements Serializable{
 	public void setApplyStatus(int applyStatus) {
 		this.applyStatus = applyStatus;
 	}
+
 
 	public String getkOrderVersionId() {
 		return kOrderVersionId;

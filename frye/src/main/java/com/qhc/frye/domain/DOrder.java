@@ -27,6 +27,7 @@ public class DOrder implements Serializable{
 
 	@Id
     @NotNull
+    @Column(name="id",columnDefinition="char",length=32)
     @GeneratedValue(generator = "jpa-uuid")
 	public String id;
 	

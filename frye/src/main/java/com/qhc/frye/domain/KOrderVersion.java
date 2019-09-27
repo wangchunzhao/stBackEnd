@@ -20,6 +20,7 @@ public class KOrderVersion {
 
 	@Id
 	@NotNull
+	@Column(name="id",columnDefinition="char",length=32)
 	@GeneratedValue(generator = "jpa-uuid")
 	public String id;
 
@@ -37,7 +38,7 @@ public class KOrderVersion {
 	private Date createTime;
 
 	@NotNull
-	@Column(name = "k_orders_id")
+	@Column(name = "k_orders_id",columnDefinition="char",length=32)
 	private String kOrdersId;
 	
 	public String getId() {

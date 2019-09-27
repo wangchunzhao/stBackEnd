@@ -6,28 +6,31 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Entity
 @Table(name = "k_item_details")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ItemDetails implements Serializable{
 	
 	private static final long serialVersionUID = -1429807827446950753L;
 
 	@Id
     @NotNull
+
+    @Column(name="id",columnDefinition="char",length=32)
     @GeneratedValue(generator = "jpa-uuid")
-	@Column(name="id",columnDefinition="char")
 	public String id;
 	
 	@NotNull
-	@Column(name = "k_forms_id",columnDefinition ="char")
+	@Column(name = "k_forms_id",columnDefinition="char",length=32)
 	public String kFormsId;
 
 	
@@ -102,15 +105,8 @@ public class ItemDetails implements Serializable{
 	
 	@Column(name = "item_requirement_plan")
 	public String itemRequirementPlan;
-	
 
 	
-	
-	
-	
-
-	
-
 	public String getId() {
 		return id;
 	}
@@ -118,7 +114,6 @@ public class ItemDetails implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
-
 
 	public String getkFormsId() {
 		return kFormsId;
