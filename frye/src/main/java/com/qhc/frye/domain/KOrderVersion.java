@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.CreatedDate;
+
 @Entity
 @Table(name = "k_order_version")
 public class KOrderVersion {
@@ -29,6 +31,7 @@ public class KOrderVersion {
 
 	@NotNull
 	@Column(name = "create_time", columnDefinition = "datetime")
+	@CreatedDate
 	private Date createTime;
 
 	@NotNull

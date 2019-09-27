@@ -3,7 +3,6 @@
  */
 package com.qhc.frye.rest.controller.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import com.qhc.frye.domain.OrderSupportInfo;
  * @author wang@dxc.com
  *
  */
-public class SaleOrder implements InterEntityToDao{
+public class SaleOrder{
 	private String orderType;//dealer or keyaccount or bulk
 	/**
 	 * 客户基本信息 Basic information
@@ -344,12 +343,9 @@ public class SaleOrder implements InterEntityToDao{
 	public void setCurrencyExchange(double currencyExchange) {
 		this.currencyExchange = currencyExchange;
 	}
-	@Override
-	public List<Object> toDaos() {
-		List<Object> objs = new ArrayList<Object>();
-		KOrderVersion orderVer = new KOrderVersion();
+	//
+	public DOrder getDorder() {
 		DOrder dorder = new DOrder();
-		OrderSupportInfo osi = new OrderSupportInfo();
 		//
 		dorder.setSequenceNumber(this.getSequenceNumber());//序列号
 		dorder.setOrderTypeCode(this.getOrderType());
@@ -362,13 +358,17 @@ public class SaleOrder implements InterEntityToDao{
 //		dorder.setContractorClassCode();//customer class
 //		dorder.setContractorClassName();//customer class name
 		dorder.setOfficeCode(this.getOfficeCode());
-		//
-		
-		//
-		objs.add(dorder);
-		objs.add(orderVer);
-		objs.add(osi);
-		return objs;
+		return dorder;
 	}
 	
+	public OrderSupportInfo getSupportInforOfOrder() {
+		OrderSupportInfo osi = new OrderSupportInfo();
+		return osi;
+	}
+	
+	public KOrderVersion getOrderVersion() {
+		KOrderVersion orderVer = new KOrderVersion();
+		return orderVer;
+	}
+		
 }
