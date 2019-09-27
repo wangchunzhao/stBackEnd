@@ -363,6 +363,7 @@ public class SaleOrder{
 	
 	public OrderSupportInfo getSupportInforOfOrder() {
 		OrderSupportInfo osi = new OrderSupportInfo();
+		osi.setOperationTime(new Date());
 		return osi;
 	}
 	

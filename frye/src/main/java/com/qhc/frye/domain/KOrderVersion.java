@@ -9,17 +9,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "k_order_version")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class KOrderVersion {
 
 
 	@Id
 	@NotNull
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int id;
+	@GeneratedValue(generator = "jpa-uuid")
+	public String id;
 
 	@NotNull
 	@Column(name = "version")
@@ -38,17 +40,11 @@ public class KOrderVersion {
 	@Column(name = "k_orders_id")
 	private int kOrdersId;
 	
-	
-	
-	
-	
-	
-
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

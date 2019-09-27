@@ -5,10 +5,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -16,11 +17,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "k_orders")
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class DOrder implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8162013779997326172L;
+
 	@Id
     @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(generator = "jpa-uuid")
 	public int id;
 	
 	@NotNull
