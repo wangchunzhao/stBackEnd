@@ -1013,6 +1013,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `item_category` VARCHAR(45) NOT NULL,
   `item_requirement_plan` VARCHAR(45) NULL,
   `k_forms_id` CHAR(32) NOT NULL,
+  `address_id` CHAR(32) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
@@ -1200,7 +1201,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_delievery_address` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` CHAR(32) NOT NULL,
   `province_code` VARCHAR(6) NOT NULL,
   `province_name` TEXT NOT NULL,
   `city_code` VARCHAR(6) NOT NULL,
