@@ -749,7 +749,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` CHAR(32) NOT NULL,
   `sequence_number` CHAR(12) NOT NULL,
   `order_type_code` CHAR(4) NOT NULL COMMENT '//dealer or keyaccount or bulk',
   `create_time` DATETIME NOT NULL,
@@ -775,18 +775,20 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` CHAR(32) NOT NULL,
   `version` VARCHAR(45) NOT NULL,
   `status` TINYINT(2) NOT NULL COMMENT '0:saved\n1:draft:submit to headquater\n2.approving:BPM\n3.approved',
   `create_time` DATETIME NOT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
+  `k_orders_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
   INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_order_version_k_orders1`
     FOREIGN KEY (`k_orders_id`)
-    REFERENCES `bohemian`.`k_orders` (`id`))
+    REFERENCES `bohemian`.`k_orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -820,7 +822,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `company_tel` TEXT NULL DEFAULT NULL,
   `bank_name` TEXT NULL DEFAULT NULL,
   `account_number` TEXT NULL DEFAULT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
+  `k_order_version_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_acceptance_approch1_idx` (`k_acceptance_approch_id` ASC) VISIBLE,
@@ -870,7 +872,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` CHAR(32) NOT NULL,
   `last_operator` VARCHAR(128) NOT NULL,
   `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
@@ -928,15 +930,15 @@ ROW_FORMAT = DYNAMIC;
 DROP TABLE IF EXISTS `bohemian`.`k_forms` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` CHAR(32) NOT NULL,
   `earliest_delivery_date` DATE NULL,
   `earliest_product_date` DATE NULL,
   `comments` TEXT NULL,
-  `k_order_info_id` INT(10) UNSIGNED NOT NULL,
   `operator` VARCHAR(128) NOT NULL,
   `type` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '0:订单\n1：工程\n2：B2C',
   `opt_time` DATETIME NOT NULL,
   `is_ready` TINYINT(1) NOT NULL COMMENT '0:draf\n1:ready',
+  `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_forms_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
@@ -968,7 +970,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_application` (
   `remark` TEXT NULL,
   `enclosure_path` TEXT NULL,
   `enclosure_name` TEXT NULL,
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
+  `k_order_version_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_speical_order_application_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
@@ -988,11 +990,10 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` CHAR(32) NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
   `material_name` TEXT NOT NULL,
   `group_code` VARCHAR(45) NOT NULL,
-  `k_forms_id` INT(10) UNSIGNED NOT NULL,
   `material_type` TINYINT(2) NOT NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
   `material_specific_Number` VARCHAR(45) NOT NULL,
   `material_attribute` VARCHAR(45) NOT NULL,
@@ -1011,6 +1012,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `discount` DOUBLE(3,3) NULL,
   `item_category` VARCHAR(45) NOT NULL,
   `item_requirement_plan` VARCHAR(45) NULL,
+  `k_forms_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
@@ -1076,8 +1078,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_bpm_dicision` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `approved_main_diccount` DOUBLE(3,3) NOT NULL,
   `approved_body_discount` DOUBLE(3,3) NOT NULL,
-  `k_order_info_id` INT(10) UNSIGNED NOT NULL,
   `is_passed` TINYINT(1) NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_bpm_dicision_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
@@ -1097,13 +1099,12 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`k_parent_order_version` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
-  `k_order_version_id` INT(10) UNSIGNED NOT NULL,
-  `k_parent_order_version_id1` INT(10) UNSIGNED NOT NULL,
   `opt_time` DATETIME NOT NULL,
-  `k_order_info_id` INT(10) UNSIGNED NOT NULL,
-  INDEX `fk_k_parent_order_version_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_parent_order_version_id1` ASC) VISIBLE,
-  PRIMARY KEY (`k_order_version_id`, `k_parent_order_version_id1`),
+  `k_order_version_id` CHAR(32) NOT NULL,
+  `k_order_version_id1` CHAR(32) NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
+  PRIMARY KEY (`k_order_version_id`, `k_order_version_id1`),
+  INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_order_version_id1` ASC) VISIBLE,
   INDEX `fk_k_parent_order_version_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_parent_order_version_k_order_version1`
     FOREIGN KEY (`k_order_version_id`)
@@ -1111,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_k_parent_order_version_k_order_version2`
-    FOREIGN KEY (`k_parent_order_version_id1`)
+    FOREIGN KEY (`k_order_version_id1`)
     REFERENCES `bohemian`.`k_order_version` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -1135,7 +1136,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
   `contract_number` VARCHAR(45) NOT NULL,
   `opterator_domain_id` VARCHAR(128) NOT NULL,
   `opt_time` DATETIME NOT NULL,
-  `k_orders_id` INT(10) UNSIGNED NOT NULL,
+  `k_orders_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_order_support_info_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
@@ -1156,8 +1157,8 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `k_item_details_id` INT UNSIGNED NOT NULL,
   `cost` DECIMAL(13,2) NOT NULL,
+  `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_b2c_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
@@ -1179,7 +1180,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_attachment` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_attachment` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `file_name` TEXT NOT NULL,
-  `k_order_info_id` INT(10) UNSIGNED NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_attachment_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
@@ -1207,7 +1208,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
   `distinct_code` VARCHAR(6) NOT NULL,
   `distinct_name` TEXT NOT NULL,
   `address` TEXT NOT NULL,
-  `k_order_info_id` INT(10) UNSIGNED NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_delievery_address_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
@@ -1230,7 +1231,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key_code` VARCHAR(45) NOT NULL,
   `value_code` VARCHAR(45) NOT NULL,
-  `k_item_details_id` INT UNSIGNED NOT NULL,
+  `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_characteristics_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
@@ -1253,8 +1254,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_attached_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `start_date_of_production` DATE NULL,
   `date_of_on_store` DATE NULL,
-  `k_item_details_id` INT UNSIGNED NOT NULL,
   `opt_time` DATETIME NOT NULL,
+  `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_attached_info_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
