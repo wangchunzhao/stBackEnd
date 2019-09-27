@@ -10,20 +10,21 @@ CREATE VIEW k_report_material_view AS SELECT
 		c.k_order_version_id1
 	) AS id,
 	c.`status` AS STATUS,
-	e.sequence_number AS sequence_number,
+	e.sequence_number,
 	-- 流水号
-	e.owner_name AS owner_name,
+	e.owner_name,
 	-- 客户经理
-	e.owner_domain_id AS owner_domain_id,
+	e.owner_domain_id,
 	-- 客户经理
-	e.office_code AS office_code,
+	e.office_code,
 	-- 区域
-	-- 中心
-	-- 合同号
-	e.contractor_code AS contractor_code,
-	-- 合同编号
-	e.contractor_class_code AS contractor_class_code,
-	e.contractor_class_name AS contractor_class_name,
+	-- 签约日期
+	e.create_time,
+ -- 合同号
+	e.contractor_code,
+	-- 客户性质
+	e.contractor_class_code,
+	e.contractor_class_name,
 	i.*
 FROM
 	(
@@ -53,72 +54,75 @@ FROM
 	(
 		SELECT
 			id AS k_order_info_id,
+			-- 区域
 			office_name,
-			is_reformed,
 			-- 是否改造店
-			contract_rmb_amount,
+			is_reformed,
 			-- 合同金额
-			sales_type,
+			contract_rmb_amount,
+			-- 保修期限
+			warranty,
+			-- 币种
+			currency_code,
+			currency_name,
+			-- 原币合同金额
+			contract_amount,
+			-- 汇率
+			exchange,
 			-- 合同状态
-			h.discount -- 毛利率
-			-- --是否长期折扣
-			main_discount,
-			-- 折扣
+			sales_type,
+			-- 毛利率
+			-- 中心
+			group_code,
+			group_name,
 			-- 到货地址
-			install_term_code,
 			-- 安装公司
-			install_term_name,
+			install_term_code,
 			-- 安装公司名
+			install_term_name,
 			-- 收货方式
+			-- 授权人
 			contactor_1_id,
 			contactor_1_tel,
 			contactor_2_id,
 			contactor_2_tel,
 			contactor_3_id,
 			contactor_3_tel,
-			-- 授权人
 			-- 收货人身份证
 			-- 结算方式
-			warranty,
-			-- 保修期限
-			currency_code,
-			-- 币种
-			currency_name,
-			contract_amount,
-			-- 原币合同金额
-			exchange,
-			-- 汇率
+			-- 是否新客户
 			is_new,
+			-- 终端客户性质
 			terminal_industry_code,
 			terminal_industry_code_name,
-			-- 是否新客户
 			h.*
 		FROM
 			k_order_info d
 		LEFT JOIN (
 			SELECT
 				f.k_order_info_id AS order_id,
-				material_code,
 				-- 物料
-				material_name,
+				material_code,
 				-- 物料名称
-				material_specific_Number,
+				material_name,
 				-- 物料专用号
-				material_attribute,
+				material_specific_Number,
 				-- 物料属性
-				quantity,
+				material_attribute,
 				-- 数量
-				amount,
+				quantity,
 				-- 金额
-				amount / quantity AS price,
+				amount,
 				-- 单价
-				discount,
+				amount / quantity AS price,
 				-- 折扣
-				measure_unit_code,
+				discount,
 				-- 单位
-				measure_unit_name,
+				measure_unit_code,
 				-- 单位名
-				earliest_delivery_date -- 要求发货时间
+				measure_unit_name,
+				-- 要求发货时间
+				earliest_delivery_date
 			FROM
 				k_forms f
 			LEFT JOIN k_item_details g ON f.id = g.k_forms_id
@@ -128,6 +132,8 @@ FROM
 WHERE
 	c.k_order_info_id = i.order_id
 AND c.k_orders_id = e.id;
+
+
 
 
 
