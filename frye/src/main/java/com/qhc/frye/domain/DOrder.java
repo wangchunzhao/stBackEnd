@@ -1,5 +1,6 @@
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "k_orders")
-public class DOrder {
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
+public class DOrder implements Serializable{
 	
 	@Id
     @NotNull

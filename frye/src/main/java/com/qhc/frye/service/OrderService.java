@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.KOrderInfoRepository;
 import com.qhc.frye.dao.KParentorderVersionRepository;
 import com.qhc.frye.dao.SalesOrderRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
 import com.qhc.frye.dao.SalesorderVersionRepository;
+import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 
 import com.qhc.frye.rest.controller.entity.SaleOrder;
@@ -29,6 +31,10 @@ public class OrderService {
 	
 	@Autowired
 	private KOrderInfoRepository orderInfoRepo; 
+	
+	@Autowired
+	private DOrderRepository dOrderRepository; 
+	
 	
 //	@Autowired
 //	private KParentorderVersionRepository parentVerRepo;
@@ -53,6 +59,11 @@ public class OrderService {
 	 */
 	public void update(SaleOrder saleOrder){
 		
+	}
+	
+	public DOrder findByKOrderVersionId(Integer id) {
+		
+		return dOrderRepository.getOne(id);
 	}
 
 }

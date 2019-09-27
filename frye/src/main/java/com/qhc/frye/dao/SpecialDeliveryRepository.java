@@ -4,11 +4,16 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.qhc.frye.domain.SpecialDelivery;
 
 @Repository
 public interface SpecialDeliveryRepository extends JpaRepository<SpecialDelivery, Integer>,JpaSpecificationExecutor<SpecialDelivery> {
 
-//	List<SpecialDelivery> findByOrdersId(Integer kOrdersId);
+
+	
+	@Query(value="select * from k_speical_order_application where k_order_version_id=?1" ,nativeQuery=true)
+	List<SpecialDelivery> findByKOrderVersionId(Integer kOrdersId);
+
 }
