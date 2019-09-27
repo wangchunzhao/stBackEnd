@@ -23,8 +23,8 @@ public class SpecialDeliveryVoInfo implements Serializable{
 	@Column(name="id")
 	public String id;
 	
-	@Column(name="k_orders_id")
-	public Integer kOrderId;
+	@Column(name="k_orders_id",columnDefinition="char")
+	public String kOrderId;
 	
 	@Column(name="sequence_number",columnDefinition="char")
 	public String sequenceNumber;
@@ -61,8 +61,8 @@ public class SpecialDeliveryVoInfo implements Serializable{
 	
 	
 	
-	@Column(name="k_order_version_id")
-	public Integer kOrderVersionId;
+	@Column(name="k_order_version_id",columnDefinition="char")
+	public String kOrderVersionId;
 	
 	@Transient
 	public Double distcount;
@@ -198,12 +198,20 @@ public class SpecialDeliveryVoInfo implements Serializable{
 		this.endTime = endTime;
 	}
 
-	public Integer getkOrderVersionId() {
+	public String getkOrderVersionId() {
 		return kOrderVersionId;
 	}
 
-	public void setkOrderVersionId(Integer kOrderVersionId) {
+	public void setkOrderVersionId(String kOrderVersionId) {
 		this.kOrderVersionId = kOrderVersionId;
+	}
+
+	public String getkOrderId() {
+		return kOrderId;
+	}
+
+	public void setkOrderId(String kOrderId) {
+		this.kOrderId = kOrderId;
 	}
 
 

@@ -34,10 +34,10 @@ public class DOrderController {
 	@ApiOperation(value="Get DOrder by id", notes="Get DOrder by id")
     @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DOrder findByKOrderVersionId(@PathVariable Integer id) throws Exception
+    public DOrder findByKOrderVersionId(@PathVariable String id) throws Exception
     {	
 		
-		return orderService.findByKOrderVersionId(id.toString());
+		return orderService.findByKOrderVersionId(id);
 		
     }
 	

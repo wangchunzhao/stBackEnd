@@ -38,6 +38,7 @@ public class ItemsForm implements Serializable{
 	@Column(name = "comments",columnDefinition ="TEXT")
 	public String comments;
 	
+
 	@Column(name = "k_order_info_id",columnDefinition ="CHAR",length=32)
 	public String kOrderInfoId;
 
@@ -56,7 +57,7 @@ public class ItemsForm implements Serializable{
 	@NotNull
 	@Column(name = "is_ready",columnDefinition ="BIT")
 	public int isReady;
-	
+
 	
 	public String getId() {
 		return id;
@@ -95,7 +96,6 @@ public class ItemsForm implements Serializable{
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-
 
 	public String getkOrderInfoId() {
 		return kOrderInfoId;

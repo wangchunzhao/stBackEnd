@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -25,6 +24,7 @@ public class ItemDetails implements Serializable{
 
 	@Id
     @NotNull
+
     @Column(name="id",columnDefinition="char",length=32)
     @GeneratedValue(generator = "jpa-uuid")
 	public String id;
@@ -61,8 +61,8 @@ public class ItemDetails implements Serializable{
 	//销售单价
 	
 	//销售金额
-	@Transient
-	public Double salesAmount;
+	@Column(name = "amount")
+	public BigDecimal amount;
 	
 	//单位 
 	@NotNull
@@ -163,12 +163,12 @@ public class ItemDetails implements Serializable{
 		this.quantity = quantity;
 	}
 
-	public Double getSalesAmount() {
-		return salesAmount;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setSalesAmount(Double salesAmount) {
-		this.salesAmount = salesAmount;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
 	public String getMeasureUnitCode() {

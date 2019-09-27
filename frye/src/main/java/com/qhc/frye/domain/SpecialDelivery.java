@@ -199,16 +199,17 @@ public class SpecialDelivery implements Serializable{
 		this.enclosureName = enclosureName;
 	}
 
+	public void setApplyStatus(int applyStatus) {
+		this.applyStatus = applyStatus;
+	}
+
+
 	public String getkOrderVersionId() {
 		return kOrderVersionId;
 	}
 
 	public void setkOrderVersionId(String kOrderVersionId) {
 		this.kOrderVersionId = kOrderVersionId;
-	}
-
-	public void setApplyStatus(int applyStatus) {
-		this.applyStatus = applyStatus;
 	}
 
 	

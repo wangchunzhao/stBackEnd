@@ -177,22 +177,17 @@ public class KOrderInfo {
 	
 	
 	
-	
-	
-	
-
-	public KOrderInfo() {
-		super();
-	}
-
 
 	public String getId() {
 		return id;
 	}
 
-
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public KOrderInfo() {
+		super();
 	}
 
 
