@@ -180,9 +180,11 @@ FROM
 	k_orders d
 WHERE
 	a.k_order_version_id = b.k_order_version_id
+	
 AND b.k_order_info_id = c.id
 AND a.k_orders_id = d.id
 AND d.order_type_code IN ('05', '06');
+
 
 
 
