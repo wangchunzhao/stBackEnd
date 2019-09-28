@@ -1,11 +1,13 @@
-/**
- * 
- */
 package com.qhc.frye.rest.controller.entity;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
@@ -104,6 +106,10 @@ public class SaleOrder{
 	
 	private double approvedDicount;//批准的折扣、标准折扣
 	//
+	
+	public SaleOrder(String json) {
+		System.out.print("here");
+	}
 	public String getCurrentUser() {
 		return currentUser;
 	}
