@@ -58,7 +58,7 @@ public class OrderController {
     public void  updateOrder(@RequestBody(required=true) @Valid SaleOrder saleOrder) throws Exception
     {	
 		System.out.println("updateOrder");
-		orderService.update(saleOrder);
+		//orderService.update(saleOrder);
     }
 	
 	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")
