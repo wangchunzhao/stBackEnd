@@ -1,13 +1,12 @@
-DROP VIEW
-IF EXISTS `bohemian`.k_report_material_view;
+DROP VIEW IF EXISTS `bohemian`.k_report_material_view;
 
-CREATE VIEW k_report_material_view AS SELECT
+ CREATE VIEW k_report_material_view AS 
+
+SELECT
 	CONCAT(
-		c.k_order_version_id,
+		(SELECT CURTIME()),
 		'_',
-		c.k_orders_id,
-		'_',
-		c.k_order_version_id1
+		(SELECT RAND())
 	) AS id,
 	c.`status` AS STATUS,
 	e.sequence_number,
@@ -25,6 +24,8 @@ CREATE VIEW k_report_material_view AS SELECT
 	-- 客户性质
 	e.contractor_class_code,
 	e.contractor_class_name,
+	-- 订单状态
+	e.order_type_code,
 	i.*
 FROM
 	(
@@ -95,6 +96,9 @@ FROM
 			-- 终端客户性质
 			terminal_industry_code,
 			terminal_industry_code_name,
+			-- 机身、机主折扣
+			body_discount,
+			main_discount,
 			h.*
 		FROM
 			k_order_info d
@@ -132,6 +136,8 @@ FROM
 WHERE
 	c.k_order_info_id = i.order_id
 AND c.k_orders_id = e.id;
+
+
 
 
 
