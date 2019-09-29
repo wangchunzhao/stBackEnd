@@ -16,7 +16,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
-import com.qhc.frye.rest.controller.entity.SaleOrder;
+import com.qhc.frye.rest.controller.entity.AbsOrder;
 
 @Service
 public class OrderService {
@@ -49,22 +49,22 @@ public class OrderService {
 	}
 	/**
 	 * 
-	 * @param saleOrder
+	 * @param absOrder
 	 */
-	public void save(SaleOrder saleOrder){
-		DOrder sDorder = dOrderRepository.saveAndFlush(saleOrder.getDorder());
-		OrderSupportInfo ori = saleOrder.getSupportInforOfOrder();
+	public void save(AbsOrder absOrder){
+		DOrder sDorder = dOrderRepository.saveAndFlush(absOrder.getDorder());
+		OrderSupportInfo ori = absOrder.getSupportInforOfOrder();
 		ori.setOrderId(sDorder.getId());
 		supportRepo.saveAndFlush(ori);
-		KOrderVersion over = saleOrder.getOrderVersion();
+		KOrderVersion over = absOrder.getOrderVersion();
 		over.setkOrdersId(sDorder.getId());
 		KOrderVersion kov = versionRepo.saveAndFlush(over);
 	}
 	/**
 	 * 
-	 * @param saleOrder
+	 * @param absOrder
 	 */
-	public void update(SaleOrder saleOrder){
+	public void update(AbsOrder absOrder){
 		
 	}
 	

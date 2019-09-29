@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -16,21 +20,32 @@ import com.qhc.frye.domain.OrderSupportInfo;
  * @author wang@dxc.com
  *
  */
-public class SaleOrder{
+public abstract class AbsOrder{
+	private final static String EXCEPTION_TOO_LONG = "too long";
+	private final static String EXCEPTION_MUST_HAVE = "must have";
+	
+	@NotBlank
+	@Max(value = 4,message = EXCEPTION_TOO_LONG)
 	private String orderType;//dealer or keyaccount or bulk
 	/**
 	 * 客户基本信息 Basic information
 	 */
+	@NotBlank
+	@Max(value = 10,message = EXCEPTION_TOO_LONG)
 	private String contracterCode;//签约单位 Contract unit
+	@NotBlank
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
+	@NotBlank
 	private String salesCode;//客户经理 Customer manager
 	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
+	
 	private int isNew;//是否新客户 new customer
 	/**
 	 * 合同详细信息 Contract details
 	 */
+	@NotBlank
 	private String sequenceNumber;//流水号 code
 	private String contractNumber;//合同号 contract no
 	private String saleType;//销售类型 Sales type
@@ -76,7 +91,7 @@ public class SaleOrder{
 	/**
 	 * 购销明细 Purchase and sale subsidiar
 	 */
-//	private List<ProductItem> items;//购销明细
+//	private List<ProductItemForm> items;//购销明细
 	private String comments;//备注
 	/**
 	 * 附件信息 Attachment information
@@ -86,7 +101,10 @@ public class SaleOrder{
 	/**
 	 * from session
 	 */
+	@NotBlank
+	@Max(value = 16,message = EXCEPTION_TOO_LONG)
 	private String currentUser;//当前session用户
+	
 	
 	private boolean isSubmit;
 	//
@@ -107,8 +125,8 @@ public class SaleOrder{
 	private double approvedDicount;//批准的折扣、标准折扣
 	//
 	
-	public SaleOrder(String json) {
-		System.out.print("here");
+	public AbsOrder(String json) {
+		
 	}
 	public String getCurrentUser() {
 		return currentUser;
