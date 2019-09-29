@@ -88,10 +88,10 @@ public class ItemDetails implements Serializable{
 	public String specialCode;
 	
 	@Column(name = "material_group_code")
-	public String materialPropertyCode;
+	public String materialGroupCode;
 	
 	@Column(name = "material_group_name",columnDefinition = "TEXT")
-	public String materialPropertyName;
+	public String materialGroupName;
 	
 	@Column(name = "transfter_price")
 	public BigDecimal transfterPrice;
@@ -105,6 +105,20 @@ public class ItemDetails implements Serializable{
 	
 	@Column(name = "item_requirement_plan")
 	public String itemRequirementPlan;
+	
+	//
+	@Column(name = "freight")
+	public BigDecimal freight;
+	
+	
+	@Column(name = "standard_price")
+	public BigDecimal standardPrice;
+	
+	
+	
+	
+	
+	
 
 	
 	public String getId() {
@@ -219,20 +233,22 @@ public class ItemDetails implements Serializable{
 		this.specialCode = specialCode;
 	}
 
-	public String getMaterialPropertyCode() {
-		return materialPropertyCode;
+	
+
+	public String getMaterialGroupCode() {
+		return materialGroupCode;
 	}
 
-	public void setMaterialPropertyCode(String materialPropertyCode) {
-		this.materialPropertyCode = materialPropertyCode;
+	public void setMaterialGroupCode(String materialGroupCode) {
+		this.materialGroupCode = materialGroupCode;
 	}
 
-	public String getMaterialPropertyName() {
-		return materialPropertyName;
+	public String getMaterialGroupName() {
+		return materialGroupName;
 	}
 
-	public void setMaterialPropertyName(String materialPropertyName) {
-		this.materialPropertyName = materialPropertyName;
+	public void setMaterialGroupName(String materialGroupName) {
+		this.materialGroupName = materialGroupName;
 	}
 
 	public BigDecimal getTransfterPrice() {
@@ -265,6 +281,22 @@ public class ItemDetails implements Serializable{
 
 	public void setItemRequirementPlan(String itemRequirementPlan) {
 		this.itemRequirementPlan = itemRequirementPlan;
+	}
+
+	public BigDecimal getFreight() {
+		return freight;
+	}
+
+	public void setFreight(BigDecimal freight) {
+		this.freight = freight;
+	}
+
+	public BigDecimal getStandardPrice() {
+		return standardPrice;
+	}
+
+	public void setStandardPrice(BigDecimal standardPrice) {
+		this.standardPrice = standardPrice;
 	}
 	
 	
