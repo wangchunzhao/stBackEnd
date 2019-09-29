@@ -16,7 +16,7 @@ import javax.persistence.Transient;
  *
  */
 @Entity
-@Table(name = "k_report_material_view")
+@Table(name = "k_report_bymaterial_view")
 public class ReportFormsInfo implements Serializable {
 	
 	
@@ -27,18 +27,23 @@ public class ReportFormsInfo implements Serializable {
 	@Column(name="sequence_number",columnDefinition = "char")
 	private String	sequenceNumber	;//	单据编号//订单编号
 	
-	@Column(name="owner_name",columnDefinition = "text")
-	private String	ownerName	;//	签约人//客户经理
+//	@Column(name="sales_code",columnDefinition = "char")
+	@Transient
+	private String	salesCode	;//	签约人//客户经理
+//	@Column(name="sales_name",columnDefinition = "text")
+	@Transient
+	private String	salesName	;//	签约人//客户经理
 	
 	@Column(name="office_code",columnDefinition = "char")
 	private String	officeCode	;//	区域
 	
-	@Transient
-	private String	centre	;//	中心
+	@Column(name="group_code",columnDefinition = "char")
+	private String	groupCode	;//	中心
+	@Column(name="group_name",columnDefinition = "text")
+	private String	groupName	;//	中心
 	
-	//@Column(name="contract_date")
-	@Transient
-	private Date	contractDate	;//	签约日期
+	@Column(name="create_time")
+	private Date	createTime	;//	签约日期
 	
 //	@Column(name="coustomer_no")
 	@Transient
@@ -56,9 +61,9 @@ public class ReportFormsInfo implements Serializable {
 	@Column(name="contractor_class_code",columnDefinition = "char")
 	private String	contractorClassCode;//	客户性质
 	
-//	@Column(name="shop_name")
+//	@Column(name="customer_name",columnDefinition="TEXT")
 	@Transient
-	private String	shopName	;//	店名
+	public String customerName;//店名
 	
 	@Column(name="terminal_industry_code",columnDefinition = "char")
 	private String	terminalIndustryCode	;//	终端客户性质
@@ -80,14 +85,22 @@ public class ReportFormsInfo implements Serializable {
 	
 //	@Column(name="gross_profit")
 	@Transient
-	private BigDecimal	grossProfit	;//	毛利率
+	private Double	grossProfit	;//	毛利率
 	
 //	@Column(name="is_long_term_discount")
 	@Transient
 	private Integer	isLongTermDiscount	;//	是否长期折扣
 	
+	//按照订单类型计算折扣 //A 标准 B 需要计算
 	@Column(name="discount")
 	private Double	discount	;//	折扣
+	
+	@Column(name="main_discount")
+	private Double	mainDiscount	;//	合并折扣
+	
+	@Column(name="body_discount")
+	private Double	bodyDiscount	;//	自身折扣
+	
 	
 	@Column(name="material_code",columnDefinition = "char")
 	private String	materialCode	;//	产品规格型号
@@ -127,11 +140,11 @@ public class ReportFormsInfo implements Serializable {
 	private String	receiveType	;//	收货方式
 	
 	@Column(name="contactor_1_id")
-	private String	contactor1id	;//	授权人及身份证号
+	private String	contactor1Id	;//	授权人及身份证号
 	@Column(name="contactor_2_id")
-	private String	contactor2id	;//	授权人及身份证号
+	private String	contactor2Id	;//	授权人及身份证号
 	@Column(name="contactor_3_id")
-	private String	contactor3id	;//	授权人及身份证号
+	private String	contactor3Id	;//	授权人及身份证号
 	
 	@Column(name="contactor_1_tel")
 	private String	contactor1Tel	;//	授权人电话
@@ -182,6 +195,14 @@ public class ReportFormsInfo implements Serializable {
 	@Transient
 	private String	customerTypeName	;//	客户性质名称
 	
+	@Column(name="order_type_code",columnDefinition = "char")
+	private String	orderTypeCode	;//	订单状态
+	
+	@Transient
+	private String queryType;//查询类型
+	
+	
+	
 	
 	@Transient
 	public String startTime;
@@ -205,15 +226,6 @@ public class ReportFormsInfo implements Serializable {
 		this.sequenceNumber = sequenceNumber;
 	}
 
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-
-	
 
 	public String getOfficeCode() {
 		return officeCode;
@@ -223,20 +235,22 @@ public class ReportFormsInfo implements Serializable {
 		this.officeCode = officeCode;
 	}
 
-	public String getCentre() {
-		return centre;
+
+
+	public String getGroupCode() {
+		return groupCode;
 	}
 
-	public void setCentre(String centre) {
-		this.centre = centre;
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
 
-	public Date getContractDate() {
-		return contractDate;
+	public String getGroupName() {
+		return groupName;
 	}
 
-	public void setContractDate(Date contractDate) {
-		this.contractDate = contractDate;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public String getCoustomerNo() {
@@ -277,14 +291,6 @@ public class ReportFormsInfo implements Serializable {
 
 	public void setContractorClassCode(String contractorClassCode) {
 		this.contractorClassCode = contractorClassCode;
-	}
-
-	public String getShopName() {
-		return shopName;
-	}
-
-	public void setShopName(String shopName) {
-		this.shopName = shopName;
 	}
 
 	public String getTerminalIndustryCode() {
@@ -333,14 +339,6 @@ public class ReportFormsInfo implements Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public BigDecimal getGrossProfit() {
-		return grossProfit;
-	}
-
-	public void setGrossProfit(BigDecimal grossProfit) {
-		this.grossProfit = grossProfit;
 	}
 
 	public Integer getIsLongTermDiscount() {
@@ -453,30 +451,6 @@ public class ReportFormsInfo implements Serializable {
 
 	public void setReceiveType(String receiveType) {
 		this.receiveType = receiveType;
-	}
-
-	public String getContactor1id() {
-		return contactor1id;
-	}
-
-	public void setContactor1id(String contactor1id) {
-		this.contactor1id = contactor1id;
-	}
-
-	public String getContactor2id() {
-		return contactor2id;
-	}
-
-	public void setContactor2id(String contactor2id) {
-		this.contactor2id = contactor2id;
-	}
-
-	public String getContactor3id() {
-		return contactor3id;
-	}
-
-	public void setContactor3id(String contactor3id) {
-		this.contactor3id = contactor3id;
 	}
 
 	public String getContactor1Tel() {
@@ -613,6 +587,102 @@ public class ReportFormsInfo implements Serializable {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getSalesCode() {
+		return salesCode;
+	}
+
+	public void setSalesCode(String salesCode) {
+		this.salesCode = salesCode;
+	}
+
+	public String getSalesName() {
+		return salesName;
+	}
+
+	public void setSalesName(String salesName) {
+		this.salesName = salesName;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public Double getGrossProfit() {
+		return grossProfit;
+	}
+
+	public void setGrossProfit(Double grossProfit) {
+		this.grossProfit = grossProfit;
+	}
+
+	public String getOrderTypeCode() {
+		return orderTypeCode;
+	}
+
+	public void setOrderTypeCode(String orderTypeCode) {
+		this.orderTypeCode = orderTypeCode;
+	}
+
+	public String getContactor1Id() {
+		return contactor1Id;
+	}
+
+	public void setContactor1Id(String contactor1Id) {
+		this.contactor1Id = contactor1Id;
+	}
+
+	public String getContactor2Id() {
+		return contactor2Id;
+	}
+
+	public void setContactor2Id(String contactor2Id) {
+		this.contactor2Id = contactor2Id;
+	}
+
+	public String getContactor3Id() {
+		return contactor3Id;
+	}
+
+	public void setContactor3Id(String contactor3Id) {
+		this.contactor3Id = contactor3Id;
+	}
+
+	public Double getMainDiscount() {
+		return mainDiscount;
+	}
+
+	public void setMainDiscount(Double mainDiscount) {
+		this.mainDiscount = mainDiscount;
+	}
+
+	public Double getBodyDiscount() {
+		return bodyDiscount;
+	}
+
+	public void setBodyDiscount(Double bodyDiscount) {
+		this.bodyDiscount = bodyDiscount;
+	}
+
+	public String getQueryType() {
+		return queryType;
+	}
+
+	public void setQueryType(String queryType) {
+		this.queryType = queryType;
 	}
 	
 	
