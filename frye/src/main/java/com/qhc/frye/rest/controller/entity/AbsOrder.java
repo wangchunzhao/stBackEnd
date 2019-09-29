@@ -77,7 +77,6 @@ public abstract class AbsOrder{
 	private String confirmTypeCode;//收货方式 Receiving way
 	private String transferTypeCode;//运输类型 Type of transportation
 	private double freight;//运费
-	//private int isAllinBulk;//是否全部为散件
 	/**
 	 * 结算方式 Method of payment
 	 */
