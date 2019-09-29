@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "sap_sales_groups")
-public class SapSalesGroups implements Serializable {
+public class SapSalesGroup implements Serializable {
 	
 	/**
 	 * 
@@ -126,7 +126,7 @@ public class SapSalesGroups implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		SapSalesGroups sg = (SapSalesGroups)obj;
+		SapSalesGroup sg = (SapSalesGroup)obj;
 		if(sg.code.equals(this.getCode()))
 			return true;
 		return false;
