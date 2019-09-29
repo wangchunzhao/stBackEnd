@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("location")
 @Api(value = "Location Management in Frye")
 public class LocationController {
+	
 	@Autowired
 	private LocationService localService;
 
