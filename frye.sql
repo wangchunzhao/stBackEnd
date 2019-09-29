@@ -128,7 +128,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_area` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_area` (
-  `code` VARCHAR(6) NOT NULL,
+  `code` VARCHAR(16) NOT NULL,
   `name` TEXT NOT NULL,
   `price` DECIMAL(13,2) NOT NULL,
   `b_city_code` VARCHAR(6) NOT NULL,
@@ -359,7 +359,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_customer` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
-  `code` VARCHAR(16) NOT NULL,
+  `code` VARCHAR(10) NOT NULL,
   `change_date` DATE NOT NULL,
   `name` TEXT NOT NULL,
   `address` TEXT NULL DEFAULT NULL,
@@ -767,7 +767,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `owner_domain_id` VARCHAR(128) NOT NULL COMMENT 'creator or changed owner',
   `owner_name` TEXT NOT NULL,
   `sales_tel` VARCHAR(45) NULL,
-  `contractor_code` VARCHAR(4) NOT NULL COMMENT 'contracter Code/ customer code',
+  `contractor_code` VARCHAR(10) NOT NULL COMMENT 'contracter Code/ customer code',
   `contractor_name` TEXT NOT NULL,
   `contractor_class_code` CHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
   `contractor_class_name` TEXT NOT NULL COMMENT '经销商/直签',
@@ -1004,7 +1004,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` CHAR(32) NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
   `material_name` TEXT NOT NULL,
-  `group_code` VARCHAR(45) NOT NULL,
   `material_type` TINYINT(2) NOT NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
   `material_specific_Number` VARCHAR(45) NOT NULL,
   `material_attribute` VARCHAR(45) NOT NULL,
@@ -1017,8 +1016,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `b2c_comments` TEXT NULL,
   `row_number` INT NOT NULL,
   `special_code` VARCHAR(45) NULL,
-  `material_property_code` VARCHAR(45) NOT NULL,
-  `material_property_name` TEXT NOT NULL,
+  `material_group_code` VARCHAR(45) NOT NULL COMMENT 'sap_material_group',
+  `material_group_name` TEXT NOT NULL,
   `transfter_price` DECIMAL(13,2) NOT NULL,
   `discount` DOUBLE(3,3) NULL,
   `item_category` VARCHAR(45) NOT NULL,
