@@ -87,10 +87,10 @@ public class ItemDetails implements Serializable{
 	@Column(name = "special_code")
 	public String specialCode;
 	
-	@Column(name = "material_property_code")
+	@Column(name = "material_group_code")
 	public String materialPropertyCode;
 	
-	@Column(name = "material_property_name",columnDefinition = "TEXT")
+	@Column(name = "material_group_name",columnDefinition = "TEXT")
 	public String materialPropertyName;
 	
 	@Column(name = "transfter_price")
