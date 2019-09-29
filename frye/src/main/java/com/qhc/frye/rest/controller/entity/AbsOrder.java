@@ -106,7 +106,7 @@ public abstract class AbsOrder{
 	private String currentUser;//当前session用户
 	
 	
-	private boolean isSubmit;
+	private int submitType;//1.save 2.submit 3.margin 4.wtw margin
 	//
 	private String recordCode;// 项目报备编号 report number
 	
@@ -134,11 +134,12 @@ public abstract class AbsOrder{
 	public void setCurrentUser(String currentUser) {
 		this.currentUser = currentUser;
 	}
-	public boolean isSubmit() {
-		return isSubmit;
+
+	public int getSubmitType() {
+		return submitType;
 	}
-	public void setSubmit(boolean isSubmit) {
-		this.isSubmit = isSubmit;
+	public void setSubmitType(int submitType) {
+		this.submitType = submitType;
 	}
 	//
 	public String getContracterCode() {
