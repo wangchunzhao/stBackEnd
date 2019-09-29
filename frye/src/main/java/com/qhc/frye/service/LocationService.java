@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
-import com.qhc.frye.domain.SapSalesGroups;
+import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
 
 import com.qhc.frye.rest.controller.entity.SalesGroup;
@@ -43,10 +43,10 @@ public class LocationService {
 	 */
 	public void put(List<SalesGroup> salesGroups) {
 		
-		List<SapSalesGroups> groups = new ArrayList();
+		List<SapSalesGroup> groups = new ArrayList();
 		Set<SapSalesOffice> offices = new HashSet();
 		for (SalesGroup sg : salesGroups) {
-			SapSalesGroups ssg = new SapSalesGroups();
+			SapSalesGroup ssg = new SapSalesGroup();
 			ssg.setCode(sg.getCode());
 			ssg.setName(sg.getName());
 			ssg.setOfficeCode(sg.getOfficeCode());
