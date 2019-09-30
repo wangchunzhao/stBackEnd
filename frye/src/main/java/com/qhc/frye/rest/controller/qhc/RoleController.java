@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,8 +34,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("role")
-@Api(value = "Role", description = "Role info")
+@Api(value = "Role", description = "角色管理")
 public class RoleController {
 	
 	@Autowired
@@ -41,13 +43,13 @@ public class RoleController {
 	private RelationService relationService;
 	
 	
-	@ApiOperation(value=" Find all role paging info", notes="Find all role paging info")
-	@GetMapping("/paging")
+	@ApiOperation(value="带条件分页查询角色", notes="带条件分页查询角色")
+	@GetMapping(value="role/{pageNo}/{pageSize}/{isActive}")
     @ResponseStatus(HttpStatus.OK)
 	public RestPage<Role> findPagingList(
-			@RequestParam("pageNo") int pageNo,
-			@RequestParam("pageSize") int pageSize,
-			@RequestParam("isActive") int isActive) throws Exception{
+			@PathVariable int pageNo,
+			@PathVariable int pageSize,
+			@PathVariable int isActive) throws Exception{
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Role role = new Role();
@@ -55,9 +57,9 @@ public class RoleController {
 		Page<Role> page = roleService.getByConditions(role,pageable);
         return new RestPage(page);
     }
-	
+/*	
 	@ApiOperation(value=" Find all role info", notes="Find all role info")
-	@GetMapping
+	@GetMapping(value="role")
     @ResponseStatus(HttpStatus.OK)
 	public List<Role> findAll(@RequestParam Integer isActive) throws Exception{
 		
@@ -74,9 +76,9 @@ public class RoleController {
 		}
 		return result;
     }
-	
-	@ApiOperation(value=" Find role by id", notes="Find role by id")
-	@GetMapping(value = "/{id}")
+*/	
+	@ApiOperation(value="根据id查找角色", notes="根据id查找角色")
+	@GetMapping(value = "role/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Object findById(@PathVariable("id") Integer id) throws Exception {	
 		
@@ -93,11 +95,11 @@ public class RoleController {
 //    }
 	
 	
-	@ApiOperation(value="Modify the permissions of roles ", notes="Modify the permissions of roles")
-	@PostMapping
+	@ApiOperation(value="根据Role对象更新角色 ", notes="根据Role对象更新角色")
+	@PutMapping(value="role")
     @ResponseStatus(HttpStatus.OK)
 	@Transactional
-    public Role updateRoleOperations(@RequestBody(required=true) Role role) throws Exception
+    public Role updateRoleOperations(@RequestBody(required=true)@Valid Role role) throws Exception
     {	
 		if(role.getIsActive()==1) {
 			relationService.saveRelation(role);
