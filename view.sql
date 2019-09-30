@@ -1,6 +1,6 @@
-DROP VIEW IF EXISTS `bohemian`.k_report_material_view;
+DROP VIEW IF EXISTS `bohemian`.k_report_bymaterial_view;
 
- CREATE VIEW k_report_material_view AS 
+ CREATE VIEW k_report_bymaterial_view AS 
 
 SELECT
 	CONCAT(
