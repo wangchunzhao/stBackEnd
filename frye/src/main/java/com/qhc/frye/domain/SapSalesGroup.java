@@ -14,9 +14,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "sap_sales_group")
 public class SapSalesGroup implements Serializable {
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1176483521099061923L;
 
 	@Id
