@@ -3,8 +3,15 @@ package com.qhc.frye.rest.controller.entity;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KOrderVersion;
@@ -71,6 +78,7 @@ public abstract class AbsOrder{
 	private String confirmTypeCode;//收货方式 Receiving way
 	private String transferTypeCode;//运输类型 Type of transportation
 	private double freight;//运费
+	//private int isAllinBulk;//是否全部为散件
 	/**
 	 * 结算方式 Method of payment
 	 */
@@ -85,7 +93,7 @@ public abstract class AbsOrder{
 	 * 购销明细 Purchase and sale subsidiar
 	 */
 //	private List<ProductItemForm> items;//购销明细
-	private ItemsForm itemsForm;
+	private ItemsForm itemsForm;//购销明细表单
 	private String comments;//备注
 	/**
 	 * 附件信息 Attachment information
