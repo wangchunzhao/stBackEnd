@@ -32,8 +32,6 @@ public class SapSalesGroup implements Serializable {
 	@Column(name="sap_sales_office_code",columnDefinition="CHAR",length=4)
     private String officeCode;
 	
-	
-	
 	@Transient
 	private BigDecimal amount;//金额
 	
@@ -47,15 +45,13 @@ public class SapSalesGroup implements Serializable {
 	private BigDecimal grossProfit;//毛利
 	
 	@Transient
-	private Double grossProfitMargin;//毛利率
-	
-	
-	
-	
-	
-	
+	private Double grossProfitMargin;//毛利率	
 	
 
+	
+	
+	
+	
 	public BigDecimal getAmount() {
 		return amount;
 	}
