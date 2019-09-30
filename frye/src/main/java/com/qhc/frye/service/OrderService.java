@@ -1,5 +1,6 @@
 package com.qhc.frye.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,14 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(AbsOrder absOrder){
+	public void save(AbsOrder order){
+		
 		DOrder sDorder = dOrderRepository.saveAndFlush(absOrder.getDorder());
-		OrderSupportInfo ori = absOrder.getSupportInforOfOrder();
-		ori.setOrderId(sDorder.getId());
-		supportRepo.saveAndFlush(ori);
-		KOrderVersion over = absOrder.getOrderVersion();
+		OrderSupportInfo ori = order.getSupportInforOfOrder();
+		if(!order.getContractNumber().trim().isEmpty())
+			ori.setOrderId(sDorder.getId());
+			supportRepo.saveAndFlush(ori);
+		KOrderVersion over = order.getOrderVersion();
 		over.setkOrdersId(sDorder.getId());
 		KOrderVersion kov = versionRepo.saveAndFlush(over);
 	}

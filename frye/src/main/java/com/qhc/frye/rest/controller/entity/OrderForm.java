@@ -9,9 +9,11 @@ package com.qhc.frye.rest.controller.entity;
  */
 public class OrderForm extends AbsOrder {
 
-	public OrderForm(String json) {
-		super(json);
-		// TODO Auto-generated constructor stub
+	public OrderForm() {
+		super();
 	}
-
+	
+	public OrderForm(String jason) {
+		super(jason);
+	}
 }

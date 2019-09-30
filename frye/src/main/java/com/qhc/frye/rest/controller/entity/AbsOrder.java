@@ -24,19 +24,17 @@ public abstract class AbsOrder{
 	private final static String EXCEPTION_TOO_LONG = "too long";
 	private final static String EXCEPTION_MUST_HAVE = "must have";
 	
-	@NotBlank
-	@Max(value = 4,message = EXCEPTION_TOO_LONG)
+	
 	private String orderType;//dealer or keyaccount or bulk
 	/**
 	 * 客户基本信息 Basic information
 	 */
-	@NotBlank
-	@Max(value = 10,message = EXCEPTION_TOO_LONG)
+	
 	private String contracterCode;//签约单位 Contract unit
-	@NotBlank
+	
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
-	@NotBlank
+	
 	private String salesCode;//客户经理 Customer manager
 	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
@@ -45,7 +43,7 @@ public abstract class AbsOrder{
 	/**
 	 * 合同详细信息 Contract details
 	 */
-	@NotBlank
+	
 	private String sequenceNumber;//流水号 code
 	private String contractNumber;//合同号 contract no
 	private String saleType;//销售类型 Sales type
@@ -100,8 +98,7 @@ public abstract class AbsOrder{
 	/**
 	 * from session
 	 */
-	@NotBlank
-	@Max(value = 16,message = EXCEPTION_TOO_LONG)
+	
 	private String currentUser;//当前session用户
 	
 	
@@ -124,9 +121,13 @@ public abstract class AbsOrder{
 	private double approvedDicount;//批准的折扣、标准折扣
 	//
 	
-	public AbsOrder(String json) {
-		
+	public AbsOrder () {
+		System.out.println("here");
 	}
+	public AbsOrder (String Json) {
+		System.out.println("here");
+	}
+	
 	public String getCurrentUser() {
 		return currentUser;
 	}
@@ -446,6 +447,20 @@ public abstract class AbsOrder{
 //		dorder.setContractorClassCode();//customer class
 //		dorder.setContractorClassName();//customer class name
 		dorder.setOfficeCode(this.getOfficeCode());
+		//
+		/*
+		 * test code
+		 */
+		dorder.setSequenceNumber("seq12345");
+		dorder.setOrderTypeCode("Z001");
+		dorder.setCreateTime(new Date());
+		dorder.setOwnerDomainId("w0123");
+		dorder.setOwnerName("test name");
+		dorder.setContractorCode("Con123");
+		dorder.setContractorName("Cont123");
+		dorder.setContractorClassCode("01");
+		dorder.setContractorClassName("conclass123");
+		dorder.setOfficeCode("10");
 		return dorder;
 	}
 	
@@ -454,6 +469,10 @@ public abstract class AbsOrder{
 		osi.setContractNumber(this.getContractNumber());
 		osi.setOperationTime(new Date());
 		osi.setSupportorId(this.getCurrentUser());
+		/*
+		 * test code
+		 */
+		osi.setContractNumber("ContractNumber");
 		return osi;
 	}
 	
