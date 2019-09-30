@@ -2,12 +2,15 @@ package com.qhc.frye.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -57,8 +60,33 @@ public class ItemsForm implements Serializable{
 	@NotNull
 	@Column(name = "is_ready",columnDefinition ="BIT")
 	public int isReady;
+	
+	
+	
+	@Transient
+	public List<ItemDetails> detailsList;
+	
+	
+	
+	
 
 	
+
+
+
+
+
+
+	public List<ItemDetails> getDetailsList() {
+		return detailsList;
+	}
+
+
+	public void setDetailsList(List<ItemDetails> detailsList) {
+		this.detailsList = detailsList;
+	}
+
+
 	public String getId() {
 		return id;
 	}
