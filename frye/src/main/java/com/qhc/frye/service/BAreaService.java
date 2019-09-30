@@ -32,8 +32,8 @@ public class BAreaService {
 		return bAreaRepository.save(bArea);
 	}
 	
-	public Page<List<Object>> getList(String name, Pageable pageable){
-		return bAreaRepository.findByName(name, pageable);
+	public Page<List<Object>> getList(Pageable pageable){
+		return bAreaRepository.findAllList(pageable);
 	}
 	
 	public void saveFreight(List<List<String>> freight) {

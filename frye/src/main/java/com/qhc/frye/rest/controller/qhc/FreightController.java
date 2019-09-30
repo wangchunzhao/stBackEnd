@@ -32,8 +32,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("freight")
-@Api(value = "BArea", description = "三级地区及运费")
+@Api(value = "BArea", description = "省市区三级地区及运费")
 public class FreightController {
 	
 	@Autowired
@@ -45,38 +44,25 @@ public class FreightController {
 	@Autowired
 	private BProvinceService bProvinceService;
 	
-	
-	@ApiOperation(value="添加或修改三级地区及运费", notes="添加或修改三级地区及运费")
-	@PostMapping
-    @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-    public BArea add(@RequestBody(required=true) BProvince bProvince,BCity bCity,BArea bArea) throws Exception
-    {	
-		bProvinceService.add(bProvince);
-		bCityService.add(bCity);
-		return bAreaService.add(bArea);
-    }
-	
-	@ApiOperation(value = "省市区运费")
-	@PutMapping
+	@ApiOperation(value = "添加省市区运费")
+	@PutMapping(value="freight")
 	@ResponseStatus(HttpStatus.OK)
 	public void put(@RequestBody(required = true) @Valid List<List<String>> freight) throws Exception {
 		
 		bAreaService.saveFreight(freight);
 	}
 	
-	@ApiOperation(value="查询省市区运费", notes="Find all kOrderInfo paging info")
-	@GetMapping
+	@ApiOperation(value="查询省市区运费", notes="分页查询全部省市区运费")
+	@GetMapping(value="freight/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
 	public  PageHelper findPagingList(
-			@RequestParam("pageNo") int pageNo,
-			@RequestParam("pageSize") int pageSize,
-			@RequestParam("name") String name
+			@PathVariable int pageNo,
+			@PathVariable int pageSize
 			) throws Exception{
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		PageHelper pageHelper = new PageHelper();
 		
-		Page<List<Object>> page = bAreaService.getList(name, pageable);
+		Page<List<Object>> page = bAreaService.getList(pageable);
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
 		pageHelper.setRows(page.getContent());
         return pageHelper;
