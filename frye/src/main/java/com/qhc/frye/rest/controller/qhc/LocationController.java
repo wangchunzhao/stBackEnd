@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("location")
-@Api(value = "Location Management in Frye")
+@Api(value = "Location Management in Frye", description = "Location管理")
 public class LocationController {
 	
 	@Autowired
@@ -40,7 +40,7 @@ public class LocationController {
 		localService.put(salesGroups);
 	}
 	
-	@ApiOperation(value = "get destination for freight calculation from DB.")
+	@ApiOperation(value = "获取目的地计算运费")
 	@GetMapping(value = "destination", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void getDestination() throws Exception {

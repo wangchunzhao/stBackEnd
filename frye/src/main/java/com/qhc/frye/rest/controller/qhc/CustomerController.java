@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,37 +35,37 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 
-@Api(value = "Customer Management in Frye")
+@Api(value = "Customer Management in Frye", description = "客户管理")
 public class CustomerController {
 	
 	@Autowired
 	private CustomerService customerService;
-	
-	@ApiOperation(value = "update customers data to DB.")
-	@GetMapping(value = "customer/lastUpdateDate")
+/*	
+	@ApiOperation(value = "获取客户lastUpdateDate")
+	@PutMapping(value = "customer/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
 		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
 		return date;
-	}
+	}*/
 	
-	@ApiOperation(value = "put the customers data to DB.")
-	@PutMapping(value = "customer", produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "新增客户信息")
+	@PostMapping(value = "customer")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
 		
 		customerService.saveCustomers(customers);
 	}
-	@ApiOperation(value = "get the customers from DB.")
+	@ApiOperation(value = "根据名称查询客户信息")
 	@GetMapping(value = "customer/{name}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Customer>  getCustomers(@RequestParam(required = true) String name) throws Exception {
 		
 		return customerService.searchCustomers(name);
 	}
-	@ApiOperation(value = "get the customer classes from DB.")
-	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "查询所有客户信息")
+	@GetMapping(value = "customer", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String>  getCustomerClazz() throws Exception {
 		Map<String,String> cClazz = new HashMap<String,String>();

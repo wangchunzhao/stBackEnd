@@ -147,6 +147,22 @@ public class UserController {
 		
     }
 	
+	@ApiOperation(value="查询所有权限", notes="查询所有权限")
+	@GetMapping(value = "operations")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Operations> findAll() throws Exception
+    {	
+		return operationService.findAll();
+    }
+	
+	@ApiOperation(value=" 根据id查询权限", notes="根据id查询权限")
+	@GetMapping(value = "operations/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Operations findById(@PathVariable("id") String id) throws Exception
+    {	
+		return operationService.findById(id);
+    }
+	
 /*	
 	@ApiOperation(value="Update user", notes="Update user")
 	@PutMapping

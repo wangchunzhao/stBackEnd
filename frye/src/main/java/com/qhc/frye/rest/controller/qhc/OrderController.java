@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Order management in Frye")
+@Api(value = "Order management in Frye", description = "订单管理")
 public class OrderController {
 	
 	@Autowired
@@ -43,7 +43,7 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
-	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
+	@ApiOperation(value="保存订单信息", notes="保存订单信息")
     @PostMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
     public void submitOrder(@RequestBody(required=true) @Valid AbsOrder absOrder) throws Exception
@@ -61,7 +61,7 @@ public class OrderController {
 		orderService.save(absOrder);
     }
 	
-	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")
+	@ApiOperation(value="查询订单类型", notes="查询订单类型")
     @GetMapping(value = "order/salesType")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getOrderType() throws Exception

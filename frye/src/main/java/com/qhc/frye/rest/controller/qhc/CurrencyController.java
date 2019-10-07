@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Currency and Incoterm management in Frye")
+@Api(value = "Currency and Incoterm management in Frye", description = "币种管理")
 public class CurrencyController {
 	
 
@@ -39,14 +39,14 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 	
 
-	@ApiOperation(value = "update currency data to DB.")
+	@ApiOperation(value = "修改币种")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
 		currencyService.saveCurrency(currency);
 	}
 	
-	@ApiOperation(value = "get currency map from DB.")
+	@ApiOperation(value = "获取币种map")
 	@GetMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String> getCurrency() {
@@ -58,20 +58,20 @@ public class CurrencyController {
 		return currencies;
 	}
 	
-	@ApiOperation(value = "update incoterms data to DB.")
+	@ApiOperation(value = "修改国际贸易条件")
 	@PutMapping(value = "incoterms")
 	@ResponseStatus(HttpStatus.OK)
 	public void putIncoterm(@RequestBody(required = true) @Valid List<Incoterm> incoterm) {
 		currencyService.saveIncoterm(incoterm);
 	}
-	@ApiOperation(value = "retrieve incoterms from DB.")
+	@ApiOperation(value = "查询国际贸易条件")
 	@GetMapping(value = "incoterms")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String> getIncoterms() {
 		return currencyService.getIncoterms();
 	}
 	
-	@ApiOperation(value = "update price data to DB.")
+	@ApiOperation(value = "新增价格")
 	@PutMapping(value = "price")
 	@ResponseStatus(HttpStatus.OK)
 	public void putPrice(@RequestBody(required = true) @Valid List<Price> price) {
