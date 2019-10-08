@@ -64,8 +64,8 @@ public class CustomerController {
 		
 		return customerService.searchCustomers(name);
 	}
-	@ApiOperation(value = "查询所有客户信息")
-	@GetMapping(value = "customer", produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "查询所有客户的级别信息")
+	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String>  getCustomerClazz() throws Exception {
 		Map<String,String> cClazz = new HashMap<String,String>();
