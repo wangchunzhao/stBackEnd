@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("bNotifyInfor")
 @Api(value = "BNotifyInfor", description = "邮件发送记录")
-public class BNotifyInforController {
+public class NotifyInforController {
 
 	@Autowired
 	private BNotifyInforService bNotifyInforService;

@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @Api(value = "ParameterSettings ", description = "系统参数管理")
-public class ParameterSettingsController {
+public class SettingsController {
 	
 	@Autowired
 	private ParameterSettingsService settingService;

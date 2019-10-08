@@ -72,7 +72,7 @@ public class OrderController {
     }
 	
 	
-    
+	@ApiOperation(value="计算毛利", notes="计算毛利")
     @PostMapping(value = "order/salesOrder")
     @ResponseStatus(HttpStatus.OK)
     public List<SapSalesGroup> getGrossProfit(@RequestBody SalesOrder salesOrder) throws Exception
@@ -84,6 +84,7 @@ public class OrderController {
 		return this.getGrossProfitDetail(grossProfitDTO);
     }
     
+	@ApiOperation(value="计算毛利", notes="计算毛利")
     @PostMapping(value = "order/grossProfitDTO")
     @ResponseStatus(HttpStatus.OK)
     public List<SapSalesGroup> getGrossProfitDetail(@RequestBody GrossProfitDTO grossProfitDTO) throws Exception

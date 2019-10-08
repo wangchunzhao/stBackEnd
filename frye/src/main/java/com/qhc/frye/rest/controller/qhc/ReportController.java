@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @Api(value = "ReportFormsInfo", description = "报表管理")
-public class ReportFormsInfoController {
+public class ReportController {
 	
 	@Autowired
 	private ReportFormsInfoService reportFormsInfoService;

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.qhc.frye.dao.UserOperationInfoRepository;
 import com.qhc.frye.domain.ApplicationOfRolechange;
 import com.qhc.frye.domain.Operation2role;
 import com.qhc.frye.domain.Operations;
 import com.qhc.frye.domain.Role;
 import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.User;
+import com.qhc.frye.domain.UserOperationInfo;
 import com.qhc.frye.rest.controller.entity.RestPage;
 import com.qhc.frye.service.ApplicationOfRolechangeService;
 import com.qhc.frye.service.OperationService;
@@ -58,6 +63,9 @@ public class UserController {
 	private RoleService roleService;
 	@Autowired
 	private ApplicationOfRolechangeService applicationOfRolechangeService;
+	@Autowired
+	private UserOperationInfoRepository userOperationInfoRepository;
+	
 	
 	@ApiOperation(value="带条件分页查询用户", notes="带条件分页查询用户")
 	@GetMapping(value="user/{pageNo}/{pageSize}")
@@ -180,5 +188,88 @@ public class UserController {
 		}
 		return pu;
 	}
+	
+	@ApiOperation(value="查询整个视图", notes="查询整个视图")
+	@GetMapping(value = "userOperationInfo")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserOperationInfo> findAllOperation() throws Exception
+    {	
+        return userOperationInfoRepository.findAll();
+    }
+	
+	@ApiOperation(value="根据域账号查询视图", notes="根据域账号查询视图")
+	@GetMapping(value="userOperationInfo/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserOperationInfo> findByUserId(@PathVariable("userId") Integer userId) throws Exception
+    {	
+		return userOperationInfoRepository.findByUserId(userId);
+    }
+	
+	@ApiOperation(value="带条件分页查询角色", notes="带条件分页查询角色")
+	@GetMapping(value="role/{pageNo}/{pageSize}")
+    @ResponseStatus(HttpStatus.OK)
+	public RestPage<Role> findPagingList(
+			@PathVariable int pageNo,
+			@PathVariable int pageSize,
+			@RequestParam("isActive") int isActive) throws Exception{
+		
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Role role = new Role();
+		role.setIsActive(isActive);
+		Page<Role> page = roleService.getByConditions(role,pageable);
+        return new RestPage(page);
+    }
+/*	
+	@ApiOperation(value=" Find all role info", notes="Find all role info")
+	@GetMapping(value="role")
+    @ResponseStatus(HttpStatus.OK)
+	public List<Role> findAll(@RequestParam Integer isActive) throws Exception{
+		
+		List<Role> list = roleService.findAll();
+		List<Role> result = new ArrayList<Role>();
+		if(isActive==2) {
+			result = list;
+		}else {
+			for(Role r :list) {
+				if(isActive==r.getIsActive()) {
+					result.add(r);
+				}
+			}
+		}
+		return result;
+    }
+*/	
+	@ApiOperation(value="根据id查找角色", notes="根据id查找角色")
+	@GetMapping(value = "role/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object findById(@PathVariable("id") Integer id) throws Exception {	
+		
+		return roleService.findById(id);
+    }
+	
+	
+//	@ApiOperation(value="Create role", notes="Create role")
+//	@PostMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public Role update(@RequestBody(required=true) Role role) throws Exception
+//    {	
+//		return roleService.createOrUpdateRole(role);	
+//    }
+	
+	
+	@ApiOperation(value="根据Role对象更新角色 ", notes="根据Role对象更新角色")
+	@PutMapping(value="role")
+    @ResponseStatus(HttpStatus.OK)
+	@Transactional
+    public Role updateRoleOperations(@RequestBody(required=true)@Valid Role role) throws Exception
+    {	
+		if(role.getIsActive()==1) {
+			relationService.saveRelation(role);
+		}
+		return roleService.createOrUpdateRole(role);
+		
+    }
+
+	
 
 }

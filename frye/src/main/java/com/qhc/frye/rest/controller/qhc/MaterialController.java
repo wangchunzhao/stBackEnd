@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Configurable;
 import com.qhc.frye.rest.controller.entity.Customer;
 import com.qhc.frye.rest.controller.entity.Material;
+import com.qhc.frye.service.CharacteristicService;
 import com.qhc.frye.service.CustomerService;
 import com.qhc.frye.service.MaterialService;
 
@@ -44,6 +46,9 @@ public class MaterialController {
 	
 	@Autowired
 	private CustomerService cu;
+	
+	@Autowired
+	private CharacteristicService characteristicService;
 	
 
 	@ApiOperation(value = "查询物料lastUpdateDate")
@@ -85,5 +90,20 @@ public class MaterialController {
 //			throws Exception {
 //
 //	}
+	
+	@ApiOperation(value = "修改MaterialClazz")
+	@PutMapping(value = "material/materialclass")
+	@ResponseStatus(HttpStatus.OK)
+	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
+		characteristicService.saveClass(clazz);
+	}
+
+	@ApiOperation(value = "修改CharacteristicValue")
+	@PutMapping(value = "material/characteristic")
+	@ResponseStatus(HttpStatus.OK)
+	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
+		characteristicService.saveCharacteristicValue(chaValues);
+	}
+	
 
 }
