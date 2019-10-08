@@ -43,7 +43,7 @@ k.sequence_number as contract_seq
 			a.k_orders_id,
 			a. STATUS,
 			b.k_order_info_id,
-			b.k_order_version_id1		
+			b.k_order_version_id_parent
 		FROM
 			(
 				SELECT
