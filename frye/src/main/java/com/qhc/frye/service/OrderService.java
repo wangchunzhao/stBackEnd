@@ -54,7 +54,7 @@ public class OrderService {
 	 */
 	public void save(AbsOrder order){
 		
-		DOrder sDorder = dOrderRepository.saveAndFlush(absOrder.getDorder());
+		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
 		OrderSupportInfo ori = order.getSupportInforOfOrder();
 		if(!order.getContractNumber().trim().isEmpty())
 			ori.setOrderId(sDorder.getId());
