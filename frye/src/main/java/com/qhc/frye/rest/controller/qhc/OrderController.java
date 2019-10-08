@@ -94,7 +94,7 @@ public class OrderController {
     }
     
     @ApiOperation(value="根据id查询订单", notes="根据id查询订单")
-    @GetMapping(value = "dOrder/{id}")
+    @GetMapping(value = "order/dOrder/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DOrder findByKOrderVersionId(@PathVariable String id) throws Exception
     {	

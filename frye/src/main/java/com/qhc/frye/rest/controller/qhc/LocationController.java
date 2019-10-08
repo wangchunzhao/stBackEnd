@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.SalesGroup;
 import com.qhc.frye.service.BAreaService;
 import com.qhc.frye.service.BCityService;
 import com.qhc.frye.service.BProvinceService;
 import com.qhc.frye.service.LocationService;
+import com.qhc.frye.service.SapSalesOfficeService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -48,6 +51,9 @@ public class LocationController {
 	
 	@Autowired
 	private BProvinceService bProvinceService;
+	
+	@Autowired
+	private SapSalesOfficeService sapSalesOfficeService;
 
 	@ApiOperation(value = "修改销售中心")
 	@PutMapping(value = "location/salesOffice", produces = "application/json;charset=UTF-8")
@@ -65,7 +71,7 @@ public class LocationController {
 	}
 	
 	@ApiOperation(value = "添加省市区运费")
-	@PutMapping(value="freight")
+	@PutMapping(value="location/freight")
 	@ResponseStatus(HttpStatus.OK)
 	public void put(@RequestBody(required = true) @Valid List<List<String>> freight) throws Exception {
 		
@@ -73,7 +79,7 @@ public class LocationController {
 	}
 	
 	@ApiOperation(value="查询省市区运费", notes="分页查询全部省市区运费")
-	@GetMapping(value="freight/{pageNo}/{pageSize}")
+	@GetMapping(value="location/freight/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
 	public  PageHelper findPagingList(
 			@PathVariable int pageNo,
@@ -86,6 +92,13 @@ public class LocationController {
 		pageHelper.setTotal(Integer.valueOf(page.getTotalElements()+""));
 		pageHelper.setRows(page.getContent());
         return pageHelper;
+    }
+	
+	@ApiOperation(value="查询所有大区", notes="查询所有大区")
+	@GetMapping(value="location/sapSalesOffice")
+    @ResponseStatus(HttpStatus.OK)
+	public List<SapSalesOffice> findAll() throws Exception{
+		return sapSalesOfficeService.findAll();
     }
 
 }
