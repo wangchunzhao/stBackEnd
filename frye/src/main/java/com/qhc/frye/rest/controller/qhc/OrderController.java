@@ -17,12 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.domain.CustomerClass;
 import com.qhc.frye.domain.DSalesType;
+import com.qhc.frye.domain.GrossProfitDTO;
+import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
+import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
 
@@ -42,6 +47,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private SalesGroupRepository salesGroupRepository;
 	
 	@ApiOperation(value="保存订单信息", notes="保存订单信息")
     @PostMapping(value = "order")
@@ -74,6 +82,28 @@ public class OrderController {
 		return saleTypes;
 		
     }
+	
+	
+    
+    @PostMapping(value = "order/salesOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SapSalesGroup> getGrossProfit(@RequestBody SalesOrder salesOrder) throws Exception
+    {	
+    	GrossProfitDTO grossProfitDTO = new GrossProfitDTO();
+    	grossProfitDTO.setSalesOrder(salesOrder);
+    	grossProfitDTO.setSapSalesGroupList(salesGroupRepository.findAll());
+    	
+		return this.getGrossProfitDetail(grossProfitDTO);
+    }
+    
+    @PostMapping(value = "order/grossProfitDTO")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SapSalesGroup> getGrossProfitDetail(@RequestBody GrossProfitDTO grossProfitDTO) throws Exception
+    {	
+    	
+		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(), grossProfitDTO.getSapSalesGroupList());
+    }
+    
 	
 
 }
