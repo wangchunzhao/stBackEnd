@@ -1114,10 +1114,10 @@ DROP TABLE IF EXISTS `bohemian`.`k_parent_order_version` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
   `opt_time` DATETIME NOT NULL,
   `k_order_version_id` CHAR(32) NOT NULL,
-  `k_order_version_id1` CHAR(32) NOT NULL,
+  `k_order_version_id_parent` CHAR(32) NOT NULL,
   `k_order_info_id` CHAR(32) NOT NULL,
-  PRIMARY KEY (`k_order_version_id`, `k_order_version_id1`),
-  INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_order_version_id1` ASC) VISIBLE,
+  PRIMARY KEY (`k_order_version_id`, `k_order_version_id_parent`),
+  INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_order_version_id_parent` ASC) VISIBLE,
   INDEX `fk_k_parent_order_version_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_parent_order_version_k_order_version1`
     FOREIGN KEY (`k_order_version_id`)
@@ -1125,7 +1125,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_k_parent_order_version_k_order_version2`
-    FOREIGN KEY (`k_order_version_id1`)
+    FOREIGN KEY (`k_order_version_id_parent`)
     REFERENCES `bohemian`.`k_order_version` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
