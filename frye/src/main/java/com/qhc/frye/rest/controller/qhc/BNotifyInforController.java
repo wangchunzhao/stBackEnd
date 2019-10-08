@@ -18,13 +18,13 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("bNotifyInfor")
-@Api(value = "BNotifyInfor", description = "BNotifyInfor info")
+@Api(value = "BNotifyInfor", description = "邮件发送记录")
 public class BNotifyInforController {
 
 	@Autowired
 	private BNotifyInforService bNotifyInforService;
 	
-	@ApiOperation(value="Add bNotifyInfor", notes="Add bNotifyInfor")
+	@ApiOperation(value="新增邮件发送记录", notes="新增邮件发送记录")
 	@PostMapping
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody

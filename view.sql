@@ -1,6 +1,6 @@
-DROP VIEW IF EXISTS `bohemian`.k_report_material_view;
+DROP VIEW IF EXISTS `bohemian`.k_report_bymaterial_view;
 
- CREATE VIEW k_report_material_view AS 
+ CREATE VIEW k_report_bymaterial_view AS 
 
 SELECT
 	CONCAT(
@@ -20,6 +20,8 @@ SELECT
 	-- 签约日期
 	e.create_time,
  -- 合同号
+  c.contract_seq,
+ -- 签约人
 	e.contractor_code,
 	-- 客户性质
 	e.contractor_class_code,
@@ -29,12 +31,19 @@ SELECT
 	i.*
 FROM
 	(
-		SELECT
+		select 
+j.k_order_version_id as k_order_version_id,
+k_orders_id,
+STATUS,
+k_order_info_id,
+k.sequence_number as contract_seq
+ from
+(SELECT
 			a.k_order_version_id,
 			a.k_orders_id,
 			a. STATUS,
 			b.k_order_info_id,
-			b.k_order_version_id1
+			b.k_order_version_id1		
 		FROM
 			(
 				SELECT
@@ -50,7 +59,9 @@ FROM
 			) a,
 			k_parent_order_version b
 		WHERE
-			a.k_order_version_id = b.k_order_version_id
+			a.k_order_version_id = b.k_order_version_id) j
+left join k_contract k
+  on j.k_order_version_id = k.k_order_version_id
 	) c,
 	(
 		SELECT

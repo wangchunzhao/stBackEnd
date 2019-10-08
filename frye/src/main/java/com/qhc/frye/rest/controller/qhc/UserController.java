@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.frye.domain.ApplicationOfRolechange;
@@ -40,8 +41,7 @@ import io.swagger.annotations.ApiOperation;
  * @author lizuoshan
  */
 @RestController
-@RequestMapping("user")
-@Api(value = "User", description = "User info")
+@Api(value = "User", description = "用户管理")
 public class UserController {
 	
 	@Autowired
@@ -56,14 +56,16 @@ public class UserController {
 	private SapSalesOfficeService officeService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private ApplicationOfRolechangeService applicationOfRolechangeService;
 	
-	@ApiOperation(value=" Find all user info ", notes="Find all user info")
-	@GetMapping(value="/paging")
+	@ApiOperation(value="带条件分页查询用户", notes="带条件分页查询用户")
+	@GetMapping(value="user/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
     public RestPage findAll(
-    		@RequestParam("pageNo") int pageNo,
-			@RequestParam("pageSize") int pageSize,
-			@RequestParam("isActive") int isActive,
+    		@PathVariable int pageNo,
+    		@PathVariable int pageSize,
+    		@RequestParam("isActive") int isActive,
     		@RequestParam("userIdentity") String userIdentity,
     		@RequestParam("userMail") String userMail) throws Exception
     {	
@@ -76,7 +78,7 @@ public class UserController {
 		return new RestPage(refushPageUser(page));
     }
 	
-	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
+/*	@ApiOperation(value=" Find user by multiple conditions", notes="Find user by multiple conditions")
 	@GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<User> findByMultipleConditions(@RequestParam("userIdentity") String userIdentity,@RequestParam("userMail") String userMail,@RequestParam("isActive") String isActive) throws Exception
@@ -92,9 +94,9 @@ public class UserController {
 		return userList;
     }
 	
-	
-	@ApiOperation(value=" Find user by UserIdentity", notes="Find user by UserIdentity")
-	@GetMapping(value = "/{userIdentity}")
+*/	
+	@ApiOperation(value="根据域账号查询用户", notes="根据域账号查询用户")
+	@GetMapping(value = "user/{userIdentity}")
     @ResponseStatus(HttpStatus.OK)
     public User findByUserIdentity(@PathVariable String userIdentity) throws Exception{	
 		User user = userService.findByUserIdentity(userIdentity);
@@ -124,8 +126,8 @@ public class UserController {
 		return user;
     }
 	
-	@ApiOperation(value="Add user", notes="Add user")
-	@PostMapping
+	@ApiOperation(value="新增用户", notes="新增用户")
+	@PostMapping(value="user")
     @ResponseStatus(HttpStatus.OK)
 	@Transactional
     public User add(@RequestBody(required=true) User user) throws Exception
@@ -135,6 +137,33 @@ public class UserController {
 		return user;
     }
 	
+	@ApiOperation(value="新增用户角色关系", notes="新增用户角色关系")
+	@PostMapping(value="applicationOfRolechange")
+    @ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+    public ApplicationOfRolechange add(@RequestBody(required=true) ApplicationOfRolechange applicationOfRolechange) throws Exception
+    {	
+		return applicationOfRolechangeService.add(applicationOfRolechange);
+		
+    }
+	
+	@ApiOperation(value="查询所有权限", notes="查询所有权限")
+	@GetMapping(value = "operations")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Operations> findAll() throws Exception
+    {	
+		return operationService.findAll();
+    }
+	
+	@ApiOperation(value=" 根据id查询权限", notes="根据id查询权限")
+	@GetMapping(value = "operations/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Operations findById(@PathVariable("id") String id) throws Exception
+    {	
+		return operationService.findById(id);
+    }
+	
+/*	
 	@ApiOperation(value="Update user", notes="Update user")
 	@PutMapping
     @ResponseStatus(HttpStatus.OK)
@@ -142,7 +171,7 @@ public class UserController {
     {	
 		return userService.createOrUpdateUser(user);
     }
-	
+*/	
 	public Page<User> refushPageUser( Page<User> pu) throws Exception {
 		if(pu.getContent()!=null&&pu.getContent().size()>0) {
 			for(User u :pu.getContent()) {

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.domain.DOrder;
+import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
 
@@ -75,6 +76,7 @@ public abstract class AbsOrder{
 	private String confirmTypeCode;//收货方式 Receiving way
 	private String transferTypeCode;//运输类型 Type of transportation
 	private double freight;//运费
+	//private int isAllinBulk;//是否全部为散件
 	/**
 	 * 结算方式 Method of payment
 	 */
@@ -89,6 +91,7 @@ public abstract class AbsOrder{
 	 * 购销明细 Purchase and sale subsidiar
 	 */
 //	private List<ProductItemForm> items;//购销明细
+	private ItemsForm itemsForm;//购销明细表单
 	private String comments;//备注
 	/**
 	 * 附件信息 Attachment information
@@ -431,6 +434,13 @@ public abstract class AbsOrder{
 	}
 	public void setCurrencyExchange(double currencyExchange) {
 		this.currencyExchange = currencyExchange;
+	}
+	
+	public ItemsForm getItemsForm() {
+		return itemsForm;
+	}
+	public void setItemsForm(ItemsForm itemsForm) {
+		this.itemsForm = itemsForm;
 	}
 	//
 	public DOrder getDorder() {

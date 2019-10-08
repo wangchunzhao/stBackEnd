@@ -26,20 +26,20 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Clazz, Characteristic and its value Management in Frye")
+@Api(value = "Clazz, Characteristic and its value Management in Frye", description = "Clazz, Characteristic管理")
 public class CharacteristicController {
 	
 	@Autowired
 	private CharacteristicService characteristicService;
 	
-	@ApiOperation(value = "update class to DB.")
+	@ApiOperation(value = "修改Clazz")
 	@PutMapping(value = "class")
 	@ResponseStatus(HttpStatus.OK)
 	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
 		characteristicService.saveClass(clazz);
 	}
 
-	@ApiOperation(value = "update characteristic and corresponding value data to DB.")
+	@ApiOperation(value = "修改CharacteristicValue")
 	@PutMapping(value = "characteristic")
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {

@@ -7,23 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.domain.DSalesType;
-import com.qhc.frye.rest.controller.entity.AbsOrder;
+import com.qhc.frye.domain.GrossProfitDTO;
+import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.OrderForm;
+import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
 
@@ -35,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@Api(value = "Order management in Frye")
+@Api(value = "Order management in Frye", description = "订单管理")
 public class OrderController {
 	
 	@Autowired
@@ -44,7 +42,10 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
-	@ApiOperation(value="Submit Order by sales", notes="Save&Submit to headQuanter by sales")
+	@Autowired
+	private SalesGroupRepository salesGroupRepository;
+	
+	@ApiOperation(value="保存订单信息", notes="保存订单信息")
     @PostMapping(value = "order")
     @ResponseStatus(HttpStatus.OK)
     public void submitOrder(@RequestBody(required=true)  OrderForm order) throws Exception
@@ -54,7 +55,7 @@ public class OrderController {
     }
 
 	
-	@ApiOperation(value="get salesType", notes="get the list olf sales type for order")
+	@ApiOperation(value="查询订单类型", notes="查询订单类型")
     @GetMapping(value = "order/salesType")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getOrderType() throws Exception
@@ -67,6 +68,28 @@ public class OrderController {
 		return saleTypes;
 		
     }
+	
+	
+    
+    @PostMapping(value = "order/salesOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SapSalesGroup> getGrossProfit(@RequestBody SalesOrder salesOrder) throws Exception
+    {	
+    	GrossProfitDTO grossProfitDTO = new GrossProfitDTO();
+    	grossProfitDTO.setSalesOrder(salesOrder);
+    	grossProfitDTO.setSapSalesGroupList(salesGroupRepository.findAll());
+    	
+		return this.getGrossProfitDetail(grossProfitDTO);
+    }
+    
+    @PostMapping(value = "order/grossProfitDTO")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SapSalesGroup> getGrossProfitDetail(@RequestBody GrossProfitDTO grossProfitDTO) throws Exception
+    {	
+    	
+		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(), grossProfitDTO.getSapSalesGroupList());
+    }
+    
 	
 
 }

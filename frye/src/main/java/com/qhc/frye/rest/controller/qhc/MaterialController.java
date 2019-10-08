@@ -36,8 +36,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("material")
-@Api(value = "Material Management in Frye")
+@Api(value = "Material Management in Frye", description = "物料管理")
 public class MaterialController {
 
 	@Autowired
@@ -47,8 +46,8 @@ public class MaterialController {
 	private CustomerService cu;
 	
 
-	@ApiOperation(value = "update material data from DB.")
-	@GetMapping(value = "material/lastUpdateDate")
+	@ApiOperation(value = "查询物料lastUpdateDate")
+	@GetMapping(value = "material/{lastUpdateDate}")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Date getLastUpdatedDate() throws Exception {
@@ -56,8 +55,8 @@ public class MaterialController {
 		return date;
 	}
 	
-	@ApiOperation(value = "put the material data to DB.")
-	@PutMapping(value = "material", produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "新增物料信息")
+	@PostMapping(value = "material", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCustomers(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
 		

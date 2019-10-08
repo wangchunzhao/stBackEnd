@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,17 +19,16 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("grossProfitCalculation")
-@Api(value = "GrossProfitCalculation", description = "Gross profit calculation interface")
+@Api(value = "GrossProfitCalculation", description = "毛利计算接口")
 public class GrossProfitCalculationController {
 	
 	
-	@ApiOperation(value=" Gross profit calculation by parameter ", notes="Gross profit calculation by parameter")
-	@GetMapping
+	@ApiOperation(value="根据入参计算毛利 ", notes="根据入参计算毛利")
+	@GetMapping(value="grossProfitCalculation/{afterTaxAmount}/{cost}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,Object> findByConditions(
-    		@RequestParam("afterTaxAmount") Double afterTaxAmount,
-			@RequestParam("cost") Double cost) throws Exception
+    		@PathVariable Double afterTaxAmount,
+    		@PathVariable Double cost) throws Exception
 	{
 		Map<String,Object> map = new HashMap();
 		Double result = (afterTaxAmount-cost)/cost;

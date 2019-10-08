@@ -22,13 +22,13 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("userOperationInfo")
-@Api(value = "UserOperationInfo", description = "userOperationInfo")
+@Api(value = "UserOperationInfo", description = "用户角色权限视图")
 public class UserOperationInfoController {
 	
 	@Autowired
 	private UserOperationInfoRepository userOperationInfoRepository;
 	
-	@ApiOperation(value=" Find all UserOperationInfo info ", notes="Find all UserOperationInfo info")
+	@ApiOperation(value="查询整个视图", notes="查询整个视图")
 	@GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserOperationInfo> findAll() throws Exception
@@ -36,7 +36,7 @@ public class UserOperationInfoController {
         return userOperationInfoRepository.findAll();
     }
 	
-	@ApiOperation(value=" Find UserOperationInfo by userId", notes="Find UserOperationInfo by userId")
+	@ApiOperation(value="根据域账号查询视图", notes="根据域账号查询视图")
 	@GetMapping(value="/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<UserOperationInfo> findByUserId(@PathVariable("userId") Integer userId) throws Exception

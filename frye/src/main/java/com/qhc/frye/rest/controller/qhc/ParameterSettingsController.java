@@ -21,16 +21,15 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("parameterSettings")
-@Api(value = "ParameterSettings ", description = "ParameterSettings info")
+@Api(value = "ParameterSettings ", description = "系统参数管理")
 public class ParameterSettingsController {
 	
 	@Autowired
 	private ParameterSettingsService settingService;
 
 	
-	@ApiOperation(value=" Find all parameter settings info ", notes="Find all parameter settings info")
-	@GetMapping
+	@ApiOperation(value="查询所有系统参数 ", notes="查询所有系统参数")
+	@GetMapping(value="parameterSettings")
     @ResponseStatus(HttpStatus.OK)
     public List<Parameter> findAll() throws Exception
     {	
@@ -39,8 +38,8 @@ public class ParameterSettingsController {
 	
 	
 	
-	@ApiOperation(value="Update parameters info and add a new value", notes="Update parameters info and add a new value")
-	@PostMapping
+	@ApiOperation(value="新增修改参数", notes="新增修改参数")
+	@PostMapping(value="parameterSettings")
     @ResponseStatus(HttpStatus.OK)
     public Parameter update(@RequestBody Parameter p)
     {	

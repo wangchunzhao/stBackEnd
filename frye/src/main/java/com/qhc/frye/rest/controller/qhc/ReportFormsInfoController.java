@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,28 +27,27 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("reportFormsInfo")
-@Api(value = "ReportFormsInfo", description = "report forms Info")
+@Api(value = "ReportFormsInfo", description = "报表管理")
 public class ReportFormsInfoController {
 	
 	@Autowired
 	private ReportFormsInfoService reportFormsInfoService;
 	
-	@ApiOperation(value=" Find all report forms info ", notes="Find all report forms info")
-	@GetMapping
+	@ApiOperation(value="带条件查询报表所有信息", notes="带条件查询报表所有信息")
+	@GetMapping(value="reportFormsInfo/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
     public PageHelper<ReportFormsInfo> findByConditions(
-    		@RequestParam("pageNo") int pageNo,
-			@RequestParam("pageSize") int pageSize,
-			@RequestParam("sequenceNumber") String sequenceNumber,
-			@RequestParam("contractorCode") String contractorCode,
-			@RequestParam("contractUnit") String contractUnit,
-			@RequestParam("startTime") String startTime,
-			@RequestParam("endTime") String endTime,
-			@RequestParam("contractorClassCode") String contractorClassCode,
-			@RequestParam("isSpecialDiscount") int isSpecialDiscount,
-			@RequestParam("orderTypeCode") String orderTypeCode,
-			@RequestParam("officeCode") String officeCode) throws Exception
+    		@PathVariable int pageNo,
+    		@PathVariable int pageSize,
+    		@RequestParam("sequenceNumber") String sequenceNumber,
+    		@RequestParam("contractorCode") String contractorCode,
+    		@RequestParam("contractUnit") String contractUnit,
+    		@RequestParam("startTime") String startTime,
+    		@RequestParam("endTime") String endTime,
+    		@RequestParam("contractorClassCode") String contractorClassCode,
+    		@RequestParam("isSpecialDiscount") int isSpecialDiscount,
+    		@RequestParam("orderTypeCode") String orderTypeCode,
+    		@RequestParam("officeCode") String officeCode) throws Exception
     
     
 	{

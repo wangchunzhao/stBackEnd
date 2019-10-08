@@ -13,15 +13,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("sapSalesOffice")
-@Api(value = "SapSalesOffice", description = "SapSalesOffice info")
+@Api(value = "SapSalesOffice", description = "大区")
 public class SapSalesOfficeController {
 	
 	@Autowired
 	private SapSalesOfficeService sapSalesOfficeService;
 	
-	@ApiOperation(value=" Find all sapSalesOffice info", notes="Find all sapSalesOffice info")
-	@GetMapping
+	@ApiOperation(value="查询所有大区", notes="查询所有大区")
+	@GetMapping(value="sapSalesOffice")
     @ResponseStatus(HttpStatus.OK)
 	public List<SapSalesOffice> findAll() throws Exception{
 		return sapSalesOfficeService.findAll();

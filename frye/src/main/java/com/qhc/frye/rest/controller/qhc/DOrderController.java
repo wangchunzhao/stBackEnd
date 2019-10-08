@@ -21,8 +21,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("dOrder")
-@Api(value = "DOrder management in Frye")
+@Api(value = "DOrder management in Frye", description = "省市区三级地区及运费")
 public class DOrderController {
 	
 	
@@ -31,8 +30,8 @@ public class DOrderController {
 	
 
 	
-	@ApiOperation(value="Get DOrder by id", notes="Get DOrder by id")
-    @GetMapping(value = "/{id}")
+	@ApiOperation(value="根据id查询订单", notes="根据id查询订单")
+    @GetMapping(value = "dOrder/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DOrder findByKOrderVersionId(@PathVariable String id) throws Exception
     {	

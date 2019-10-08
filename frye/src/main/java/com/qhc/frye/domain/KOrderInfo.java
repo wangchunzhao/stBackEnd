@@ -171,12 +171,24 @@ public class KOrderInfo {
 	public List<SpecialDelivery> applyList;
 	
 	
+	@Transient
+	public ItemsForm form;
 	
 	
 	
 	
 	
 	
+	
+
+
+	public ItemsForm getForm() {
+		return form;
+	}
+
+	public void setForm(ItemsForm form) {
+		this.form = form;
+	}
 
 	public String getId() {
 		return id;
