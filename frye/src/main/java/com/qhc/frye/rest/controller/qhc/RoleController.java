@@ -44,12 +44,12 @@ public class RoleController {
 	
 	
 	@ApiOperation(value="带条件分页查询角色", notes="带条件分页查询角色")
-	@GetMapping(value="role/{pageNo}/{pageSize}/{isActive}")
+	@GetMapping(value="role/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
 	public RestPage<Role> findPagingList(
 			@PathVariable int pageNo,
 			@PathVariable int pageSize,
-			@PathVariable int isActive) throws Exception{
+			@RequestParam("isActive") int isActive) throws Exception{
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Role role = new Role();

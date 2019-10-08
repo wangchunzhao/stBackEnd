@@ -71,17 +71,17 @@ public class SpecialController {
     }
 	
 	@ApiOperation(value="分页查询特批发货列表", notes="分页查询特批发货列表")
-	@GetMapping(value="specialDeliveryVoInfo/{pageNo}/{pageSize}/{sequenceNumber}/{startTime}/{endTime}/{ownerDomainId}/{officeCode}/{orderTypeCode}")
+	@GetMapping(value="specialDeliveryVoInfo/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
 	public PageHelper<SpecialDeliveryVoInfo> findPagingList(
 			@PathVariable int pageNo,
 			@PathVariable int pageSize,
-			@PathVariable String sequenceNumber,
-			@PathVariable String startTime,
-			@PathVariable String endTime,
-			@PathVariable String ownerDomainId,
-			@PathVariable String officeCode,
-			@PathVariable String orderTypeCode) throws Exception{
+			@RequestParam("sequenceNumber") String sequenceNumber,
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
+			@RequestParam("ownerDomainId") String ownerDomainId,
+			@RequestParam("officeCode") String officeCode,
+			@RequestParam("orderTypeCode") String orderTypeCode) throws Exception{
 		
 		PageHelper<SpecialDeliveryVoInfo> pageHelper = new PageHelper<SpecialDeliveryVoInfo>();
 		Pageable pageable = PageRequest.of(pageNo, pageSize);

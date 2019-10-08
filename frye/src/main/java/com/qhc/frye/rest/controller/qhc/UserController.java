@@ -60,14 +60,14 @@ public class UserController {
 	private ApplicationOfRolechangeService applicationOfRolechangeService;
 	
 	@ApiOperation(value="带条件分页查询用户", notes="带条件分页查询用户")
-	@GetMapping(value="user/{pageNo}/{pageSize}/{isActive}/{userIdentity}/{userMail}")
+	@GetMapping(value="user/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
     public RestPage findAll(
     		@PathVariable int pageNo,
     		@PathVariable int pageSize,
-    		@PathVariable int isActive,
-    		@PathVariable String userIdentity,
-    		@PathVariable String userMail) throws Exception
+    		@RequestParam("isActive") int isActive,
+    		@RequestParam("userIdentity") String userIdentity,
+    		@RequestParam("userMail") String userMail) throws Exception
     {	
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		User user = new User();

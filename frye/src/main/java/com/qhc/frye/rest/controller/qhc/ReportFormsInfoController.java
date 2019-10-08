@@ -34,20 +34,20 @@ public class ReportFormsInfoController {
 	private ReportFormsInfoService reportFormsInfoService;
 	
 	@ApiOperation(value="带条件查询报表所有信息", notes="带条件查询报表所有信息")
-	@GetMapping(value="reportFormsInfo/{pageNo}/{pageSize}/{sequenceNumber}/{contractorCode}/{contractUnit}/{startTime}/{endTime}/{contractorClassCode}/{isSpecialDiscount}/{orderTypeCode}/{officeCode}")
+	@GetMapping(value="reportFormsInfo/{pageNo}/{pageSize}")
     @ResponseStatus(HttpStatus.OK)
     public PageHelper<ReportFormsInfo> findByConditions(
     		@PathVariable int pageNo,
     		@PathVariable int pageSize,
-    		@PathVariable String sequenceNumber,
-    		@PathVariable String contractorCode,
-    		@PathVariable String contractUnit,
-    		@PathVariable String startTime,
-    		@PathVariable String endTime,
-    		@PathVariable String contractorClassCode,
-    		@PathVariable int isSpecialDiscount,
-    		@PathVariable String orderTypeCode,
-    		@PathVariable String officeCode) throws Exception
+    		@RequestParam("sequenceNumber") String sequenceNumber,
+    		@RequestParam("contractorCode") String contractorCode,
+    		@RequestParam("contractUnit") String contractUnit,
+    		@RequestParam("startTime") String startTime,
+    		@RequestParam("endTime") String endTime,
+    		@RequestParam("contractorClassCode") String contractorClassCode,
+    		@RequestParam("isSpecialDiscount") int isSpecialDiscount,
+    		@RequestParam("orderTypeCode") String orderTypeCode,
+    		@RequestParam("officeCode") String officeCode) throws Exception
     
     
 	{
