@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.qhc.frye.rest.controller.entity.AbsOrder;
+import com.qhc.frye.rest.controller.entity.SalesOrder;
 
 /**
  * 合同列表信息实体
@@ -13,7 +14,7 @@ import com.qhc.frye.rest.controller.entity.AbsOrder;
 public class GrossProfitDTO implements Serializable {
 	
 
-	private AbsOrder absOrder;
+	private SalesOrder salesOrder;
 	private List<SapSalesGroup> sapSalesGroupList;
 	
 	
@@ -28,12 +29,13 @@ public class GrossProfitDTO implements Serializable {
 	public void setSapSalesGroupList(List<SapSalesGroup> sapSalesGroupList) {
 		this.sapSalesGroupList = sapSalesGroupList;
 	}
-	public AbsOrder getAbsOrder() {
-		return absOrder;
+	public SalesOrder getSalesOrder() {
+		return salesOrder;
 	}
-	public void setAbsOrder(AbsOrder absOrder) {
-		this.absOrder = absOrder;
+	public void setSalesOrder(SalesOrder salesOrder) {
+		this.salesOrder = salesOrder;
 	}
+	
 
 	
 	
