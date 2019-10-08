@@ -49,8 +49,11 @@ public class ReportFormsInfo implements Serializable {
 	@Transient
 	private String	coustomerNo	;//	客户编号
 	
+	@Column(name="contract_seq",columnDefinition = "char")
+	private String	contractSeq	;//	合同号
+	
 	@Column(name="contractor_code",columnDefinition = "char")
-	private String	contractorCode	;//	合同号
+	private String	contractorCode	;//	签约人合同号
 	
 //	@Column(name="contract_unit")
 	@Transient
@@ -683,6 +686,14 @@ public class ReportFormsInfo implements Serializable {
 
 	public void setQueryType(String queryType) {
 		this.queryType = queryType;
+	}
+
+	public String getContractSeq() {
+		return contractSeq;
+	}
+
+	public void setContractSeq(String contractSeq) {
+		this.contractSeq = contractSeq;
 	}
 	
 	
