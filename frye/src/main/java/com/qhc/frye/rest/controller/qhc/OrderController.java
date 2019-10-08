@@ -11,12 +11,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.dao.SalesGroupRepository;
+import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
@@ -88,6 +90,16 @@ public class OrderController {
     {	
     	
 		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(), grossProfitDTO.getSapSalesGroupList());
+    }
+    
+    @ApiOperation(value="根据id查询订单", notes="根据id查询订单")
+    @GetMapping(value = "dOrder/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DOrder findByKOrderVersionId(@PathVariable String id) throws Exception
+    {	
+		
+		return orderService.findByKOrderVersionId(id);
+		
     }
     
 	
