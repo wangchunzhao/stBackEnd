@@ -31,6 +31,7 @@ public class ConstantService {
 	
 	public Map<String,String> findAllCustomerClazz() {
 		if(customerClazz==null || customerClazz.isEmpty()) {
+			customerClazz = new HashMap();
 			List<CustomerClass> cucList = customerClassRepo.findAll();
 			for(CustomerClass cc:cucList) {
 				customerClazz.put(cc.getCode(), cc.getName());
@@ -41,11 +42,7 @@ public class ConstantService {
 
 	public String findCustomerClazzByCode(String code) {
 		if(customerClazz==null || customerClazz.isEmpty()) {
-			customerClazz = new HashMap();
-			List<CustomerClass> cucList = customerClassRepo.findAll();
-			for(CustomerClass cc:cucList) {
-				customerClazz.put(cc.getCode(), cc.getName());
-			}
+			this.findAllCustomerClazz();
 		}
 		return customerClazz.get(code);
 	}

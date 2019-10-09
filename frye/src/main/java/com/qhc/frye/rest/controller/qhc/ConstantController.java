@@ -36,7 +36,7 @@ public class ConstantController {
 	@Autowired
 	private ConstantService constService;
 	
-	@ApiOperation(value = "所有客户的级别信息")
+	@ApiOperation(value = "列出所有客户的级别信息")
 	@GetMapping(value = "customerClazz")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String> putCustomers() throws Exception {
