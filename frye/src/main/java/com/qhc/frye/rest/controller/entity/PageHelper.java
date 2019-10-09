@@ -3,6 +3,8 @@ package com.qhc.frye.rest.controller.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public class PageHelper <T>{
 	//实体类集合
     private List<T> rows = new ArrayList<T>();
@@ -11,6 +13,12 @@ public class PageHelper <T>{
  
     public PageHelper() {
         super();
+    }
+    
+    public PageHelper(Page page) {
+    	
+		this.setTotal(Integer.parseInt(String.valueOf(page.getTotalElements())));
+		this.setRows(page.getContent());
     }
  
     public List<T> getRows() {

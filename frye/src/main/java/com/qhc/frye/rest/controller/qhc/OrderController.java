@@ -23,6 +23,7 @@ import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.OrderForm;
+import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
@@ -100,6 +101,16 @@ public class OrderController {
     {	
 		
 		return orderService.findByKOrderVersionId(id);
+		
+    }
+    
+    @ApiOperation(value="订单的公共可选择", notes="所有订单共享的可选项")
+    @GetMapping(value = "order/option")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderOption getOption() throws Exception
+    {	
+		
+		return new OrderOption();
 		
     }
     

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.ConstantService;
 import com.qhc.frye.service.CustomerService;
 
@@ -60,18 +61,12 @@ public class CustomerController {
 	@ApiOperation(value = "根据名称查询客户信息")
 	@GetMapping(value = "customer/{name},{pageNo}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public Page<DCustomer> findCustomers(@PathVariable(required = true) String name,@PathVariable int pageNo) throws Exception {
+	public PageHelper<DCustomer> findCustomers(@PathVariable(required = true) String name,@PathVariable int pageNo) throws Exception {
 		
-		return customerService.searchCustomers(name,pageNo);
+		Page<DCustomer> dcs=customerService.searchCustomers(name,pageNo);
+		PageHelper ph = new PageHelper(dcs);
+		return ph;
 	}
-//	@ApiOperation(value = "查询所有客户的级别信息")
-//	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
-//	@ResponseStatus(HttpStatus.OK)
-//	public Map<String,String>  getCustomerClazz() throws Exception {
-//		
-//		Map<String,String> ccMap =  constService.findAllCustomerClazz();
-//		return ccMap;
-//	}
 	
 	
 
