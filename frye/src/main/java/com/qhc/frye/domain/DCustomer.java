@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,7 +24,8 @@ public class DCustomer implements Serializable{
 	/**
 	 * 
 	 */
-	
+	@Transient
+	private String clazzName;
 	
 	@Id
     @NotNull
@@ -103,5 +105,12 @@ public class DCustomer implements Serializable{
 	public int hashCode() {
 		return this.getCode().hashCode();
 	}
+	public String getClazzName() {
+		return clazzName;
+	}
+	public void setClazzName(String clazzName) {
+		this.clazzName = clazzName;
+	}
 
+	
 }

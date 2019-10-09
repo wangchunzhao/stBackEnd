@@ -3,27 +3,24 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
-
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.service.ConstantService;
 import com.qhc.frye.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -40,6 +37,9 @@ public class CustomerController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private ConstantService constService;
 /*	
 	@ApiOperation(value = "获取客户lastUpdateDate")
 	@PutMapping(value = "customer/lastUpdateDate")
@@ -58,23 +58,20 @@ public class CustomerController {
 		customerService.saveCustomers(customers);
 	}
 	@ApiOperation(value = "根据名称查询客户信息")
-	@GetMapping(value = "customer/{name}", produces = "application/json;charset=UTF-8")
+	@GetMapping(value = "customer/{name},{pageNo}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Customer>  getCustomers(@RequestParam(required = true) String name) throws Exception {
+	public Page<DCustomer> findCustomers(@PathVariable(required = true) String name,@PathVariable int pageNo) throws Exception {
 		
-		return customerService.searchCustomers(name);
+		return customerService.searchCustomers(name,pageNo);
 	}
-	@ApiOperation(value = "查询所有客户的级别信息")
-	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
-	@ResponseStatus(HttpStatus.OK)
-	public Map<String,String>  getCustomerClazz() throws Exception {
-		Map<String,String> cClazz = new HashMap<String,String>();
-		List<CustomerClass> ccl =  customerService.getCustomerClasses();
-		for(CustomerClass cc:ccl) {
-			cClazz.put(cc.getCode(), cc.getName());
-		}
-		return cClazz;
-	}
+//	@ApiOperation(value = "查询所有客户的级别信息")
+//	@GetMapping(value = "customer/customerClass", produces = "application/json;charset=UTF-8")
+//	@ResponseStatus(HttpStatus.OK)
+//	public Map<String,String>  getCustomerClazz() throws Exception {
+//		
+//		Map<String,String> ccMap =  constService.findAllCustomerClazz();
+//		return ccMap;
+//	}
 	
 	
 

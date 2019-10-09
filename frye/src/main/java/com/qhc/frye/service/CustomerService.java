@@ -12,22 +12,19 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.CustomerAffiliationRepository;
-import com.qhc.frye.dao.CustomerClassRepository;
 import com.qhc.frye.dao.CustomerIndustryRepository;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CustomerAffiliation;
-import com.qhc.frye.domain.CustomerClass;
-import com.qhc.frye.domain.DClazzOfMaterial;
-import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.Industry;
 import com.qhc.frye.domain.LastUpdated;
-import com.qhc.frye.rest.controller.entity.Clazz;
-import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Customer;
 
 /**
@@ -52,7 +49,7 @@ public class CustomerService {
 	private CustomerAffiliationRepository affilitionRepo;
 	
 	@Autowired
-	private CustomerClassRepository customerClassRepo;
+	private ConstantService constService;
 	
 	
 	public Date getLastUpdated(String code) {
@@ -69,28 +66,20 @@ public class CustomerService {
 	 * @param name
 	 * @return
 	 */
-	public List<Customer> searchCustomers(String name) {
-		List<Customer> cuList = new ArrayList<Customer>();
+	public Page<DCustomer> searchCustomers(String name,int pageNo) {
 		
-		List<DCustomer> dcuList = customerRepo.findByName(name);
-		for(DCustomer dc:dcuList) {
-			Customer cu = new Customer();
-			cu.setCode(dc.getCode());
-			cu.setName(dc.getName());
-			cu.setAddress(dc.getAddress());
-			cuList.add(cu);
+		if( pageNo >0){
+			pageNo = pageNo-1;
 		}
 		
-		return cuList;
+		Page<DCustomer> dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,2));
+		for(DCustomer dc:dcuList) {		
+			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
+		}
+		
+		return dcuList;
 	}
-	/**
-	 * 
-	 * @return customer class in the db table sap_customer_class
-	 */
-	public List<CustomerClass> getCustomerClasses(){
-		List<CustomerClass> cucList = customerClassRepo.findAll();
-		return cucList;
-	}
+
 	
 	/**
 	 * 

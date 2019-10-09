@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ import com.qhc.frye.domain.identity.CustomerIndustryIdentity;
  * @author wang@dxc.com
  *
  */
-public class Customer implements InterEntityToDao {
+public class Customer implements InterEntityToDao,Serializable {
 	private static final long serialVersionUID = -9169262959918008183L;
 	public final static String CODE_CUSTOMER = "59870645008146f9938f7e8818031778";
 	public final static String NAME_CUSTOMER = "Customer master date";
@@ -27,9 +28,20 @@ public class Customer implements InterEntityToDao {
 	private String address;
 	private String groupCode;
 	private String clazzCode;
+	private String clazzName;
 	private String levelCode;
 	private String affiliationCode;
 	private String affiliationName;
+	
+	public Customer() {
+		
+	}
+	public Customer(String code,String name,String clazzCode,String clazzName) {
+		this.code = code;
+		this.name= name;
+		this.clazzCode = clazzCode;
+		this.clazzName =  clazzName;
+	}
 	
 	public Date getChangedDate() {
 		return changedDate;
@@ -77,6 +89,12 @@ public class Customer implements InterEntityToDao {
 	}
 	
 		
+	public String getClazzName() {
+		return clazzName;
+	}
+	public void setClazzName(String clazzName) {
+		this.clazzName = clazzName;
+	}
 	public String getAffiliationCode() {
 		return affiliationCode;
 	}
