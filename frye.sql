@@ -322,6 +322,21 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
+-- Table `bohemian`.`sap_sales_type`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_sales_type` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_type` (
+  `code` CHAR(2) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `idsap_sales_type_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
 -- Table `bohemian`.`sap_currency`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`sap_currency` ;
@@ -331,8 +346,15 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_currency` (
   `name` TEXT NOT NULL,
   `rate` DOUBLE(10,5) NOT NULL,
   `is_reserved` TINYINT(1) NOT NULL DEFAULT '0',
+  `sap_sales_type_code` CHAR(2) NOT NULL,
   PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  INDEX `fk_sap_currency_sap_sales_type1_idx` (`sap_sales_type_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_currency_sap_sales_type1`
+    FOREIGN KEY (`sap_sales_type_code`)
+    REFERENCES `bohemian`.`sap_sales_type` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -388,8 +410,15 @@ DROP TABLE IF EXISTS `bohemian`.`sap_incoterms` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_incoterms` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
+  `sap_sales_type_code` CHAR(2) NOT NULL,
   PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  INDEX `fk_sap_incoterms_sap_sales_type1_idx` (`sap_sales_type_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_incoterms_sap_sales_type1`
+    FOREIGN KEY (`sap_sales_type_code`)
+    REFERENCES `bohemian`.`sap_sales_type` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -443,43 +472,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_code` (
   `name` TEXT NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`sap_item_category`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_item_category` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_item_category` (
-  `code` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  `is_reserved` TINYINT(1) UNSIGNED ZEROFILL NOT NULL,
-  PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`sap_item_category_plan`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_item_category_plan` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_item_category_plan` (
-  `code` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  `is_reserved` TINYINT(1) NOT NULL,
-  `sap_item_category_code` CHAR(4) NOT NULL,
-  PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
-  INDEX `fk_sap_item_category_plan_sap_item_category1_idx` (`sap_item_category_code` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_item_category_plan_sap_item_category1`
-    FOREIGN KEY (`sap_item_category_code`)
-    REFERENCES `bohemian`.`sap_item_category` (`code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -667,8 +659,15 @@ DROP TABLE IF EXISTS `bohemian`.`sap_sales_office` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_office` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
+  `sap_sales_type_code` CHAR(2) NOT NULL,
   PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  INDEX `fk_sap_sales_office_sap_sales_type1_idx` (`sap_sales_type_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_sales_office_sap_sales_type1`
+    FOREIGN KEY (`sap_sales_type_code`)
+    REFERENCES `bohemian`.`sap_sales_type` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -689,21 +688,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_group` (
   CONSTRAINT `fk_sap_sales_group_sap_sales_office1`
     FOREIGN KEY (`sap_sales_office_code`)
     REFERENCES `bohemian`.`sap_sales_office` (`code`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`sap_sales_type`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_sales_type` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_sales_type` (
-  `code` CHAR(2) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`code`),
-  UNIQUE INDEX `idsap_sales_type_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1281,6 +1265,22 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
 
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_payment_term_bidding_plan`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_payment_term_bidding_plan` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_payment_term_bidding_plan` (
+  `code` VARCHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  `is_payment_term` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 USE `bohemian` ;
 
 -- -----------------------------------------------------
@@ -1345,12 +1345,55 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_sales_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_sales_type` (`code`, `name`) VALUES ('10', '内销');
+INSERT INTO `bohemian`.`sap_sales_type` (`code`, `name`) VALUES ('20', '出口');
+INSERT INTO `bohemian`.`sap_sales_type` (`code`, `name`) VALUES ('30', '冷库');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_currency`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_currency` (`code`, `name`, `rate`, `is_reserved`, `sap_sales_type_code`) VALUES ('RMB', '人民币', 1, 1, '10');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_customer_class`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_customer_class` (`code`, `name`) VALUES ('01', '直销');
 INSERT INTO `bohemian`.`sap_customer_class` (`code`, `name`) VALUES ('02', '经销商');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_industry`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_industry` (`code`, `name`) VALUES ('1', '大润发');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_industry_code`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`) VALUES ('1', '500强');
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`) VALUES ('2', '50');
 
 COMMIT;
 
