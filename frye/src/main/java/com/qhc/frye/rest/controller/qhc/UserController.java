@@ -114,6 +114,8 @@ public class UserController {
 		String region ="";
 		if(appList!=null&&appList.size()>0) {
 			for(ApplicationOfRolechange app:appList) {
+				app.setCreateTime(null);
+				app.setApprovalTime(null);
 				region = app.getAttachedCode();
 				Role role = roleService.findById(app.getbRolesId());
 				roleList.add(role);
@@ -219,7 +221,7 @@ public class UserController {
 		Page<Role> page = roleService.getByConditions(role,pageable);
         return new RestPage(page);
     }
-/*	
+	
 	@ApiOperation(value=" Find all role info", notes="Find all role info")
 	@GetMapping(value="role")
     @ResponseStatus(HttpStatus.OK)
@@ -231,6 +233,11 @@ public class UserController {
 			result = list;
 		}else {
 			for(Role r :list) {
+				Set<ApplicationOfRolechange> ars = r.getApps();
+				for(ApplicationOfRolechange ar:ars) {
+					ar.setApprovalTime(null);
+					ar.setCreateTime(null);
+				}
 				if(isActive==r.getIsActive()) {
 					result.add(r);
 				}
@@ -238,7 +245,7 @@ public class UserController {
 		}
 		return result;
     }
-*/	
+	
 	@ApiOperation(value="根据id查找角色", notes="根据id查找角色")
 	@GetMapping(value = "role/{id}")
     @ResponseStatus(HttpStatus.OK)
