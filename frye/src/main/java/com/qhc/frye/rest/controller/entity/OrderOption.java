@@ -33,11 +33,12 @@ public class OrderOption {
 	private Map<String,Map<String,String>> offices;//Map<saleType key(code),Map<office code,office name>>
 	private Map<String,Map<String,String>> groups;//Map<office code,Map<group code,group name>>
 	//
-	private Map<String,Map<String,Double>> taxRate;//Map<saleType key(code),Map<taxRate name,rate>>
+	private Map<String,Double> taxRate;//Map<saleType key(code),Map<taxRate name,rate>>
 	//
-	private Set<Currency> exchangeRate;
+	private Map<String,Currency> exchangeRate;
 	//
 	private Map<String,String> paymentType;//回款类型
+	private Map<String,String> biddingPlan;//回款类型,大客户
 	
 	/**
 	 * 
@@ -57,8 +58,8 @@ public class OrderOption {
 		this.saleTypes =new HashMap<String, String>();
 		this.offices =new HashMap<String, Map<String, String>>();;
 		this.groups=new HashMap<String, Map<String, String>>();
-		this.taxRate=new HashMap<String, Map<String, Double>>();
-		this.exchangeRate= new HashSet<Currency>();
+		this.taxRate=new HashMap<String, Double>();
+		this.exchangeRate= new HashMap<String,Currency>();
 		this.paymentType =new HashMap<String, String>();
 		
 	}
@@ -127,19 +128,21 @@ public class OrderOption {
 		this.groups = groups;
 	}
 
-	public Map<String, Map<String, Double>> getTaxRate() {
+	
+
+	public Map<String, Double> getTaxRate() {
 		return taxRate;
 	}
 
-	public void setTaxRate(Map<String, Map<String, Double>> taxRate) {
+	public void setTaxRate(Map<String, Double> taxRate) {
 		this.taxRate = taxRate;
 	}
 
-	public Set<Currency> getExchangeRate() {
+	public Map<String, Currency> getExchangeRate() {
 		return exchangeRate;
 	}
 
-	public void setExchangeRate(Set<Currency> exchangeRate) {
+	public void setExchangeRate(Map<String, Currency> exchangeRate) {
 		this.exchangeRate = exchangeRate;
 	}
 
@@ -149,6 +152,14 @@ public class OrderOption {
 
 	public void setPaymentType(Map<String, String> paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public Map<String, String> getBiddingPlan() {
+		return biddingPlan;
+	}
+
+	public void setBiddingPlan(Map<String, String> biddingPlan) {
+		this.biddingPlan = biddingPlan;
 	}
 	
 	
