@@ -2,7 +2,7 @@ package com.qhc.frye.service;
 
 
 import java.math.BigDecimal;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,11 @@ public class OrderService {
 
 	
 	public List<SapSalesGroup> findGrossProfitBySalesOrder(SalesOrder saleOrder,List<SapSalesGroup> salesGroups) {
-		List<ItemDetails> details = saleOrder.getItemsForm().getDetailsList();
+		
+		List<ItemDetails> details = new ArrayList<ItemDetails>();;
+		if(saleOrder.getItemsForm()!=null) {
+			details = saleOrder.getItemsForm().getDetailsList();
+		}
 		//提交类型 3.margin 4.wtw margin
 		int submitType = saleOrder.getSubmitType();
 		
@@ -155,7 +159,11 @@ public class OrderService {
 		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount);
 		sumssg.setCost(sumCost);
 		sumssg.setGrossProfit(sumGrossProfit);
-		sumssg.setGrossProfitMargin(sumGrossProfitMargin/salesGroups.size());
+		if(salesGroups.size()!=0) {
+			sumssg.setGrossProfitMargin(sumGrossProfitMargin/salesGroups.size());
+		}else {
+			sumssg.setGrossProfitMargin(0D);
+		}
 		sumssg.setCode("sum");
 		sumssg.setName("合计");
 		
