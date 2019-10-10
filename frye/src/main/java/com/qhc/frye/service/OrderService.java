@@ -2,26 +2,43 @@ package com.qhc.frye.service;
 
 
 import java.math.BigDecimal;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.BAreaRepository;
+import com.qhc.frye.dao.BCityRepository;
+import com.qhc.frye.dao.BProvinceRepository;
+import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.ItemDetailRepository;
 import com.qhc.frye.dao.KOrderInfoRepository;
 import com.qhc.frye.dao.OrderFormRepository;
 import com.qhc.frye.dao.OrderSupportInforRepository;
+import com.qhc.frye.dao.SalesGroupRepository;
+import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
 import com.qhc.frye.dao.SalesorderVersionRepository;
+import com.qhc.frye.dao.TerminalIndustryCodeRepository;
+import com.qhc.frye.domain.BArea;
+import com.qhc.frye.domain.BCity;
+import com.qhc.frye.domain.BProvince;
+import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
 import com.qhc.frye.domain.SapSalesGroup;
+import com.qhc.frye.domain.SapSalesOffice;
+import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
+import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 
 @Service
@@ -47,6 +64,30 @@ public class OrderService {
 	
 	@Autowired
 	private ItemDetailRepository itemDetailRepository;
+	
+	@Autowired
+	private BAreaRepository distinctRepo;
+
+	@Autowired
+	private BCityRepository cityRepo;
+
+	@Autowired
+	private BProvinceRepository provinceRepo;
+	
+	@Autowired
+	private TerminalIndustryCodeRepository industryCodeRepo;
+
+	@Autowired
+	private SalesTypeRepository saleTypeRepo;
+	
+	@Autowired
+	private SalesOfficeRepository officeRepo;
+	
+	@Autowired
+	private SalesGroupRepository groupsRepo;
+	
+	@Autowired
+	private CurrencyRepository currencyRepo;
 	
 	
 //	@Autowired
@@ -169,4 +210,84 @@ public class OrderService {
 		 
 	        return (afterTaxAmount.subtract(cost)).divide(afterTaxAmount).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 	    }
+	 
+	 /**
+		 * 
+		 * @return
+		 */
+		public OrderOption getOrderOption() {
+			OrderOption oo = new OrderOption();
+			//
+			List<BProvince> bps = provinceRepo.findAll();
+			Map<String, String> provinces = oo.getProvinces();
+			for (BProvince bp : bps) {
+				provinces.put(bp.getCode(), bp.getName());
+			}
+			//
+			List<BCity> bcs = cityRepo.findAll();
+			Map<String, Map<String, String>> citys = oo.getCitys();
+			for (BCity bc : bcs) {
+				String pcode = bc.getbProvinceCode();
+				Map<String,String> vals = new HashMap<String,String>();
+				vals.put(bc.getCode(), bc.getName());
+				if(citys.putIfAbsent(pcode, vals)!=null) {
+					citys.get(pcode).put(bc.getCode(), bc.getName());
+				}
+				
+			}
+			//
+			List<BArea> bas = distinctRepo.findAll();
+			Set<BArea> distincts = oo.getDistricts();
+			distincts.addAll(bas);
+			//
+			Map<String, String> incs = oo.getTermialClass();
+			List<TermianlIndustryCode> tics= industryCodeRepo.findAll();
+			for(TermianlIndustryCode tic:tics) {
+				incs.put(tic.getCode(), tic.getName());
+			}
+			//
+			Map<String, String> st = oo.getSaleTypes();
+			List<DSalesType> dsts = saleTypeRepo.findAll();
+			for(DSalesType dst:dsts) {
+				st.put(dst.getCode(), dst.getName());
+			}
+			//
+			Map<String, Map<String, String>> offices = oo.getOffices();
+			List<SapSalesOffice> ssos= officeRepo.findAll();
+			for(SapSalesOffice so:ssos){
+				String tcode = so.getTypeCode();
+				Map<String,String> vals = new HashMap<String,String>();
+				vals.put(so.getCode(),so.getName());
+				if(offices.putIfAbsent(tcode, vals)!=null) {
+					offices.get(tcode).put(so.getCode(),so.getName());
+				}
+			}
+			//
+			Map<String, Map<String, String>> groups = oo.getGroups();
+			List<SapSalesGroup> ssgs= groupsRepo.findAll();
+			for(SapSalesGroup ssg:ssgs) {
+				String ocode = ssg.getOfficeCode();
+				Map<String,String> vals = new HashMap<String,String>();
+				vals.put(ssg.getCode(),ssg.getName());
+				if(groups.putIfAbsent(ocode, vals)!=null) {
+					groups.get(ocode).put(ssg.getCode(), ssg.getName());
+				}
+			}
+			//
+			Map<String, Map<String, Double>> taxRate = oo.getTaxRate();
+			//
+			Set<Currency> currencys = oo.getExchangeRate();
+			List<DCurrency> dcs =currencyRepo.findAll();
+			for(DCurrency dc:dcs) {
+				Currency val = new Currency();
+				val.setCode(dc.getCode());
+				val.setName(dc.getName());
+				val.setRate(dc.getRate());
+				currencys.add(val);
+			}
+			//
+			Map<String, String> payments = oo.getPaymentType();
+			
+			return oo;
+		}
 }
