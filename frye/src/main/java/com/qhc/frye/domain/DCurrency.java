@@ -26,6 +26,15 @@ public class DCurrency {
     @NotNull
     @Column(name="rate",columnDefinition="DOUBLE")
 	private double rate;
+    
+    @NotNull
+    @Column(name="sap_sales_type_code",columnDefinition="CHAR",length=2)
+    private String salesTypeCode;
+    
+    @NotNull
+    @Column(name="is_reserved",columnDefinition="BIT",length=1)
+    private boolean isReserved;
+    
 
 	public String getCode() {
 		return code;
@@ -50,7 +59,25 @@ public class DCurrency {
 	public void setRate(double rate) {
 		this.rate = rate;
 	}
+	
+	
     
+	public String getSalesTypeCode() {
+		return salesTypeCode;
+	}
+
+	public void setSalesTypeCode(String salesTypeCode) {
+		this.salesTypeCode = salesTypeCode;
+	}
+
+	public boolean isReserved() {
+		return isReserved;
+	}
+
+	public void setReserved(boolean isReserved) {
+		this.isReserved = isReserved;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if(o.getClass().equals(this.getClass()) ) {
