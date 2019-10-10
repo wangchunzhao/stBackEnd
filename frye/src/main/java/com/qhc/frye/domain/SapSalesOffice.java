@@ -25,6 +25,10 @@ public class SapSalesOffice implements Serializable{
 	@NotNull
 	@Column(name="name",columnDefinition="TEXT")
     private String name;
+	
+	@NotNull
+	@Column(name="sap_sales_type_code",columnDefinition="CHAR",length=2)
+	private String typeCode;
 
 	public String getCode() {
 		return code;
@@ -41,6 +45,16 @@ public class SapSalesOffice implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		SapSalesOffice sa = (SapSalesOffice)obj;

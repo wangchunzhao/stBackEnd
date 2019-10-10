@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.dao.BAreaRepository;
+import com.qhc.frye.dao.BCityRepository;
+import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
+import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
@@ -25,6 +29,9 @@ import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
+import com.qhc.frye.service.BAreaService;
+import com.qhc.frye.service.BCityService;
+import com.qhc.frye.service.BProvinceService;
 import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
 
@@ -39,14 +46,14 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Order management in Frye", description = "订单管理")
 public class OrderController {
 	
-	@Autowired
-    private MaterialService configService;
-	
+
 	@Autowired
 	private OrderService orderService;
 	
 	@Autowired
 	private SalesGroupRepository salesGroupRepository;
+	
+	
 	
 	@ApiOperation(value="保存订单信息", notes="保存订单信息")
     @PostMapping(value = "order")
@@ -109,8 +116,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public OrderOption getOption() throws Exception
     {	
-		
-		return new OrderOption();
+    	
+		return orderService.getOrderOption();
 		
     }
     
