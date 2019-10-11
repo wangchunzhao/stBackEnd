@@ -642,13 +642,11 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_order_type` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_order_type` (
-  `id` CHAR(4) NOT NULL,
-  `name` TEXT NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -1280,6 +1278,43 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_payment_term_bidding_plan` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_order_type`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_order_type` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_order_type` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_order_type_and_customer_class`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_order_type_and_customer_class` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_order_type_and_customer_class` (
+  `sap_order_type_code` CHAR(4) NOT NULL,
+  `sap_customer_class_code` CHAR(2) NOT NULL,
+  INDEX `fk_sap_order_type_and_customer_class_sap_order_type1_idx` (`sap_order_type_code` ASC) VISIBLE,
+  INDEX `fk_sap_order_type_and_customer_class_sap_customer_class1_idx` (`sap_customer_class_code` ASC) VISIBLE,
+  PRIMARY KEY (`sap_order_type_code`, `sap_customer_class_code`),
+  CONSTRAINT `fk_sap_order_type_and_customer_class_sap_order_type1`
+    FOREIGN KEY (`sap_order_type_code`)
+    REFERENCES `bohemian`.`sap_order_type` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_order_type_and_customer_class_sap_customer_class1`
+    FOREIGN KEY (`sap_customer_class_code`)
+    REFERENCES `bohemian`.`sap_customer_class` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 USE `bohemian` ;
 
