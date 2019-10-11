@@ -12,6 +12,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Table(name = "b_settings")
@@ -33,6 +37,8 @@ public class Parameter implements Serializable{
 	public String sValue;
 	
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@NotNull
 	@Column(name="enable_date")
 	public Date enableDate;
@@ -56,9 +62,13 @@ public class Parameter implements Serializable{
 	public String afterValue;
 	
 	@Transient
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date preEnableDate;
 	
 	@Transient
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date afterEnableDate;
 	
 	
