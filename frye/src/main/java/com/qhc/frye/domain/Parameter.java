@@ -37,8 +37,6 @@ public class Parameter implements Serializable{
 	public String sValue;
 	
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@NotNull
 	@Column(name="enable_date")
 	public Date enableDate;
