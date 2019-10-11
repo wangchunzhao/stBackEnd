@@ -82,6 +82,9 @@ public class OrderService {
 
 	@Autowired
 	private PaymentTermRepository paymentRepo;
+	
+	@Autowired
+	private ConstantService constService;
 
 	/**
 	 * 
@@ -300,7 +303,8 @@ public class OrderService {
 				bidding.put(pt.getCode(), pt.getName());
 			}
 		}
-
+		//
+		oo.setOrderTypes(constService.getOrderTypes());
 		return oo;
 	}
 }

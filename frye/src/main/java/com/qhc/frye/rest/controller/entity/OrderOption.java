@@ -40,6 +40,7 @@ public class OrderOption {
 	private Map<String,String> paymentType;//回款类型
 	private Map<String,String> biddingPlan;//回款类型,大客户
 	
+	private Map<String,String> orderTypes;//Map<customer class code, orderType>
 	/**
 	 * 
 	 */
@@ -61,7 +62,8 @@ public class OrderOption {
 		this.taxRate=new HashMap<String, Double>();
 		this.exchangeRate= new HashMap<String,Currency>();
 		this.paymentType =new HashMap<String, String>();
-		
+		this.biddingPlan = new HashMap<String, String>();
+		this.orderTypes = new HashMap<String,String>();
 	}
 
 	public String getSequenceNumber() {
@@ -161,6 +163,12 @@ public class OrderOption {
 	public void setBiddingPlan(Map<String, String> biddingPlan) {
 		this.biddingPlan = biddingPlan;
 	}
-	
-	
+
+	public Map<String, String> getOrderTypes() {
+		return orderTypes;
+	}
+
+	public void setOrderTypes(Map<String, String> orderTypes) {
+		this.orderTypes = orderTypes;
+	}
 }
