@@ -66,13 +66,17 @@ public class CustomerService {
 	 * @param name
 	 * @return
 	 */
-	public Page<DCustomer> searchCustomers(String name,int pageNo) {
+	public Page<DCustomer> searchCustomers(String clazzCode,String name,int pageNo) {
 		
 		if( pageNo >0){
 			pageNo = pageNo-1;
 		}
-		
-		Page<DCustomer> dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,2));
+		Page<DCustomer> dcuList= null;
+		if(clazzCode==null || clazzCode.isEmpty())
+			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,2));
+		else {
+			dcuList = customerRepo.findByCodeAndName(clazzCode,name,PageRequest.of(pageNo,2));
+		}
 		for(DCustomer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
 		}
