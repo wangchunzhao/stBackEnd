@@ -89,7 +89,4 @@ public class Material implements Serializable{
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	
-	
-
 }
