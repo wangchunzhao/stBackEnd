@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.RoleRepository;
+import com.qhc.frye.domain.ApplicationOfRolechange;
 import com.qhc.frye.domain.Operation2role;
 import com.qhc.frye.domain.Operations;
 import com.qhc.frye.domain.Role;
@@ -36,10 +37,16 @@ public class RoleService {
 	 */
 	public Role findById(int id) throws NoSuchElementException{
 		Role role = roleRepository.findById(id).get();
+		Set<ApplicationOfRolechange> sets = role.getApps();
+		for(ApplicationOfRolechange set:sets) {
+			set.setApprovalTime(null);
+			set.setCreateTime(null);
+		}
 		List<Operation2role> relationList= relationService.findByRoleId(id,1);
 		Set<Operations> operations = new HashSet<Operations>();
 		if(relationList!=null&&relationList.size()>0) {
 			for(Operation2role or:relationList) {
+				or.setOptTime(null);
 				operations.add(operationService.findById(or.getOperationId()));
 			}
 		}
