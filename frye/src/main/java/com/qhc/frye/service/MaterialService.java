@@ -57,4 +57,8 @@ public class MaterialService {
 		materialRepo.saveAll(mset);
 		mcRepo.saveAll(mcset);
 	}
+	public List<Material> findMaterialsByName(String name){
+//		List<DMaterial> dms = materialRepo.findAllByName(name);
+		return null;
+	}
 }

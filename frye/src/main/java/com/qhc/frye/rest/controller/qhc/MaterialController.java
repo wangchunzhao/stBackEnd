@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,33 +64,20 @@ public class MaterialController {
 	@ApiOperation(value = "新增物料信息")
 	@PostMapping(value = "material", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public void putCustomers(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
+	public void postMaterial(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
 		
 		materialService.saveMaterials(materials);
 	}
+	
+	@ApiOperation(value = "查找增物料信息")
+	@GetMapping(value = "material/{name}", produces = "application/json;charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Material> findMaterialsByName(@PathVariable(required = true) String name) throws Exception {
+		
+		return materialService.findMaterialsByName(name);
+	}
 
-//	@ApiOperation(value = "update a FERT material list to DB.")
-//	@PostMapping(value = "/updateFERTMaterials", produces = "application/json;charset=UTF-8")
-//	@ResponseStatus(HttpStatus.OK)
-//	public void updateFERTMaterials(@RequestBody(required = true) @Valid List<Material> material) throws Exception {
-//
-//	}
-//
-//	@ApiOperation(value = "update a Configurable and their values into DB. update data in table only. the data will be ingored if there is not")
-//	@PostMapping(value = "/updateConfigs", produces = "application/json;charset=UTF-8")
-//	@ResponseStatus(HttpStatus.OK)
-//	public void updateConfigurableValue(@RequestBody(required = true) @Valid List<Configurable> configs)
-//			throws Exception {
-//
-//	}
-//
-//	@ApiOperation(value = "update the relationship and each Configurable and Class to DB. Delete whole talbe and insert data with batch.")
-//	@PostMapping(value = "/updateConfigAndClazz", produces = "application/json;charset=UTF-8")
-//	@ResponseStatus(HttpStatus.OK)
-//	public void relateConfigAndClazz(@RequestBody(required = true) @Valid Map<Clazz, List<Configurable>> configs)
-//			throws Exception {
-//
-//	}
+
 	
 	@ApiOperation(value = "修改MaterialClazz")
 	@PutMapping(value = "material/materialclass")
