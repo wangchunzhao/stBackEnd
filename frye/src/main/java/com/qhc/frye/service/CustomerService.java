@@ -72,10 +72,12 @@ public class CustomerService {
 			pageNo = pageNo-1;
 		}
 		Page<DCustomer> dcuList= null;
-		if(clazzCode==null || clazzCode.isEmpty())
+		
+		if(clazzCode==null || clazzCode.isEmpty()) {
+			
 			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,2));
-		else {
-			dcuList = customerRepo.findByCodeAndName(clazzCode,name,PageRequest.of(pageNo,2));
+		}else {
+			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,2));
 		}
 		for(DCustomer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));

@@ -61,8 +61,13 @@ public class CustomerController {
 	@ApiOperation(value = "根据名称查询客户信息")
 	@GetMapping(value = "customer/{clazzCode},{name},{pageNo}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<DCustomer> findCustomers(@PathVariable(required = true) String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
-		
+	public PageHelper<DCustomer> findCustomers(@PathVariable String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
+		if(clazzCode.equals("null")) {
+			clazzCode =null;
+		}
+		if(name.equals("null")) {
+			name = null;
+		}
 		Page<DCustomer> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
 		PageHelper ph = new PageHelper(dcs);
 		return ph;

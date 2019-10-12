@@ -43,9 +43,9 @@ public class DCustomer implements Serializable{
 	@Column(name="address",columnDefinition="TEXT")
 	private String address;
 	
-	@NotNull
-	@Column(name="sap_account_group_code",columnDefinition="CHAR",length=4)
-	private String groupCode;
+//	@NotNull
+//	@Column(name="sap_account_group_code",columnDefinition="CHAR",length=4)
+//	private String groupCode;
 	
 	@NotNull
 	@Column(name="sap_customer_class_code",columnDefinition="CHAR",length=2)
@@ -67,12 +67,12 @@ public class DCustomer implements Serializable{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getGroupCode() {
-		return groupCode;
-	}
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+//	public String getGroupCode() {
+//		return groupCode;
+//	}
+//	public void setGroupCode(String groupCode) {
+//		this.groupCode = groupCode;
+//	}
 	public String getClazzCode() {
 		return clazzCode;
 	}

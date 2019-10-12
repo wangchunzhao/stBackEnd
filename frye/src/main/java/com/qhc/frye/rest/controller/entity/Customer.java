@@ -26,7 +26,7 @@ public class Customer implements InterEntityToDao,Serializable {
 	private String name;
 	private Date changedDate;
 	private String address;
-	private String groupCode;
+	//private String groupCode;
 	private String clazzCode;
 	private String clazzName;
 	private String levelCode;
@@ -55,12 +55,12 @@ public class Customer implements InterEntityToDao,Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getGroupCode() {
-		return groupCode;
-	}
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
+//	public String getGroupCode() {
+//		return groupCode;
+//	}
+//	public void setGroupCode(String groupCode) {
+//		this.groupCode = groupCode;
+//	}
 	public String getClazzCode() {
 		return clazzCode;
 	}
@@ -116,7 +116,7 @@ public class Customer implements InterEntityToDao,Serializable {
 		dc.setAddress(this.getAddress());
 		dc.setChangedDate(this.getChangedDate());
 		dc.setClazzCode(this.getClazzCode());
-		dc.setGroupCode(this.getGroupCode());
+//		dc.setGroupCode(this.getGroupCode());
 //		dc.setLevelCode(this.getLevelCode());
 		objs.add(dc);
 		//
