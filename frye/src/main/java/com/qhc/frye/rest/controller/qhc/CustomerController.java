@@ -69,7 +69,7 @@ public class CustomerController {
 			name = null;
 		}
 		Page<DCustomer> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
-		PageHelper ph = new PageHelper(dcs);
+		PageHelper<DCustomer> ph = new PageHelper<DCustomer>(dcs);
 		return ph;
 	}
 	
