@@ -386,14 +386,9 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_customer` (
   `name` TEXT NOT NULL,
   `address` TEXT NULL DEFAULT NULL,
   `sap_customer_class_code` CHAR(2) NOT NULL,
-  `sap_account_group_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `number_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_sap_customer_sap_customer_class1_idx` (`sap_customer_class_code` ASC) VISIBLE,
-  INDEX `fk_sap_customer_sap_account_group1_idx` (`sap_account_group_code` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_customer_sap_account_group1`
-    FOREIGN KEY (`sap_account_group_code`)
-    REFERENCES `bohemian`.`sap_account_group` (`code`),
   CONSTRAINT `fk_sap_customer_sap_customer_class1`
     FOREIGN KEY (`sap_customer_class_code`)
     REFERENCES `bohemian`.`sap_customer_class` (`code`))
@@ -1429,6 +1424,31 @@ START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`) VALUES ('1', '500强');
 INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`) VALUES ('2', '50');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_order_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('Z001', '经销商订单');
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('Z002', '大客户订单');
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('B001', '备货订单');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_order_type_and_customer_class`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('Z001', '01');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('Z002', '02');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('B001', '01');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('B001', '02');
 
 COMMIT;
 
