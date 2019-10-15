@@ -18,15 +18,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Configurable;
 import com.qhc.frye.rest.controller.entity.Customer;
 import com.qhc.frye.rest.controller.entity.Material;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.CharacteristicService;
 import com.qhc.frye.service.CustomerService;
 import com.qhc.frye.service.MaterialService;
@@ -62,7 +65,7 @@ public class MaterialController {
 	}
 	
 	@ApiOperation(value = "新增物料信息")
-	@PostMapping(value = "material", produces = "application/json;charset=UTF-8")
+	@PutMapping(value = "material", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void postMaterial(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
 		
@@ -70,11 +73,25 @@ public class MaterialController {
 	}
 	
 	@ApiOperation(value = "查找增物料信息")
-	@GetMapping(value = "material/{name}", produces = "application/json;charset=UTF-8")
+	@PostMapping(value = "material", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Material> findMaterialsByName(@PathVariable(required = true) String name) throws Exception {
-		
-		return materialService.findMaterialsByName(name);
+	public PageHelper<DMaterial> findMaterialsByName(@RequestParam(required = true) String name,@RequestParam(required = true) int pageNo) throws Exception {
+		if(name.equals("null")) {
+			name =null;
+		}
+		PageHelper<DMaterial> ms =materialService.findMaterialsByName(name,pageNo); 
+		return ms;
+	}
+	
+	@ApiOperation(value = "通过code查找增物料信息")
+	@GetMapping(value = "material/{code}", produces = "application/json;charset=UTF-8")
+	@ResponseStatus(HttpStatus.OK)
+	public Material getMaterialById(@PathVariable(required = true) String code) throws Exception {
+		if(code.equals("null")) {
+			code =null;
+		}
+		Material m =materialService.getMaterialsById(code);
+		return m;
 	}
 
 

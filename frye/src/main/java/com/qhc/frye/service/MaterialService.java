@@ -3,17 +3,22 @@ package com.qhc.frye.service;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.LockSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.rest.controller.entity.Material;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.MaterialClazzRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
+import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.MaterialClazz;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
@@ -57,8 +62,32 @@ public class MaterialService {
 		materialRepo.saveAll(mset);
 		mcRepo.saveAll(mcset);
 	}
-	public List<Material> findMaterialsByName(String name){
-//		List<DMaterial> dms = materialRepo.findAllByName(name);
-		return null;
+	/**
+	 * 
+	 * @param name material name
+	 * @param pageNo
+	 * @return
+	 */
+	public PageHelper<DMaterial> findMaterialsByName(String name,int pageNo){
+		if( pageNo >0){
+			pageNo = pageNo-1;
+		}
+		Page<DMaterial> dms = materialRepo.findAllByName(name,PageRequest.of(pageNo,2));
+		PageHelper<DMaterial> ph = new PageHelper<DMaterial>(dms);
+		return ph;
+	}
+	/**
+	 * 
+	 * @param code id of material
+	 * @return corresponded material information
+	 */
+	public Material getMaterialsById(String code){
+		Material m = new Material();
+		Optional<DMaterial> dmo = materialRepo.findById(code);
+		DMaterial dm = dmo.get();
+		m.setCode(dm.getCode());
+		m.setDescription(dm.getDescription());
+		
+		return m;
 	}
 }
