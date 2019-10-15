@@ -538,7 +538,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_materials` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `code` VARCHAR(18) NOT NULL,
-  `description` TEXT NULL DEFAULT NULL,
+  `description` TEXT NOT NULL,
   `is_configurable` TINYINT(1) NOT NULL,
   `moving_average_price` DECIMAL(13,2) NOT NULL,
   `transfer_price` DECIMAL(13,2) NOT NULL,
@@ -979,6 +979,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` CHAR(32) NOT NULL,
+  `row_number` INT NOT NULL,
   `material_code` VARCHAR(45) NOT NULL,
   `material_name` TEXT NOT NULL,
   `material_type` TINYINT(2) NOT NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
@@ -991,7 +992,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `b2c_estimation_cost` DOUBLE NULL,
   `b2c_estimation_amount` DECIMAL(13,2) NOT NULL,
   `b2c_comments` TEXT NULL,
-  `row_number` INT NOT NULL,
   `special_code` VARCHAR(45) NULL,
   `material_group_code` VARCHAR(45) NOT NULL COMMENT 'sap_material_group',
   `material_group_name` TEXT NOT NULL,
@@ -1429,13 +1429,92 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_material_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_material_type` (`code`, `name`) VALUES ('FERT', '成品');
+INSERT INTO `bohemian`.`sap_material_type` (`code`, `name`) VALUES ('HALB', '半成品');
+INSERT INTO `bohemian`.`sap_material_type` (`code`, `name`) VALUES ('KMAT', '可配置物料');
+INSERT INTO `bohemian`.`sap_material_type` (`code`, `name`) VALUES ('ROH', '原材料');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_unit_of_measurement`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('EA', '个/卷/件');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('G', '克');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('KG', '公斤');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('TO', '吨');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('CM', '厘米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M', '米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('KM', '千米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M2', '平方米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ML', '毫升');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('L', '升');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('M3', '立方米');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ZA', '个/卷/件');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('SZ', '套');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ROL', '卷');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q6', '扇');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('BOT', '瓶');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_material_groups`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA01', '整机柜');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA02', '分体柜');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA03', '并联机组');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA04', '其他机组（CDU）');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA05', '冷风机');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA06', '冷凝器');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA07', '电控柜');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA08', '冷库');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA09', '侧板');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA11', '虚拟物料');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SA', '总装');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SB', '钣金');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SC', '喷粉');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SD', '发泡');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SE', '辅料加工');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SG', '配置类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SH', '焊接件');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SI', '半成品其它');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R01', '金属类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R02', '塑料类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R03', '橡胶、辅料类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R04', '电缆类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R15', '实木板类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R05', '包装印刷类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R06', '标准紧固类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R07', '系统类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R08', '系统、组件、部件类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R10', '外协类(外协加工费、熏蒸费）');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R14', '玻璃类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R40', '电器类');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R83', '焊条');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('NPP', '设备、维修设备用的备件、展会用印刷品、工装、叉车维修、计量工具、劳保用品');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_order_type`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('Z001', '经销商订单');
-INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('Z002', '大客户订单');
-INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('B001', '备货订单');
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('ZH0D', '经销商订单');
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('ZH0T', '大客户订单');
+INSERT INTO `bohemian`.`sap_order_type` (`code`, `name`) VALUES ('ZH0M', '备货订单');
 
 COMMIT;
 
@@ -1445,10 +1524,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('Z001', '01');
-INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('Z002', '02');
-INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('B001', '01');
-INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('B001', '02');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0D', '01');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0T', '02');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '01');
+INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '02');
 
 COMMIT;
 
