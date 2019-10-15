@@ -42,10 +42,11 @@ public class MaterialService {
 			dm.setCode(ma.getCode());
 			dm.setConfigurable(ma.isConfigurable());
 			dm.setDescription(ma.getDescription());
-			dm.setMkPrice(ma.getMkPrice());
-			dm.setMvPrice(ma.getMvPrice());
+			dm.setPrice(ma.getMkPrice());
+//			dm.setMkPrice(ma.getMkPrice());
+//			dm.setMvPrice(ma.getMvPrice());
 			dm.setOptTime(ma.getOptTime());
-			dm.setTrPrice(ma.getTrPrice());
+//			dm.setTrPrice(ma.getTrPrice());
 			dm.setType(ma.getType());
 			dm.setUnit(ma.getUnit());
 			mset.add(dm);

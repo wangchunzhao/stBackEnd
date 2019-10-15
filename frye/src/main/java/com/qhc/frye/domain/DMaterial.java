@@ -31,17 +31,17 @@ public class DMaterial {
 	private boolean isConfigurable;
 	
 	@NotNull
-    @Column(name="moving_average_price",columnDefinition="DECIMAL", precision=13, scale=2)
-	private double mvPrice;
+    @Column(name="stand_price",columnDefinition="DECIMAL", precision=13, scale=2)
+	private double price;
 	
-	@NotNull
-    @Column(name="transfer_price",columnDefinition="DECIMAL", precision=13, scale=2)
-	private double trPrice;
-	
-	@NotNull
-    @Column(name="marketing_price",columnDefinition="DECIMAL", precision=13, scale=2)
-	private double mkPrice;
-	
+//	@NotNull
+//    @Column(name="transfer_price",columnDefinition="DECIMAL", precision=13, scale=2)
+//	private double trPrice;
+//	
+//	@NotNull
+//    @Column(name="marketing_price",columnDefinition="DECIMAL", precision=13, scale=2)
+//	private double mkPrice;
+//	
 	@NotNull
     @Column(name="opt_time",columnDefinition="DATETIME")
 	private Date optTime;
@@ -78,30 +78,7 @@ public class DMaterial {
 		this.isConfigurable = isConfigurable;
 	}
 
-	public double getMvPrice() {
-		return mvPrice;
-	}
-
-	public void setMvPrice(double mvPrice) {
-		this.mvPrice = mvPrice;
-	}
-
-	public double getTrPrice() {
-		return trPrice;
-	}
-
-	public void setTrPrice(double trPrice) {
-		this.trPrice = trPrice;
-	}
-
-	public double getMkPrice() {
-		return mkPrice;
-	}
-
-	public void setMkPrice(double mkPrice) {
-		this.mkPrice = mkPrice;
-	}
-
+	
 	public Date getOptTime() {
 		return optTime;
 	}
@@ -124,6 +101,14 @@ public class DMaterial {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	
 

@@ -290,7 +290,7 @@ public class OrderService {
 			val.setCode(dc.getCode());
 			val.setName(dc.getName());
 			val.setRate(dc.getRate());
-			currencys.put(dc.getSalesTypeCode(), val);
+//			currencys.put(dc.getSalesTypeCode(), val);
 		}
 		//
 		Map<String, String> payments = oo.getPaymentType();
