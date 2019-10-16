@@ -39,7 +39,7 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 	
 
-	@ApiOperation(value = "修改币种",notes="修改币种")
+	@ApiOperation(value = "保存或修改币种",notes="保存或修改币种")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
 	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {

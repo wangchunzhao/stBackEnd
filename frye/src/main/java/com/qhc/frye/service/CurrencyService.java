@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.IncotermRepository;
 import com.qhc.frye.dao.PriceRepository;
+import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DPrice;
+import com.qhc.frye.domain.Industry;
+import com.qhc.frye.domain.SapCurrencySaleType;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.Price;
@@ -29,6 +32,10 @@ import com.qhc.frye.rest.controller.entity.Price;
 public class CurrencyService {
 	@Autowired
 	private CurrencyRepository currencyRepo;
+	
+	@Autowired
+	private SapCurrencySaleTypeRepository sapCurrencySaleTypeRepo;
+	
 	@Autowired
 	private IncotermRepository incotermRepo;
 	
@@ -40,16 +47,19 @@ public class CurrencyService {
 	 */
 	public void saveCurrency(List<Currency> currency) {
 		Set<DCurrency> dcs = new HashSet<DCurrency>();
+		Set<SapCurrencySaleType> sc = new HashSet<SapCurrencySaleType>();
 		for(Currency cur:currency) {
-			DCurrency dc = new DCurrency();
-			dc.setCode(cur.getCode());
-			dc.setName(cur.getName());
-			dc.setRate(cur.getRate());
-			
-			dcs.add(dc);
+			List<Object> objs = cur.toDaos();
+			for(Object obj:objs) {
+				if(obj instanceof DCurrency) {
+					dcs.add((DCurrency) obj);
+				}else if(obj instanceof SapCurrencySaleType){
+					sc.add((SapCurrencySaleType) obj);
+				}
+			}
 		}
 		currencyRepo.saveAll(dcs);
-		
+		sapCurrencySaleTypeRepo.saveAll(sc);
 	}
 	/**
 	 * 

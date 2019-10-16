@@ -1,5 +1,7 @@
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="sap_currency")
-public class DCurrency {
+public class DCurrency implements Serializable{
 	@Id
     @NotNull
     @Column(name="code",columnDefinition="CHAR",length=3)
