@@ -45,6 +45,7 @@ public class CurrencyService {
 			dc.setCode(cur.getCode());
 			dc.setName(cur.getName());
 			dc.setRate(cur.getRate());
+			
 			dcs.add(dc);
 		}
 		currencyRepo.saveAll(dcs);
@@ -76,6 +77,7 @@ public class CurrencyService {
 			DIncoterm temp = new DIncoterm();
 			temp.setCode(inco.getCode());
 			temp.setName(inco.getName());
+			temp.setSapSalesTypeCode(inco.getSapSalesTypeCode());
 			incos.add(temp);
 		}
 		incotermRepo.saveAll(incos);

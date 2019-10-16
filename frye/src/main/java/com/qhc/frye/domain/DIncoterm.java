@@ -25,6 +25,9 @@ public class DIncoterm {
     @NotNull
     @Column(name="name",columnDefinition="TEXT")
 	private String name;
+    
+    @Column(name="sap_sales_type_code",columnDefinition="CHAR")
+	private String sapSalesTypeCode;
 
 	public String getCode() {
 		return code;
@@ -40,6 +43,14 @@ public class DIncoterm {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSapSalesTypeCode() {
+		return sapSalesTypeCode;
+	}
+
+	public void setSapSalesTypeCode(String sapSalesTypeCode) {
+		this.sapSalesTypeCode = sapSalesTypeCode;
 	}
     
     
