@@ -330,6 +330,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_currency` (
   `code` CHAR(3) NOT NULL,
   `name` TEXT NOT NULL,
   `rate` DOUBLE(10,5) NOT NULL,
+  `is_reserved` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
@@ -586,7 +587,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_price_type` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_price_type` (
-  `code` VARCHAR(5) NOT NULL,
+  `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
@@ -1393,7 +1394,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_currency` (`code`, `name`, `rate`) VALUES ('RMB', '人民币', 1);
+INSERT INTO `bohemian`.`sap_currency` (`code`, `name`, `rate`, `is_reserved`) VALUES ('RMB', '人民币', 1, 1);
 
 COMMIT;
 
@@ -1526,6 +1527,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
+INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH01', '零售价');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH02', '年采价 ');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH03', '客户折扣');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH05', '实卖价 ');
@@ -1534,7 +1536,6 @@ INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH07', '转移
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH10', '运费预估');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH11', '服务外包预估');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZHCS', '内部价格');
-INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('﻿ZH01', '零售价');
 
 COMMIT;
 
