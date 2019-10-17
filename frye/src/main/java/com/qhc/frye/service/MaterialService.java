@@ -47,7 +47,7 @@ public class MaterialService {
 //			dm.setMvPrice(ma.getMvPrice());
 			dm.setOptTime(ma.getOptTime());
 //			dm.setTrPrice(ma.getTrPrice());
-			dm.setType(ma.getType());
+//			dm.setType(ma.getType());
 			dm.setUnit(ma.getUnit());
 			mset.add(dm);
 			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {

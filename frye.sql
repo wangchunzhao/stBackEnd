@@ -130,19 +130,19 @@ DROP TABLE IF EXISTS `bohemian`.`b_area` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_area` (
   `code` VARCHAR(16) NOT NULL,
   `name` TEXT NOT NULL,
-  `price` DECIMAL(13,2) NOT NULL,
   `b_city_code` VARCHAR(6) NOT NULL,
-  `price1` DECIMAL(13,2) NULL,
-  `price2` DECIMAL(13,2) NULL,
-  `price3` DECIMAL(13,2) NULL,
-  `price4` DECIMAL(13,2) NULL,
-  `price5` DECIMAL(13,2) NULL,
-  `price6` DECIMAL(13,2) NULL,
-  `price7` DECIMAL(13,2) NULL,
-  `price8` DECIMAL(13,2) NULL,
-  `price9` DECIMAL(13,2) NULL,
-  `price10` DECIMAL(13,2) NULL,
-  `price11` DECIMAL(13,2) NULL,
+  `price` DECIMAL(13,2) NOT NULL COMMENT '供应商<20m³单价',
+  `price1` DECIMAL(13,2) NULL COMMENT '供应商<20m³送货费',
+  `price2` DECIMAL(13,2) NULL COMMENT '供应商>20<50m³单价',
+  `price3` DECIMAL(13,2) NULL COMMENT '供应商>20<50m³送货费',
+  `price4` DECIMAL(13,2) NULL COMMENT '供应商>=50m³单价',
+  `price5` DECIMAL(13,2) NULL COMMENT '供应商>50m³送货费',
+  `price6` DECIMAL(13,2) NULL COMMENT '客户<=20m³单价',
+  `price7` DECIMAL(13,2) NULL COMMENT '客户<=20m³送货费',
+  `price8` DECIMAL(13,2) NULL COMMENT '客户>20<50m³单价',
+  `price9` DECIMAL(13,2) NULL COMMENT '客户>20<50m³送货费',
+  `price10` DECIMAL(13,2) NULL COMMENT '客户>=50m³单价',
+  `price11` DECIMAL(13,2) NULL COMMENT '客户>=50m³送货费',
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_b_area_b_city1_idx` (`b_city_code` ASC) VISIBLE,
@@ -505,6 +505,19 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
+-- Table `bohemian`.`b_material_group_order`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`b_material_group_order` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`b_material_group_order` (
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `id_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `bohemian`.`sap_material_groups`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`sap_material_groups` ;
@@ -512,8 +525,15 @@ DROP TABLE IF EXISTS `bohemian`.`sap_material_groups` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_groups` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
+  `b_material_group_order_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  INDEX `fk_sap_material_groups_b_material_group_order1_idx` (`b_material_group_order_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_material_groups_b_material_group_order1`
+    FOREIGN KEY (`b_material_group_order_code`)
+    REFERENCES `bohemian`.`b_material_group_order` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -717,11 +737,11 @@ DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `id` CHAR(32) NOT NULL,
-  `sequence_number` CHAR(12) NOT NULL,
+  `sequence_number` CHAR(12) NOT NULL COMMENT '序列号',
   `order_type_code` CHAR(4) NOT NULL COMMENT '//dealer or keyaccount or bulk',
-  `create_time` DATETIME NOT NULL,
+  `create_time` DATETIME NOT NULL COMMENT '创建时间',
   `owner_domain_id` VARCHAR(128) NOT NULL COMMENT 'creator or changed owner/sale code',
-  `owner_name` TEXT NOT NULL,
+  `owner_name` TEXT NOT NULL COMMENT '创建人员姓名',
   `sales_tel` VARCHAR(45) NULL COMMENT 'sales name',
   `contractor_code` VARCHAR(10) NOT NULL COMMENT 'contracter Code/ customer code',
   `contractor_name` TEXT NOT NULL,
@@ -733,7 +753,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   UNIQUE INDEX `order_type_UNIQUE` (`order_type_code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '订单';
 
 
 -- -----------------------------------------------------
@@ -743,9 +764,9 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` CHAR(32) NOT NULL,
-  `version` VARCHAR(45) NOT NULL,
+  `version` VARCHAR(45) NOT NULL COMMENT '版本名称',
   `status` TINYINT(2) NOT NULL COMMENT '0:saved\n1:draft:submit to headquater\n2.approving:BPM\n3.approved',
-  `create_time` DATETIME NOT NULL,
+  `create_time` DATETIME NOT NULL COMMENT '版本创建时间',
   `k_orders_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -840,7 +861,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `id` CHAR(32) NOT NULL,
-  `last_operator` VARCHAR(128) NOT NULL,
+  `last_operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
   `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
   `is_reformed` TINYINT(1) NULL COMMENT '是否是改造店',
@@ -848,39 +869,39 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `is_new` TINYINT(1) NULL COMMENT '是不是新店',
   `terminal_industry_code` VARCHAR(10) NULL COMMENT '终端店面的insustray code',
   `terminal_industry_code_name` TEXT NULL COMMENT '终端店面的insustray code的名字',
-  `body_discount` DOUBLE(3,3) NULL,
-  `main_discount` DOUBLE(3,3) NULL,
-  `install_term_code` VARCHAR(4) NULL,
-  `install_term_name` TEXT NULL,
-  `receive_term_code` VARCHAR(4) NULL,
-  `receive_term_name` TEXT NULL,
-  `contactor_1_id` VARCHAR(18) NULL,
-  `contactor_1_tel` VARCHAR(16) NULL,
-  `contactor_2_id` VARCHAR(18) NULL,
-  `contactor_2_tel` VARCHAR(16) NULL,
-  `contactor_3_id` VARCHAR(18) NULL,
-  `contactor_3_tel` VARCHAR(16) NULL,
-  `freight` DECIMAL(13,2) NULL,
-  `warranty` INT NULL,
-  `currency_code` VARCHAR(3) NULL,
-  `currency_name` TEXT NULL,
-  `exchange` DOUBLE(10,5) NULL,
-  `contract_amount` DECIMAL(13,2) NULL,
-  `contract_rmb_amount` DECIMAL(13,2) NULL,
-  `sales_type` CHAR(2) NULL,
+  `body_discount` DOUBLE(3,3) NULL COMMENT '柜体折扣',
+  `main_discount` DOUBLE(3,3) NULL COMMENT '机身折扣',
+  `install_term_code` VARCHAR(4) NULL COMMENT '安装code',
+  `install_term_name` TEXT NULL COMMENT '安装方式名称',
+  `receive_term_code` VARCHAR(4) NULL COMMENT '接货方式名称code',
+  `receive_term_name` TEXT NULL COMMENT '接货方式名称',
+  `contactor_1_id` VARCHAR(18) NULL COMMENT '第一联系人身份证',
+  `contactor_1_tel` VARCHAR(16) NULL COMMENT '第一联系人电话',
+  `contactor_2_id` VARCHAR(18) NULL COMMENT '第二联系人身份证',
+  `contactor_2_tel` VARCHAR(16) NULL COMMENT '第二联系人电话',
+  `contactor_3_id` VARCHAR(18) NULL COMMENT '第三联系人身份证',
+  `contactor_3_tel` VARCHAR(16) NULL COMMENT '第三联系人电话',
+  `freight` DECIMAL(13,2) NULL COMMENT '运费合计',
+  `warranty` INT NULL COMMENT '保修周期',
+  `currency_code` VARCHAR(3) NULL COMMENT '外币code',
+  `currency_name` TEXT NULL COMMENT '外币名称',
+  `exchange` DOUBLE(10,5) NULL COMMENT '汇率',
+  `contract_amount` DECIMAL(13,2) NULL COMMENT '原合同金额',
+  `contract_rmb_amount` DECIMAL(13,2) NULL COMMENT '合同人民币金额',
+  `sales_type` CHAR(2) NULL COMMENT '销售类型',
   `tax_rate` DOUBLE NULL COMMENT '税率',
-  `incoterm_code` VARCHAR(45) NULL,
-  `incoterm_name` TEXT NULL,
-  `incoterm_contect` TEXT NULL,
-  `office_code` VARCHAR(45) NULL COMMENT '表单里的区域',
-  `office_name` TEXT NULL,
-  `group_code` VARCHAR(45) NULL,
-  `group_name` TEXT NULL,
-  `transfer_type_code` VARCHAR(45) NULL,
-  `transfer_type_name` TEXT NULL,
-  `is_term1` TINYINT(1) NULL,
-  `is_term2` TINYINT(1) NULL,
-  `is_term3` TINYINT(1) NULL,
+  `incoterm_code` VARCHAR(45) NULL COMMENT '贸易条件code',
+  `incoterm_name` TEXT NULL COMMENT '贸易条件名称',
+  `incoterm_contect` TEXT NULL COMMENT '贸易条件',
+  `office_code` VARCHAR(45) NULL COMMENT '表单里的大区code',
+  `office_name` TEXT NULL COMMENT '大区名称',
+  `group_code` VARCHAR(45) NULL COMMENT '中心code',
+  `group_name` TEXT NULL COMMENT '中心名称',
+  `transfer_type_code` VARCHAR(45) NULL COMMENT '运输类型代码',
+  `transfer_type_name` TEXT NULL COMMENT '运输类型名称',
+  `is_term1` TINYINT(1) NULL COMMENT '柜体控制阀门件是否甲供',
+  `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
+  `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
   `comments` TEXT NULL,
   PRIMARY KEY USING BTREE (`id`),
   UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
@@ -898,13 +919,12 @@ DROP TABLE IF EXISTS `bohemian`.`k_forms` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
   `id` CHAR(32) NOT NULL,
-  `earliest_delivery_date` DATE NULL,
-  `earliest_product_date` DATE NULL,
-  `comments` TEXT NULL,
-  `operator` VARCHAR(128) NOT NULL,
-  `type` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '0:订单\n1：工程\n2：B2C',
-  `opt_time` DATETIME NOT NULL,
-  `is_ready` TINYINT(1) NOT NULL COMMENT '0:draf\n1:ready',
+  `earliest_delivery_date` DATE NULL COMMENT '最早交付时间',
+  `earliest_product_date` DATE NULL COMMENT '最早生产时间',
+  `comments` TEXT NULL COMMENT '备注',
+  `operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
+  `type` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '最后的操作类型\n0:订单\n1：工程\n2：B2C',
+  `opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -916,7 +936,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '订单行项目总表';
 
 
 -- -----------------------------------------------------
@@ -958,30 +979,34 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` CHAR(32) NOT NULL,
-  `row_number` INT NOT NULL,
-  `material_code` VARCHAR(45) NOT NULL,
-  `material_name` TEXT NOT NULL,
-  `material_type` TINYINT(2) NOT NULL DEFAULT '1' COMMENT '1: material code\n2. engining vitural material ',
-  `material_specific_Number` VARCHAR(45) NOT NULL,
-  `material_attribute` VARCHAR(45) NOT NULL,
-  `quantity` INT NULL,
-  `amount` DECIMAL(13,2) NULL,
-  `measure_unit_code` VARCHAR(3) NULL,
-  `measure_unit_name` TEXT NULL,
-  `b2c_estimation_cost` DOUBLE NULL,
-  `b2c_estimation_amount` DECIMAL(13,2) NOT NULL,
-  `b2c_comments` TEXT NULL,
-  `special_code` VARCHAR(45) NULL,
-  `material_group_code` VARCHAR(45) NOT NULL COMMENT 'sap_material_group',
-  `material_group_name` TEXT NOT NULL,
-  `transfter_price` DECIMAL(13,2) NOT NULL,
-  `discount` DOUBLE(3,3) NULL,
-  `item_category` VARCHAR(45) NOT NULL,
-  `item_requirement_plan` VARCHAR(45) NULL,
+  `row_number` INT NOT NULL COMMENT '行号',
+  `material_code` VARCHAR(45) NOT NULL COMMENT '物料代码',
+  `material_name` TEXT NOT NULL COMMENT '物料名称',
+  `is_virtual` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0:由销售录入的行项目\n1: 非销售部门录入的行项目',
+  `is_purchased` TINYINT(1) NOT NULL COMMENT '物料属性：1. 采购 0：生产',
+  `quantity` INT NULL COMMENT '数量',
+  `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
+  `sale_amount` DECIMAL(13,2) NULL COMMENT '产品实卖金额',
+  `transfter_price` DECIMAL(13,2) NULL COMMENT '产品转移价',
+  `standard_price` DECIMAL(13,2) NOT NULL COMMENT '移动平均价，即成本价格',
+  `b2c_estimation_amount` DECIMAL(13,2) NULL COMMENT 'bc2评估价成本',
+  `b2c_estimation_cost` DECIMAL(13,2) NULL COMMENT 'bc2预估成本',
+  `b2c_comments` TEXT NULL COMMENT 'B2C备注',
+  `material_group_code` VARCHAR(45) NOT NULL COMMENT '物料类型代码\nsap_material_group',
+  `material_group_name` TEXT NOT NULL COMMENT '物料类型代码\nsap_material_group',
+  `discount` DOUBLE(3,3) NULL COMMENT '折扣',
+  `item_category` VARCHAR(45) NOT NULL COMMENT '行项目类别',
+  `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
   `k_forms_id` CHAR(32) NOT NULL,
-  `address_id` CHAR(32) NULL,
-  `freight` DECIMAL(13,2) NULL,
-  `standard_price` DECIMAL(13,2) NOT NULL,
+  `address` TEXT NULL COMMENT '运输目的地',
+  `volume_cube` DECIMAL(13,2) NULL COMMENT '体积',
+  `freight` DECIMAL(13,2) NULL COMMENT '运费',
+  `retail_price` DECIMAL(13,2) NULL COMMENT '零售价格',
+  `delievery_date` DATE NULL COMMENT '发货日期日期',
+  `comments` TEXT NULL COMMENT '备注，位于配置页面',
+  `special_need` TEXT NULL COMMENT '特殊备注',
+  `mosaic_image` TEXT NULL COMMENT '拼接图备注',
+  `attached_image` TEXT NULL COMMENT '拼接图附件',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
@@ -990,7 +1015,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
     REFERENCES `bohemian`.`k_forms` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+COMMENT = '订单行项目表，每行记录代表一个行项目';
 
 
 -- -----------------------------------------------------
@@ -1069,8 +1095,8 @@ DROP TABLE IF EXISTS `bohemian`.`k_parent_order_version` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
   `opt_time` DATETIME NOT NULL,
-  `k_order_version_id` CHAR(32) NOT NULL,
-  `k_order_version_id_parent` CHAR(32) NOT NULL,
+  `k_order_version_id` CHAR(32) NOT NULL COMMENT '当前版本',
+  `k_order_version_id_parent` CHAR(32) NOT NULL COMMENT '前版本',
   `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`k_order_version_id`, `k_order_version_id_parent`),
   INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_order_version_id_parent` ASC) VISIBLE,
@@ -1092,7 +1118,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '订单版本';
 
 
 -- -----------------------------------------------------
@@ -1102,9 +1129,9 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_support_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `contract_number` VARCHAR(45) NOT NULL,
-  `opterator_domain_id` VARCHAR(128) NOT NULL,
-  `opt_time` DATETIME NOT NULL,
+  `contract_number` VARCHAR(45) NOT NULL COMMENT '合同号',
+  `opterator_domain_id` VARCHAR(128) NOT NULL COMMENT '支持经理id',
+  `opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `k_orders_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1116,7 +1143,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '支持经理给付项';
 
 
 -- -----------------------------------------------------
@@ -1126,7 +1154,8 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `cost` DECIMAL(13,2) NOT NULL,
+  `cost` DECIMAL(13,2) NOT NULL COMMENT 'B2C成本',
+  `opt_time` DATETIME NOT NULL COMMENT '最后修改时间',
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1138,7 +1167,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = 'B2C人员填写的评估成本';
 
 
 -- -----------------------------------------------------
@@ -1160,7 +1190,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_attachment` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '附件文件名称';
 
 
 -- -----------------------------------------------------
@@ -1188,7 +1219,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '送达地址';
 
 
 -- -----------------------------------------------------
@@ -1198,8 +1230,8 @@ DROP TABLE IF EXISTS `bohemian`.`k_characteristics` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `key_code` VARCHAR(45) NOT NULL,
-  `value_code` VARCHAR(45) NOT NULL,
+  `key_code` VARCHAR(45) NOT NULL COMMENT '选定的特征代码',
+  `value_code` VARCHAR(45) NOT NULL COMMENT '选定的特征值的代码',
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1211,7 +1243,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = '物料选定的特征';
 
 
 -- -----------------------------------------------------
@@ -1221,8 +1254,9 @@ DROP TABLE IF EXISTS `bohemian`.`k_attached_info` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_attached_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `start_date_of_production` DATE NULL,
-  `date_of_on_store` DATE NULL,
+  `start_date_of_production` DATE NULL COMMENT '最早生产开始日期',
+  `date_of_on_store` DATE NULL COMMENT '入库时间',
+  `lead_time` INT UNSIGNED NULL COMMENT '生产/采购周期',
   `opt_time` DATETIME NOT NULL,
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1235,7 +1269,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_attached_info` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+COLLATE = utf8mb4_bin
+COMMENT = 'sap返回的相关信息';
 
 
 -- -----------------------------------------------------
@@ -1333,6 +1368,27 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_price` (
   CONSTRAINT `fk_sap_industry_price_sap_materials_price1`
     FOREIGN KEY (`sap_materials_price_id`)
     REFERENCES `bohemian`.`sap_materials_price` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_configure_material`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_configure_material` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_configure_material` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `k_item_details_id` CHAR(32) NOT NULL,
+  `material_code` VARCHAR(45) NOT NULL,
+  `price` DECIMAL(13,2) NOT NULL,
+  INDEX `fk_table1_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  CONSTRAINT `fk_table1_k_item_details1`
+    FOREIGN KEY (`k_item_details_id`)
+    REFERENCES `bohemian`.`k_item_details` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1479,42 +1535,56 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `bohemian`.`b_material_group_order`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T101', '机柜');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T102', '冷风机');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T103', '冷凝器');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T104', '散件');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T105', '其它');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_material_groups`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA01', '整机柜');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA02', '分体柜');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA03', '并联机组');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA04', '其他机组（CDU）');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA05', '冷风机');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA06', '冷凝器');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA07', '电控柜');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA08', '冷库');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA09', '侧板');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('FA11', '虚拟物料');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SA', '总装');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SB', '钣金');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SC', '喷粉');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SD', '发泡');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SE', '辅料加工');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SG', '配置类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SH', '焊接件');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('SI', '半成品其它');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R01', '金属类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R02', '塑料类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R03', '橡胶、辅料类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R04', '电缆类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R15', '实木板类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R05', '包装印刷类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R06', '标准紧固类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R07', '系统类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R08', '系统、组件、部件类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R10', '外协类(外协加工费、熏蒸费）');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R14', '玻璃类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R40', '电器类');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('R83', '焊条');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`) VALUES ('NPP', '设备、维修设备用的备件、展会用印刷品、工装、叉车维修、计量工具、劳保用品');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA01', '整机柜', 'T101');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA02', '分体柜', 'T101');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA03', '并联机组', 'T102');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA04', '其他机组（CDU）', 'T102');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA05', '冷风机', 'T103');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA06', '冷凝器', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA07', '电控柜', 'T101');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA08', '冷库', 'T101');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA09', '侧板', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA11', '虚拟物料', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SA', '总装', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SB', '钣金', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SC', '喷粉', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SD', '发泡', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SE', '辅料加工', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SG', '配置类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SH', '焊接件', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SI', '半成品其它', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R01', '金属类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R02', '塑料类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R03', '橡胶、辅料类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R04', '电缆类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R15', '实木板类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R05', '包装印刷类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R06', '标准紧固类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R07', '系统类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R08', '系统、组件、部件类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R10', '外协类(外协加工费、熏蒸费）', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R14', '玻璃类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R40', '电器类', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R83', '焊条', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('NPP', '设备、维修设备用的备件、展会用印刷品、工装、叉车维修、计量工具、劳保用品', 'T105');
 
 COMMIT;
 

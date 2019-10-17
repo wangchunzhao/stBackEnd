@@ -57,10 +57,10 @@ public class ItemsForm implements Serializable{
 	@Column(name="opt_time",columnDefinition="datetime")
 	public Date optTime;
 	
-	@NotNull
-	@Column(name = "is_ready",columnDefinition ="BIT")
-	public int isReady;
-	
+//	@NotNull
+//	@Column(name = "is_ready",columnDefinition ="BIT")
+//	public int isReady;
+//	
 	
 	
 	@Transient
@@ -165,14 +165,14 @@ public class ItemsForm implements Serializable{
 	}
 
 
-	public int getIsReady() {
-		return isReady;
-	}
-
-
-	public void setIsReady(int isReady) {
-		this.isReady = isReady;
-	}
+//	public int getIsReady() {
+//		return isReady;
+//	}
+//
+//
+//	public void setIsReady(int isReady) {
+//		this.isReady = isReady;
+//	}
 
 
 

@@ -46,10 +46,10 @@ public class DMaterial {
     @Column(name="opt_time",columnDefinition="DATETIME")
 	private Date optTime;
 	
-	@NotNull
-    @Column(name="sap_material_type_number",length=4)
-	private String type;
-	
+//	@NotNull
+//    @Column(name="sap_material_type_number",length=4)
+//	private String type;
+//	
 	@NotNull      
     @Column(name="sap_unit_of_measurement_code",length=3)
 	private String unit;
@@ -87,13 +87,13 @@ public class DMaterial {
 		this.optTime = optTime;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+//	public String getType() {
+//		return type;
+//	}
+//
+//	public void setType(String type) {
+//		this.type = type;
+//	}
 
 	public String getUnit() {
 		return unit;

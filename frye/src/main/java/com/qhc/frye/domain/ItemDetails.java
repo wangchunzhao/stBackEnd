@@ -44,14 +44,14 @@ public class ItemDetails implements Serializable{
 	public String materialName;
 	
 	//物料专用号
-	@NotNull
-	@Column(name = "material_specific_Number")
-	public String materialSpecificNumber;
+//	@NotNull
+//	@Column(name = "material_specific_Number")
+//	public String materialSpecificNumber;
 	
 	//物料属性
 	@NotNull
-	@Column(name = "material_attribute")
-	public String materialAttribute;
+	@Column(name = "is_purchased",columnDefinition="BIT",length=1)
+	public boolean materialAttribute;
 	
 	//合同数量
 	@NotNull
@@ -61,7 +61,7 @@ public class ItemDetails implements Serializable{
 	//销售单价
 	
 	//销售金额
-	@Column(name = "amount")
+	@Column(name = "sale_amount")
 	public BigDecimal amount;
 	
 	//单位 
@@ -69,9 +69,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "measure_unit_code")
 	public String measureUnitCode;
 	
-	@NotNull
-	@Column(name = "measure_unit_name",columnDefinition = "TEXT")
-	public String measureUnitName;
+//	@NotNull
+//	@Column(name = "measure_unit_name",columnDefinition = "TEXT")
+//	public String measureUnitName;
 
 	
 	@Column(name = "b2c_comments",columnDefinition = "TEXT")
@@ -84,9 +84,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "row_number")
 	public Integer rowNumber;
 	
-	@Column(name = "special_code")
-	public String specialCode;
-	
+//	@Column(name = "special_code")
+//	public String specialCode;
+//	
 	@Column(name = "material_group_code")
 	public String materialGroupCode;
 	
@@ -153,19 +153,19 @@ public class ItemDetails implements Serializable{
 		this.materialName = materialName;
 	}
 
-	public String getMaterialSpecificNumber() {
-		return materialSpecificNumber;
-	}
+//	public String getMaterialSpecificNumber() {
+//		return materialSpecificNumber;
+//	}
+//
+//	public void setMaterialSpecificNumber(String materialSpecificNumber) {
+//		this.materialSpecificNumber = materialSpecificNumber;
+//	}
 
-	public void setMaterialSpecificNumber(String materialSpecificNumber) {
-		this.materialSpecificNumber = materialSpecificNumber;
-	}
-
-	public String getMaterialAttribute() {
+	public boolean isMaterialAttribute() {
 		return materialAttribute;
 	}
 
-	public void setMaterialAttribute(String materialAttribute) {
+	public void setMaterialAttribute(boolean materialAttribute) {
 		this.materialAttribute = materialAttribute;
 	}
 
@@ -193,13 +193,13 @@ public class ItemDetails implements Serializable{
 		this.measureUnitCode = measureUnitCode;
 	}
 
-	public String getMeasureUnitName() {
-		return measureUnitName;
-	}
-
-	public void setMeasureUnitName(String measureUnitName) {
-		this.measureUnitName = measureUnitName;
-	}
+//	public String getMeasureUnitName() {
+//		return measureUnitName;
+//	}
+//
+//	public void setMeasureUnitName(String measureUnitName) {
+//		this.measureUnitName = measureUnitName;
+//	}
 
 	public String getB2cComments() {
 		return b2cComments;
@@ -225,13 +225,13 @@ public class ItemDetails implements Serializable{
 		this.rowNumber = rowNumber;
 	}
 
-	public String getSpecialCode() {
-		return specialCode;
-	}
-
-	public void setSpecialCode(String specialCode) {
-		this.specialCode = specialCode;
-	}
+//	public String getSpecialCode() {
+//		return specialCode;
+//	}
+//
+//	public void setSpecialCode(String specialCode) {
+//		this.specialCode = specialCode;
+//	}
 
 	
 

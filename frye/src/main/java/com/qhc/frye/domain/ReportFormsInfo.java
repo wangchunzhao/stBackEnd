@@ -108,11 +108,11 @@ public class ReportFormsInfo implements Serializable {
 	@Column(name="material_code",columnDefinition = "char")
 	private String	materialCode	;//	产品规格型号
 	
-	@Column(name="material_specific_Number",columnDefinition = "char")
-	private String	materialSpecificNumber	;//	物料专用号
+//	@Column(name="material_specific_Number",columnDefinition = "char")
+//	private String	materialSpecificNumber	;//	物料专用号
 	
-	@Column(name="material_attribute",columnDefinition = "char")
-	private String	materialAttribute	;//	物料属性
+	@Column(name="is_purchased",columnDefinition = "BIT")
+	private boolean	materialAttribute	;//	物料属性
 	
 	@Column(name="quantity")
 	private Integer	quantity	;//	合同数量
@@ -120,11 +120,11 @@ public class ReportFormsInfo implements Serializable {
 	@Column(name="price")
 	private BigDecimal	price	;//	销售单价
 	
-	@Column(name="amount")
+	@Column(name="sale_amount")
 	private BigDecimal	amount	;//	销售金额
 	
-	@Column(name="measure_unit_name",columnDefinition = "text")
-	private String	measureUnitName	;//	单位
+//	@Column(name="measure_unit_name",columnDefinition = "text")
+//	private String	measureUnitName	;//	单位
 	
 //	@Column(name="receiver_address")
 	@Transient
@@ -368,19 +368,19 @@ public class ReportFormsInfo implements Serializable {
 		this.materialCode = materialCode;
 	}
 
-	public String getMaterialSpecificNumber() {
-		return materialSpecificNumber;
-	}
+//	public String getMaterialSpecificNumber() {
+//		return materialSpecificNumber;
+//	}
+//
+//	public void setMaterialSpecificNumber(String materialSpecificNumber) {
+//		this.materialSpecificNumber = materialSpecificNumber;
+//	}
 
-	public void setMaterialSpecificNumber(String materialSpecificNumber) {
-		this.materialSpecificNumber = materialSpecificNumber;
-	}
-
-	public String getMaterialAttribute() {
+	public boolean getMaterialAttribute() {
 		return materialAttribute;
 	}
 
-	public void setMaterialAttribute(String materialAttribute) {
+	public void setMaterialAttribute(boolean materialAttribute) {
 		this.materialAttribute = materialAttribute;
 	}
 
@@ -408,13 +408,13 @@ public class ReportFormsInfo implements Serializable {
 		this.amount = amount;
 	}
 
-	public String getMeasureUnitName() {
-		return measureUnitName;
-	}
-
-	public void setMeasureUnitName(String measureUnitName) {
-		this.measureUnitName = measureUnitName;
-	}
+//	public String getMeasureUnitName() {
+//		return measureUnitName;
+//	}
+//
+//	public void setMeasureUnitName(String measureUnitName) {
+//		this.measureUnitName = measureUnitName;
+//	}
 
 	public String getReceiverAddress() {
 		return receiverAddress;
