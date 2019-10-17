@@ -121,6 +121,21 @@ public class OrderController {
 		
     }
     
+    /**
+     * 根据流水号获取销售订单详情并同步SAP
+     * @param sequenceNumber
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value="根据sequenceNumber组装订单并同步SAP", notes="根据sequenceNumber组装订单并同步SAP")
+    @GetMapping(value = "order/creationSap/{sequenceNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public String orderCreationForSAP(@PathVariable String sequenceNumber) throws Exception
+    {	
+		
+	
+	return orderService.orderCreationForSAP(sequenceNumber);
+    }
 	
 
 }

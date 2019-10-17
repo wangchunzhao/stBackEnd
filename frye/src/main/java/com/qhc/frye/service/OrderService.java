@@ -40,6 +40,7 @@ import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
+import com.qhc.frye.rest.controller.entity.SapOrder;
 
 @Service
 public class OrderService {
@@ -85,6 +86,11 @@ public class OrderService {
 	
 	@Autowired
 	private ConstantService constService;
+	
+	@Autowired
+	private BayernService<SapOrder> bayernService;
+	
+	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
 	/**
 	 * 
@@ -307,4 +313,40 @@ public class OrderService {
 		oo.setOrderTypes(constService.getOrderTypes());
 		return oo;
 	}
+	
+	
+	/**
+	 * 根据流水号组装数据并同步SAP
+	 * @param sequenceNumber
+	 * @return
+	 */
+	public String orderCreationForSAP(String sequenceNumber) {
+		
+		//1. 根据sequenceNumber组装数据
+		SapOrder sapOrder = assembleOrderForSAP(sequenceNumber);
+		
+		
+		//2. 调用bayernService同步SAP
+		bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
+	
+		return "SUCCESS";
+		
+	}
+	
+	/**
+	 * 根据流水号组装数据
+	 * @param sequenceNumber
+	 * @return
+	 */
+	private SapOrder assembleOrderForSAP(String sequenceNumber) {
+		
+		//TODO: 根据流水号组装数据
+	
+		return new SapOrder();
+		
+	}
+	
+	
+	
+	
 }
