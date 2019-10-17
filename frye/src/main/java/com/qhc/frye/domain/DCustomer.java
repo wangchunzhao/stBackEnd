@@ -51,6 +51,10 @@ public class DCustomer implements Serializable{
 	@Column(name="sap_customer_class_code",columnDefinition="CHAR",length=2)
 	private String clazzCode;
 	
+	@NotNull
+	@Column(name="sap_industry_code_code",columnDefinition="VARCHAR",length=10)
+	private String industryCodeCode;
+	
 //	@NotNull
 //	@Column(name="sap_customer_level_code",columnDefinition="CHAR",length=4)
 //	private String levelCode;
@@ -110,6 +114,12 @@ public class DCustomer implements Serializable{
 	}
 	public void setClazzName(String clazzName) {
 		this.clazzName = clazzName;
+	}
+	public String getIndustryCodeCode() {
+		return industryCodeCode;
+	}
+	public void setIndustryCodeCode(String industryCodeCode) {
+		this.industryCodeCode = industryCodeCode;
 	}
 
 	

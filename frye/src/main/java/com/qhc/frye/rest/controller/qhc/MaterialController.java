@@ -96,7 +96,7 @@ public class MaterialController {
 
 
 	
-	@ApiOperation(value = "修改MaterialClazz")
+	@ApiOperation(value = "保存或者修改MaterialClazz")
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
 	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {

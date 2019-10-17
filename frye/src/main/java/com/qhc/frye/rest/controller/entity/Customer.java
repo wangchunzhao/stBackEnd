@@ -32,6 +32,7 @@ public class Customer implements InterEntityToDao,Serializable {
 	private String levelCode;
 	private String affiliationCode;
 	private String affiliationName;
+	private String industryCodeCode;
 	
 	public Customer() {
 		
@@ -107,6 +108,12 @@ public class Customer implements InterEntityToDao,Serializable {
 	public void setAffiliationName(String affiliationName) {
 		this.affiliationName = affiliationName;
 	}
+	public String getIndustryCodeCode() {
+		return industryCodeCode;
+	}
+	public void setIndustryCodeCode(String industryCodeCode) {
+		this.industryCodeCode = industryCodeCode;
+	}
 	@Override
 	public List<Object> toDaos() {
 		List<Object> objs = new ArrayList<Object>();
@@ -116,6 +123,7 @@ public class Customer implements InterEntityToDao,Serializable {
 		dc.setAddress(this.getAddress());
 		dc.setChangedDate(this.getChangedDate());
 		dc.setClazzCode(this.getClazzCode());
+		dc.setIndustryCodeCode(this.getIndustryCodeCode());
 //		dc.setGroupCode(this.getGroupCode());
 //		dc.setLevelCode(this.getLevelCode());
 		objs.add(dc);
