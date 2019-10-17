@@ -103,7 +103,7 @@ public class MaterialController {
 		characteristicService.saveClass(clazz);
 	}
 
-	@ApiOperation(value = "修改CharacteristicValue")
+	@ApiOperation(value = "保存或者修改CharacteristicValue")
 	@PutMapping(value = "material/characteristic")
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {

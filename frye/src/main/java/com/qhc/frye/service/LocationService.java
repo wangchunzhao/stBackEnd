@@ -43,8 +43,8 @@ public class LocationService {
 	 */
 	public void put(List<SalesGroup> salesGroups) {
 		
-		List<SapSalesGroup> groups = new ArrayList();
-		Set<SapSalesOffice> offices = new HashSet();
+		Set<SapSalesGroup> groups = new HashSet<SapSalesGroup>();
+		Set<SapSalesOffice> offices = new HashSet<SapSalesOffice>();
 		for (SalesGroup sg : salesGroups) {
 			SapSalesGroup ssg = new SapSalesGroup();
 			ssg.setCode(sg.getCode());
@@ -53,14 +53,14 @@ public class LocationService {
 			
 			SapSalesOffice sso = new SapSalesOffice();
 			sso.setCode(sg.getOfficeCode());
-			sso.setName(sg.getOfficeName());	
-			
+			sso.setName(sg.getOfficeName());
+			//只有内销，出口没有大区，冷库对应冷酷
+			sso.setTypeCode("10");
 			groups.add(ssg);
 			offices.add(sso);
 		}
 		officeRepo.saveAll(offices);
 		groupRepo.saveAll(groups);
-		
 	}
 	
 }

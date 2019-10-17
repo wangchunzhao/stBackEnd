@@ -50,9 +50,7 @@ public class CharacteristicService {
 			dc.setName(cl.getName());
 			dcs.add(dc);
 		}
-		
 		clazzRepo.saveAll(dcs);
-				
 	}
 	/**
 	 * 
