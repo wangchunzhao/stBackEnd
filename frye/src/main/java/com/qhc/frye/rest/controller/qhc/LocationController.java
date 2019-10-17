@@ -55,11 +55,11 @@ public class LocationController {
 	@Autowired
 	private SapSalesOfficeService sapSalesOfficeService;
 
-	@ApiOperation(value = "修改销售中心")
+	@ApiOperation(value = "保存或者修改销售大区和中心")
 	@PutMapping(value = "location/salesOffice", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void uploadSalesOffice(@RequestBody(required = true) @Valid List<SalesGroup> salesGroups) throws Exception {
-		localService.clean();
+//		localService.clean();
 		localService.put(salesGroups);
 	}
 	
