@@ -39,6 +39,8 @@ public class ConstantService {
 	
 	public static Map<String,String> orderType;//Map<customerClassCode,List<ordertype code>> 
 	
+	public static Map<String,String> dealerIndustryCodes = null;//Map<customerClassCode,List<ordertype code>> 
+	
 	public Map<String,String> findAllCustomerClazz() {
 		if(customerClazz==null || customerClazz.isEmpty()) {
 			customerClazz = new HashMap<String,String> ();
@@ -75,8 +77,17 @@ public class ConstantService {
 		 return industryCodeRepository.findByCode(code);
 	}
 
-	public List<DIndustryCode> findAllIndustryCodeFordealer() {
-		 return industryCodeRepository.findAllFordealer();
+	public Map<String,String> findFordealerIndustryCodes() {
+		if (dealerIndustryCodes == null || dealerIndustryCodes.isEmpty()) {
+			List<DIndustryCode> industryCodeList = industryCodeRepository.findAllFordealer();
+			dealerIndustryCodes = new HashMap<String,String>();
+			
+			for (DIndustryCode dIndustryCode : industryCodeList) {
+				dealerIndustryCodes.put(dIndustryCode.getCode(), dIndustryCode.getName());
+			}
+		}
+		
+		return dealerIndustryCodes;
 	}
 
 }

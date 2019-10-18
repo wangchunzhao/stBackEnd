@@ -44,6 +44,7 @@ import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
+import com.qhc.frye.rest.controller.entity.SapOrder;
 //import com.qhc.frye.rest.controller.entity.SapOrder;
 
 @Service
@@ -331,6 +332,10 @@ public class OrderService {
 		}
 		//
 		oo.setOrderTypes(constService.getOrderTypes());
+		
+		// Industry Codes For dealer
+		oo.setDealerIndustryCodes(constService.findFordealerIndustryCodes());
+		
 		return oo;
 	}
 	
@@ -343,7 +348,7 @@ public class OrderService {
 	public String orderCreationForSAP(String sequenceNumber) {
 		
 //		//1. 根据sequenceNumber组装数据
-//		SapOrder sapOrder = assembleOrderForSAP(sequenceNumber);
+		SapOrder sapOrder = assembleOrderForSAP(sequenceNumber);
 //		
 //		
 //		//2. 调用bayernService同步SAP
@@ -358,13 +363,13 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @return
 //	 */
-//	private SapOrder assembleOrderForSAP(String sequenceNumber) {
-//		
-//		//TODO: 根据流水号组装数据
-//	
-//		return new SapOrder();
-//		
-//	}
+	private SapOrder assembleOrderForSAP(String sequenceNumber) {
+		
+		//TODO: 根据流水号组装数据
+	
+		return new SapOrder();
+		
+	}
 	
 	
 	

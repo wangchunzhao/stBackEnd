@@ -41,9 +41,10 @@ public class OrderOption {
 	private Map<String,String> biddingPlan;//回款类型,大客户
 	
 	private Map<String,String> orderTypes;//Map<customer class code, orderType>
-	/**
-	 * 
-	 */
+	
+	// For dealer的 industry_code
+	private Map<String,String> dealerIndustryCodes;//Map<customer class code, orderType>
+	
 	public OrderOption() {
 		Date  date =new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -64,6 +65,7 @@ public class OrderOption {
 		this.paymentType =new HashMap<String, String>();
 		this.biddingPlan = new HashMap<String, String>();
 		this.orderTypes = new HashMap<String,String>();
+		this.dealerIndustryCodes = new HashMap<String,String>();
 	}
 
 	public String getSequenceNumber() {
@@ -170,5 +172,13 @@ public class OrderOption {
 
 	public void setOrderTypes(Map<String, String> orderTypes) {
 		this.orderTypes = orderTypes;
+	}
+
+	public Map<String, String> getDealerIndustryCodes() {
+		return dealerIndustryCodes;
+	}
+
+	public void setDealerIndustryCodes(Map<String, String> dealerIndustryCodes) {
+		this.dealerIndustryCodes = dealerIndustryCodes;
 	}
 }

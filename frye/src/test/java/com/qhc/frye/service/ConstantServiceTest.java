@@ -18,7 +18,7 @@ class ConstantServiceTest {
 
 	@Test
 	void testFindAllIndustryCodeFordealer() {
-		constantService.findAllIndustryCodeFordealer();
+		constantService.findFordealerIndustryCodes();
 	}
 
 }

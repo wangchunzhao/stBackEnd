@@ -53,9 +53,9 @@ public class ConstantController {
 	@ApiOperation(value = "列出所有For Dealer的终端客户性质")
 	@GetMapping(value = "dealerIndustryCode")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DIndustryCode> getFordealerIndustryCodes() throws Exception {
-		List<DIndustryCode> list =  constService.findAllIndustryCodeFordealer();
-		return list;
+	public Map<String,String> getFordealerIndustryCodes() throws Exception {
+		Map<String,String> map =  constService.findFordealerIndustryCodes();
+		return map;
 	}
 
 }
