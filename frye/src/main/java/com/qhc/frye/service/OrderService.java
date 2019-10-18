@@ -2,6 +2,7 @@ package com.qhc.frye.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.qhc.frye.domain.BArea;
 import com.qhc.frye.domain.BCity;
 import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.DCurrency;
+import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
@@ -38,7 +40,9 @@ import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
+import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 //import com.qhc.frye.rest.controller.entity.SapOrder;
 
@@ -98,6 +102,22 @@ public class OrderService {
 	 */
 	public List<DSalesType> getSalesTypes() {
 		return salesTypeRepo.findAll();
+	}
+	
+	/**
+	 * 
+	 * @param paymentPlan
+	 */
+	public void savePaymentPlan(List<PaymentPlan> paymentPlan) {
+		Set<PaymentTerm> incos = new HashSet<PaymentTerm>();
+		for(PaymentPlan inco:paymentPlan) {
+			PaymentTerm temp = new PaymentTerm();
+			temp.setCode(inco.getCode());
+			temp.setName(inco.getName());
+			temp.setIsPaymentTerm(inco.getPaymentTerm());
+			incos.add(temp);
+		}
+		paymentRepo.saveAll(incos);
 	}
 
 	/**
@@ -303,7 +323,7 @@ public class OrderService {
 		Map<String, String> bidding = oo.getBiddingPlan();
 		List<PaymentTerm> pts = paymentRepo.findAll();
 		for (PaymentTerm pt : pts) {
-			if (pt.isPaymentTerm()) {
+			if (pt.getIsPaymentTerm()) {
 				payments.put(pt.getCode(), pt.getName());
 			} else {
 				bidding.put(pt.getCode(), pt.getName());

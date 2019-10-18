@@ -25,7 +25,7 @@ public class PaymentTerm {
 	private String name;
 	@NotNull
     @Column(name="is_payment_term",columnDefinition="BIT",length=1)
-	private boolean isPaymentTerm;
+	private Boolean isPaymentTerm;
 	
 	public String getCode() {
 		return code;
@@ -39,11 +39,11 @@ public class PaymentTerm {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public boolean isPaymentTerm() {
+	public Boolean getIsPaymentTerm() {
 		return isPaymentTerm;
 	}
-	public void setPaymentTerm(boolean isPaymentTerm) {
+	public void setIsPaymentTerm(Boolean isPaymentTerm) {
 		this.isPaymentTerm = isPaymentTerm;
 	}
-	
+
 }

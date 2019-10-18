@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +28,10 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
+import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
+import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.BAreaService;
 import com.qhc.frye.service.BCityService;
@@ -53,7 +57,12 @@ public class OrderController {
 	@Autowired
 	private SalesGroupRepository salesGroupRepository;
 	
-	
+	@ApiOperation(value = "保存或修改结算方式",notes="保存或修改结算方式")
+	@PutMapping(value = "order/paymentPlan")
+	@ResponseStatus(HttpStatus.OK)
+	public void putCurrency(@RequestBody(required = true) @Valid List<PaymentPlan> paymentPlan) {
+		orderService.savePaymentPlan(paymentPlan);
+	}
 	
 	@ApiOperation(value="保存订单信息", notes="保存订单信息")
     @PostMapping(value = "order")
