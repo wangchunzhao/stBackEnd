@@ -23,6 +23,7 @@ import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CustomerAffiliation;
 import com.qhc.frye.domain.DCustomer;
+import com.qhc.frye.domain.DIndustryCode;
 import com.qhc.frye.domain.Industry;
 import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.rest.controller.entity.Customer;
@@ -81,6 +82,10 @@ public class CustomerService {
 		}
 		for(DCustomer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
+			
+			DIndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
+			String industryCodeName = industryCode == null ? null : industryCode.getName();
+			dc.setIndustryCodeName(industryCodeName);
 		}
 		
 		return dcuList;

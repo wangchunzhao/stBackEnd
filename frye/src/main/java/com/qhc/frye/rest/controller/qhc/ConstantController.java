@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.frye.domain.DIndustryCode;
 import com.qhc.frye.service.ConstantService;
 
 import io.swagger.annotations.Api;
@@ -45,6 +47,15 @@ public class ConstantController {
 		
 		Map<String,String> ccMap =  constService.getOrderTypes();
 		return ccMap;
+	}
+	
+		
+	@ApiOperation(value = "列出所有For Dealer的终端客户性质")
+	@GetMapping(value = "dealerIndustryCode")
+	@ResponseStatus(HttpStatus.OK)
+	public List<DIndustryCode> getFordealerIndustryCodes() throws Exception {
+		List<DIndustryCode> list =  constService.findAllIndustryCodeFordealer();
+		return list;
 	}
 
 }

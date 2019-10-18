@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.CustomerClassRepository;
+import com.qhc.frye.dao.DIndustryCodeRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.domain.DIndustryCode;
 import com.qhc.frye.domain.OrderTypeCustomerClass;
 
 /**
@@ -29,6 +31,9 @@ public class ConstantService {
 	
 	@Autowired
 	private OrderTypeRepository orderTypeRepository;
+	
+	@Autowired
+	private DIndustryCodeRepository industryCodeRepository;
 	
 	public static Map<String,String> customerClazz;
 	
@@ -64,6 +69,14 @@ public class ConstantService {
 		}
 		return orderType;
 		
+	}
+
+	public DIndustryCode findIndustryCodeByCode(String code) {
+		 return industryCodeRepository.findByCode(code);
+	}
+
+	public List<DIndustryCode> findAllIndustryCodeFordealer() {
+		 return industryCodeRepository.findAllFordealer();
 	}
 
 }

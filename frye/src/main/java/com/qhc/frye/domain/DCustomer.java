@@ -26,6 +26,8 @@ public class DCustomer implements Serializable{
 	 */
 	@Transient
 	private String clazzName;
+	@Transient
+	private String industryCodeName;
 	
 	@Id
     @NotNull
@@ -54,10 +56,6 @@ public class DCustomer implements Serializable{
 	@NotNull
 	@Column(name="sap_industry_code_code",columnDefinition="VARCHAR",length=10)
 	private String industryCodeCode;
-	
-//	@NotNull
-//	@Column(name="sap_customer_level_code",columnDefinition="CHAR",length=4)
-//	private String levelCode;
 	
 	public Date getChangedDate() {
 		return changedDate;
@@ -95,6 +93,13 @@ public class DCustomer implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getIndustryCodeCode() {
+		return industryCodeCode;
+	}
+	public void setIndustryCodeCode(String industryCodeCode) {
+		this.industryCodeCode = industryCodeCode;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if(o.getClass().equals(this.getClass()) ) {
@@ -115,11 +120,11 @@ public class DCustomer implements Serializable{
 	public void setClazzName(String clazzName) {
 		this.clazzName = clazzName;
 	}
-	public String getIndustryCodeCode() {
-		return industryCodeCode;
+	public String getIndustryCodeName() {
+		return industryCodeName;
 	}
-	public void setIndustryCodeCode(String industryCodeCode) {
-		this.industryCodeCode = industryCodeCode;
+	public void setIndustryCodeName(String industryCodeName) {
+		this.industryCodeName = industryCodeName;
 	}
 
 	
