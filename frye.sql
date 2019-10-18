@@ -258,6 +258,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_characteristic` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic` (
   `code` VARCHAR(30) NOT NULL,
   `name` TEXT NOT NULL,
+  `is_optional` TINYINT(1) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
@@ -1558,33 +1559,32 @@ INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_
 INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA03', '并联机组', 'T102');
 INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA04', '其他机组（CDU）', 'T102');
 INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA05', '冷风机', 'T103');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA06', '冷凝器', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA06', '冷凝器', 'T103');
 INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA07', '电控柜', 'T101');
 INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA08', '冷库', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA09', '侧板', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA11', '虚拟物料', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SA', '总装', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SB', '钣金', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SC', '喷粉', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SD', '发泡', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SE', '辅料加工', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SG', '配置类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SH', '焊接件', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SI', '半成品其它', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R01', '金属类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R02', '塑料类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R03', '橡胶、辅料类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R04', '电缆类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R15', '实木板类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R05', '包装印刷类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R06', '标准紧固类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R07', '系统类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R08', '系统、组件、部件类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R10', '外协类(外协加工费、熏蒸费）', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R14', '玻璃类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R40', '电器类', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R83', '焊条', 'T105');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('NPP', '设备、维修设备用的备件、展会用印刷品、工装、叉车维修、计量工具、劳保用品', 'T105');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA09', '侧板', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('FA11', '虚拟物料', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SA', '总装', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SB', '钣金', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SC', '喷粉', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SD', '发泡', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SE', '辅料加工', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SG', '配置类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SH', '焊接件', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('SI', '半成品其它', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R01', '金属类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R02', '塑料类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R03', '橡胶、辅料类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R04', '电缆类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R15', '实木板类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R05', '包装印刷类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R06', '标准紧固类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R07', '系统类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R08', '系统、组件、部件类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R10', '外协类(外协加工费、熏蒸费）', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R14', '玻璃类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R40', '电器类', 'T104');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('R83', '焊条', 'T104');
 
 COMMIT;
 
