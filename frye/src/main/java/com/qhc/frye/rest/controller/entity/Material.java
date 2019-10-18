@@ -22,13 +22,8 @@ public class Material implements Serializable{
 	private String code;
 	private String description;
 	private boolean isConfigurable;
-	private double mvPrice;
-	private double trPrice;
-	private double mkPrice;
-	private Date optTime;
-	private String type;
-	private String clazz;
-	private String unit;
+	private String groupCode;
+	
 	public String getCode() {
 		return code;
 	}
@@ -47,46 +42,12 @@ public class Material implements Serializable{
 	public void setConfigurable(boolean isConfigurable) {
 		this.isConfigurable = isConfigurable;
 	}
-	public double getMvPrice() {
-		return mvPrice;
+	public String getGroupCode() {
+		return groupCode;
 	}
-	public void setMvPrice(double mvPrice) {
-		this.mvPrice = mvPrice;
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
-	public double getTrPrice() {
-		return trPrice;
-	}
-	public void setTrPrice(double trPrice) {
-		this.trPrice = trPrice;
-	}
-	public double getMkPrice() {
-		return mkPrice;
-	}
-	public void setMkPrice(double mkPrice) {
-		this.mkPrice = mkPrice;
-	}
-	public Date getOptTime() {
-		return optTime;
-	}
-	public void setOptTime(Date optTime) {
-		this.optTime = optTime;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getClazz() {
-		return clazz;
-	}
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
-	}
-	public String getUnit() {
-		return unit;
-	}
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+
+	
 }

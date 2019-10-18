@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -73,17 +74,29 @@ public class MaterialController {
 	}
 	
 	@ApiOperation(value = "查找增物料信息")
-	@PostMapping(value = "material", produces = "application/json;charset=UTF-8")
+	@PostMapping(value = "material")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<DMaterial> findMaterialsByName(@RequestParam(required = true) String name,@RequestParam(required = true) int pageNo) throws Exception {
-		if(name.equals("null")) {
-			name =null;
+	public PageHelper<Material> findMaterialsByName(@RequestBody(required = true) Map<String,String> pars) throws Exception {
+		if(pars.containsKey("name")&&pars.containsKey("pageNo")) {
+			PageHelper<Material> ms = new PageHelper();
+			PageHelper<DMaterial> dms =materialService.findMaterialsByName(pars.get("name"),Integer.parseInt(pars.get("pageNo")));
+			List<Material> ml = new ArrayList<Material>(); 
+			List<DMaterial> dml = dms.getRows();
+			for(DMaterial dm:dml) {
+				Material temp = new Material();
+				temp.setCode(dm.getCode());
+				temp.setDescription(dm.getDescription());
+				temp.setConfigurable(dm.isConfigurable());
+				ml.add(temp);
+			}
+			ms.setRows(ml);
+			ms.setTotal(dms.getTotal());
+			return ms;	
 		}
-		PageHelper<DMaterial> ms =materialService.findMaterialsByName(name,pageNo); 
-		return ms;
+		return null;
 	}
 	
-	@ApiOperation(value = "通过code查找增物料信息")
+	@ApiOperation(value = "通过code查找具体增物料信息")
 	@GetMapping(value = "material/{code}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public Material getMaterialById(@PathVariable(required = true) String code) throws Exception {

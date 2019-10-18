@@ -34,10 +34,10 @@ public class DMaterial {
     @Column(name="stand_price",columnDefinition="DECIMAL", precision=13, scale=2)
 	private double price;
 	
-//	@NotNull
-//    @Column(name="transfer_price",columnDefinition="DECIMAL", precision=13, scale=2)
-//	private double trPrice;
-//	
+	@NotNull
+    @Column(name="sap_material_groups_code",columnDefinition="CHAR", length = 4)
+	private String group;
+	
 //	@NotNull
 //    @Column(name="marketing_price",columnDefinition="DECIMAL", precision=13, scale=2)
 //	private double mkPrice;
@@ -87,13 +87,13 @@ public class DMaterial {
 		this.optTime = optTime;
 	}
 
-//	public String getType() {
-//		return type;
-//	}
-//
-//	public void setType(String type) {
-//		this.type = type;
-//	}
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
 
 	public String getUnit() {
 		return unit;
