@@ -121,21 +121,21 @@ left join k_contract k
 				-- 物料名称
 				material_name,
 				-- 物料专用号
-				material_specific_Number,
+				
 				-- 物料属性
-				material_attribute,
+				is_purchased,
 				-- 数量
 				quantity,
 				-- 金额
-				amount,
+				sale_amount,
 				-- 单价
-				amount / quantity AS price,
+				sale_amount / quantity AS price,
 				-- 折扣
 				discount,
 				-- 单位
 				measure_unit_code,
 				-- 单位名
-				measure_unit_name,
+				
 				-- 要求发货时间
 				earliest_delivery_date
 			FROM
