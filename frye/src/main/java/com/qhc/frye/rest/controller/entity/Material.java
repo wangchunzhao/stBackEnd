@@ -19,11 +19,15 @@ public class Material implements Serializable{
 	
 	public final static String MATERIAL_CODE = "59870645008146f9938f7e8718031778";
 	
-	private String code;
-	private String description;
-	private boolean isConfigurable;
-	private String groupCode;
-	
+	private String code;   //matnr  物料编码
+	private String description;  //maktx 物料描述
+	private boolean isConfigurable;//kzkfg 是否可配置物料
+	private boolean isPurchased;//物料属性
+	private double standPrice;//verpr  标准价格
+	private Date optTime;//laeda 
+	private String measurementUnit;//meins  计量单位
+	private String materialGroups;//matkl 物料分组
+	private String clazz;
 	public String getCode() {
 		return code;
 	}
@@ -42,12 +46,47 @@ public class Material implements Serializable{
 	public void setConfigurable(boolean isConfigurable) {
 		this.isConfigurable = isConfigurable;
 	}
-	public String getGroupCode() {
-		return groupCode;
+	public boolean isPurchased() {
+		return isPurchased;
 	}
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
+	public void setPurchased(boolean isPurchased) {
+		this.isPurchased = isPurchased;
 	}
-
+	public double getStandPrice() {
+		return standPrice;
+	}
+	public void setStandPrice(double standPrice) {
+		this.standPrice = standPrice;
+	}
+	public Date getOptTime() {
+		return optTime;
+	}
+	public void setOptTime(Date optTime) {
+		this.optTime = optTime;
+	}
+	public String getMeasurementUnit() {
+		return measurementUnit;
+	}
+	public void setMeasurementUnit(String measurementUnit) {
+		this.measurementUnit = measurementUnit;
+	}
+	public String getMaterialGroups() {
+		return materialGroups;
+	}
+	public void setMaterialGroups(String materialGroups) {
+		this.materialGroups = materialGroups;
+	}
+	public String getClazz() {
+		return clazz;
+	}
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	
 }
+
+          

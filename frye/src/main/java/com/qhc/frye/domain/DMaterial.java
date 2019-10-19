@@ -31,28 +31,24 @@ public class DMaterial {
 	private boolean isConfigurable;
 	
 	@NotNull
+    @Column(name="is_purchased",columnDefinition="BIT")
+	private boolean isPurchased;
+	
+	@NotNull
     @Column(name="stand_price",columnDefinition="DECIMAL", precision=13, scale=2)
 	private double price;
 	
 	@NotNull
-    @Column(name="sap_material_groups_code",columnDefinition="CHAR", length = 4)
-	private String group;
-	
-//	@NotNull
-//    @Column(name="marketing_price",columnDefinition="DECIMAL", precision=13, scale=2)
-//	private double mkPrice;
-//	
-	@NotNull
     @Column(name="opt_time",columnDefinition="DATETIME")
 	private Date optTime;
 	
-//	@NotNull
-//    @Column(name="sap_material_type_number",length=4)
-//	private String type;
-//	
 	@NotNull      
     @Column(name="sap_unit_of_measurement_code",length=3)
 	private String unit;
+	
+	@NotNull
+    @Column(name="sap_material_groups_code",columnDefinition="CHAR",length=4)
+	private String type;
 
 	public String getCode() {
 		return code;
@@ -87,14 +83,6 @@ public class DMaterial {
 		this.optTime = optTime;
 	}
 
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
 	public String getUnit() {
 		return unit;
 	}
@@ -110,6 +98,23 @@ public class DMaterial {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
+	public boolean isPurchased() {
+		return isPurchased;
+	}
+
+	public void setPurchased(boolean isPurchased) {
+		this.isPurchased = isPurchased;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	
 
 }

@@ -40,26 +40,23 @@ public class MaterialService {
 		for(Material ma: materials){
 			DMaterial dm = new DMaterial();
 			dm.setCode(ma.getCode());
-			dm.setConfigurable(ma.isConfigurable());
 			dm.setDescription(ma.getDescription());
-			//dm.setPrice(ma.getMkPrice());
-//			dm.setMkPrice(ma.getMkPrice());
-//			dm.setMvPrice(ma.getMvPrice());
-			//dm.setOptTime(ma.getOptTime());
-//			dm.setTrPrice(ma.getTrPrice());
-//			dm.setType(ma.getType());
-			//dm.setUnit(ma.getUnit());
+			dm.setConfigurable(ma.isConfigurable());
+			dm.setPurchased(ma.isPurchased());
+			dm.setPrice(ma.getStandPrice());
+			dm.setOptTime(ma.getOptTime());
+			dm.setUnit(ma.getMeasurementUnit());
+			dm.setType(ma.getMaterialGroups());
 			mset.add(dm);
-//			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {
-//				MaterialClazz mc = new MaterialClazz();
-//				MaterialClazzIdentity mci = new MaterialClazzIdentity();
-//				mci.setClazzCode(ma.getClazz());
-//				mci.setMaterialCode(ma.getCode());
-//				mc.setMci(mci);
-//				mcset.add(mc);
-//			}
+			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {
+				MaterialClazz mc = new MaterialClazz();
+				MaterialClazzIdentity mci = new MaterialClazzIdentity();
+				mci.setClazzCode(ma.getClazz());
+				mci.setMaterialCode(ma.getCode());
+				mc.setMci(mci);
+				mcset.add(mc);
+			}
 		}
-		
 		materialRepo.saveAll(mset);
 		mcRepo.saveAll(mcset);
 	}
