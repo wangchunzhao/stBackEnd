@@ -43,7 +43,13 @@ public class OrderOption {
 	private Map<String,String> orderTypes;//Map<customer class code, orderType>
 	
 	// For dealer的 industry_code
-	private Map<String,String> dealerIndustryCodes;//Map<customer class code, orderType>
+	private Map<String,String> dealerIndustryCodes;
+	
+	// 
+	private Map<String,String> materialGroups;
+	
+	// 
+	private Map<String,String> materialGroupOrders;
 	
 	public OrderOption() {
 		Date  date =new Date();
@@ -66,6 +72,8 @@ public class OrderOption {
 		this.biddingPlan = new HashMap<String, String>();
 		this.orderTypes = new HashMap<String,String>();
 		this.dealerIndustryCodes = new HashMap<String,String>();
+		this.materialGroups = new HashMap<String,String>();
+		this.materialGroupOrders = new HashMap<String,String>();
 	}
 
 	public String getSequenceNumber() {
@@ -180,5 +188,21 @@ public class OrderOption {
 
 	public void setDealerIndustryCodes(Map<String, String> dealerIndustryCodes) {
 		this.dealerIndustryCodes = dealerIndustryCodes;
+	}
+
+	public Map<String, String> getMaterialGroups() {
+		return materialGroups;
+	}
+
+	public void setMaterialGroups(Map<String, String> materialGroups) {
+		this.materialGroups = materialGroups;
+	}
+
+	public Map<String, String> getMaterialGroupOrders() {
+		return materialGroupOrders;
+	}
+
+	public void setMaterialGroupOrders(Map<String, String> materialGroupOrders) {
+		this.materialGroupOrders = materialGroupOrders;
 	}
 }
