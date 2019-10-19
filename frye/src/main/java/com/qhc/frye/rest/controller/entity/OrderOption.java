@@ -42,14 +42,17 @@ public class OrderOption {
 	
 	private Map<String,String> orderTypes;//Map<customer class code, orderType>
 	
-	// For dealer的 industry_code
+	// 终端客户性质选择 For dealer
 	private Map<String,String> dealerIndustryCodes;
 	
-	// 
+	// 物料评估类
 	private Map<String,String> materialGroups;
 	
-	// 
+	// 物料在订单上的分类
 	private Map<String,String> materialGroupOrders;
+	
+	// 运输方式
+	private Map<String,String> shippingTypes;
 	
 	public OrderOption() {
 		Date  date =new Date();
@@ -74,6 +77,7 @@ public class OrderOption {
 		this.dealerIndustryCodes = new HashMap<String,String>();
 		this.materialGroups = new HashMap<String,String>();
 		this.materialGroupOrders = new HashMap<String,String>();
+		this.shippingTypes = new HashMap<String, String>();
 	}
 
 	public String getSequenceNumber() {
@@ -204,5 +208,13 @@ public class OrderOption {
 
 	public void setMaterialGroupOrders(Map<String, String> materialGroupOrders) {
 		this.materialGroupOrders = materialGroupOrders;
+	}
+
+	public Map<String, String> getShippingTypes() {
+		return shippingTypes;
+	}
+
+	public void setShippingTypes(Map<String, String> shippingTypes) {
+		this.shippingTypes = shippingTypes;
 	}
 }

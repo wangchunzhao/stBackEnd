@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.BMaterialGroupOrderRepository;
 import com.qhc.frye.dao.CustomerClassRepository;
 import com.qhc.frye.dao.DIndustryCodeRepository;
+import com.qhc.frye.dao.DShippingTypeRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
@@ -23,6 +24,7 @@ import com.qhc.frye.domain.BMaterialGroupOrder;
 import com.qhc.frye.domain.CustomerClass;
 import com.qhc.frye.domain.DIndustryCode;
 import com.qhc.frye.domain.DMaterialGroups;
+import com.qhc.frye.domain.DShippingType;
 import com.qhc.frye.domain.OrderTypeCustomerClass;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
@@ -57,6 +59,9 @@ public class ConstantService {
 	@Autowired
 	private SalesGroupRepository salesGroupRepository;
 	
+	@Autowired 
+	private DShippingTypeRepository shippingTypeRepository;
+	
 	public static Map<String,String> customerClazz;
 	
 	public static Map<String,String> orderType;//Map<customerClassCode,List<ordertype code>> 
@@ -70,6 +75,8 @@ public class ConstantService {
 	public static Map<String, Map<String, String>> salesOffices = null;
 	
 	public static Map<String, Map<String, String>> salesGroups = null;
+	
+	public static Map<String,String> shippingTypes = null;
 	
 	public Map<String,String> findAllCustomerClazz() {
 		if(customerClazz==null || customerClazz.isEmpty()) {
@@ -182,6 +189,19 @@ public class ConstantService {
 		}
 		
 		return salesGroups;
+	}
+
+	public Map<String, String> findShippingTypes() {
+		if (shippingTypes == null || shippingTypes.isEmpty()) {
+			List<DShippingType> list = shippingTypeRepository.findAll(Sort.by(Order.asc("code")));
+			shippingTypes = new HashMap<String, String>();
+			
+			for (DShippingType dShippingType : list) {
+				shippingTypes.put(dShippingType.getCode(), dShippingType.getName());
+			}
+		}
+		
+		return shippingTypes;
 	}
 
 }

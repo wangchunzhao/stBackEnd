@@ -333,20 +333,23 @@ public class OrderService {
 		//
 		oo.setOrderTypes(constService.getOrderTypes());
 		
-		// Industry Codes For dealer
+		// 终端客户性质选择 Industry Codes For dealer
 		oo.setDealerIndustryCodes(constService.findFordealerIndustryCodes());
 		
-		// MaterialGroups
+		// 物料评估类MaterialGroups
 		oo.setMaterialGroups(constService.findMaterialGroups());
 		
-		// MaterialGroupOrders
+		// 物料在订单上的分类MaterialGroupOrders
 		oo.setMaterialGroupOrders(constService.findMaterialGroupOrders());
 		
-		// Sales Goups
+		// 销售区域Sales Goups
 		oo.setGroups(constService.findSalesGroups());
 		
-		// Sales Offices
+		// 销售区域Sales Offices
 		oo.setOffices(constService.findSalesOffices());
+		
+		// 运输方式ShippingTypes
+		oo.setShippingTypes(constService.findShippingTypes());
 		
 		return oo;
 	}
