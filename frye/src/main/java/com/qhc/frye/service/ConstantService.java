@@ -72,6 +72,8 @@ public class ConstantService {
 	
 	public static Map<String,String> materialGroups = null;
 	
+	public static Map<String,String> materialGroupMapGroupOrders = null;
+	
 	public static Map<String, Map<String, String>> salesOffices = null;
 	
 	public static Map<String, Map<String, String>> salesGroups = null;
@@ -144,13 +146,22 @@ public class ConstantService {
 		if (materialGroups == null || materialGroups.isEmpty()) {
 			List<DMaterialGroups> list = materialGroupsRepository.findAll(Sort.by(Order.asc("code")));
 			materialGroups = new HashMap<String,String>();
+			materialGroupMapGroupOrders = new HashMap<String, String>();
 			
 			for (DMaterialGroups dMaterialGroups : list) {
-				materialGroups.put(dMaterialGroups.getCode(), dMaterialGroups.getName());
+				String groupCode = dMaterialGroups.getCode();
+				materialGroups.put(groupCode, dMaterialGroups.getName());
+				
+				materialGroupMapGroupOrders.put(groupCode, dMaterialGroups.getMaterialGroupOrderCode());
 			}
 		}
 		
 		return materialGroups;
+	}
+	
+	public Map<String,String> findMaterialGroupMapGroupOrders() {
+		findMaterialGroups();
+		return materialGroupMapGroupOrders;
 	}
 
 	public Map<String, Map<String, String>> findSalesOffices() {

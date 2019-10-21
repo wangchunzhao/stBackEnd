@@ -342,6 +342,9 @@ public class OrderService {
 		// 物料在订单上的分类MaterialGroupOrders
 		oo.setMaterialGroupOrders(constService.findMaterialGroupOrders());
 		
+		// 物料评估类 与 物料在订单上的分类映射
+		oo.setMaterialGroupMapGroupOrder(constService.findMaterialGroupMapGroupOrders());
+		
 		// 销售区域Sales Goups
 		oo.setGroups(constService.findSalesGroups());
 		
