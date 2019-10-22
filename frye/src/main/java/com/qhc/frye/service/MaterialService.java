@@ -16,11 +16,13 @@ import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.MaterialClazzRepository;
+import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.MaterialClazz;
+import com.qhc.frye.domain.MaterialPrice;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
 
 
@@ -33,6 +35,9 @@ public class MaterialService {
 	
 	@Autowired
 	private MaterialClazzRepository mcRepo;
+	
+	@Autowired
+	private MaterialInfoRepository materialInfoRepo;
 	
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
@@ -81,10 +86,8 @@ public class MaterialService {
 	 */
 	public Material getMaterialsById(String code){
 		Material m = new Material();
-		Optional<DMaterial> dmo = materialRepo.findById(code);
-		DMaterial dm = dmo.get();
-		m.setCode(dm.getCode());
-		m.setDescription(dm.getDescription());
+		Optional<MaterialPrice> dmo = materialInfoRepo.findById(code);
+		
 		
 		return m;
 	}

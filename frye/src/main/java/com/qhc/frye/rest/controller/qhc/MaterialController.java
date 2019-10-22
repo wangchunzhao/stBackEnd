@@ -87,6 +87,8 @@ public class MaterialController {
 				temp.setCode(dm.getCode());
 				temp.setDescription(dm.getDescription());
 				temp.setConfigurable(dm.isConfigurable());
+				temp.setPurchased(dm.isPurchased());
+				temp.setMaterialGroups(dm.getType());
 				ml.add(temp);
 			}
 			ms.setRows(ml);
