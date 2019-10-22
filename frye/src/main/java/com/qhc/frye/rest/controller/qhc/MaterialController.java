@@ -29,6 +29,7 @@ import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Configurable;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.CharacteristicService;
@@ -48,69 +49,68 @@ public class MaterialController {
 
 	@Autowired
 	private MaterialService materialService;
-	
+
 	@Autowired
 	private CustomerService cu;
-	
+
 	@Autowired
 	private CharacteristicService characteristicService;
-	
 
 	@ApiOperation(value = "查询物料lastUpdateDate")
-	@GetMapping(value = "material/{lastUpdateDate}")
+	@GetMapping(value = "material/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Date getLastUpdatedDate() throws Exception {
+	public String getLastUpdatedDate() throws Exception {
 		Date date = cu.getLastUpdated(Material.MATERIAL_CODE);
-		return date;
+		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
-	
+
 	@ApiOperation(value = "新增物料信息")
 	@PutMapping(value = "material", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public void postMaterial(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
-		
+
 		materialService.saveMaterials(materials);
 	}
-	
+
 	@ApiOperation(value = "查找增物料信息")
 	@PostMapping(value = "material")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<Material> findMaterialsByName(@RequestBody(required = true) Map<String,String> pars) throws Exception {
-		if(pars.containsKey("name")&&pars.containsKey("pageNo")) {
+	public PageHelper<Material> findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
+			throws Exception {
+		if (pars.containsKey("name") && pars.containsKey("pageNo")) {
 			PageHelper<Material> ms = new PageHelper();
-			PageHelper<DMaterial> dms =materialService.findMaterialsByName(pars.get("name"),Integer.parseInt(pars.get("pageNo")));
-			List<Material> ml = new ArrayList<Material>(); 
+			PageHelper<DMaterial> dms = materialService.findMaterialsByName(pars.get("name"),
+					Integer.parseInt(pars.get("pageNo")));
+			List<Material> ml = new ArrayList<Material>();
 			List<DMaterial> dml = dms.getRows();
-			for(DMaterial dm:dml) {
+			for (DMaterial dm : dml) {
 				Material temp = new Material();
 				temp.setCode(dm.getCode());
 				temp.setDescription(dm.getDescription());
 				temp.setConfigurable(dm.isConfigurable());
 				temp.setPurchased(dm.isPurchased());
-				temp.setMaterialGroups(dm.getType());
+				temp.setStandardPrice(dm.getPrice());
 				ml.add(temp);
 			}
 			ms.setRows(ml);
 			ms.setTotal(dms.getTotal());
-			return ms;	
+			return ms;
 		}
 		return null;
 	}
-	
+
 	@ApiOperation(value = "通过code查找具体增物料信息")
 	@GetMapping(value = "material/{code}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
 	public Material getMaterialById(@PathVariable(required = true) String code) throws Exception {
-		if(code.equals("null")) {
-			code =null;
+		if (code.equals("null")) {
+			code = null;
 		}
-		Material m =materialService.getMaterialsById(code);
+		Material m = materialService.getMaterialsById(code);
 		return m;
 	}
 
-
-	
 	@ApiOperation(value = "保存或者修改MaterialClazz")
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
@@ -124,6 +124,5 @@ public class MaterialController {
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
 		characteristicService.saveCharacteristicValue(chaValues);
 	}
-	
 
 }

@@ -19,15 +19,32 @@ public class Material implements Serializable{
 	
 	public final static String MATERIAL_CODE = "59870645008146f9938f7e8718031778";
 	
-	private String code;   //matnr  物料编码
-	private String description;  //maktx 物料描述
-	private boolean isConfigurable;//kzkfg 是否可配置物料
-	private boolean isPurchased;//物料属性
-	private double standPrice;//verpr  标准价格
-	private Date optTime;//laeda 
-	private String measurementUnit;//meins  计量单位
-	private String materialGroups;//matkl 物料分组
-	private String clazz;
+	private String code;//物料号,专用号
+	private String description;//物料名称，规格型号
+	private boolean isConfigurable;//是否为可配置物料
+	private boolean isPurchased;//类型
+	private String unitName;//计量单位名称
+	private double acturalPrice;//产品实卖价
+	private double transcationPrice;//转移价
+	private double acturalPricaOfOptional;//可选项实卖价
+	private double transcationPriceOfOptional;//可选项转移价
+	private double B2CPriceEstimated;//B2C评估价
+	private double B2CCostOfEstimated;//B2C评估成本
+	private double retailPrice;//市场零售价
+	private double discount;//折扣
+	private int period;//生产、采购周期
+	private Date deliveryDate;//最早交货时间
+	private Date shippDate; //要求发货时间
+	private Date produceDate;//生产开始时间
+	private Date onStoreDate;//入库时间
+	private double standardPrice;//标准价
+	
+	//need by bayern
+	private String groupCode;//物料分组
+	private Date optTime;
+	private String unitCode;//计量单位代码
+	private String clazzCode;
+	
 	public String getCode() {
 		return code;
 	}
@@ -52,39 +69,124 @@ public class Material implements Serializable{
 	public void setPurchased(boolean isPurchased) {
 		this.isPurchased = isPurchased;
 	}
-	public double getStandPrice() {
-		return standPrice;
+	public String getUnitName() {
+		return unitName;
 	}
-	public void setStandPrice(double standPrice) {
-		this.standPrice = standPrice;
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
+	public double getActuralPrice() {
+		return acturalPrice;
+	}
+	public void setActuralPrice(double acturalPrice) {
+		this.acturalPrice = acturalPrice;
+	}
+	public double getTranscationPrice() {
+		return transcationPrice;
+	}
+	public void setTranscationPrice(double transcationPrice) {
+		this.transcationPrice = transcationPrice;
+	}
+	public double getActuralPricaOfOptional() {
+		return acturalPricaOfOptional;
+	}
+	public void setActuralPricaOfOptional(double acturalPricaOfOptional) {
+		this.acturalPricaOfOptional = acturalPricaOfOptional;
+	}
+	public double getTranscationPriceOfOptional() {
+		return transcationPriceOfOptional;
+	}
+	public void setTranscationPriceOfOptional(double transcationPriceOfOptional) {
+		this.transcationPriceOfOptional = transcationPriceOfOptional;
+	}
+	public double getB2CPriceEstimated() {
+		return B2CPriceEstimated;
+	}
+	public void setB2CPriceEstimated(double b2cPriceEstimated) {
+		B2CPriceEstimated = b2cPriceEstimated;
+	}
+	public double getB2CCostOfEstimated() {
+		return B2CCostOfEstimated;
+	}
+	public void setB2CCostOfEstimated(double b2cCostOfEstimated) {
+		B2CCostOfEstimated = b2cCostOfEstimated;
+	}
+	public double getRetailPrice() {
+		return retailPrice;
+	}
+	public void setRetailPrice(double retailPrice) {
+		this.retailPrice = retailPrice;
+	}
+	
+	public double getDiscount() {
+		return discount;
+	}
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+	public int getPeriod() {
+		return period;
+	}
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	public Date getShippDate() {
+		return shippDate;
+	}
+	public void setShippDate(Date shippDate) {
+		this.shippDate = shippDate;
+	}
+	public Date getProduceDate() {
+		return produceDate;
+	}
+	public void setProduceDate(Date produceDate) {
+		this.produceDate = produceDate;
+	}
+	public Date getOnStoreDate() {
+		return onStoreDate;
+	}
+	public void setOnStoreDate(Date onStoreDate) {
+		this.onStoreDate = onStoreDate;
+	}
+	public double getStandardPrice() {
+		return standardPrice;
+	}
+	public void setStandardPrice(double standardPrice) {
+		this.standardPrice = standardPrice;
 	}
 	public Date getOptTime() {
+		if(optTime==null)
+			optTime = new Date();
 		return optTime;
 	}
 	public void setOptTime(Date optTime) {
 		this.optTime = optTime;
 	}
-	public String getMeasurementUnit() {
-		return measurementUnit;
+	public String getUnitCode() {
+		return unitCode;
 	}
-	public void setMeasurementUnit(String measurementUnit) {
-		this.measurementUnit = measurementUnit;
+	public void setUnitCode(String unitCode) {
+		this.unitCode = unitCode;
 	}
-	public String getMaterialGroups() {
-		return materialGroups;
+	public String getGroupCode() {
+		return groupCode;
 	}
-	public void setMaterialGroups(String materialGroups) {
-		this.materialGroups = materialGroups;
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
-	public String getClazz() {
-		return clazz;
+	public String getClazzCode() {
+		return clazzCode;
 	}
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	
 	
 	
 }
