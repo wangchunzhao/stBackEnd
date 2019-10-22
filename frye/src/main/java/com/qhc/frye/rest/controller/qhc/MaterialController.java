@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.DMaterial;
+import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Configurable;
@@ -123,6 +124,14 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
 		characteristicService.saveCharacteristicValue(chaValues);
+	}
+	
+	@ApiOperation(value = "保存或者修改CharacteristicValue")
+	@GetMapping(value = "material/configurations/{clazzCode}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Characteristic> findCharacteristic(@RequestBody(required = true) String clazzCode) {
+		return materialService.getCharactersByClazzCode(clazzCode);
+		
 	}
 
 }

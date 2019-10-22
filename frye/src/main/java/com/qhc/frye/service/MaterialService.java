@@ -1,7 +1,10 @@
 package com.qhc.frye.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +12,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.rest.controller.entity.Characteristic;
+import com.qhc.frye.rest.controller.entity.Configuration;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
+import com.qhc.frye.dao.CharacteristicConfigurationRepository;
 import com.qhc.frye.dao.MaterialClazzRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
+import com.qhc.frye.domain.CharacteristicConfiguration;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.domain.MaterialClazz;
@@ -47,6 +54,9 @@ public class MaterialService {
 	
 	@Autowired
 	private MaterialInfoRepository materialInfoRepo;
+	
+	@Autowired
+	private CharacteristicConfigurationRepository charaterRepo;
 	
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
@@ -126,6 +136,35 @@ public class MaterialService {
 
 		
 		return m;
+	}
+	
+	public List<Characteristic> getCharactersByClazzCode(String clazzCode){
+		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
+		List<Characteristic> chas = new ArrayList<Characteristic>();
+		Map<String,Characteristic> cs = new HashMap<String,Characteristic>();
+		for(CharacteristicConfiguration cc:ccs) {
+			if(!cs.containsKey(cc.getKeyCode())) {
+				Characteristic ch = new Characteristic();
+				ch.setCode(cc.getKeyCode());
+				ch.setName(cc.getKeyName());
+				ch.setOptional(cc.isOptional());
+				ch.setClassCode(clazzCode);
+				cs.put(cc.getKeyCode(), ch);
+				Configuration con = new Configuration();
+				con.setCode(cc.getValCode());
+				con.setName(cc.getValName());
+				ch.getConfigs().add(con);
+			}else {
+				Configuration con = new Configuration();
+				con.setCode(cc.getValCode());
+				con.setName(cc.getValName());
+				cs.get(cc.getKeyCode()).getConfigs().add(con);
+			}		
+		}
+		for(String key:cs.keySet()) {
+			chas.add(cs.get(key));
+		}
+		return chas;
 	}
 	
 	
