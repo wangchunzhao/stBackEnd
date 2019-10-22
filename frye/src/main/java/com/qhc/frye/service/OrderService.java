@@ -16,7 +16,8 @@ import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
-
+import com.qhc.frye.dao.KOrderVersionRepository;
+import com.qhc.frye.dao.KParentOrderVersionRepository;
 import com.qhc.frye.dao.OrderSupportInforRepository;
 import com.qhc.frye.dao.PaymentTermRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
@@ -33,6 +34,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.KOrderVersion;
+import com.qhc.frye.domain.KParentOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
 import com.qhc.frye.domain.PaymentTerm;
 import com.qhc.frye.domain.SapSalesGroup;
@@ -42,6 +44,7 @@ import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
+import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.rest.controller.entity.SapOrder;
@@ -54,7 +57,7 @@ public class OrderService {
 	private SalesTypeRepository salesTypeRepo;
 
 	@Autowired
-	private SalesorderVersionRepository versionRepo;
+	private KOrderVersionRepository versionRepo;
 
 	@Autowired
 	private DOrderRepository dOrderRepository;
@@ -88,6 +91,9 @@ public class OrderService {
 
 	@Autowired
 	private PaymentTermRepository paymentRepo;
+
+	@Autowired
+	private KParentOrderVersionRepository orderParentVersionRepository;
 	
 	@Autowired
 	private ConstantService constService;
@@ -133,7 +139,7 @@ public class OrderService {
 			ori.setOrderId(sDorder.getId());
 		supportRepo.saveAndFlush(ori);
 		KOrderVersion over = order.getOrderVersion();
-		over.setkOrdersId(sDorder.getId());
+		over.setOrderId(sDorder.getId());
 		KOrderVersion kov = versionRepo.saveAndFlush(over);
 	}
 
@@ -354,6 +360,9 @@ public class OrderService {
 		// 运输方式ShippingTypes
 		oo.setShippingTypes(constService.findShippingTypes());
 		
+		// 收货方式ReceiveTerms
+		oo.setReceiveTerms(constService.findReceiveTerms());
+		
 		return oo;
 	}
 	
@@ -389,7 +398,30 @@ public class OrderService {
 		
 	}
 	
-	
+	/**
+	   *  查询订单版本历史
+	 * @param orderId
+	 * @return
+	 */
+	public List<OrderVersion> findOrderVersionsByOrderId(String orderId) {
+		List<KOrderVersion> versions = versionRepo.findByOrderIdOrderById(orderId);
+		List<OrderVersion> list = new ArrayList<>(versions.size());
+		for (KOrderVersion version : versions) {
+			String versionId = version.getId();
+			KParentOrderVersion parentVersion = orderParentVersionRepository.findByOrderVersionId(versionId);
+			
+			OrderVersion v = new OrderVersion();
+			list.add(v);
+			v.setCreateTime(version.getCreateTime());
+			v.setId(version.getId());
+			v.setkOrderInfoId(parentVersion.getOrderInfoId());
+			v.setkOrdersId(version.getOrderId());
+			v.setOptTime(parentVersion.getOptTime());
+			v.setParentVersionId(parentVersion.getParentOrderVersionId());
+		}
+		
+		return list;
+	}
 	
 	
 }
