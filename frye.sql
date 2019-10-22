@@ -751,7 +751,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `office_code` CHAR(4) NOT NULL COMMENT '销售员所属区域',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `order_type_UNIQUE` (`order_type_code` ASC) VISIBLE)
+  UNIQUE INDEX `sequence_number_UNIQUE` (`sequence_number` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin
@@ -1402,6 +1402,11 @@ USE `bohemian` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id` INT, `user_mail` INT, `user_identity` INT, `user_isActive` INT, `role_id` INT, `role_name` INT, `attached_code` INT, `attached_name` INT, `operation_id` INT, `operation_name` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_material_info_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT);
+
+-- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
@@ -1452,6 +1457,37 @@ CREATE  OR REPLACE VIEW user_operation_view AS
         ars.role_id = rxo.id
             AND ars.user_id = u.id
     ORDER BY user_id , role_id , operation_id ASC;
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_material_info_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_material_info_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_material_info_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW `k_material_info_view` AS
+    SELECT 
+        t.code AS price_type_code,
+        t.name AS price_type_name,
+        p.price,
+        m.code,
+        m.description,
+        m.is_configurable,
+        m.is_purchased,
+        m.stand_price,
+        m.sap_unit_of_measurement_code,
+        unit.name AS unit_name,
+        m.sap_material_groups_code,
+        g.name AS group_name
+    FROM
+        sap_materials m
+            LEFT JOIN
+        sap_material_groups g ON m.sap_material_groups_code = g.code
+            LEFT JOIN
+        sap_unit_of_measurement unit ON unit.code = m.sap_unit_of_measurement_code
+            RIGHT JOIN
+        sap_materials_price p ON p.sap_materials_code = m.code
+            LEFT JOIN
+        sap_price_type t ON t.code = p.sap_price_type_code;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1541,10 +1577,11 @@ COMMIT;
 START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T101', '机柜');
-INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T102', '冷风机');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T102', '机组');
 INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T103', '冷凝器');
-INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T104', '散件');
-INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T105', '其它');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T104', '冷风机');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T105', '散件');
+INSERT INTO `bohemian`.`b_material_group_order` (`code`, `name`) VALUES ('T106', '其它');
 
 COMMIT;
 
