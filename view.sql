@@ -203,5 +203,54 @@ AND a.k_orders_id = d.id
 AND d.order_type_code IN ('05', '06');
 
 
+-- 订单版本
+DROP VIEW
+IF EXISTS `bohemian`.`k_order_version_view`;
+
+CREATE VIEW k_order_version_view AS 
+SELECT o.sequence_number, 
+	   v.k_orders_id as order_id
+       v.id as version_id, 
+	   v.version, 
+	   v.status, 
+	   v.create_time, 
+	   pv.opt_time, 
+	   pv.k_order_version_id_parent as parent_version_id, 
+	   pv.k_order_info_id as order_info_id
+FROM k_orders o 
+left join k_order_version v on v.k_orders_id = o.id
+left join k_parent_order_version pv on pv.k_order_version_id = v.id;
+
+
+-- 订单
+DROP VIEW
+IF EXISTS `bohemian`.`k_order_view`;
+
+CREATE VIEW k_order_view AS 
+SELECT o.sequence_number, 
+       o.order_type_code,
+	   o.create_time,
+	   o.owner_domain_id,
+	   o.owner_name,
+	   o.sales_tel,
+	   o.contractor_code,
+	   o.contractor_name,
+	   o.contractor_class_code,
+	   o.contractor_class_name,
+	   -- 销售员所属区域
+	   o.office_code as sales_office_code,
+	   v.k_orders_id as order_id,
+       v.id as version_id, 
+	   v.version, 
+	   v.status, 
+	   v.create_time as version_create_time, 
+	   pv.opt_time, 
+	   pv.k_order_version_id_parent as parent_version_id, 
+	   pv.k_order_info_id as order_info_id,
+	   d.*
+FROM k_orders o 
+left join k_order_version v on v.k_orders_id = o.id
+left join k_parent_order_version pv on pv.k_order_version_id = v.id
+left join k_order_info d on d.id = pv.k_order_info_id;
 
 
