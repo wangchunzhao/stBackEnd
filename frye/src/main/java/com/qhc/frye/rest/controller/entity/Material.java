@@ -22,7 +22,7 @@ public class Material implements Serializable{
 	private String code;//物料号,专用号
 	private String description;//物料名称，规格型号
 	private boolean isConfigurable;//是否为可配置物料
-	private boolean isPurchased;//类型
+	private boolean isPurchased;//属性
 	private String unitName;//计量单位名称
 	private double acturalPrice;//产品实卖价
 	private double transcationPrice;//转移价
@@ -34,13 +34,14 @@ public class Material implements Serializable{
 	private double discount;//折扣
 	private int period;//生产、采购周期
 	private Date deliveryDate;//最早交货时间
-	private Date shippDate; //要求发货时间
+
 	private Date produceDate;//生产开始时间
 	private Date onStoreDate;//入库时间
 	private double standardPrice;//标准价
-	
-	//need by bayern
 	private String groupCode;//物料分组
+	private String groupName;//类型名称
+
+	//need by bayern
 	private Date optTime;
 	private String unitCode;//计量单位代码
 	private String clazzCode;
@@ -136,12 +137,7 @@ public class Material implements Serializable{
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-	public Date getShippDate() {
-		return shippDate;
-	}
-	public void setShippDate(Date shippDate) {
-		this.shippDate = shippDate;
-	}
+
 	public Date getProduceDate() {
 		return produceDate;
 	}
