@@ -550,6 +550,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `is_purchased` TINYINT(1) NOT NULL,
   `stand_price` DECIMAL(13,2) NOT NULL COMMENT '标准价格moving_average_price',
   `opt_time` DATETIME NOT NULL,
+  `material_size` DOUBLE(13,3) NULL COMMENT '物料体积',
   `sap_unit_of_measurement_code` VARCHAR(3) NOT NULL,
   `sap_material_groups_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`code`),
@@ -620,6 +621,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) INVISIBLE,
   INDEX `fk_sap_materials_price_sap_price_type1_idx` (`sap_price_type_code` ASC) VISIBLE,
   INDEX `fk_sap_materials_price_sap_materials1_idx` (`sap_materials_code` ASC) VISIBLE,
+  UNIQUE INDEX `sap_price_type_code_UNIQUE` (`sap_price_type_code` ASC, `sap_materials_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_materials_price_sap_materials1`
     FOREIGN KEY (`sap_materials_code`)
     REFERENCES `bohemian`.`sap_materials` (`code`),
@@ -1394,6 +1396,30 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_configure_material` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_bidding_plan`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_bidding_plan` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_bidding_plan` (
+  `id` INT UNSIGNED NOT NULL,
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NULL,
+  `amount` DECIMAL(13,2) NULL,
+  `pay_date` DATE NULL,
+  `reason` TEXT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_k_bidding_plan_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_bidding_plan_k_order_info1`
+    FOREIGN KEY (`k_order_info_id`)
+    REFERENCES `bohemian`.`k_order_info` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `bohemian` ;
 
 -- -----------------------------------------------------
@@ -1405,6 +1431,11 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id`
 -- Placeholder table for view `bohemian`.`k_material_info_view`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_class_characteristic_value_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1488,6 +1519,20 @@ CREATE  OR REPLACE VIEW `k_material_info_view` AS
         sap_materials_price p ON p.sap_materials_code = m.code
             LEFT JOIN
         sap_price_type t ON t.code = p.sap_price_type_code;
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_class_characteristic_value_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_class_characteristic_value_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_class_characteristic_value_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW `k_class_characteristic_value_view` AS
+SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name
+FROM sap_clazz_and_character c
+left join sap_characteristic k 
+	on c.sap_characteristic_code = k.code 
+left join sap_characteristic_value v
+	on v.sap_characteristic_code = k.code;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
