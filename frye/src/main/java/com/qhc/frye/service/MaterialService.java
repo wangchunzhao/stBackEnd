@@ -30,6 +30,16 @@ import com.qhc.frye.domain.identity.MaterialClazzIdentity;
 @Service
 public class MaterialService {
 	
+	public final String MATERIAL_PRICE_TYPE_RETAIL_PRICE = "ZH01";
+	public final String MATERIAL_PRICE_TYPE_ANNUAL_PRICE = "ZH02";
+	public final String MATERIAL_PRICE_TYPE_DISCOUNT_PRICE = "ZH03";
+	public final String MATERIAL_PRICE_TYPE_SALE_PRICE = "ZH05";
+	public final String MATERIAL_PRICE_TYPE_TRANSACTION_PRICE = "ZH06";
+	public final String MATERIAL_PRICE_TYPE_TRANSACTION_PERCENTAGE_PRICE = "ZH07";
+	public final String MATERIAL_PRICE_TYPE_TRANSFER_PRICE = "ZH10";
+	public final String MATERIAL_PRICE_TYPE_OUTSOURCING_PRICE = "ZH11";
+	public final String MATERIAL_PRICE_TYPE_INTERNAL_PRICE = "ZHCS";
+	
 	@Autowired
 	private MaterialRepository materialRepo;
 	
@@ -48,15 +58,15 @@ public class MaterialService {
 			dm.setDescription(ma.getDescription());
 			dm.setConfigurable(ma.isConfigurable());
 			dm.setPurchased(ma.isPurchased());
-			dm.setPrice(ma.getStandPrice());
+			dm.setPrice(ma.getStandardPrice());
 			dm.setOptTime(ma.getOptTime());
-			dm.setUnit(ma.getMeasurementUnit());
-			dm.setType(ma.getMaterialGroups());
+			dm.setUnit(ma.getUnitCode());
+			dm.setType(ma.getGroupCode());
 			mset.add(dm);
-			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {
+			if(ma.getClazzCode()!=null && !ma.getClazzCode().isEmpty()) {
 				MaterialClazz mc = new MaterialClazz();
 				MaterialClazzIdentity mci = new MaterialClazzIdentity();
-				mci.setClazzCode(ma.getClazz());
+				mci.setClazzCode(ma.getClazzCode());
 				mci.setMaterialCode(ma.getCode());
 				mc.setMci(mci);
 				mcset.add(mc);
@@ -86,8 +96,28 @@ public class MaterialService {
 	 */
 	public Material getMaterialsById(String code){
 		Material m = new Material();
-		Optional<MaterialPrice> dmo = materialInfoRepo.findById(code);
-		
+		List<MaterialPrice> dmo = materialInfoRepo.findByMaterialId(code);
+		for(MaterialPrice mp:dmo) {
+			m.setCode(mp.getCode());
+			m.setDescription(mp.getDescription());
+			m.setConfigurable(mp.isConfigurable());
+			m.setPurchased(mp.isPurchased());
+			m.setStandardPrice(mp.getStandPrice());
+			m.setGroupCode(mp.getGroupCode());
+			//
+			switch(mp.getPriceTypeCode()) {
+				case MATERIAL_PRICE_TYPE_RETAIL_PRICE:
+					m.setRetailPrice(mp.getPrice());
+					break;
+				case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
+					m.setActuralPrice(mp.getPrice());
+					break;
+				case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
+					m.setTranscationPrice(mp.getPrice());
+					break;
+
+			}
+		}
 		
 		return m;
 	}

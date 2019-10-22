@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "k_material_info_view")
 public class MaterialPrice implements Serializable {
 	
-	@Id // 添加一个空的id标识，因为jpa在映射实体是需要一个id，这个必须
+	@Id 
 	@Column(name = "code",columnDefinition ="CHAR")
 	private String code;
 	
