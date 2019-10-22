@@ -16,13 +16,12 @@ import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.MaterialClazzRepository;
-import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.DMaterial;
+import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.domain.MaterialClazz;
-import com.qhc.frye.domain.MaterialPrice;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
 
 
@@ -34,14 +33,17 @@ public class MaterialService {
 	private MaterialRepository materialRepo;
 	
 	@Autowired
-	private MaterialClazzRepository mcRepo;
+	private SapLastUpdatedRepository lastUpdatedRepo;
 	
 	@Autowired
-	private MaterialInfoRepository materialInfoRepo;
+	private MaterialClazzRepository mcRepo;
 	
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
 		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(Material.MATERIAL_CODE);
+		lastUpdated.setName("material");
 		for(Material ma: materials){
 			DMaterial dm = new DMaterial();
 			dm.setCode(ma.getCode());
@@ -53,6 +55,7 @@ public class MaterialService {
 			dm.setUnit(ma.getMeasurementUnit());
 			dm.setType(ma.getMaterialGroups());
 			mset.add(dm);
+			//
 			if(ma.getClazz()!=null && !ma.getClazz().isEmpty()) {
 				MaterialClazz mc = new MaterialClazz();
 				MaterialClazzIdentity mci = new MaterialClazzIdentity();
@@ -61,9 +64,11 @@ public class MaterialService {
 				mc.setMci(mci);
 				mcset.add(mc);
 			}
+			lastUpdated.setLastUpdate(ma.getOptTime());
 		}
 		materialRepo.saveAll(mset);
 		mcRepo.saveAll(mcset);
+		lastUpdatedRepo.save(lastUpdated);
 	}
 	/**
 	 * 
@@ -86,9 +91,13 @@ public class MaterialService {
 	 */
 	public Material getMaterialsById(String code){
 		Material m = new Material();
-		Optional<MaterialPrice> dmo = materialInfoRepo.findById(code);
-		
+		Optional<DMaterial> dmo = materialRepo.findById(code);
+		DMaterial dm = dmo.get();
+		m.setCode(dm.getCode());
+		m.setDescription(dm.getDescription());
 		
 		return m;
 	}
+	
+	
 }

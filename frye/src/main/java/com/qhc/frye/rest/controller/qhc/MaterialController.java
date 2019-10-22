@@ -29,6 +29,7 @@ import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.Configurable;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.CharacteristicService;
@@ -57,12 +58,12 @@ public class MaterialController {
 	
 
 	@ApiOperation(value = "查询物料lastUpdateDate")
-	@GetMapping(value = "material/{lastUpdateDate}")
+	@GetMapping(value = "material/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Date getLastUpdatedDate() throws Exception {
+	public String getLastUpdatedDate() throws Exception {
 		Date date = cu.getLastUpdated(Material.MATERIAL_CODE);
-		return date;
+		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
 	
 	@ApiOperation(value = "新增物料信息")
