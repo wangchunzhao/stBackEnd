@@ -39,7 +39,7 @@ public class KOrderVersion {
 
 	@NotNull
 	@Column(name = "k_orders_id",columnDefinition="char",length=32)
-	private String kOrdersId;
+	private String orderId;
 	
 	public String getId() {
 		return id;
@@ -73,12 +73,12 @@ public class KOrderVersion {
 		this.createTime = createTime;
 	}
 
-	public String getkOrdersId() {
-		return kOrdersId;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setkOrdersId(String kOrdersId) {
-		this.kOrdersId = kOrdersId;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }

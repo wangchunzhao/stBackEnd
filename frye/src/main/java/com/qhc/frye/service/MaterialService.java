@@ -1,11 +1,8 @@
 package com.qhc.frye.service;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.locks.LockSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,13 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
-import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.MaterialClazzRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
-import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.domain.DMaterial;
+import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.domain.MaterialClazz;
 import com.qhc.frye.domain.MaterialPrice;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
@@ -44,6 +40,9 @@ public class MaterialService {
 	private MaterialRepository materialRepo;
 	
 	@Autowired
+	private SapLastUpdatedRepository lastUpdatedRepo;
+	
+	@Autowired
 	private MaterialClazzRepository mcRepo;
 	
 	@Autowired
@@ -52,6 +51,9 @@ public class MaterialService {
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
 		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(Material.MATERIAL_CODE);
+		lastUpdated.setName("material");
 		for(Material ma: materials){
 			DMaterial dm = new DMaterial();
 			dm.setCode(ma.getCode());
@@ -63,6 +65,7 @@ public class MaterialService {
 			dm.setUnit(ma.getUnitCode());
 			dm.setType(ma.getGroupCode());
 			mset.add(dm);
+
 			if(ma.getClazzCode()!=null && !ma.getClazzCode().isEmpty()) {
 				MaterialClazz mc = new MaterialClazz();
 				MaterialClazzIdentity mci = new MaterialClazzIdentity();
@@ -71,9 +74,11 @@ public class MaterialService {
 				mc.setMci(mci);
 				mcset.add(mc);
 			}
+			lastUpdated.setLastUpdate(ma.getOptTime());
 		}
 		materialRepo.saveAll(mset);
 		mcRepo.saveAll(mcset);
+		lastUpdatedRepo.save(lastUpdated);
 	}
 	/**
 	 * 
@@ -118,7 +123,10 @@ public class MaterialService {
 
 			}
 		}
+
 		
 		return m;
 	}
+	
+	
 }

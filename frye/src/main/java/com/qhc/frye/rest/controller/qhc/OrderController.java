@@ -31,6 +31,7 @@ import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
+import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.BAreaService;
@@ -119,22 +120,53 @@ public class OrderController {
 	public OrderOption getOption() throws Exception {
 
 		return orderService.getOrderOption();
-
+		
 	}
+//<<<<<<< HEAD
+//
+//	}
+//
+//	/**
+//	 * 根据流水号获取销售订单详情并同步SAP
+//	 * 
+//	 * @param sequenceNumber
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
+//	@GetMapping(value = "order/creationSap/{sequenceNumber}")
+//	@ResponseStatus(HttpStatus.OK)
+//	public String orderCreationForSAP(@PathVariable String sequenceNumber) throws Exception {
+//
+//		return orderService.orderCreationForSAP(sequenceNumber);
+//	}
+//=======
+		    
+    /**
+     * 根据流水号获取销售订单详情并同步SAP
+     * @param sequenceNumber
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value="根据sequenceNumber组装订单并同步SAP", notes="根据sequenceNumber组装订单并同步SAP")
+    @GetMapping(value = "order/creationSap/{sequenceNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public String orderCreationForSAP(@PathVariable String sequenceNumber) throws Exception {	
+    	return orderService.orderCreationForSAP(sequenceNumber);
+    }
 
-	/**
-	 * 根据流水号获取销售订单详情并同步SAP
-	 * 
-	 * @param sequenceNumber
-	 * @return
-	 * @throws Exception
-	 */
-	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
-	@GetMapping(value = "order/creationSap/{sequenceNumber}")
-	@ResponseStatus(HttpStatus.OK)
-	public String orderCreationForSAP(@PathVariable String sequenceNumber) throws Exception {
-
-		return orderService.orderCreationForSAP(sequenceNumber);
-	}
+    
+    /**
+     * 查询订单版本历史
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value="根据orderId查询订单版本历史", notes="根据orderId查询订单版本历史")
+    @GetMapping(value = "order/{orderId}/version")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderVersion> orderVersions(@PathVariable String orderId) throws Exception {	
+    	return orderService.findOrderVersionsByOrderId(orderId);
+    }
 
 }
