@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.DCustomer;
 import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.ConstantService;
 import com.qhc.frye.service.CustomerService;
@@ -41,15 +44,15 @@ public class CustomerController {
 	
 	@Autowired
 	private ConstantService constService;
-/*	
+	
 	@ApiOperation(value = "获取客户lastUpdateDate")
-	@PutMapping(value = "customer/lastUpdateDate")
+	@GetMapping(value = "customer/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Date getLastUpdatedDate() throws Exception {
+	public String getLastUpdatedDate() throws Exception {
 		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
-		return date;
-	}*/
+		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
+	}
 	
 	@ApiOperation(value = "新增客户信息")
 	@PostMapping(value = "customer")

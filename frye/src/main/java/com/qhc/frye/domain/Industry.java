@@ -23,6 +23,10 @@ public class Industry {
 	@Column(name = "name",columnDefinition="TEXT")
 	private String name;
 	
+	@NotNull
+	@Column(name = "is_reserved",columnDefinition="BIT")
+	private boolean isReserved;
+	
 	public String getCode() {
 		return code;
 	}
@@ -36,6 +40,12 @@ public class Industry {
 		this.name = name;
 	}
 	
+	public boolean isReserved() {
+		return isReserved;
+	}
+	public void setReserved(boolean isReserved) {
+		this.isReserved = isReserved;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if(o.getClass().equals(this.getClass()) ) {

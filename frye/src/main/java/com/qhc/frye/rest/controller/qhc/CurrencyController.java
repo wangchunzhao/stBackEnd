@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.rest.controller.qhc;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Incoterm;
+import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.Price;
 import com.qhc.frye.service.CurrencyService;
 import com.qhc.frye.service.CustomerService;
@@ -38,7 +42,24 @@ public class CurrencyController {
 	@Autowired
 	private CurrencyService currencyService;
 	
-
+	@ApiOperation(value = "查询价格lastUpdateDate")
+	@GetMapping(value = "currency/lastUpdateDate")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public String getLastUpdatedDate() throws Exception {
+		Date date = currencyService.getLastUpdated(Price.PRICE_CODE);
+		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
+	}
+	
+	@ApiOperation(value = "查询价格lastUpdateDate")
+	@GetMapping(value = "currency/priceALastUpdateDate")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public String getALastUpdatedDate() throws Exception {
+		Date date = currencyService.getLastUpdated(Price.PRICEA_CODE);
+		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
+	}
+	
 	@ApiOperation(value = "保存或修改币种",notes="保存或修改币种")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
@@ -76,6 +97,13 @@ public class CurrencyController {
 	@ResponseStatus(HttpStatus.OK)
 	public void putPrice(@RequestBody(required = true) @Valid List<Price> price) {
 		currencyService.savePrice(price);
+	}
+	
+	@ApiOperation(value = "新增价格(年采价)",notes="新增价格(年采价)")
+	@PutMapping(value = "currency/priceA")
+	@ResponseStatus(HttpStatus.OK)
+	public void putPriceA(@RequestBody(required = true) @Valid List<Price> price) {
+		currencyService.savePriceA(price);
 	}
 
 }

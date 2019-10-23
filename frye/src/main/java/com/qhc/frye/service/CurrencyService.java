@@ -1,10 +1,12 @@
 package com.qhc.frye.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,17 @@ import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.IncotermRepository;
 import com.qhc.frye.dao.PriceRepository;
 import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
+import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DPrice;
 import com.qhc.frye.domain.Industry;
+import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.domain.SapCurrencySaleType;
 import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Incoterm;
+import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.Price;
 
 /**
@@ -30,6 +36,9 @@ import com.qhc.frye.rest.controller.entity.Price;
  */
 @Service
 public class CurrencyService {
+	
+	public final static long DEFAULT_DATE = 1008005271098L;
+	
 	@Autowired
 	private CurrencyRepository currencyRepo;
 	
@@ -40,7 +49,13 @@ public class CurrencyService {
 	private IncotermRepository incotermRepo;
 	
 	@Autowired
+	private SapLastUpdatedRepository lastUpdatedRepo;
+	
+	@Autowired
 	private PriceRepository priceRepo;
+	
+	@Autowired
+	private SapLastUpdatedRepository lastUpdate;
 	/**
 	 * 
 	 * @param currency
@@ -107,13 +122,51 @@ public class CurrencyService {
 	
 	public void savePrice(List<Price> price) {
 		Set<DPrice> dps = new HashSet<DPrice>();
+		//
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(Price.PRICE_CODE);
+		lastUpdated.setName("price");
+		//
 		for(Price pri:price) {
 			DPrice temp = new DPrice();
 			temp.setPrice(pri.getPrice());
-			temp.setType(pri.getTypeCode());
+			temp.setType(pri.getType());
 			temp.setMaterialCode(pri.getMaterialCode());
+			temp.setIndustryCode(pri.getIndustryCode());
 			dps.add(temp);
+			lastUpdated.setLastUpdate(DateUtil.convert2Date(pri.getLastDate(), "yyyyMMddhhmmss"));
 		}
 		priceRepo.saveAll(dps);
+		lastUpdatedRepo.save(lastUpdated);
+	}
+	
+	public void savePriceA(List<Price> price) {
+		Set<DPrice> dps = new HashSet<DPrice>();
+		//
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(Price.PRICEA_CODE);
+		lastUpdated.setName("priceA");
+		//
+		for(Price pri:price) {
+			DPrice temp = new DPrice();
+			temp.setPrice(pri.getPrice());
+			temp.setType(pri.getType());
+			temp.setMaterialCode(pri.getMaterialCode());
+			temp.setIndustryCode(pri.getIndustryCode());
+			dps.add(temp);
+			lastUpdated.setLastUpdate(DateUtil.convert2Date(pri.getLastDate(), "yyyyMMddHHmmss"));
+		}
+		priceRepo.saveAll(dps);
+		lastUpdatedRepo.save(lastUpdated);
+	}
+	
+	public Date getLastUpdated(String code) {
+		Optional<LastUpdated> lu = lastUpdate.findById(code);
+		if(lu.isPresent()) {
+			return lu.get().getLastUpdate();
+		}
+		Date d = new Date(DEFAULT_DATE);
+
+		return d;
 	}
 }

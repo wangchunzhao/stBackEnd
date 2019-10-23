@@ -34,6 +34,10 @@ public class DPrice {
 	@Column(name="sap_materials_code",length=18)
 	private String materialCode;
 	
+	@NotNull      
+	@Column(name="sap_industry_code",length=4)
+	private String industryCode;
+	
 	
 	public double getPrice() {
 		return price;
@@ -52,6 +56,12 @@ public class DPrice {
 	}
 	public void setMaterialCode(String materialCode) {
 		this.materialCode = materialCode;
+	}
+	public String getIndustryCode() {
+		return industryCode;
+	}
+	public void setIndustryCode(String industryCode) {
+		this.industryCode = industryCode;
 	}
 	
 	

@@ -132,6 +132,8 @@ public class Customer implements InterEntityToDao,Serializable {
 			Industry indu = new Industry();
 			indu.setCode(this.getAffiliationCode());
 			indu.setName(this.getAffiliationName());
+			//sap同步的数据设置默认值
+			indu.setReserved(false);
 			objs.add(indu);
 			//
 			CustomerAffiliation ca= new CustomerAffiliation();
