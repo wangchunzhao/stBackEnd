@@ -444,6 +444,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_industry` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry` (
   `code` VARCHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
+  `is_reserved` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
@@ -613,21 +614,28 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_materials_price` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials_price` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `price` DECIMAL(13,2) NOT NULL,
   `sap_price_type_code` CHAR(4) NOT NULL,
   `sap_materials_code` VARCHAR(18) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) INVISIBLE,
-  INDEX `fk_sap_materials_price_sap_price_type1_idx` (`sap_price_type_code` ASC) VISIBLE,
+  `sap_industry_code` VARCHAR(4) NOT NULL,
+  PRIMARY KEY (`sap_price_type_code`, `sap_materials_code`, `sap_industry_code`),
   INDEX `fk_sap_materials_price_sap_materials1_idx` (`sap_materials_code` ASC) VISIBLE,
-  UNIQUE INDEX `sap_price_type_code_UNIQUE` (`sap_price_type_code` ASC, `sap_materials_code` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_materials_price_sap_materials1`
-    FOREIGN KEY (`sap_materials_code`)
-    REFERENCES `bohemian`.`sap_materials` (`code`),
+  INDEX `fk_sap_materials_price_sap_industry1_idx` (`sap_industry_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_materials_price_sap_price_type1`
     FOREIGN KEY (`sap_price_type_code`)
-    REFERENCES `bohemian`.`sap_price_type` (`code`))
+    REFERENCES `bohemian`.`sap_price_type` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_materials_price_sap_materials1`
+    FOREIGN KEY (`sap_materials_code`)
+    REFERENCES `bohemian`.`sap_materials` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_materials_price_sap_industry1`
+    FOREIGN KEY (`sap_industry_code`)
+    REFERENCES `bohemian`.`sap_industry` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -987,11 +995,11 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `material_name` TEXT NOT NULL COMMENT '物料名称',
   `is_virtual` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0:由销售录入的行项目\n1: 非销售部门录入的行项目',
   `is_purchased` TINYINT(1) NOT NULL COMMENT '物料属性：1. 采购 0：生产',
-  `quantity` INT NULL COMMENT '数量',
+  `quantity` DOUBLE(13,2) NULL COMMENT '数量',
   `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
   `sale_amount` DECIMAL(13,2) NULL COMMENT '产品实卖金额',
   `transfter_price` DECIMAL(13,2) NULL COMMENT '产品转移价',
-  `standard_price` DECIMAL(13,2) NOT NULL COMMENT '移动平均价，即成本价格',
+  `standard_price` DECIMAL(13,2) NULL COMMENT '移动平均价，即成本价格',
   `b2c_estimation_amount` DECIMAL(13,2) NULL COMMENT 'bc2评估价成本',
   `b2c_estimation_cost` DECIMAL(13,2) NULL COMMENT 'bc2预估成本',
   `b2c_comments` TEXT NULL COMMENT 'B2C备注',
@@ -1157,6 +1165,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `b2c_code` VARCHAR(45) NOT NULL,
   `cost` DECIMAL(13,2) NOT NULL COMMENT 'B2C成本',
   `opt_time` DATETIME NOT NULL COMMENT '最后修改时间',
   `k_item_details_id` CHAR(32) NOT NULL,
@@ -1354,29 +1363,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`sap_industry_price`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_industry_price` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_industry_price` (
-  `sap_industry_code` VARCHAR(4) NOT NULL,
-  `sap_materials_price_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`sap_industry_code`, `sap_materials_price_id`),
-  INDEX `fk_sap_industry_price_sap_materials_price1_idx` (`sap_materials_price_id` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_industry_price_sap_industry1`
-    FOREIGN KEY (`sap_industry_code`)
-    REFERENCES `bohemian`.`sap_industry` (`code`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_sap_industry_price_sap_materials_price1`
-    FOREIGN KEY (`sap_materials_price_id`)
-    REFERENCES `bohemian`.`sap_materials_price` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `bohemian`.`k_configure_material`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_configure_material` ;
@@ -1420,6 +1406,26 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_bidding_plan` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_material_default_characteristic`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_material_default_characteristic` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_default_characteristic` (
+  `id` INT NOT NULL,
+  `material_code` VARCHAR(18) NOT NULL,
+  `sap_characteristic_value_code` VARCHAR(30) NOT NULL,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  INDEX `fk_sap_material_default_characteristic_sap_characteristic_v_idx` (`sap_characteristic_value_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_material_default_characteristic_sap_characteristic_val1`
+    FOREIGN KEY (`sap_characteristic_value_code`)
+    REFERENCES `bohemian`.`sap_characteristic_value` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `bohemian` ;
 
 -- -----------------------------------------------------
@@ -1433,9 +1439,9 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id`
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
+-- Placeholder table for view `bohemian`.`k_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1521,12 +1527,12 @@ CREATE  OR REPLACE VIEW `k_material_info_view` AS
         sap_price_type t ON t.code = p.sap_price_type_code;
 
 -- -----------------------------------------------------
--- View `bohemian`.`sap_class_characteristic_value_view`
+-- View `bohemian`.`k_class_characteristic_value_view`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
-DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
+DROP TABLE IF EXISTS `bohemian`.`k_class_characteristic_value_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_class_characteristic_value_view` ;
 USE `bohemian`;
-CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
+CREATE  OR REPLACE VIEW `k_class_characteristic_value_view` AS
 SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name
 FROM sap_clazz_and_character c
 left join sap_characteristic k 
@@ -1586,7 +1592,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_industry` (`code`, `name`) VALUES ('1', '大润发');
+INSERT INTO `bohemian`.`sap_industry` (`code`, `name`, `is_reserved`) VALUES ('unkn', 'unknow', 1);
 
 COMMIT;
 
@@ -1685,6 +1691,7 @@ INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH07', '转移
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH10', '运费预估');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH11', '服务外包预估');
 INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZHCS', '内部价格');
+INSERT INTO `bohemian`.`sap_price_type` (`code`, `name`) VALUES ('ZH08', '成本项目价');
 
 COMMIT;
 
