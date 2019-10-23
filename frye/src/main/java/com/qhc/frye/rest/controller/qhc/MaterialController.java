@@ -12,14 +12,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +25,6 @@ import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
-import com.qhc.frye.rest.controller.entity.Configurable;
-import com.qhc.frye.rest.controller.entity.Customer;
 import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
@@ -47,6 +42,9 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @Api(value = "Material Management in Frye", description = "物料管理")
 public class MaterialController {
+	
+	public final static String MATERIAL_CLAZZ_CODE ="class_code";
+	public final static String MATERIAL_BOM_CODE ="bom_code";
 
 	@Autowired
 	private MaterialService materialService;
@@ -126,12 +124,24 @@ public class MaterialController {
 		characteristicService.saveCharacteristicValue(chaValues);
 	}
 	
-	@ApiOperation(value = "保存或者修改CharacteristicValue")
+	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表")
 	@GetMapping(value = "material/configurations/{clazzCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Characteristic> findCharacteristic(@RequestBody(required = true) String clazzCode) {
 		return materialService.getCharactersByClazzCode(clazzCode);
 		
 	}
+	
+	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
+	@PostMapping(value = "material/configuration/{clazzCode}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Object> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
+		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE) && pars.containsKey(MATERIAL_CLAZZ_CODE)) {
+			
+		}
+		return null;
+		
+	}
+
 
 }
