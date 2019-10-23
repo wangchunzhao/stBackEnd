@@ -4,6 +4,7 @@
 package com.qhc.frye.service;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +70,26 @@ public class BayernService<T> {
 						clientResponse -> Mono.error(new ExternalServerInternalException()))
 				.bodyToMono(String.class);
 		response.block();
+	}
+
+	/**
+	 * 
+	 * @param path remote url path in bayern
+	 * @param pars post data
+	 * @param T returned object type
+	 * @return returned object
+	 */
+	public T postForm(String path, Map<String,String> pars, Class T) {
+		String url = config.getFryeURL() + path;
+		
+		@SuppressWarnings("unchecked")
+		Mono<T> resp = WebClient.create().post().uri(url).contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(pars).retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new URLNotFoundException()))
+				.onStatus(HttpStatus::is5xxServerError,
+						clientResponse -> Mono.error(new ExternalServerInternalException()))
+				.bodyToMono(T);
+		return resp.block();
 	}
 
 	
