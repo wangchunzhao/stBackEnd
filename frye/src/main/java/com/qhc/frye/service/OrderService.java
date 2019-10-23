@@ -2,6 +2,7 @@ package com.qhc.frye.service;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.ItemDetailRepository;
+import com.qhc.frye.dao.KBiddingPlanRepository;
 import com.qhc.frye.dao.KCharacteristicsRepository;
 import com.qhc.frye.dao.KOrderVersionRepository;
 import com.qhc.frye.dao.KOrderVersionViewRepository;
@@ -43,6 +44,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
+import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.KOrderVersionView;
@@ -125,6 +127,9 @@ public class OrderService {
 	
 	@Autowired
 	private KCharacteristicsRepository characteristicsRepository;
+	
+	@Autowired
+	private KBiddingPlanRepository biddingPlanRepository;
 	
 	@Autowired
 	private ConstantService constService;
@@ -426,12 +431,18 @@ public class OrderService {
 //	 */
 	private SapOrder assembleOrderForSAP(String sequenceNumber) {
 		List<KOrderVersionView> verions = orderVersionViewRepository.findBySequenceNumberOrderByCreateTime(sequenceNumber);
+		
+		String orderId = null;
 		String orderInfoId = null;
+		String orderVersionId = null;
+		
 		for (KOrderVersionView kOrderVersionView : verions) {
+			orderId = kOrderVersionView.getOrderId();
 			String status = kOrderVersionView.getStatus();
 			// 最后一个审批通过的版本
 			if (status.equals("3")) {
 				orderInfoId = kOrderVersionView.getOrderInfoId();
+				orderVersionId = kOrderVersionView.getVersionId();
 			}
 		}
 		
@@ -439,9 +450,10 @@ public class OrderService {
 			throw new NullPointerException(MessageFormat.format("Not found approved order with sequence number [{}]", sequenceNumber));
 		}
 		
-		OrderQuery query = new OrderQuery();
-		List<SalesOrder> orders = findOrder(query);
-		SalesOrder order = orders.get(0);
+//		OrderQuery query = new OrderQuery();
+//		List<SalesOrder> orders = findOrder(query);
+//		SalesOrder order = orders.get(0);
+		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
 		
 		SapOrderHeader header = new SapOrderHeader();
 		// TODO assemble sap order header
@@ -450,7 +462,8 @@ public class OrderService {
 		List<SapOrderPrice> prices = new ArrayList<SapOrderPrice>();
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 		
-		List<ItemDetails> itemDetails = order.getItemsForm().getDetailsList();
+//		List<ItemDetails> itemDetails = orderView.getItemsForm().getDetailsList();
+		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
 		for (ItemDetails itemDetail : itemDetails) {
 			int rowNumber = itemDetail.getRowNumber();
 			SapOrderItem item = new SapOrderItem();
@@ -464,6 +477,8 @@ public class OrderService {
 //			item.setEdatu(itemDetail.getDeliveryDate());
 			// Item category/行项目类别
 			item.setPstyv(itemDetail.getItemCategory());
+			
+			// TODO delivery address
 			// Item usage/项目用途
 //			item.setVkaus(String);
 			// Ship-to address/送达方地址
@@ -475,7 +490,7 @@ public class OrderService {
 			// District/区
 //			item.setCity2(String);
 			// B2C note/B2C备注
-//			item.setVbbp0006(String);
+			item.setVbbp0006(itemDetail.getB2cComments());
 			// Survey info. for item /调研表基本信息
 //			item.setVbbpz121(String);
 			// Special note/特殊备注
@@ -515,7 +530,23 @@ public class OrderService {
 			}
 		}
 		
-		// TODO Billing plan
+		// Billing plan 
+		// 当订单为经销商订单，billing plan只有一条数据，金额为空或0，不向sap发送billing plan数据，sap order header的付款条款为billing plan 的 code
+		List<KBiddingPlan> planList = biddingPlanRepository.findByKOrderInfoId(orderInfoId);
+		for (KBiddingPlan kBiddingPlan : planList) {
+			SapOrderPlan plan = new SapOrderPlan();
+			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0) {
+				header.setZterm(kBiddingPlan.getCode());
+			}
+			// Value to be billed/金额
+			plan.setFakwr(BigDecimal.valueOf(kBiddingPlan.getAmount()));
+			// Settlement date/结算日期
+			plan.setFkdat(new SimpleDateFormat("yyyyMMdd").format(kBiddingPlan.getPayDate()));
+			// Date category/日期原因
+			plan.setTetxt(kBiddingPlan.getReason());
+			// Payment terms/付款条款
+			plan.setZterm(kBiddingPlan.getCode());
+		}
 		
 		SapOrder sapOrder = new SapOrder();
 		sapOrder.setIsZhdr(header);
@@ -573,19 +604,19 @@ public class OrderService {
 		StringBuilder querySql = new StringBuilder();
 		Map<String, Object> params = new HashMap<>();
 	     querySql.append("select * from k_order_view where 1=1 ");
-	     if(StringUtils.isNotEmpty(orderQuery.getOrderId())) {
+	     if(!isEmpty(orderQuery.getOrderId())) {
 	    	 querySql.append(" order_id = :orderId");
 	    	 params.put("orderId", orderQuery.getOrderId());
 	     }
-	     if(StringUtils.isNotEmpty(orderQuery.getSequenceNumber())) {
+	     if(!isEmpty(orderQuery.getSequenceNumber())) {
 	    	 querySql.append(" sequence_number = :sequenceNumber");//.append(query.getSequenceNumber());
 	    	 params.put("sequenceNumber", orderQuery.getSequenceNumber());
 	     }
-	     if(StringUtils.isNotEmpty(orderQuery.getVersionId())) {
+	     if(!isEmpty(orderQuery.getVersionId())) {
 	    	 querySql.append(" version_id = :versionId");// .append(query.getVersionId());
 	    	 params.put("versionId", orderQuery.getVersionId());
 	     }
-	     if(StringUtils.isNotEmpty(orderQuery.getVersion())) {
+	     if(!isEmpty(orderQuery.getVersion())) {
 	    	 querySql.append(" version = :version"); // .append(query.getVersion());
 	    	 params.put("version", orderQuery.getVersion());
 	     }
@@ -648,6 +679,10 @@ public class OrderService {
 			// TODO configure material
 			// TODO attached info
 		}
+	}
+	
+	private boolean isEmpty(String v) {
+		return v == null || v.length() == 0;
 	}
 	
 }

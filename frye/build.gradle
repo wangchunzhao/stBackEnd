@@ -51,9 +51,6 @@ dependencies {
 	implementation "org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"
 	implementation "org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE"
 	
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
-	
-	
 	runtimeOnly 'mysql:mysql-connector-java'
 	//Gradle 5.0
 	compileOnly 'org.projectlombok:lombok:1.18.8'
