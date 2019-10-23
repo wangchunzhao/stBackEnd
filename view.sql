@@ -209,7 +209,7 @@ IF EXISTS `bohemian`.`k_order_version_view`;
 
 CREATE VIEW k_order_version_view AS 
 SELECT o.sequence_number, 
-	   v.k_orders_id as order_id
+	   v.k_orders_id as order_id,
        v.id as version_id, 
 	   v.version, 
 	   v.status, 
