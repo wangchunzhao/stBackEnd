@@ -6,6 +6,7 @@ package com.qhc.frye.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +31,9 @@ public class BayernService<T> {
 	
 	@Autowired
 	ApplicationConfig config;
+	
+	@Value("${qhc.bayern.url}")
+	String bayernUrl;
 
 	private WebClient webClient;
 
@@ -49,6 +53,22 @@ public class BayernService<T> {
 					.forEach((name, values) -> values.forEach(value -> System.out.println("{}={}" + name + value)));
 			return next.exchange(clientRequest);
 		};
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @param value
+	 */
+	public void postJason(String path, Object value) {
+		webClient = getBuilder().baseUrl(bayernUrl).build();
+		Mono<String> response = webClient.post().uri(path).contentType(MediaType.APPLICATION_JSON).bodyValue(value)
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new URLNotFoundException()))
+				.onStatus(HttpStatus::is5xxServerError,
+						clientResponse -> Mono.error(new ExternalServerInternalException()))
+				.bodyToMono(String.class);
+		response.block();
 	}
 
 	

@@ -1,5 +1,10 @@
 package com.qhc.frye.rest.controller.entity;
 
+/**
+ * SAP Header input
+ * @author zsu4
+ *
+ */
 public class SapOrderHeader {
 	// Sales order type/订单类型 -- Selling tool 需求类型
 	private String auart;
@@ -39,6 +44,8 @@ public class SapOrderHeader {
 	private String inco1;
 	// Incoterms2/国际贸易条款2 -- Selling tool 国际贸易条件2
 	private String inco2;
+	// 折扣 ：规定为 ZH03
+	// TODO
 	// Contract amount/合同金额 -- Selling tool 合同金额
 	private String vbbkz120;
 	// Sale rep./签约人 -- Selling tool 客户经理
