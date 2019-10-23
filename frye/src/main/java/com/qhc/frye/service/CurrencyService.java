@@ -109,9 +109,9 @@ public class CurrencyService {
 		Set<DPrice> dps = new HashSet<DPrice>();
 		for(Price pri:price) {
 			DPrice temp = new DPrice();
-			/**
-			 * 
-			 */
+			temp.setPrice(pri.getPrice());
+			temp.setType(pri.getTypeCode());
+			temp.setMaterialCode(pri.getMaterialCode());
 			dps.add(temp);
 		}
 		priceRepo.saveAll(dps);
