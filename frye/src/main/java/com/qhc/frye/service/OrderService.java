@@ -489,6 +489,7 @@ public class OrderService {
 //			item.setCity1(String);
 			// District/区
 //			item.setCity2(String);
+			
 			// B2C note/B2C备注
 			item.setVbbp0006(itemDetail.getB2cComments());
 			// Survey info. for item /调研表基本信息
