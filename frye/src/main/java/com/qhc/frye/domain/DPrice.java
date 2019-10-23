@@ -18,29 +18,23 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="sap_materials_price")
 public class DPrice {
-	@Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-	private int id;
 	
+	@Id
 	@NotNull
 	@Column(name="price",columnDefinition="DECIMAL",precision = 13 ,scale=2)
 	private double price;
+	
 	
 	@NotNull
 	@Column(name="sap_price_type_code",columnDefinition ="CHAR",length=4)
 	private String type;
 	
+	
 	@NotNull      
 	@Column(name="sap_materials_code",length=18)
 	private String materialCode;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	public double getPrice() {
 		return price;
 	}

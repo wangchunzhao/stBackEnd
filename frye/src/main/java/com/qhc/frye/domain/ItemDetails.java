@@ -56,7 +56,7 @@ public class ItemDetails implements Serializable{
 	//合同数量
 	@NotNull
 	@Column(name = "quantity")
-	public Integer quantity;
+	public Double quantity;
 	
 	//销售单价
 	
@@ -169,11 +169,11 @@ public class ItemDetails implements Serializable{
 		this.materialAttribute = materialAttribute;
 	}
 
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 

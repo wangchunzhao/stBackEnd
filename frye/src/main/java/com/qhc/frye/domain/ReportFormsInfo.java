@@ -115,10 +115,10 @@ public class ReportFormsInfo implements Serializable {
 	private boolean	materialAttribute	;//	物料属性
 	
 	@Column(name="quantity")
-	private Integer	quantity	;//	合同数量
+	private double	quantity	;//	合同数量
 	
 	@Column(name="price")
-	private BigDecimal	price	;//	销售单价
+	private double	price	;//	销售单价
 	
 	@Column(name="sale_amount")
 	private BigDecimal	amount	;//	销售金额
@@ -384,19 +384,19 @@ public class ReportFormsInfo implements Serializable {
 		this.materialAttribute = materialAttribute;
 	}
 
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
-	public BigDecimal getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
