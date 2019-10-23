@@ -15,5 +15,5 @@ import com.qhc.frye.domain.KOrderVersion;
  */
 
 public interface KOrderVersionRepository extends JpaRepository<KOrderVersion, String> {
-	public List<KOrderVersion> findByOrderIdOrderById(String orderId);
+	public List<KOrderVersion> findByOrderIdOrderByCreateTime(String orderId);
 }

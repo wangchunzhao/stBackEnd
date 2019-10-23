@@ -3,6 +3,11 @@ package com.qhc.frye.rest.controller.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * SAP Billing plan
+ * @author zsu4
+ *
+ */
 public class SapOrderPlan {
 	// Date category/日期原因 -- Selling tool 回款类型
 	private String tetxt;

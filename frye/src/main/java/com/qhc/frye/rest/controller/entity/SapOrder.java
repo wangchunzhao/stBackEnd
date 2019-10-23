@@ -3,7 +3,7 @@ package com.qhc.frye.rest.controller.entity;
 import java.util.List;
 
 /**
- * SAP Creation Order 
+ * SAP Order 
  * @author zsu4
  *
  */

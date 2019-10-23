@@ -1,5 +1,10 @@
 package com.qhc.frye.rest.controller.entity;
 
+/**
+ * SAP Item input
+ * @author zsu4
+ *
+ */
 public class SapOrderItem {
 	// Ship-to PO item/送达方-采购订单编号项目 -- Selling tool 行号
 	private Integer posnr;
@@ -32,4 +37,95 @@ public class SapOrderItem {
 	private String vbbpz120;
 	// Customer special request/客户物料说明 -- Selling tool 备注
 	private String vbbp0007;
+	
+	public Integer getPosnr() {
+		return posnr;
+	}
+	public void setPosnr(Integer posnr) {
+		this.posnr = posnr;
+	}
+	public String getMatnr() {
+		return matnr;
+	}
+	public void setMatnr(String matnr) {
+		this.matnr = matnr;
+	}
+	public Integer getZmeng() {
+		return zmeng;
+	}
+	public void setZmeng(Integer zmeng) {
+		this.zmeng = zmeng;
+	}
+	public String getEdatu() {
+		return edatu;
+	}
+	public void setEdatu(String edatu) {
+		this.edatu = edatu;
+	}
+	public String getPstyv() {
+		return pstyv;
+	}
+	public void setPstyv(String pstyv) {
+		this.pstyv = pstyv;
+	}
+	public String getVkaus() {
+		return vkaus;
+	}
+	public void setVkaus(String vkaus) {
+		this.vkaus = vkaus;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public String getRegion() {
+		return region;
+	}
+	public void setRegion(String region) {
+		this.region = region;
+	}
+	public String getCity1() {
+		return city1;
+	}
+	public void setCity1(String city1) {
+		this.city1 = city1;
+	}
+	public String getCity2() {
+		return city2;
+	}
+	public void setCity2(String city2) {
+		this.city2 = city2;
+	}
+	public String getVbbp0006() {
+		return vbbp0006;
+	}
+	public void setVbbp0006(String vbbp0006) {
+		this.vbbp0006 = vbbp0006;
+	}
+	public String getVbbpz121() {
+		return vbbpz121;
+	}
+	public void setVbbpz121(String vbbpz121) {
+		this.vbbpz121 = vbbpz121;
+	}
+	public String getVbbpz117() {
+		return vbbpz117;
+	}
+	public void setVbbpz117(String vbbpz117) {
+		this.vbbpz117 = vbbpz117;
+	}
+	public String getVbbpz120() {
+		return vbbpz120;
+	}
+	public void setVbbpz120(String vbbpz120) {
+		this.vbbpz120 = vbbpz120;
+	}
+	public String getVbbp0007() {
+		return vbbp0007;
+	}
+	public void setVbbp0007(String vbbp0007) {
+		this.vbbp0007 = vbbp0007;
+	}
 }

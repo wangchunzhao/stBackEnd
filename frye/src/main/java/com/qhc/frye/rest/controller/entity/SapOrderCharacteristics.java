@@ -1,5 +1,10 @@
 package com.qhc.frye.rest.controller.entity;
 
+/**
+ * SAP Characteristics value input
+ * @author zsu4
+ *
+ */
 public class SapOrderCharacteristics {
 	// Item/行项目编号	VBAP-POSNR -- Selling tool 行号
 	private Integer posnr;
