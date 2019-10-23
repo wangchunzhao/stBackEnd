@@ -247,10 +247,18 @@ SELECT o.sequence_number,
 	   pv.opt_time, 
 	   pv.k_order_version_id_parent as parent_version_id, 
 	   pv.k_order_info_id as order_info_id,
-	   d.*
+	   d.*,
+	   f.id as form_id,
+	   f.earliest_delivery_date,
+	   f.earliest_product_date,
+	   f.comments as form_comments,
+	   f.operator as form_operator,
+	   f.type as form_type,
+	   f.opt_time as form_opt_time
 FROM k_orders o 
 left join k_order_version v on v.k_orders_id = o.id
 left join k_parent_order_version pv on pv.k_order_version_id = v.id
-left join k_order_info d on d.id = pv.k_order_info_id;
+left join k_order_info d on d.id = pv.k_order_info_id
+left join k_forms f on f.k_order_info_id = d.id;
 
 
