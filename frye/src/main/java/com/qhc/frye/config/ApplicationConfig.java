@@ -11,59 +11,68 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfig {
 
-	@Value("${qhc.frye.server}")
-	String fryeServer;
+	@Value("${qhc.bayern.server}")
+	String bayernServer;
 
-	@Value("${qhc.frye.port}")
-	int fryePort;
+	@Value("${qhc.bayern.port}")
+	int bayernPort;
 
-	@Value("${qhc.frye.application}")
+	@Value("${qhc.bayern.application}")
 	String application;
 
-	@Value("${qhc.frye.protocal}")
+	@Value("${qhc.bayern.protocal}")
 	String protocal;
 
 	public final static String SIGN_PROTOCAL = "://";
 	public final static String SIGN_SEGAMENT = "/";
 	public final static String SIGN_PORT = ":";
 
-	public String getFryeServer() {
-		return fryeServer;
+	
+	public String getBayernServer() {
+		return bayernServer;
 	}
 
-	public int getFryePort() {
-		return fryePort;
+
+	public void setBayernServer(String bayernServer) {
+		this.bayernServer = bayernServer;
 	}
 
-	public void setFryeServer(String fryeServer) {
-		this.fryeServer = fryeServer;
+
+	public int getBayernPort() {
+		return bayernPort;
 	}
 
-	public void setFryePort(int fryePort) {
-		this.fryePort = fryePort;
+
+	public void setBayernPort(int bayernPort) {
+		this.bayernPort = bayernPort;
 	}
+
 
 	public String getApplication() {
 		return application;
 	}
 
+
 	public void setApplication(String application) {
 		this.application = application;
 	}
+
 
 	public String getProtocal() {
 		return protocal;
 	}
 
+
 	public void setProtocal(String protocal) {
 		this.protocal = protocal;
 	}
-	
+
+
 	//
 	public String getFryeURL() {
 
-		return this.getProtocal() + SIGN_PROTOCAL + this.getFryeServer() + SIGN_PORT
-				+ String.valueOf(this.getFryePort()) + SIGN_SEGAMENT + this.getApplication() + SIGN_SEGAMENT;
+		return this.getProtocal() + SIGN_PROTOCAL + this.getBayernServer() + SIGN_PORT
+				+ String.valueOf(this.getBayernPort()) + SIGN_SEGAMENT + this.getApplication() + SIGN_SEGAMENT;
 	}
 
 }

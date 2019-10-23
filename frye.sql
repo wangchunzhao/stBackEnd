@@ -1439,9 +1439,9 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id`
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `bohemian`.`k_class_characteristic_value_view`
+-- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1527,12 +1527,12 @@ CREATE  OR REPLACE VIEW `k_material_info_view` AS
         sap_price_type t ON t.code = p.sap_price_type_code;
 
 -- -----------------------------------------------------
--- View `bohemian`.`k_class_characteristic_value_view`
+-- View `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_class_characteristic_value_view`;
-DROP VIEW IF EXISTS `bohemian`.`k_class_characteristic_value_view` ;
+DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
+DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
-CREATE  OR REPLACE VIEW `k_class_characteristic_value_view` AS
+CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
 SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name
 FROM sap_clazz_and_character c
 left join sap_characteristic k 
