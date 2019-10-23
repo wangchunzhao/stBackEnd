@@ -28,6 +28,7 @@ import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
+import com.qhc.frye.service.BayernService;
 import com.qhc.frye.service.CharacteristicService;
 import com.qhc.frye.service.CustomerService;
 import com.qhc.frye.service.MaterialService;
@@ -45,15 +46,18 @@ public class MaterialController {
 	
 	public final static String MATERIAL_CLAZZ_CODE ="class_code";
 	public final static String MATERIAL_BOM_CODE ="bom_code";
-
+	public final static String BOM_PATH_EXPORSION = "";
 	@Autowired
-	private MaterialService materialService;
+	private MaterialService materialSer;
 
 	@Autowired
 	private CustomerService cu;
 
 	@Autowired
-	private CharacteristicService characteristicService;
+	private CharacteristicService characteristicSer;
+	
+	@Autowired
+	private BayernService bayernSer;
 
 	@ApiOperation(value = "查询物料lastUpdateDate")
 	@GetMapping(value = "material/lastUpdateDate")
@@ -69,7 +73,7 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public void postMaterial(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
 
-		materialService.saveMaterials(materials);
+		materialSer.saveMaterials(materials);
 	}
 
 	@ApiOperation(value = "查找增物料信息")
@@ -79,7 +83,7 @@ public class MaterialController {
 			throws Exception {
 		if (pars.containsKey("name") && pars.containsKey("pageNo")) {
 			PageHelper<Material> ms = new PageHelper();
-			PageHelper<DMaterial> dms = materialService.findMaterialsByName(pars.get("name"),
+			PageHelper<DMaterial> dms = materialSer.findMaterialsByName(pars.get("name"),
 					Integer.parseInt(pars.get("pageNo")));
 			List<Material> ml = new ArrayList<Material>();
 			List<DMaterial> dml = dms.getRows();
@@ -106,7 +110,7 @@ public class MaterialController {
 		if (code.equals("null")) {
 			code = null;
 		}
-		Material m = materialService.getMaterialsById(code);
+		Material m = materialSer.getMaterialsById(code);
 		return m;
 	}
 
@@ -114,30 +118,30 @@ public class MaterialController {
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
 	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
-		characteristicService.saveClass(clazz);
+		characteristicSer.saveClass(clazz);
 	}
 
 	@ApiOperation(value = "保存或者修改CharacteristicValue")
 	@PutMapping(value = "material/characteristic")
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
-		characteristicService.saveCharacteristicValue(chaValues);
+		characteristicSer.saveCharacteristicValue(chaValues);
 	}
 	
 	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表")
-	@GetMapping(value = "material/configurations/{clazzCode}")
+	@GetMapping(value = "material/configuration/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Characteristic> findCharacteristic(@RequestBody(required = true) String clazzCode) {
-		return materialService.getCharactersByClazzCode(clazzCode);
+	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode) {
+		return materialSer.getCharactersByClazzCode(clazzCode);
 		
 	}
 	
 	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
-	@PostMapping(value = "material/configuration/{clazzCode}")
+	@PostMapping(value = "material/configuration/")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Object> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
 		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE) && pars.containsKey(MATERIAL_CLAZZ_CODE)) {
-			
+			//Object obj = bayernSer.postForm(BOM_PATH_EXPORSION, pars, T);
 		}
 		return null;
 		
