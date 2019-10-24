@@ -45,7 +45,7 @@ public class Material implements Serializable{
 	//need by bayern
 	private Date optTime;
 	private String unitCode;//计量单位代码
-	
+	private double materialSize;
 	
 	public String getCode() {
 		return code;
@@ -188,6 +188,12 @@ public class Material implements Serializable{
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+	public double getMaterialSize() {
+		return materialSize;
+	}
+	public void setMaterialSize(double materialSize) {
+		this.materialSize = materialSize;
 	}
 	
 	

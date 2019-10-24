@@ -45,7 +45,7 @@ public class MaterialService {
 	public final static String BOM_PATH_EXPORSION = "material/configuration";
 	public final static String BOM_CONFIGURATION_DEFAULT = "default";
 	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
-	
+			
 	@Autowired
 	private MaterialRepository materialRepo;
 	
@@ -64,9 +64,11 @@ public class MaterialService {
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
 //		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
+		//
 		LastUpdated lastUpdated = new LastUpdated();
 		lastUpdated.setCode(Material.MATERIAL_CODE);
 		lastUpdated.setName("material");
+		//
 		for(Material ma: materials){
 			DMaterial dm = new DMaterial();
 			dm.setCode(ma.getCode());
@@ -77,6 +79,8 @@ public class MaterialService {
 			dm.setOptTime(ma.getOptTime());
 			dm.setUnit(ma.getUnitCode());
 			dm.setType(ma.getGroupCode());
+			dm.setMaterialSize(ma.getMaterialSize());
+			dm.setClazzCode(ma.getClazzCode());
 			mset.add(dm);
 
 			if(ma.getClazzCode()!=null && !ma.getClazzCode().isEmpty()) {
