@@ -60,6 +60,7 @@ import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.DealerOrder;
 import com.qhc.frye.rest.controller.entity.Incoterm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -649,8 +650,8 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public List<SalesOrder> findOrder(OrderQuery orderQuery) {
-		List<SalesOrder> orders = new ArrayList<>();
+	public List<AbsOrder> findOrder(OrderQuery orderQuery) {
+		List<AbsOrder> orders = new ArrayList<>();
 		
 //		String countSql = "";
 //		Query countQuery = entityManager.createNativeQuery(countSql);
@@ -699,15 +700,15 @@ public class OrderService {
 	    	 String orderId = orderView.getOrderId();
 	    	 String orderInfoId = orderView.getOrderInfoId();
 	    	 
-			SalesOrder order = new SalesOrder();
+	    	DealerOrder order = new DealerOrder();
 			orders.add(order);
 			order.setSequenceNumber(orderView.getSequenceNumber());
 //			order.setAddress(orderView.);
 //			order.setApprovedDicount(orderView);
 			order.setBodyDiscount(orderView.getBodyDiscount());
-//			order.setCityCode(cityCode);
+//			order.setCityCode(orderView.getci);
 			order.setComments(orderView.getComments());
-//			order.setConfirmTypeCode(orderView.getcon);
+//			order.setConfirmTypeCode(orderView.getconf);
 			order.setContactor1Id(orderView.getContactor1Id());
 			order.setContactor1Tel(orderView.getContactor1Tel());
 			BeanUtils.copyProperties(orderView, order);
@@ -737,9 +738,9 @@ public class OrderService {
 		return orders;
 	}
 
-	private void assembleItemsForm(SalesOrder order, KOrderView orderView) {
+	private void assembleItemsForm(DealerOrder order, KOrderView orderView) {
 		ItemsForm form = new ItemsForm();
-		order.setItemsForm(form);
+//		order.setItemsForm(form);
 		form.setComments(orderView.getFormComments());
 		form.setEarliestDeliveryDate(orderView.getEarliestDeliveryDate());
 		form.setEarliestProductDate(orderView.getEarliestProductDate());

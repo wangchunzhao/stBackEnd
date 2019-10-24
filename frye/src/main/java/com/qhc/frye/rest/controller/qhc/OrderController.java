@@ -28,6 +28,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
+import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
@@ -159,7 +160,7 @@ public class OrderController {
     @ApiOperation(value="查询订单", notes="查询订单")
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
-    public List<SalesOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
+    public List<AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
     	return orderService.findOrder(query);
     }
 
