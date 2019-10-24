@@ -533,7 +533,7 @@ public class OrderService {
 		
 		// Billing plan 
 		// 当订单为经销商订单，billing plan只有一条数据，金额为空或0，不向sap发送billing plan数据，sap order header的付款条款为billing plan 的 code
-		List<KBiddingPlan> planList = biddingPlanRepository.findByKOrderInfoId(orderInfoId);
+		List<KBiddingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		for (KBiddingPlan kBiddingPlan : planList) {
 			SapOrderPlan plan = new SapOrderPlan();
 			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0) {
