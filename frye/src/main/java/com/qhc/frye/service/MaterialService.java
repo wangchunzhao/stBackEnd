@@ -175,7 +175,7 @@ public class MaterialService {
 	}
 	
 	public Map<String,List<Bom>> findBOMWithPrice(Map<String,String> pars){
-		Bom obj = (Bom) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Bom.class);
-		return null;
+		Map<String,List<Bom>> boms = (Map<String,List<Bom>> ) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
+		return boms;
 	}
 }
