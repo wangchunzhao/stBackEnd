@@ -24,6 +24,10 @@ public class Bom implements Serializable{
 	private double price;
 	private double quantity;
 	private boolean isMarked;
+	//
+	private boolean isMarkedByDefault;
+	private boolean isMarkedByConfig;
+	
 	public String getCode() {
 		return code;
 	}
@@ -64,19 +68,30 @@ public class Bom implements Serializable{
 	@Override
 	public int hashCode() {
 		
-		return this.getCode().hashCode() * FACTOR;
+		return this.getCode().hashCode() * FACTOR+this.getParentCode().hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object anObject) {
 		if(anObject.getClass().equals(this.getClass()) ) {
 			Bom obj = (Bom)anObject;
-			if(obj.getCode().equals(this.getCode())) {
+			if(obj.getCode().equals(this.getCode())&&obj.getParentCode().equals(this.getParentCode())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+	public boolean isMarkedByDefault() {
+		return isMarkedByDefault;
+	}
+	public void setMarkedByDefault(boolean isMarkedByDefault) {
+		this.isMarkedByDefault = isMarkedByDefault;
+	}
+	public boolean isMarkedByConfig() {
+		return isMarkedByConfig;
+	}
+	public void setMarkedByConfig(boolean isMarkedByConfig) {
+		this.isMarkedByConfig = isMarkedByConfig;
+	}
 
 }

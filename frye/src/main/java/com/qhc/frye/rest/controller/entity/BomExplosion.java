@@ -4,6 +4,7 @@
 package com.qhc.frye.rest.controller.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,64 +14,75 @@ import java.util.Set;
  *
  */
 public class BomExplosion {
-	private List<Bom> src;
-	private List<Bom> tag;
-	private BigDecimal priceGap;
-	private String rootBomCode;
-	public List<Bom> getSrc() {
-		return src;
+	
+	private List<Bom> boms;
+	private double priceGap;
+
+	public Boolean fillIn(List<Bom> src,List<Bom> targ) {
+		
+		if(this.verify(src, targ)) {
+			boms = new ArrayList<Bom>();
+			boms.addAll(src);
+			//
+			for(Bom bom:boms) {
+				bom.setMarkedByDefault(true);
+			}
+			//
+			for(Bom tbom:targ){
+				if(tbom.isMarked()) {
+					int myindex = boms.indexOf(tbom);
+					Bom temp = boms.get(myindex);
+					temp.setMarkedByConfig(true);
+					temp.setPrice(tbom.getPrice());
+					temp.setMarked(true);
+				}
+			}
+			this.calPriceGap();
+			return true;
+		}
+		return false;
 	}
-	public void setSrc(List<Bom> src) {
-		this.src = src;
-	}
-	public List<Bom> getTag() {
-		return tag;
-	}
-	public void setTag(List<Bom> tag) {
-		this.tag = tag;
-	}
-	public BigDecimal getPriceGap() {
-		if(this.priceGap==null)
-			this.cal();
-		return priceGap;
-	}
-	public String getRootBomCode() {
-		if (this.rootBomCode==null)
-			this.cal();
-		return rootBomCode;
-	}
-	private void cal() {
-		String scrRoot = this.findRoot(this.getSrc());
-		String tagRoot = this.findRoot(this.getTag());
-		if(scrRoot!=null && tagRoot!=null) {
-			if(scrRoot.equals(tagRoot)) {
-				this.rootBomCode = scrRoot;
+	private void calPriceGap() {
+		for(Bom bom:boms) {
+			if(bom.isMarkedByDefault()) {
+				Bom peer = getConfigPeerBom(bom);
+				
+				BigDecimal n = new BigDecimal(peer.getPrice());
+				BigDecimal o = new BigDecimal(bom.getPrice());
+				
+				this.priceGap  = n.subtract(o).doubleValue();
 			}
 		}
-		
-		
-		
 	}
-	private Set<String> findLeaf(final List<Bom> boms) {
+	
+	private Bom getConfigPeerBom(Bom bom){
+		Set<Bom> children = new HashSet<Bom>();
+		String parentCode = null;
+		for(Bom bo:boms) {
+			if(bo.getCode().equals(bom.getParentCode()))
+				parentCode = bo.getCode();
+				break;
+		}
+		if(parentCode!=null) {
+			for(Bom bo:boms) {
+				if(bo.getParentCode().equals(parentCode)) {
+					if(bo.isMarkedByConfig()) {
+						return bo;
+					}
+				}
+			}
+		}
 		return null;
 	}
-	private String findRoot(final List<Bom> boms) {
-		String root = null;
-		Set<String> bomCode = new HashSet<String>();
-		Set<String> parBomCode = new HashSet<String>();
-		for(Bom bom:boms) {
-			bomCode.add(bom.getCode());
-			parBomCode.add(bom.getParentCode());
+	
+	private boolean verify(List<Bom> srcList,List<Bom> targList) {
+		if(srcList.size()!=targList.size())
+			return false;
+		for(Bom srcBom:srcList) {
+			if(!targList.contains(srcBom))
+				return false;
 		}
-		for(String p:parBomCode ) {
-			if(!bomCode.contains(p)) {
-				if(root==null)
-					root = p;
-				else
-					return null;
-			}
-		}
-		return root;
+		return true;
 	}
 
 }

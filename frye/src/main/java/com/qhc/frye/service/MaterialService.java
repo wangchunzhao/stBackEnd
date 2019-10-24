@@ -192,11 +192,10 @@ public class MaterialService {
 		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
 			
 			BomExplosion be = new BomExplosion();
-			
-			be.setSrc(boms.get(BOM_CONFIGURATION_DEFAULT));
-			be.setTag(boms.get(BOM_CONFIGURATION_CONFIGURATED));
-			
-			return be;
+			boolean result = be.fillIn(boms.get(BOM_CONFIGURATION_DEFAULT), boms.get(BOM_CONFIGURATION_CONFIGURATED));
+			if(result)
+				return be;
+
 		}
 			
 		return null;
