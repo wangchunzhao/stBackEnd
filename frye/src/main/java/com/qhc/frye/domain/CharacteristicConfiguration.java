@@ -36,7 +36,7 @@ public class CharacteristicConfiguration {
 	private boolean isOptional;
 	
 	@Column(name = "material_code",columnDefinition ="CHAR")
-	private boolean materialCode;
+	private String materialCode;
 
 	public String getValCode() {
 		return valCode;
@@ -86,13 +86,13 @@ public class CharacteristicConfiguration {
 		this.isOptional = isOptional;
 	}
 
-	public boolean isMaterialCode() {
+	public String getMaterialCode() {
 		return materialCode;
 	}
 
-	public void setMaterialCode(boolean materialCode) {
+	public void setMaterialCode(String materialCode) {
 		this.materialCode = materialCode;
 	}
-	
+
 
 }
