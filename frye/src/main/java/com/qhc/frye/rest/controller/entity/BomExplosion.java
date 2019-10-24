@@ -50,7 +50,7 @@ public class BomExplosion {
 				BigDecimal n = new BigDecimal(peer.getPrice());
 				BigDecimal o = new BigDecimal(bom.getPrice());
 				
-				this.priceGap  = n.subtract(o).doubleValue();
+				this.priceGap  += n.subtract(o).doubleValue();
 			}
 		}
 	}
