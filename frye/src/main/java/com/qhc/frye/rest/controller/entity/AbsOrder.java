@@ -1,19 +1,9 @@
 package com.qhc.frye.rest.controller.entity;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.domain.DOrder;
-import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
 
@@ -24,27 +14,31 @@ import com.qhc.frye.domain.OrderSupportInfo;
 public abstract class AbsOrder{
 	private final static String EXCEPTION_TOO_LONG = "too long";
 	private final static String EXCEPTION_MUST_HAVE = "must have";
+	public final static String ORDER_TYPE_CODE_DEALER = "Z001";
+	public final static String ORDER_TYPE_CODE_KEYACCOUNT = "Z002";
+	public final static String ORDER_TYPE_CODE_BULK = "Z003";
 	
-	
-	private String orderType;//dealer or keyaccount or bulk
+	public final static String ORDER_CUSTOMER_DEALER_CODE="01";
+	public final static String ORDER_CUSTOMER_KEY_ACCOUNT_CODE="02";
+	//@NotEmpty(message="order type 不能为空")
+	private String orderType;
 	/**
 	 * 客户基本信息 Basic information
 	 */
-	
+	private String customerClazzCode;//客户性质分类代码
+	private String customerClazzName;//客户性质分类名称
+	private String terminalType;//终端客户性质
 	private String contracterCode;//签约单位 Contract unit
-	
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
-	
 	private String salesCode;//客户经理 Customer manager
 	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
-	
 	private int isNew;//是否新客户 new customer
 	/**
 	 * 合同详细信息 Contract details
 	 */
-	
+	//@NotEmpty(message="流水号不能为空") 
 	private String sequenceNumber;//流水号 code
 	private String contractNumber;//合同号 contract no
 	private String saleType;//销售类型 Sales type
@@ -76,13 +70,13 @@ public abstract class AbsOrder{
 	private String confirmTypeCode;//收货方式 Receiving way
 	private String transferTypeCode;//运输类型 Type of transportation
 	private double freight;//运费
-	//private int isAllinBulk;//是否全部为散件
 	/**
 	 * 结算方式 Method of payment
 	 */
-//	private List<AbsSettlement> settles;
+	//private List<AbsSettlement> settles;
 	/**
 	 * 调研表相关内容 Research table related content
+	 * SAP字段名：VBBKZ122，格式为：汉字：是/否，汉字：是/否，汉字：是/否
 	 */
 	private int isTerm1;//柜体控制阀件是否甲供
 	private int isTerm2;//分体柜是否远程监控
@@ -90,39 +84,17 @@ public abstract class AbsOrder{
 	/**
 	 * 购销明细 Purchase and sale subsidiar
 	 */
-//	private List<ProductItemForm> items;//购销明细
-	private ItemsForm itemsForm;//购销明细表单
+	private List<ProductItem> items;//购销明细
 	private String comments;//备注
+	//合同明细地址
+	private List<OrderAddress> orderAddress;
 	/**
 	 * 附件信息 Attachment information
 	 */
 	private List<String> attachedFileName;
-	
-	/**
-	 * from session
-	 */
-	
+	//
+	private int submitType;
 	private String currentUser;//当前session用户
-	
-	
-	private int submitType;//1.save 2.submit 3.margin 4.wtw margin
-	//
-	private String recordCode;// 项目报备编号 report number
-	
-	private String customerNatureCode;//终端客户性质 customer nature
-	/**
-	 * 
-	 */
-	private double discount;//合并折扣
-	
-	private double bodyDiscount;//柜体折扣 standard discount
-	
-	private double mainDiscount;//机组折扣 standard discount
-	
-	private int isLongterm;//是否为长期折扣
-	
-	private double approvedDicount;//批准的折扣、标准折扣
-	//
 	
 	public AbsOrder () {
 		System.out.println("here");
@@ -254,47 +226,35 @@ public abstract class AbsOrder{
 		this.warrenty = warrenty;
 	}
 	
-	public String getRecordCode() {
-		return recordCode;
+	public String getCustomerClazzCode() {
+		return customerClazzCode;
 	}
-	public void setRecordCode(String recordCode) {
-		this.recordCode = recordCode;
+	public void setCustomerClazzCode(String customerClazzCode) {
+		this.customerClazzCode = customerClazzCode;
 	}
-	public String getCustomerNatureCode() {
-		return customerNatureCode;
+	public String getCustomerClazzName() {
+		return customerClazzName;
 	}
-	public void setCustomerNatureCode(String customerNatureCode) {
-		this.customerNatureCode = customerNatureCode;
+	public void setCustomerClazzName(String customerClazzName) {
+		this.customerClazzName = customerClazzName;
 	}
-	public double getDiscount() {
-		return discount;
+	public String getTerminalType() {
+		return terminalType;
 	}
-	public void setDiscount(double discount) {
-		this.discount = discount;
+	public void setTerminalType(String terminalType) {
+		this.terminalType = terminalType;
 	}
-	public double getBodyDiscount() {
-		return bodyDiscount;
+	public List<ProductItem> getItems() {
+		return items;
 	}
-	public void setBodyDiscount(double bodyDiscount) {
-		this.bodyDiscount = bodyDiscount;
+	public void setItems(List<ProductItem> items) {
+		this.items = items;
 	}
-	public double getMainDiscount() {
-		return mainDiscount;
+	public List<OrderAddress> getOrderAddress() {
+		return orderAddress;
 	}
-	public void setMainDiscount(double mainDiscount) {
-		this.mainDiscount = mainDiscount;
-	}
-	public int getIsLongterm() {
-		return isLongterm;
-	}
-	public void setIsLongterm(int isLongterm) {
-		this.isLongterm = isLongterm;
-	}
-	public double getApprovedDicount() {
-		return approvedDicount;
-	}
-	public void setApprovedDicount(double approvedDicount) {
-		this.approvedDicount = approvedDicount;
+	public void setOrderAddress(List<OrderAddress> orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 	public String getContactor1Id() {
 		return contactor1Id;
@@ -434,13 +394,6 @@ public abstract class AbsOrder{
 	}
 	public void setCurrencyExchange(double currencyExchange) {
 		this.currencyExchange = currencyExchange;
-	}
-	
-	public ItemsForm getItemsForm() {
-		return itemsForm;
-	}
-	public void setItemsForm(ItemsForm itemsForm) {
-		this.itemsForm = itemsForm;
 	}
 	//
 	public DOrder getDorder() {

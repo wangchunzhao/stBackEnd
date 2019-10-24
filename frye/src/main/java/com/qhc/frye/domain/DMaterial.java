@@ -39,6 +39,10 @@ public class DMaterial {
 	private double price;
 	
 	@NotNull
+    @Column(name="material_size",columnDefinition="DOUBLE")
+	private double materialSize;
+	
+	@NotNull
     @Column(name="opt_time",columnDefinition="DATETIME")
 	private Date optTime;
 	
@@ -125,6 +129,14 @@ public class DMaterial {
 
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
+	}
+
+	public double getMaterialSize() {
+		return materialSize;
+	}
+
+	public void setMaterialSize(double materialSize) {
+		this.materialSize = materialSize;
 	}
 	
 	
