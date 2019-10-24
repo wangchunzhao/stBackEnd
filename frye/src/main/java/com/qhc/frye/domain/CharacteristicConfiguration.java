@@ -34,6 +34,9 @@ public class CharacteristicConfiguration {
 	
 	@Column(name = "is_optional",columnDefinition ="BIT")
 	private boolean isOptional;
+	
+	@Column(name = "material_code",columnDefinition ="CHAR")
+	private boolean materialCode;
 
 	public String getValCode() {
 		return valCode;
@@ -81,6 +84,14 @@ public class CharacteristicConfiguration {
 
 	public void setOptional(boolean isOptional) {
 		this.isOptional = isOptional;
+	}
+
+	public boolean isMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(boolean materialCode) {
+		this.materialCode = materialCode;
 	}
 	
 
