@@ -27,5 +27,11 @@ class OrderServiceTest {
 		List<OrderVersion> versions = orderService.findOrderVersionsByOrderId("123");
 		System.out.println(versions);
 	}
+	
+	@Test
+	void testOrderCreationForSAP() {
+		String result = orderService.orderCreationForSAP("123");
+		System.out.println(result);
+	}
 
 }

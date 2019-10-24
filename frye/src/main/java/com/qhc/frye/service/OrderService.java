@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.ItemDetailRepository;
 import com.qhc.frye.dao.KBiddingPlanRepository;
 import com.qhc.frye.dao.KCharacteristicsRepository;
+import com.qhc.frye.dao.KDelieveryAddressRepository;
 import com.qhc.frye.dao.KOrderVersionRepository;
 import com.qhc.frye.dao.KOrderVersionViewRepository;
 import com.qhc.frye.dao.KOrderViewRepository;
@@ -46,6 +48,7 @@ import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
+import com.qhc.frye.domain.KDelieveryAddress;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.KOrderVersionView;
 import com.qhc.frye.domain.KOrderView;
@@ -130,6 +133,12 @@ public class OrderService {
 	
 	@Autowired
 	private KBiddingPlanRepository biddingPlanRepository;
+	
+	@Autowired
+	private KDelieveryAddressRepository deliveryAddressRepository;
+	
+//	@Autowired
+//	private AttachementRepository attachementRepository;
 	
 	@Autowired
 	private ConstantService constService;
@@ -446,21 +455,48 @@ public class OrderService {
 			}
 		}
 		
-		if (orderInfoId == null) {
-			throw new NullPointerException(MessageFormat.format("Not found approved order with sequence number [{}]", sequenceNumber));
-		}
+//		if (orderInfoId == null) {
+//			throw new NullPointerException(MessageFormat.format("Not found approved order with sequence number [{}]", sequenceNumber));
+//		}
 		
 //		OrderQuery query = new OrderQuery();
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
 		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
 		
+		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
-		// TODO assemble sap order header
 		List<SapOrderItem> items = new ArrayList<SapOrderItem>();
 		List<SapOrderCharacteristics> characs = new ArrayList<SapOrderCharacteristics>();
 		List<SapOrderPrice> prices = new ArrayList<SapOrderPrice>();
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
+		
+		// Header input
+//		header.setAuart(orderView.getOrderTypeCode());	// Sales order type/订单类型
+//		header.setVkorg(orderView);	// Sales org./销售组织
+//		header.setVtweg(orderView.);	// DC/分销渠道
+//		header.setName2(orderView.getCustomerName());	// Store name/店名
+//		header.setSpart(orderView.get);	// Division/产品组
+//		header.setVkbur();	// Sales office/销售办公室
+//		header.setVkgrp();	// Sales group/销售组
+//		header.setVbeln();	// SO number/销售订单编号
+//		header.setKvgr1();	// Customer grp.1/客户组1
+//		header.setKvgr2();	// Customer grp.2/客户组2
+//		header.setKvgr3();	// Customer grp.3/客户组3
+//		header.setBstzd();	// Additional/附加的
+//		header.setBstkdE();	// Ship-to PO/送达方-采购订单编号
+//		header.setVsart();	// Shipping type/装运类型
+//		header.setZterm();	// Payment terms/付款条款
+//		header.setKunnr();	// Sold-to party/售达方
+//		header.setWaerk();	// Currency/币别
+//		header.setInco1();	// Incoterms/国际贸易条款
+//		header.setInco1();	// Incoterms2/国际贸易条款2
+//		// 折扣
+//		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额
+//		header.setVbbkz121(orderView.getcontractor);	// Sale rep./签约人
+//		header.setVbbkz109();	// Order clerk/合同管理员
+//		header.setVbbkz108();	// Contact info./授权人信息
+//		header.setVbbkz122();	// Survey info. for header /调研表相关内容
 		
 //		List<ItemDetails> itemDetails = orderView.getItemsForm().getDetailsList();
 		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
@@ -477,29 +513,42 @@ public class OrderService {
 //			item.setEdatu(itemDetail.getDeliveryDate());
 			// Item category/行项目类别
 			item.setPstyv(itemDetail.getItemCategory());
-			
-			// TODO delivery address
-			// Item usage/项目用途
+			// TODO Item usage/项目用途
 //			item.setVkaus(String);
-			// Ship-to address/送达方地址
-//			item.setStreet(String);
-			// Province/省
-//			item.setRegion(String);
-			// City/市
-//			item.setCity1(String);
-			// District/区
-//			item.setCity2(String);
+			
+			// delivery address
+			// TODO Ship-to address/送达方地址
+//			item.setStreet(itemDetail.getAddress());
+//			// Province/省
+//			item.setRegion();
+//			// City/市
+//			item.setCity1();
+//			// District/区
+//			item.setCity2();
 			
 			// B2C note/B2C备注
 			item.setVbbp0006(itemDetail.getB2cComments());
 			// Survey info. for item /调研表基本信息
-//			item.setVbbpz121(String);
+//			StringBuilder sb = new StringBuilder(128);
+//			if(!StringUtils.isEmpty(item.getRequestBrand()) ) {
+//				sb.append(",").append(item.getRequestBrand());
+//			}
+//			if(!StringUtils.isEmpty(item.getRequestPackage()) ) {
+//				sb.append(",").append(item.getRequestPackage());
+//			}
+//			if(!StringUtils.isEmpty(item.getRequestNameplate()) ) {
+//				sb.append(",").append(item.getRequestNameplate());
+//			}
+//			if(!StringUtils.isEmpty(item.getRequestCircuit()) ) {
+//				sb.append(",").append(item.getRequestCircuit());
+//			}
+//			item.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
 			// Special note/特殊备注
-//			item.setVbbpz117(String);
+//			item.setVbbpz117(item.getSpecialNeed());
 			// Color option/颜色可选项
 //			item.setVbbpz120(String);
 			// Customer special request/客户物料说明
-//			item.setVbbp0007(String);
+//			item.setVbbp0007(item.getComments());
 			
 			items.add(item);
 			
@@ -521,6 +570,15 @@ public class OrderService {
 			List<KCharacteristics> characList = characteristicsRepository.findByItemDetailsId(itemDetail.getId());
 			for (KCharacteristics charac : characList) {
 				SapOrderCharacteristics c = new SapOrderCharacteristics();
+				
+//				if (charac.getIsConfigurable() == 1) {
+//					// 设置 Item 的 Color option/颜色可选项
+//					String vbbpz120 = item.getVbbpz120();
+//					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
+//					vbbpz120 = (vbbpz120 == null || vbbpz120.length() == 0) ? tmp : "," + tmp;
+//					item.setVbbpz120(vbbpz120);
+//				}
+				
 				// Item/行项目编号
 				c.setPosnr(rowNumber);
 				// Characteristic/特性
@@ -606,20 +664,24 @@ public class OrderService {
 		Map<String, Object> params = new HashMap<>();
 	     querySql.append("select * from k_order_view where 1=1 ");
 	     if(!isEmpty(orderQuery.getOrderId())) {
-	    	 querySql.append(" order_id = :orderId");
+	    	 querySql.append(" and order_id = :orderId");
 	    	 params.put("orderId", orderQuery.getOrderId());
 	     }
 	     if(!isEmpty(orderQuery.getSequenceNumber())) {
-	    	 querySql.append(" sequence_number = :sequenceNumber");//.append(query.getSequenceNumber());
+	    	 querySql.append(" and sequence_number = :sequenceNumber");//.append(query.getSequenceNumber());
 	    	 params.put("sequenceNumber", orderQuery.getSequenceNumber());
 	     }
 	     if(!isEmpty(orderQuery.getVersionId())) {
-	    	 querySql.append(" version_id = :versionId");// .append(query.getVersionId());
+	    	 querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
 	    	 params.put("versionId", orderQuery.getVersionId());
 	     }
 	     if(!isEmpty(orderQuery.getVersion())) {
-	    	 querySql.append(" version = :version"); // .append(query.getVersion());
+	    	 querySql.append(" and version = :version"); // .append(query.getVersion());
 	    	 params.put("version", orderQuery.getVersion());
+	     }
+	     if(!isEmpty(orderQuery.getVersion())) {
+	    	 querySql.append(" and status = :status"); // .append(query.getStatus());
+	    	 params.put("status", orderQuery.getStatus());
 	     }
 	     
 	     Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
@@ -634,22 +696,37 @@ public class OrderService {
 	 
 	     List<KOrderView> orderViews = query.getResultList();
 	     for (KOrderView orderView : orderViews) {
+	    	 String orderId = orderView.getOrderId();
+	    	 String orderInfoId = orderView.getOrderInfoId();
+	    	 
 			SalesOrder order = new SalesOrder();
 			orders.add(order);
 			order.setSequenceNumber(orderView.getSequenceNumber());
 //			order.setAddress(orderView.);
 //			order.setApprovedDicount(orderView);
-			
 			order.setBodyDiscount(orderView.getBodyDiscount());
-			
-//			order.setCityCode(orderView.getci);
+//			order.setCityCode(cityCode);
+			order.setComments(orderView.getComments());
+//			order.setConfirmTypeCode(orderView.getcon);
+			order.setContactor1Id(orderView.getContactor1Id());
+			order.setContactor1Tel(orderView.getContactor1Tel());
+			BeanUtils.copyProperties(orderView, order);
 			
 			// TODO Attached File
-//			order.setAttachedFileName(attachedFileName);
+//			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
+			List<String> attachmentNames = new ArrayList<String>();
+//			for(KAttachment attachment : attachments) {
+//				attachmentNames.add(attachment.getFileName());
+//			}
+			order.setAttachedFileName(attachmentNames);
 			
 			// TODO 收货地址
+			List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderId);
+//			order.setDeliveryAddresses(addressList);
 			
 			// TODO billing plan
+			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+//			order.setBillingPlans(billingPlanList);
 			
 			// TODO bpm dicision
 			
@@ -675,8 +752,10 @@ public class OrderService {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(form.getId());
 		form.setDetailsList(detailsList);
 		for (ItemDetails itemDetails : detailsList) {
+			String itemId = itemDetails.getId();
 			// TODO item b2c
 			// TODO characteristics
+			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
 			// TODO configure material
 			// TODO attached info
 		}
