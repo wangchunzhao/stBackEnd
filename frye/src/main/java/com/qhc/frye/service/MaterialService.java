@@ -138,7 +138,7 @@ public class MaterialService {
 		return m;
 	}
 	
-	public List<Characteristic> getCharactersByClazzCode(String clazzCode){
+	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode){
 		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
 		List<Characteristic> chas = new ArrayList<Characteristic>();
 		Map<String,Characteristic> cs = new HashMap<String,Characteristic>();

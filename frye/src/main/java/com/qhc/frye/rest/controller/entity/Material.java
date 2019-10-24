@@ -183,6 +183,12 @@ public class Material implements Serializable{
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
 	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 	
 	
 	

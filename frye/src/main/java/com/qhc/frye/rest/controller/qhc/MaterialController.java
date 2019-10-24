@@ -128,7 +128,7 @@ public class MaterialController {
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode) {
-		return materialService.getCharactersByClazzCode(clazzCode);
+		return materialService.getCharactersByClazzCode(clazzCode,materialCode);
 		
 	}
 	
