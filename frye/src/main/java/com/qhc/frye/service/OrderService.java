@@ -438,9 +438,9 @@ public class OrderService {
 		
 		for (KOrderVersionView kOrderVersionView : verions) {
 			orderId = kOrderVersionView.getOrderId();
-			String status = kOrderVersionView.getStatus();
+			Integer status = kOrderVersionView.getStatus();
 			// 最后一个审批通过的版本
-			if (status.equals("3")) {
+			if (status.equals(3)) {
 				orderInfoId = kOrderVersionView.getOrderInfoId();
 				orderVersionId = kOrderVersionView.getVersionId();
 			}
@@ -518,7 +518,7 @@ public class OrderService {
 			prices.add(price2);
 			
 			// Characteristics value input
-			List<KCharacteristics> characList = characteristicsRepository.findByKItemDetailsId(itemDetail.getId());
+			List<KCharacteristics> characList = characteristicsRepository.findByItemDetailsId(itemDetail.getId());
 			for (KCharacteristics charac : characList) {
 				SapOrderCharacteristics c = new SapOrderCharacteristics();
 				// Item/行项目编号
@@ -540,7 +540,7 @@ public class OrderService {
 				header.setZterm(kBiddingPlan.getCode());
 			}
 			// Value to be billed/金额
-			plan.setFakwr(BigDecimal.valueOf(kBiddingPlan.getAmount()));
+			plan.setFakwr(kBiddingPlan.getAmount());
 			// Settlement date/结算日期
 			plan.setFkdat(new SimpleDateFormat("yyyyMMdd").format(kBiddingPlan.getPayDate()));
 			// Date category/日期原因

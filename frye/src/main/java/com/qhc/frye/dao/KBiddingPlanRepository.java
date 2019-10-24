@@ -10,5 +10,5 @@ import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.KBiddingPlan;
 @Repository
 public interface KBiddingPlanRepository extends JpaRepository<KBiddingPlan, Integer> {
-	public List<KBiddingPlan> findByKOrderInfoId(String orderInfoId);
+	public List<KBiddingPlan> findByOrderInfoId(String orderInfoId);
 }

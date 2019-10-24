@@ -80,7 +80,7 @@ public class BayernService<T> {
 	 * @return returned object
 	 */
 	public T postForm(String path, Map<String,String> pars, Class T) {
-		String url = config.getFryeURL() + path;
+		String url = config.getBayernURL() + path;
 		
 		@SuppressWarnings("unchecked")
 		Mono<T> resp = WebClient.create().post().uri(url).contentType(MediaType.APPLICATION_JSON)

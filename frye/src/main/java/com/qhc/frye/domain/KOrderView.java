@@ -1,6 +1,7 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,11 +15,11 @@ public class KOrderView
 		implements Serializable {
 	
 	/* Column(sequence_number) - 序列号 */
-	@Column(name="sequence_number")
+	@Column(name="sequence_number",columnDefinition="CHAR",length=12)
 	private String sequenceNumber = null;
 
 	/* Column(order_type_code) - //dealer or keyaccount or bulk */
-	@Column(name="order_type_code")
+	@Column(name="order_type_code",columnDefinition="CHAR",length=4)
 	private String orderTypeCode = null;
 
 	/* Column(create_time) - 创建时间 */
@@ -30,51 +31,52 @@ public class KOrderView
 	private String ownerDomainId = null;
 
 	/* Column(owner_name) - 创建人员姓名 */
-	@Column(name="owner_name")
+	@Column(name="owner_name",columnDefinition="TEXT")
 	private String ownerName = null;
 
 	/* Column(sales_tel) - sales name */
-	@Column(name="sales_tel")
+	@Column(name="sales_tel",columnDefinition="CHAR",length=45)
 	private String salesTel = null;
 
 	/* Column(contractor_code) - contracter Code/ customer code */
-	@Column(name="contractor_code")
+	@Column(name="contractor_code",columnDefinition="CHAR",length=10)
 	private String contractorCode = null;
 
 	/* Column(contractor_name) - ContractorName */
-	@Column(name="contractor_name")
+	@Column(name="contractor_name",columnDefinition="TEXT")
 	private String contractorName = null;
 
 	/* Column(contractor_class_code) - sap customer class code: 01/02 */
-	@Column(name="contractor_class_code")
+	@Column(name="contractor_class_code",columnDefinition="CHAR",length=10)
 	private String contractorClassCode = null;
 
 	/* Column(contractor_class_name) - 经销商/直签 */
-	@Column(name="contractor_class_name")
+	@Column(name="contractor_class_name",columnDefinition="TEXT")
 	private String contractorClassName = null;
 
 	/* Column(sales_office_code) - 销售员所属区域 */
-	@Column(name="sales_office_code")
+	@Column(name="sales_office_code",columnDefinition="CHAR",length=45)
 	private String salesOfficeCode = null;
 
 	/* Column(order_id) - OrderId */
-	@Column(name="order_id")
+	@Column(name="order_id",columnDefinition="CHAR",length=32)
 	private String orderId = null;
 
 	/* Column(version_id) - VersionId */
-	@Column(name="version_id")
+	@Id
+	@Column(name="version_id",columnDefinition="CHAR",length=32)
 	private String versionId = null;
 
 	/* Column(version) - 版本名称 */
-	@Column(name="version")
+	@Column(name="version",columnDefinition="CHAR",length=45)
 	private String version = null;
 
 	/* Column(status) - 0:saved
 1:draft:submit to headquater
 2.approving:BPM
 3.approved */
-	@Column(name="status")
-	private String status = null;
+	@Column(name="status",columnDefinition="TINYINT",length=2)
+	private Integer status = null;
 
 	/* Column(version_create_time) - 版本创建时间 */
 	@Column(name="version_create_time")
@@ -85,15 +87,15 @@ public class KOrderView
 	private Date optTime = null;
 
 	/* Column(parent_version_id) - 前版本 */
-	@Column(name="parent_version_id")
+	@Column(name="parent_version_id",columnDefinition="CHAR",length=32)
 	private String parentVersionId = null;
 
 	/* Column(order_info_id) - OrderInfoId */
-	@Column(name="order_info_id")
+	@Column(name="order_info_id",columnDefinition="CHAR",length=32)
 	private String orderInfoId = null;
 
-	/* Column(id) - Id */
-	@Column(name="id")
+	/* Column(id) - Id of k_order_info */
+	@Column(name="id",columnDefinition="char",length=32)
 	private String id = null;
 
 	/* Column(last_operator) - 最后操作人 */
@@ -105,19 +107,19 @@ public class KOrderView
 	private Date lastOptTime = null;
 
 	/* Column(customer_name) - //店名 customer name */
-	@Column(name="customer_name")
+	@Column(name="customer_name",columnDefinition="TEXT")
 	private String customerName = null;
 
 	/* Column(is_reformed) - 是否是改造店 */
-	@Column(name="is_reformed")
-	private Integer isReformed = null;
+	@Column(name="is_reformed",columnDefinition ="BIT")
+	private Integer	isReformed	;//	是否改造店
 
 	/* Column(is_convenient_store) - 是否是便利店 */
-	@Column(name="is_convenient_store")
+	@Column(name="is_convenient_store",columnDefinition="BIT")
 	private Integer isConvenientStore = null;
 
 	/* Column(is_new) - 是不是新店 */
-	@Column(name="is_new")
+	@Column(name="is_new",columnDefinition ="BIT")
 	private Integer isNew = null;
 
 	/* Column(terminal_industry_code) - 终端店面的insustray code */
@@ -125,7 +127,7 @@ public class KOrderView
 	private String terminalIndustryCode = null;
 
 	/* Column(terminal_industry_code_name) - 终端店面的insustray code的名字 */
-	@Column(name="terminal_industry_code_name")
+	@Column(name="terminal_industry_code_name",columnDefinition="TEXT")
 	private String terminalIndustryCodeName = null;
 
 	/* Column(body_discount) - 柜体折扣 */
@@ -141,7 +143,7 @@ public class KOrderView
 	private String installTermCode = null;
 
 	/* Column(install_term_name) - 安装方式名称 */
-	@Column(name="install_term_name")
+	@Column(name="install_term_name",columnDefinition="TEXT")
 	private String installTermName = null;
 
 	/* Column(receive_term_code) - 接货方式名称code */
@@ -149,47 +151,47 @@ public class KOrderView
 	private String receiveTermCode = null;
 
 	/* Column(receive_term_name) - 接货方式名称 */
-	@Column(name="receive_term_name")
+	@Column(name="receive_term_name",columnDefinition="TEXT")
 	private String receiveTermName = null;
 
 	/* Column(contactor_1_id) - 第一联系人身份证 */
-	@Column(name="contactor_1_id")
+	@Column(name="contactor_1_id",columnDefinition="VARCHAR",length=18)
 	private String contactor1Id = null;
 
 	/* Column(contactor_1_tel) - 第一联系人电话 */
-	@Column(name="contactor_1_tel")
+	@Column(name="contactor_1_tel",columnDefinition="VARCHAR",length=16)
 	private String contactor1Tel = null;
 
 	/* Column(contactor_2_id) - 第二联系人身份证 */
-	@Column(name="contactor_2_id")
+	@Column(name="contactor_2_id",columnDefinition="VARCHAR",length=18)
 	private String contactor2Id = null;
 
 	/* Column(contactor_2_tel) - 第二联系人电话 */
-	@Column(name="contactor_2_tel")
+	@Column(name="contactor_2_tel",columnDefinition="VARCHAR",length=16)
 	private String contactor2Tel = null;
 
 	/* Column(contactor_3_id) - 第三联系人身份证 */
-	@Column(name="contactor_3_id")
+	@Column(name="contactor_3_id",columnDefinition="VARCHAR",length=18)
 	private String contactor3Id = null;
 
 	/* Column(contactor_3_tel) - 第三联系人电话 */
-	@Column(name="contactor_3_tel")
+	@Column(name="contactor_3_tel",columnDefinition="VARCHAR",length=16)
 	private String contactor3Tel = null;
 
 	/* Column(freight) - 运费合计 */
 	@Column(name="freight")
-	private Double freight = null;
+	private BigDecimal freight = null;
 
 	/* Column(warranty) - 保修周期 */
 	@Column(name="warranty")
 	private Integer warranty = null;
 
 	/* Column(currency_code) - 外币code */
-	@Column(name="currency_code")
+	@Column(name="currency_code",columnDefinition="VARCHAR",length=3)
 	private String currencyCode = null;
 
 	/* Column(currency_name) - 外币名称 */
-	@Column(name="currency_name")
+	@Column(name="currency_name",columnDefinition="TEXT")
 	private String currencyName = null;
 
 	/* Column(exchange) - 汇率 */
@@ -198,14 +200,14 @@ public class KOrderView
 
 	/* Column(contract_amount) - 原合同金额 */
 	@Column(name="contract_amount")
-	private Double contractAmount = null;
+	private BigDecimal contractAmount = null;
 
 	/* Column(contract_rmb_amount) - 合同人民币金额 */
 	@Column(name="contract_rmb_amount")
-	private Double contractRmbAmount = null;
+	private BigDecimal contractRmbAmount = null;
 
 	/* Column(sales_type) - 销售类型 */
-	@Column(name="sales_type")
+	@Column(name="sales_type",columnDefinition="CHAR",length=2)
 	private String salesType = null;
 
 	/* Column(tax_rate) - 税率 */
@@ -217,55 +219,55 @@ public class KOrderView
 	private String incotermCode = null;
 
 	/* Column(incoterm_name) - 贸易条件名称 */
-	@Column(name="incoterm_name")
+	@Column(name="incoterm_name",columnDefinition="TEXT")
 	private String incotermName = null;
 
 	/* Column(incoterm_contect) - 贸易条件 */
-	@Column(name="incoterm_contect")
+	@Column(name="incoterm_contect",columnDefinition="TEXT")
 	private String incotermContect = null;
 
 	/* Column(office_code) - 表单里的大区code */
-	@Column(name="office_code")
+	@Column(name="office_code",columnDefinition="CHAR",length=45)
 	private String officeCode = null;
 
 	/* Column(office_name) - 大区名称 */
-	@Column(name="office_name")
+	@Column(name="office_name",columnDefinition="TEXT")
 	private String officeName = null;
 
 	/* Column(group_code) - 中心code */
-	@Column(name="group_code")
+	@Column(name="group_code",columnDefinition="CHAR",length=45)
 	private String groupCode = null;
 
 	/* Column(group_name) - 中心名称 */
-	@Column(name="group_name")
+	@Column(name="group_name",columnDefinition="TEXT")
 	private String groupName = null;
 
 	/* Column(transfer_type_code) - 运输类型代码 */
-	@Column(name="transfer_type_code")
+	@Column(name="transfer_type_code",columnDefinition="CHAR",length=45)
 	private String transferTypeCode = null;
 
 	/* Column(transfer_type_name) - 运输类型名称 */
-	@Column(name="transfer_type_name")
+	@Column(name="transfer_type_name",columnDefinition="TEXT")
 	private String transferTypeName = null;
 
 	/* Column(is_term1) - 柜体控制阀门件是否甲供 */
-	@Column(name="is_term1")
+	@Column(name="is_term1",columnDefinition="BIT")
 	private Integer isTerm1 = null;
 
 	/* Column(is_term2) - 分体柜是否远程监控 */
-	@Column(name="is_term2")
+	@Column(name="is_term2",columnDefinition="BIT")
 	private Integer isTerm2 = null;
 
 	/* Column(is_term3) - 立体柜是否在地下室 */
-	@Column(name="is_term3")
+	@Column(name="is_term3",columnDefinition="BIT")
 	private Integer isTerm3 = null;
 
 	/* Column(comments) - Comments */
-	@Column(name="comments")
+	@Column(name="comments",columnDefinition="TEXT")
 	private String comments = null;
 
 	/* Column(form_id) - FormId */
-	@Column(name="form_id")
+	@Column(name="form_id",columnDefinition="CHAR",length=32)
 	private String formId = null;
 
 	/* Column(earliest_delivery_date) - 最早交付时间 */
@@ -277,7 +279,7 @@ public class KOrderView
 	private Date earliestProductDate = null;
 
 	/* Column(form_comments) - 备注 */
-	@Column(name="form_comments")
+	@Column(name="form_comments",columnDefinition="text")
 	private String formComments = null;
 
 	/* Column(form_operator) - 最后操作人 */
@@ -288,7 +290,7 @@ public class KOrderView
 0:订单
 1：工程
 2：B2C */
-	@Column(name="form_type")
+	@Column(name="form_type",columnDefinition="tinyint",length=2)
 	private Integer formType = null;
 
 	/* Column(form_opt_time) - 最后操作时间 */
@@ -411,11 +413,11 @@ public class KOrderView
 		this.version = version;
 	}
 	 
-	public String getStatus() {
+	public Integer getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	 
@@ -619,11 +621,11 @@ public class KOrderView
 		this.contactor3Tel = contactor3Tel;
 	}
 	 
-	public Double getFreight() {
+	public BigDecimal getFreight() {
 		return this.freight;
 	}
 
-	public void setFreight(Double freight) {
+	public void setFreight(BigDecimal freight) {
 		this.freight = freight;
 	}
 	 
@@ -659,19 +661,19 @@ public class KOrderView
 		this.exchange = exchange;
 	}
 	 
-	public Double getContractAmount() {
+	public BigDecimal getContractAmount() {
 		return this.contractAmount;
 	}
 
-	public void setContractAmount(Double contractAmount) {
+	public void setContractAmount(BigDecimal contractAmount) {
 		this.contractAmount = contractAmount;
 	}
 	 
-	public Double getContractRmbAmount() {
+	public BigDecimal getContractRmbAmount() {
 		return this.contractRmbAmount;
 	}
 
-	public void setContractRmbAmount(Double contractRmbAmount) {
+	public void setContractRmbAmount(BigDecimal contractRmbAmount) {
 		this.contractRmbAmount = contractRmbAmount;
 	}
 	 

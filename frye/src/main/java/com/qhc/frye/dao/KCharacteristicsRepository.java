@@ -10,5 +10,5 @@ import com.qhc.frye.domain.KCharacteristics;
 @Repository
 public interface KCharacteristicsRepository extends JpaRepository<KCharacteristics, String> {
 	
-	List<KCharacteristics> findByKItemDetailsId(String itemId);
+	List<KCharacteristics> findByItemDetailsId(String itemId);
 }
