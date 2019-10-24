@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.rest.controller.entity.Bom;
+import com.qhc.frye.rest.controller.entity.BomExplosion;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.Configuration;
 import com.qhc.frye.rest.controller.entity.Material;
@@ -44,7 +45,7 @@ public class MaterialService {
 	
 	public final static String BOM_PATH_EXPORSION = "material/configuration";
 	public final static String BOM_CONFIGURATION_DEFAULT = "default";
-	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
+	public final static String BOM_CONFIGURATION_CONFIGURATED = "new";
 	
 	@Autowired
 	private MaterialRepository materialRepo;
@@ -180,10 +181,19 @@ public class MaterialService {
 	 * @param pars
 	 * @return
 	 */
-	public Map<String,List<Bom>> findBOMWithPrice(Map<String,String> pars){
+	public BomExplosion findBOMWithPrice(Map<String,String> pars){
 		Map<String,List<Bom>> boms = bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
-		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED))
-			return boms;
+		
+		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
+			
+			BomExplosion be = new BomExplosion();
+			
+			be.setSrc(boms.get(BOM_CONFIGURATION_DEFAULT));
+			be.setTag(boms.get(BOM_CONFIGURATION_CONFIGURATED));
+			
+			return be;
+		}
+			
 		return null;
 	}
 }

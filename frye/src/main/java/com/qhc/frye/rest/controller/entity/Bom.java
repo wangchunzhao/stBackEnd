@@ -19,7 +19,7 @@ public class Bom implements Serializable{
 	private static final int FACTOR = 31;
 	//
 	private String code;
-	private Bom parent;
+	private String parentCode;
 	private boolean isConfigurable;
 	private double price;
 	private double quantity;
@@ -31,11 +31,11 @@ public class Bom implements Serializable{
 		this.code = code;
 	}
 	
-	public Bom getParent() {
-		return parent;
+	public String getParentCode() {
+		return parentCode;
 	}
-	public void setParent(Bom parent) {
-		this.parent = parent;
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 	public boolean isConfigurable() {
 		return isConfigurable;

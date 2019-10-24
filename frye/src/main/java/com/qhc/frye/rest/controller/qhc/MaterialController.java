@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.rest.controller.entity.Bom;
+import com.qhc.frye.rest.controller.entity.BomExplosion;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
@@ -139,7 +140,7 @@ public class MaterialController {
 	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
 	@PostMapping(value = "material/configuration/{clazzCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String,List<Bom>> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
+	public BomExplosion findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
 		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE)) {
 			return materialSer.findBOMWithPrice(pars);
 		}
