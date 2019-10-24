@@ -916,8 +916,6 @@ DROP TABLE IF EXISTS `bohemian`.`k_forms` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
   `id` CHAR(32) NOT NULL,
-  `earliest_delivery_date` DATE NULL COMMENT '最早交付时间',
-  `earliest_product_date` DATE NULL COMMENT '最早生产时间',
   `comments` TEXT NULL COMMENT '备注',
   `operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
   `type` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '最后的操作类型\n0:订单\n1：工程\n2：B2C',
@@ -1000,10 +998,15 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `freight` DECIMAL(13,2) NULL COMMENT '运费',
   `retail_price` DECIMAL(13,2) NULL COMMENT '零售价格',
   `delievery_date` DATE NULL COMMENT '发货日期日期',
-  `comments` TEXT NULL COMMENT '备注，位于配置页面',
   `special_need` TEXT NULL COMMENT '特殊备注',
   `mosaic_image` TEXT NULL COMMENT '拼接图备注',
   `attached_image` TEXT NULL COMMENT '拼接图附件',
+  `request_brand` TEXT NULL,
+  `request_package` TEXT NULL,
+  `request_nameplate` TEXT NULL,
+  `request_circuit` TEXT NULL,
+  `comments` TEXT NULL COMMENT '备注，位于配置页面',
+  `color_comments` TEXT NULL COMMENT '颜色备注',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
@@ -1230,6 +1233,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key_code` VARCHAR(45) NOT NULL COMMENT '选定的特征代码',
   `value_code` VARCHAR(45) NOT NULL COMMENT '选定的特征值的代码',
+  `is_configurable` TINYINT(1) NOT NULL,
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1404,8 +1408,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_default_characteristic` (
   `sap_characteristic_value_code` VARCHAR(30) NOT NULL,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
-  INDEX `fk_sap_material_default_characteristic_sap_characteristic_v_idx` (`sap_characteristic_value_code` ASC) INVISIBLE,
-  UNIQUE INDEX `index4` (`material_code` ASC, `sap_characteristic_value_code` ASC) VISIBLE,
+  INDEX `fk_sap_material_default_characteristic_sap_characteristic_v_idx` (`sap_characteristic_value_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_material_default_characteristic_sap_characteristic_val1`
     FOREIGN KEY (`sap_characteristic_value_code`)
     REFERENCES `bohemian`.`sap_characteristic_value` (`code`)
@@ -1428,7 +1431,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT, `material_code` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1521,14 +1524,12 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name,m.material_code
+SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name
 FROM sap_clazz_and_character c
 left join sap_characteristic k 
 	on c.sap_characteristic_code = k.code 
 left join sap_characteristic_value v
-	on v.sap_characteristic_code = k.code
-left join sap_material_default_characteristic m
-	on m.sap_characteristic_value_code = v.code;
+	on v.sap_characteristic_code = k.code;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
