@@ -43,6 +43,8 @@ public class MaterialService {
 	public final String MATERIAL_PRICE_TYPE_INTERNAL_PRICE = "ZHCS";
 	
 	public final static String BOM_PATH_EXPORSION = "material/configuration";
+	public final static String BOM_CONFIGURATION_DEFAULT = "default";
+	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
 	
 	@Autowired
 	private MaterialRepository materialRepo;
@@ -51,7 +53,7 @@ public class MaterialService {
 	private SapLastUpdatedRepository lastUpdatedRepo;
 	
 	@Autowired
-	private BayernService bayernSer;
+	private BayernService<Map<String,List<Bom>>> bayernSer;
 	
 	@Autowired
 	private MaterialInfoRepository materialInfoRepo;
@@ -173,9 +175,15 @@ public class MaterialService {
 		}
 		return chas;
 	}
-	
+	/**
+	 * 
+	 * @param pars
+	 * @return
+	 */
 	public Map<String,List<Bom>> findBOMWithPrice(Map<String,String> pars){
-		Map<String,List<Bom>> boms = (Map<String,List<Bom>> ) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
-		return boms;
+		Map<String,List<Bom>> boms = bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
+		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED))
+			return boms;
+		return null;
 	}
 }

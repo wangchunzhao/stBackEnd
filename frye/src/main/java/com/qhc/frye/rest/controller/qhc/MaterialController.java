@@ -139,10 +139,9 @@ public class MaterialController {
 	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
 	@PostMapping(value = "material/configuration/{clazzCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Object> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
+	public Map<String,List<Bom>> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
 		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE)) {
-			//return materialSer.findBOMWithPrice(Map<String,String> pars);
-			return null;
+			return materialSer.findBOMWithPrice(pars);
 		}
 		return null;
 		
