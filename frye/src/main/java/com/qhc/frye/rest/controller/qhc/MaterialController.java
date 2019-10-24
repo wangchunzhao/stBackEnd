@@ -125,10 +125,10 @@ public class MaterialController {
 	}
 	
 	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表")
-	@GetMapping(value = "material/configurations/{clazzCode}")
+	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Characteristic> findCharacteristic(@RequestBody(required = true) String clazzCode) {
-		return materialService.getCharactersByClazzCode(clazzCode);
+	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode) {
+		return materialService.getCharactersByClazzCode(clazzCode,materialCode);
 		
 	}
 	

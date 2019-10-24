@@ -40,11 +40,12 @@ public class Material implements Serializable{
 	private double standardPrice;//标准价
 	private String groupCode;//物料分组
 	private String groupName;//类型名称
-
+	private String clazzCode;//物料分类代码
+	
 	//need by bayern
 	private Date optTime;
 	private String unitCode;//计量单位代码
-	private String clazzCode;
+	
 	
 	public String getCode() {
 		return code;
@@ -181,6 +182,12 @@ public class Material implements Serializable{
 	}
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 	
 	
