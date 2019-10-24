@@ -117,6 +117,7 @@ public class MaterialService {
 			m.setPurchased(mp.isPurchased());
 			m.setStandardPrice(mp.getStandPrice());
 			m.setGroupCode(mp.getGroupCode());
+			m.setClazzCode(mp.getClazzCode());
 			//
 			switch(mp.getPriceTypeCode()) {
 				case MATERIAL_PRICE_TYPE_RETAIL_PRICE:
@@ -135,7 +136,12 @@ public class MaterialService {
 		
 		return m;
 	}
-	
+	/**
+	 * 
+	 * @param clazzCode
+	 * @param materialCode
+	 * @return
+	 */
 	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode){
 		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
 		List<Characteristic> chas = new ArrayList<Characteristic>();
