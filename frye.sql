@@ -921,6 +921,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_forms` (
   `type` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '最后的操作类型\n0:订单\n1：工程\n2：B2C',
   `opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `k_order_info_id` CHAR(32) NOT NULL,
+  `earliest_delivery_date` DATE NULL,
+  `earliest_product_date` DATE NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_forms_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
@@ -1431,7 +1433,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT, `material_code` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1524,12 +1526,22 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-SELECT c.sap_clazz_code,k.code as key_code,k.name as key_name,k.is_optional,v.code as value_code,v.name as value_name
-FROM sap_clazz_and_character c
-left join sap_characteristic k 
-	on c.sap_characteristic_code = k.code 
-left join sap_characteristic_value v
-	on v.sap_characteristic_code = k.code;
+    SELECT 
+        c.sap_clazz_code,
+        k.code AS key_code,
+        k.name AS key_name,
+        k.is_optional,
+        v.code AS value_code,
+        v.name AS value_name,
+        m.material_code
+    FROM
+        sap_clazz_and_character c
+            LEFT JOIN
+        sap_characteristic k ON c.sap_characteristic_code = k.code
+            LEFT JOIN
+        sap_characteristic_value v ON v.sap_characteristic_code = k.code
+            LEFT JOIN
+        sap_material_default_characteristic m ON m.sap_characteristic_value_code = v.code;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
