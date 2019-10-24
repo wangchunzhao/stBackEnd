@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.rest.controller.entity.Bom;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.Configuration;
 import com.qhc.frye.rest.controller.entity.Material;
@@ -41,14 +42,16 @@ public class MaterialService {
 	public final String MATERIAL_PRICE_TYPE_OUTSOURCING_PRICE = "ZH11";
 	public final String MATERIAL_PRICE_TYPE_INTERNAL_PRICE = "ZHCS";
 	
+	public final static String BOM_PATH_EXPORSION = "material/configuration";
+	
 	@Autowired
 	private MaterialRepository materialRepo;
 	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdatedRepo;
 	
-//	@Autowired
-//	private MaterialClazzRepository mcRepo;
+	@Autowired
+	private BayernService bayernSer;
 	
 	@Autowired
 	private MaterialInfoRepository materialInfoRepo;
@@ -171,5 +174,8 @@ public class MaterialService {
 		return chas;
 	}
 	
-	
+	public Map<String,List<Bom>> findBOMWithPrice(Map<String,String> pars){
+		Bom obj = (Bom) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Bom.class);
+		return null;
+	}
 }

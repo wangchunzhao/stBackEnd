@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.domain.DMaterial;
+import com.qhc.frye.rest.controller.entity.Bom;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.DateUtil;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
+import com.qhc.frye.service.BayernService;
 import com.qhc.frye.service.CharacteristicService;
 import com.qhc.frye.service.CustomerService;
 import com.qhc.frye.service.MaterialService;
@@ -43,17 +45,19 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Material Management in Frye", description = "物料管理")
 public class MaterialController {
 	
-	public final static String MATERIAL_CLAZZ_CODE ="class_code";
+	public final static String MATERIAL_NAME ="name";
+	public final static String MATERIAL_PAGENO ="pageNo";
 	public final static String MATERIAL_BOM_CODE ="bom_code";
+	
 
 	@Autowired
-	private MaterialService materialService;
+	private MaterialService materialSer;
 
 	@Autowired
 	private CustomerService cu;
 
 	@Autowired
-	private CharacteristicService characteristicService;
+	private CharacteristicService characteristicSer;
 
 	@ApiOperation(value = "查询物料lastUpdateDate")
 	@GetMapping(value = "material/lastUpdateDate")
@@ -69,7 +73,7 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public void postMaterial(@RequestBody(required = true) @Valid List<Material> materials) throws Exception {
 
-		materialService.saveMaterials(materials);
+		materialSer.saveMaterials(materials);
 	}
 
 	@ApiOperation(value = "查找增物料信息")
@@ -77,10 +81,10 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public PageHelper<Material> findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
 			throws Exception {
-		if (pars.containsKey("name") && pars.containsKey("pageNo")) {
-			PageHelper<Material> ms = new PageHelper();
-			PageHelper<DMaterial> dms = materialService.findMaterialsByName(pars.get("name"),
-					Integer.parseInt(pars.get("pageNo")));
+		if (pars.containsKey(MATERIAL_NAME) && pars.containsKey(MATERIAL_PAGENO)) {
+			PageHelper<Material> ms = new PageHelper<Material>();
+			PageHelper<DMaterial> dms = materialSer.findMaterialsByName(pars.get(MATERIAL_NAME),
+					Integer.parseInt(pars.get(MATERIAL_PAGENO)));
 			List<Material> ml = new ArrayList<Material>();
 			List<DMaterial> dml = dms.getRows();
 			for (DMaterial dm : dml) {
@@ -106,7 +110,7 @@ public class MaterialController {
 		if (code.equals("null")) {
 			code = null;
 		}
-		Material m = materialService.getMaterialsById(code);
+		Material m = materialSer.getMaterialsById(code);
 		return m;
 	}
 
@@ -114,21 +118,21 @@ public class MaterialController {
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
 	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
-		characteristicService.saveClass(clazz);
+		characteristicSer.saveClass(clazz);
 	}
 
 	@ApiOperation(value = "保存或者修改CharacteristicValue")
 	@PutMapping(value = "material/characteristic")
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
-		characteristicService.saveCharacteristicValue(chaValues);
+		characteristicSer.saveCharacteristicValue(chaValues);
 	}
 	
-	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表")
+	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode) {
-		return materialService.getCharactersByClazzCode(clazzCode,materialCode);
+		return materialSer.getCharactersByClazzCode(clazzCode,materialCode);
 		
 	}
 	
@@ -136,8 +140,9 @@ public class MaterialController {
 	@PostMapping(value = "material/configuration/{clazzCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Object> findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
-		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE) && pars.containsKey(MATERIAL_CLAZZ_CODE)) {
-			
+		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE)) {
+			//return materialSer.findBOMWithPrice(Map<String,String> pars);
+			return null;
 		}
 		return null;
 		
