@@ -294,6 +294,7 @@ DROP TABLE IF EXISTS `bohemian`.`sap_clazz` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_clazz` (
   `code` VARCHAR(18) NOT NULL,
   `name` TEXT NOT NULL,
+  `is_reserved` TINYINT(1) NOT NULL COMMENT '保留字段，非可配置类',
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
@@ -554,10 +555,12 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `material_size` DOUBLE(13,3) NULL COMMENT '物料体积',
   `sap_unit_of_measurement_code` VARCHAR(3) NOT NULL,
   `sap_material_groups_code` CHAR(4) NOT NULL,
+  `sap_clazz_code` VARCHAR(18) NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_sap_materials_sap_unit_of_measurement1_idx` (`sap_unit_of_measurement_code` ASC) VISIBLE,
   INDEX `fk_sap_materials_sap_material_groups1_idx` (`sap_material_groups_code` ASC) VISIBLE,
+  INDEX `fk_sap_materials_sap_clazz1_idx` (`sap_clazz_code` ASC) VISIBLE,
   CONSTRAINT `fk_sap_materials_sap_unit_of_measurement1`
     FOREIGN KEY (`sap_unit_of_measurement_code`)
     REFERENCES `bohemian`.`sap_unit_of_measurement` (`code`),
@@ -565,29 +568,12 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
     FOREIGN KEY (`sap_material_groups_code`)
     REFERENCES `bohemian`.`sap_material_groups` (`code`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`sap_material_clazz`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`sap_material_clazz` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_clazz` (
-  `sap_clazz_code` VARCHAR(18) NOT NULL,
-  `sap_materials_code` VARCHAR(18) NOT NULL,
-  PRIMARY KEY (`sap_clazz_code`, `sap_materials_code`),
-  INDEX `fk_sap_material_clazz_sap_clazz1_idx` (`sap_clazz_code` ASC) VISIBLE,
-  INDEX `fk_sap_material_clazz_sap_materials1_idx` (`sap_materials_code` ASC) INVISIBLE,
-  CONSTRAINT `fk_sap_material_clazz_sap_clazz1`
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_materials_sap_clazz1`
     FOREIGN KEY (`sap_clazz_code`)
-    REFERENCES `bohemian`.`sap_clazz` (`code`),
-  CONSTRAINT `fk_sap_material_clazz_sap_materials1`
-    FOREIGN KEY (`sap_materials_code`)
-    REFERENCES `bohemian`.`sap_materials` (`code`))
+    REFERENCES `bohemian`.`sap_clazz` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1434,9 +1420,9 @@ USE `bohemian` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`user_operation_view` (`id` INT, `user_id` INT, `user_mail` INT, `user_identity` INT, `user_isActive` INT, `role_id` INT, `role_name` INT, `attached_code` INT, `attached_name` INT, `operation_id` INT, `operation_name` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `bohemian`.`k_material_info_view`
+-- Placeholder table for view `bohemian`.`sap_material_info_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code` INT, `price_type_name` INT, `price` INT, `code` INT, `description` INT, `is_configurable` INT, `is_purchased` INT, `stand_price` INT, `sap_unit_of_measurement_code` INT, `unit_name` INT, `sap_material_groups_code` INT, `group_name` INT, `sap_clazz_code` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
@@ -1496,12 +1482,12 @@ CREATE  OR REPLACE VIEW user_operation_view AS
     ORDER BY user_id , role_id , operation_id ASC;
 
 -- -----------------------------------------------------
--- View `bohemian`.`k_material_info_view`
+-- View `bohemian`.`sap_material_info_view`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_material_info_view`;
-DROP VIEW IF EXISTS `bohemian`.`k_material_info_view` ;
+DROP TABLE IF EXISTS `bohemian`.`sap_material_info_view`;
+DROP VIEW IF EXISTS `bohemian`.`sap_material_info_view` ;
 USE `bohemian`;
-CREATE  OR REPLACE VIEW `k_material_info_view` AS
+CREATE  OR REPLACE VIEW `sap_material_info_view` AS
     SELECT 
         t.code AS price_type_code,
         t.name AS price_type_name,
@@ -1514,7 +1500,8 @@ CREATE  OR REPLACE VIEW `k_material_info_view` AS
         m.sap_unit_of_measurement_code,
         unit.name AS unit_name,
         m.sap_material_groups_code,
-        g.name AS group_name
+        g.name AS group_name,
+		m.sap_clazz_code
     FROM
         sap_materials m
             LEFT JOIN
@@ -1543,6 +1530,16 @@ left join sap_characteristic_value v
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_clazz`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_clazz` (`code`, `name`, `is_reserved`) VALUES ('unknow', 'Not able to be configurated', 1);
+
+COMMIT;
+
 
 -- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_currency`

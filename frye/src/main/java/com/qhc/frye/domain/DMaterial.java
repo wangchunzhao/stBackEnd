@@ -49,6 +49,10 @@ public class DMaterial {
 	@NotNull
     @Column(name="sap_material_groups_code",columnDefinition="CHAR",length=4)
 	private String type;
+	
+	@NotNull
+    @Column(name="sap_clazz_code",columnDefinition="CHAR",length=18)
+	private String clazzCode;
 
 	public String getCode() {
 		return code;
@@ -113,6 +117,14 @@ public class DMaterial {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getClazzCode() {
+		return clazzCode;
+	}
+
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
 	}
 	
 	

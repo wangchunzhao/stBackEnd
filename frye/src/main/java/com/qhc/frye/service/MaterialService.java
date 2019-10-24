@@ -17,14 +17,12 @@ import com.qhc.frye.rest.controller.entity.Configuration;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.dao.CharacteristicConfigurationRepository;
-import com.qhc.frye.dao.MaterialClazzRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CharacteristicConfiguration;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.LastUpdated;
-import com.qhc.frye.domain.MaterialClazz;
 import com.qhc.frye.domain.MaterialPrice;
 import com.qhc.frye.domain.identity.MaterialClazzIdentity;
 
@@ -49,8 +47,8 @@ public class MaterialService {
 	@Autowired
 	private SapLastUpdatedRepository lastUpdatedRepo;
 	
-	@Autowired
-	private MaterialClazzRepository mcRepo;
+//	@Autowired
+//	private MaterialClazzRepository mcRepo;
 	
 	@Autowired
 	private MaterialInfoRepository materialInfoRepo;
@@ -60,7 +58,7 @@ public class MaterialService {
 	
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
-		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
+//		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
 		LastUpdated lastUpdated = new LastUpdated();
 		lastUpdated.setCode(Material.MATERIAL_CODE);
 		lastUpdated.setName("material");
@@ -77,17 +75,17 @@ public class MaterialService {
 			mset.add(dm);
 
 			if(ma.getClazzCode()!=null && !ma.getClazzCode().isEmpty()) {
-				MaterialClazz mc = new MaterialClazz();
+//				MaterialClazz mc = new MaterialClazz();
 				MaterialClazzIdentity mci = new MaterialClazzIdentity();
 				mci.setClazzCode(ma.getClazzCode());
 				mci.setMaterialCode(ma.getCode());
-				mc.setMci(mci);
-				mcset.add(mc);
+//				mc.setMci(mci);
+//				mcset.add(mc);
 			}
 			lastUpdated.setLastUpdate(ma.getOptTime());
 		}
 		materialRepo.saveAll(mset);
-		mcRepo.saveAll(mcset);
+//		mcRepo.saveAll(mcset);
 		lastUpdatedRepo.save(lastUpdated);
 	}
 	/**

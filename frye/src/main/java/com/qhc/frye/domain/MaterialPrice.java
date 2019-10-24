@@ -15,7 +15,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "k_material_info_view")
+@Table(name = "sap_material_info_view")
 public class MaterialPrice implements Serializable {
 	
 	@Id 
@@ -55,6 +55,9 @@ public class MaterialPrice implements Serializable {
 	
 	@Column(name ="group_name",columnDefinition ="TEXT")
 	private String groupName;
+	
+	@Column(name ="sap_clazz_code",columnDefinition ="CHAR")
+	private String clazzCode;
 
 	public String getCode() {
 		return code;
@@ -150,6 +153,14 @@ public class MaterialPrice implements Serializable {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public String getClazzCode() {
+		return clazzCode;
+	}
+
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
 	}
 
 	

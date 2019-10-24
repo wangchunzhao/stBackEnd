@@ -18,6 +18,6 @@ import com.qhc.frye.domain.MaterialPrice;
  */
 @Repository
 public interface MaterialInfoRepository extends JpaRepository<MaterialPrice, String> {
-	@Query(value = "select * from k_material_info_view m where m.code=:code", nativeQuery = true)
+	@Query(value = "select * from sap_material_info_view m where m.code=:code", nativeQuery = true)
 	public List<MaterialPrice> findByMaterialId(@Param("code")String code);
 }
