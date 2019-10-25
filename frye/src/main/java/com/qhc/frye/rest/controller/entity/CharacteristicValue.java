@@ -99,6 +99,8 @@ public class CharacteristicValue implements InterEntityToDao{
 		DCharacteristic dc = new DCharacteristic();
 		dc.setCode(this.getCharacteristicCode());
 		dc.setName(this.getCharacteristicName());
+		//从SAP取数默认值为   0 
+		dc.setOptional(false);
 		
 		DClassAndCharacter dcac = new DClassAndCharacter();
 		ClassCharacterIdentity cci = new ClassCharacterIdentity();

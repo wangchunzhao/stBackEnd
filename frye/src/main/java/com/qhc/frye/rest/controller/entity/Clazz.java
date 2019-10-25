@@ -8,9 +8,11 @@ package com.qhc.frye.rest.controller.entity;
  *
  */
 public class Clazz {
+	
 	private String code;
+	
 	private String name;
-
+	
 	public String getCode() {
 		return code;
 	}
@@ -23,5 +25,5 @@ public class Clazz {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 }

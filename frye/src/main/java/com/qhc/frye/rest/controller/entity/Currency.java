@@ -49,7 +49,7 @@ public class Currency extends AbsConObject{
 		
 		SapCurrencySaleType sc = new SapCurrencySaleType();
 		CurrencySaleTypeIdentity ci = new CurrencySaleTypeIdentity();
-		//
+		//默认值20-出口
 		ci.setSaleTypeCode("20");
 		ci.setCurrencyCode(this.getCode());
 		sc.setCii(ci);

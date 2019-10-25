@@ -48,6 +48,8 @@ public class CharacteristicService {
 			DClazzOfMaterial dc = new DClazzOfMaterial();
 			dc.setCode(cl.getCode());
 			dc.setName(cl.getName());
+			//从sap抽取的数据该字段为0，其他自己存在的该字段为1
+			dc.setReserved(false);
 			dcs.add(dc);
 		}
 		clazzRepo.saveAll(dcs);
