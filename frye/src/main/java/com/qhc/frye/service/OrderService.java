@@ -490,14 +490,14 @@ public class OrderService {
 		header.setBstkdE(toString(orderView.getContractNumber()));	// Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
 		header.setVsart(toString(orderView.getTransferTypeCode()));	// Shipping type/装运类型 -- 运输类型
 //		header.setZterm();	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
-//		header.setKunnr(toString(orderView.getContractorCode()));	// Sold-to party/售达方 -- 签约单位
+		header.setKunnr(toString(orderView.getContractorCode()));	// Sold-to party/售达方 -- 签约单位
 		header.setWaerk(toString(orderView.getCurrencyCode()));	// Currency/币别 -- 币别
 		header.setInco1(toString(orderView.getIncotermCode()));	// Incoterms/国际贸易条款 -- 国际贸易条件 code
 		header.setInco1(toString(orderView.getIncotermName()));	// Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
 		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额 -- 合同金额
-//		header.setVbbkz121(orderView.getContractorName());	// Sale rep./签约人 -- 客户经理
-//		header.setVbbkz109();	// Order clerk/合同管理员 -- 合同管理员
+		header.setVbbkz121(orderView.getContractorName());	// Sale rep./签约人 -- 客户经理
+		header.setVbbkz109(orderView.getOpteratorDomainId());	// Order clerk/合同管理员 -- 合同管理员
 		String contactorInfo = toString(orderView.getContactor1Id()) + "/" + toString(orderView.getContactor1Tel())
 		 + toString(orderView.getContactor2Id()) + "/" + toString(orderView.getContactor2Tel())
 		 + toString(orderView.getContactor3Id()) + "/" + toString(orderView.getContactor3Tel());
@@ -517,15 +517,14 @@ public class OrderService {
 			item.setMatnr(itemDetail.getMaterialCode());
 			// Target quantity/数量
 			item.setZmeng(itemDetail.getAmount().intValue());
-			// TODO Req.dlv.date/请求发货日期
+			// Req.dlv.date/请求发货日期
 //			item.setEdatu(itemDetail.getDeliveryDate());
 			// Item category/行项目类别
 			item.setPstyv(itemDetail.getItemCategory());
-			// TODO Item usage/项目用途
-//			item.setVkaus(String);
+			// Item usage/项目用途
+			item.setVkaus(itemDetail.getItemCategory());
 
-			// delivery address
-			// TODO Ship-to address/送达方地址
+			// Ship-to address/送达方地址
 //			item.setStreet(itemDetail.getAddress());
 //			// Province/省
 //			item.setRegion();
@@ -558,7 +557,7 @@ public class OrderService {
 			// Survey info. Note/调研表备注
 //			item.setVbbp0007(item.getComments());
 			// Color Note/颜色备注
-//			item.setVbbpz118(vbbpz118);
+//			item.setVbbpz118(itemDetail.getColorComments());
 
 			items.add(item);
 
