@@ -56,6 +56,8 @@ public class SapOrderHeader {
 	private String vbbkz108;
 	// Survey info. for header /调研表相关内容 -- Selling tool 调研表相关内容3个字段
 	private String vbbkz122;
+	// Receiving method /收货方式 -- Selling tool 收货方式
+	private String vbbkz106;
 	
 	public String getAuart() {
 		return auart;
@@ -200,5 +202,11 @@ public class SapOrderHeader {
 	}
 	public void setVbbkz122(String vbbkz122) {
 		this.vbbkz122 = vbbkz122;
+	}
+	public String getVbbkz106() {
+		return vbbkz106;
+	}
+	public void setVbbkz106(String vbbkz106) {
+		this.vbbkz106 = vbbkz106;
 	}
 }

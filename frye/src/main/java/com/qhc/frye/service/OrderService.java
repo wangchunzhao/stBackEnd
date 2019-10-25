@@ -477,7 +477,7 @@ public class OrderService {
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-//		header.setAuart(orderView.getOrderTypeCode());	// Sales order type/订单类型
+		header.setAuart(orderView.getOrderTypeCode());	// Sales order type/订单类型
 //		header.setVkorg(orderView);	// Sales org./销售组织
 //		header.setVtweg(orderView.);	// DC/分销渠道
 //		header.setName2(orderView.getCustomerName());	// Store name/店名
@@ -502,6 +502,7 @@ public class OrderService {
 //		header.setVbbkz109();	// Order clerk/合同管理员
 //		header.setVbbkz108();	// Contact info./授权人信息
 //		header.setVbbkz122();	// Survey info. for header /调研表相关内容
+//		header.setVbbkz106(vbbkz106); // Receiving method /收货方式
 
 //		List<ItemDetails> itemDetails = orderView.getItemsForm().getDetailsList();
 		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
@@ -552,8 +553,10 @@ public class OrderService {
 //			item.setVbbpz117(item.getSpecialNeed());
 			// Color option/颜色可选项
 //			item.setVbbpz120(String);
-			// Customer special request/客户物料说明
+			// Survey info. Note/调研表备注
 //			item.setVbbp0007(item.getComments());
+			// Color Note/颜色备注
+//			item.se/tVbbpz118(vbbpz118);
 
 			items.add(item);
 
@@ -562,13 +565,13 @@ public class OrderService {
 			SapOrderPrice price1 = new SapOrderPrice();
 			price1.setPosnr(rowNumber);
 			price1.setKschl("ZH05");
-//			price1.setKbetr(itemDetail.getSaleAmount());
+//			price1.setKbetr(itemDetails.getSaleAmount());
 			prices.add(price1);
 			// ZH08：转移价合计/成本合计
 			SapOrderPrice price2 = new SapOrderPrice();
 			price2.setPosnr(itemDetail.getRowNumber());
-			price1.setKschl("ZH08");
-			price1.setKbetr(itemDetail.getTransfterPrice());
+			price2.setKschl("ZH08");
+			price2.setKbetr(itemDetail.getTransfterPrice());
 			prices.add(price2);
 
 			// Characteristics value input
