@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +31,7 @@ import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.rest.controller.entity.DealerOrder;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -161,7 +163,20 @@ public class OrderController {
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
     public List<AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
-    	return orderService.findOrder(query);
+    	return orderService.findOrders(query);
+    }
+    
+    /**
+     * 查询订单
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value="查询Dealer订单详情", notes="查询Dealer订单详情")
+    @GetMapping(value = "order/dealerOrder")
+    @ResponseStatus(HttpStatus.OK)
+    public DealerOrder getDealerOrder(@RequestParam String sequenceNumber, @RequestParam String versionId) throws Exception {	
+    	return orderService.findDealerOrder(sequenceNumber, versionId);
     }
 
 }
