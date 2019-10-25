@@ -35,13 +35,11 @@ import com.qhc.frye.dao.PaymentTermRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
-import com.qhc.frye.dao.SalesorderVersionRepository;
 import com.qhc.frye.dao.TerminalIndustryCodeRepository;
 import com.qhc.frye.domain.BArea;
 import com.qhc.frye.domain.BCity;
 import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.DCurrency;
-import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
@@ -60,9 +58,6 @@ import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
-import com.qhc.frye.rest.controller.entity.DealerOrder;
-import com.qhc.frye.rest.controller.entity.Incoterm;
-import com.qhc.frye.rest.controller.entity.OrderAddress;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
@@ -72,10 +67,12 @@ import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.rest.controller.entity.SapOrder;
 import com.qhc.frye.rest.controller.entity.SapOrderCharacteristics;
 import com.qhc.frye.rest.controller.entity.SapOrderHeader;
-//import com.qhc.frye.rest.controller.entity.SapOrder;
 import com.qhc.frye.rest.controller.entity.SapOrderItem;
 import com.qhc.frye.rest.controller.entity.SapOrderPlan;
 import com.qhc.frye.rest.controller.entity.SapOrderPrice;
+import com.qhc.frye.rest.controller.entity.form.AbsItem;
+import com.qhc.frye.rest.controller.entity.form.DealerOrder;
+import com.qhc.frye.rest.controller.entity.form.OrderAddress;
 
 @Service
 public class OrderService {
@@ -483,6 +480,7 @@ public class OrderService {
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
 		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
+		String orderType = orderView.getOrderTypeCode();
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -493,7 +491,7 @@ public class OrderService {
 
 		// Header input
 		header.setAuart(toString(orderView.getOrderTypeCode()));	// Sales order type/订单类型
-//		header.setVkorg(orderView);	// Sales org./销售组织 -- Fixed value/固定为 0841
+		header.setVkorg("0841");	// Sales org./销售组织 -- Fixed value/固定为 0841
 		header.setVtweg(toString(orderView.getContractorClassCode()));	// DC/分销渠道 -- 客户
 		header.setName2(orderView.getCustomerName());	// Store name/店名
 		header.setSpart(orderView.getSalesType());	// Division/产品组
@@ -504,19 +502,24 @@ public class OrderService {
 		header.setKvgr2(toString(orderView.getIsNew()));	// Customer grp.2/客户组2 -- 是否新客户
 		header.setKvgr3(toString(orderView.getIsReformed()));	// Customer grp.3/客户组3 -- 是否改造店
 		header.setBstzd(toString(orderView.getWarranty()));	// Additional/附加的 -- 保修年限
-//		header.setBstkdE();	// Ship-to PO/送达方-采购订单编号 -- 项目报备编号
+		header.setBstkdE(toString(orderView.getContractNumber()));	// Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
 		header.setVsart(toString(orderView.getTransferTypeCode()));	// Shipping type/装运类型 -- 运输类型
-//		header.setZterm();	// Payment terms/付款条款 -- 结算方式
-//		header.setKunnr();	// Sold-to party/售达方 -- 签约单位
+//		header.setZterm();	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
+		header.setKunnr(toString(orderView.getContractorCode()));	// Sold-to party/售达方 -- 签约单位
 		header.setWaerk(toString(orderView.getCurrencyCode()));	// Currency/币别 -- 币别
-		header.setInco1(toString(orderView.getIncotermContect()));	// Incoterms/国际贸易条款 -- 国际贸易条件
-//		header.setInco1();	// Incoterms2/国际贸易条款2 -- 国际贸易条件2
+		header.setInco1(toString(orderView.getIncotermCode()));	// Incoterms/国际贸易条款 -- 国际贸易条件 code
+		header.setInco1(toString(orderView.getIncotermName()));	// Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
 		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额 -- 合同金额
-//		header.setVbbkz121(orderView.getcontractor);	// Sale rep./签约人 -- 客户经理
-//		header.setVbbkz109();	// Order clerk/合同管理员 -- 合同管理员
-//		header.setVbbkz108();	// Contact info./授权人信息 -- 授权人信息6个字段
-//		header.setVbbkz122();	// Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
+		header.setVbbkz121(orderView.getContractorName());	// Sale rep./签约人 -- 客户经理
+		header.setVbbkz109(orderView.getOpteratorDomainId());	// Order clerk/合同管理员 -- 合同管理员
+		String contactorInfo = toString(orderView.getContactor1Id()) + "/" + toString(orderView.getContactor1Tel())
+		 + toString(orderView.getContactor2Id()) + "/" + toString(orderView.getContactor2Tel())
+		 + toString(orderView.getContactor3Id()) + "/" + toString(orderView.getContactor3Tel());
+		header.setVbbkz108(contactorInfo);	// Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
+		String vbbkz122 = toString(orderView.getIsTerm1()) + "/" + toString(orderView.getIsTerm2())
+		 + toString(orderView.getIsTerm3());
+		header.setVbbkz122(vbbkz122);	// Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段 
 		header.setVbbkz106(orderView.getReceiveTermCode()); // Receiving method /收货方式 -- 收货方式
 
 		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
@@ -533,11 +536,10 @@ public class OrderService {
 //			item.setEdatu(itemDetail.getDeliveryDate());
 			// Item category/行项目类别
 			item.setPstyv(itemDetail.getItemCategory());
-			// TODO Item usage/项目用途
-//			item.setVkaus(String);
+			// Item usage/项目用途
+			item.setVkaus(itemDetail.getItemCategory());
 
-			// delivery address
-			// TODO Ship-to address/送达方地址
+			// Ship-to address/送达方地址
 //			item.setStreet(itemDetail.getAddress());
 //			// Province/省
 //			item.setRegion();
@@ -565,12 +567,12 @@ public class OrderService {
 //			item.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
 			// Special note/特殊备注
 //			item.setVbbpz117(item.getSpecialNeed());
-			// Color option/颜色可选项
+			// Color option/颜色可选项 -- Characteristics中处理
 //			item.setVbbpz120(String);
 			// Survey info. Note/调研表备注
 //			item.setVbbp0007(item.getComments());
 			// Color Note/颜色备注
-//			item.se/tVbbpz118(vbbpz118);
+//			item.setVbbpz118(itemDetail.getColorComments());
 
 			items.add(item);
 
@@ -616,10 +618,16 @@ public class OrderService {
 		// header的付款条款为billing plan 的 code
 		List<KBiddingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		for (KBiddingPlan kBiddingPlan : planList) {
-			SapOrderPlan plan = new SapOrderPlan();
-			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0) {
+//			if (orderType.equals("dealer")) {
+//				header.setZterm(kBiddingPlan.getCode());
+//				break;
+//			}
+			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals("dealer")) {
 				header.setZterm(kBiddingPlan.getCode());
+				break;
 			}
+			
+			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
 			plan.setFakwr(kBiddingPlan.getAmount());
 			// Settlement date/结算日期
@@ -678,7 +686,7 @@ public class OrderService {
 		OrderQuery orderQuery = new OrderQuery();
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersionId(versionId);
-		List<AbsOrder> orders = findOrders(orderQuery);
+		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = findOrders(orderQuery);
 		
 		if (orders.size() > 0) {
 			order = (DealerOrder)orders.get(0);
@@ -693,8 +701,8 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public List<AbsOrder> findOrders(OrderQuery orderQuery) {
-		List<AbsOrder> orders = new ArrayList<>();
+	public List<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(OrderQuery orderQuery) {
+		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = new ArrayList<>();
 
 		List<KOrderView> orderViews = queryOrderView(orderQuery);
 		for (KOrderView orderView : orderViews) {
@@ -702,7 +710,7 @@ public class OrderService {
 			String orderInfoId = orderView.getOrderInfoId();
 			String orderType = orderView.getOrderTypeCode();
 
-			AbsOrder order = null;
+			com.qhc.frye.rest.controller.entity.form.AbsOrder order = null;
 			if (orderType.equals("dealer")) {
 				order = new DealerOrder();
 			} else if (orderType.equals("keyaccount")) {
@@ -724,6 +732,8 @@ public class OrderService {
 //			order.setConfirmTypeCode(orderView.getconf);
 //			order.setContactor1Id(orderView.getContactor1Id());
 //			order.setContactor1Tel(orderView.getContactor1Tel());
+			order.setConfirmTypeCode(orderView.getReceiveTermCode());
+			order.setConfirmTypeName(orderView.getReceiveTermName());
 
 			// TODO Attached File
 //			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
@@ -733,7 +743,7 @@ public class OrderService {
 //			}
 			order.setAttachedFileName(attachmentNames);
 
-			// TODO 收货地址
+			// 收货地址
 			List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderId);
 			List<OrderAddress> addresses = new ArrayList<OrderAddress>(addressList.size());
 			for (KOrderView kOrderView : orderViews) {
@@ -741,7 +751,7 @@ public class OrderService {
 				addresses.add(address);
 				BeanUtils.copyProperties(kOrderView, address);
 			}
-//			order.setAddress(addresses);
+			order.setOrderAddress(addresses);
 
 			// TODO billing plan
 			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
@@ -809,45 +819,45 @@ public class OrderService {
 		return orderViews;
 	}
 
-	private void assembleItems(AbsOrder order, KOrderView orderView) {
+	private void assembleItems(com.qhc.frye.rest.controller.entity.form.AbsOrder order, KOrderView orderView) {
+		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(orderView.getFormId());
 		// 旧的AbsOrder格式
-		ItemsForm form = new ItemsForm();
-//		order.setItemsForm(form);
-		form.setComments(orderView.getFormComments());
-		form.setEarliestDeliveryDate(orderView.getEarliestDeliveryDate());
-		form.setEarliestProductDate(orderView.getEarliestProductDate());
-		form.setId(orderView.getFormId());
-		form.setkOrderInfoId(orderView.getOrderInfoId());
-		form.setOperator(orderView.getFormOperator());
-		form.setOptTime(orderView.getFormOptTime());
-		form.setType(orderView.getFormType());
-
-		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(form.getId());
-		form.setDetailsList(detailsList);
-		for (ItemDetails itemDetails : detailsList) {
-			String itemId = itemDetails.getId();
-			// TODO item b2c
-			// TODO characteristics
-			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-			// TODO configure material
-			// TODO attached info
-		}
+//		ItemsForm form = new ItemsForm();
+////		order.setItemsForm(form);
+//		form.setComments(orderView.getFormComments());
+//		form.setEarliestDeliveryDate(orderView.getEarliestDeliveryDate());
+//		form.setEarliestProductDate(orderView.getEarliestProductDate());
+//		form.setId(orderView.getFormId());
+//		form.setkOrderInfoId(orderView.getOrderInfoId());
+//		form.setOperator(orderView.getFormOperator());
+//		form.setOptTime(orderView.getFormOptTime());
+//		form.setType(orderView.getFormType());
+//
+//		form.setDetailsList(detailsList);
+//		for (ItemDetails itemDetails : detailsList) {
+//			String itemId = itemDetails.getId();
+//			// TODO item b2c
+//			// TODO characteristics
+//			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+//			// TODO configure material
+//			// TODO attached info
+//		}
 		
 		// 新的AbsOrder
-		List<ProductItem> items = new ArrayList<ProductItem>(detailsList.size()); 
+		List<AbsItem> items = new ArrayList<AbsItem>(detailsList.size()); 
 		for (ItemDetails itemDetails : detailsList) { 
 			String itemId = itemDetails.getId();
-			ProductItem item = new ProductItem();
+			com.qhc.frye.rest.controller.entity.form.ProductItem item = new com.qhc.frye.rest.controller.entity.form.ProductItem();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
 			items.add(item);
 			
 			// TODO item b2c
 			// TODO characteristics
-			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+//			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
 			// TODO configure material
 			// TODO attached info
 		}
-//		order.setItems(items);
+		order.setItems(items);
 	}
 
 	private boolean isEmpty(String v) {

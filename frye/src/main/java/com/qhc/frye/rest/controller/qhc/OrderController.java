@@ -163,7 +163,7 @@ public class OrderController {
     @ApiOperation(value="查询订单", notes="查询订单")
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
-    public List<AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
+    public List<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
     	return orderService.findOrders(query);
     }
     
@@ -176,7 +176,7 @@ public class OrderController {
     @ApiOperation(value="查询Dealer订单详情", notes="查询Dealer订单详情")
     @GetMapping(value = "order/dealerOrder")
     @ResponseStatus(HttpStatus.OK)
-    public DealerOrder getDealerOrder(@RequestParam String sequenceNumber, @RequestParam String versionId) throws Exception {	
+    public com.qhc.frye.rest.controller.entity.form.DealerOrder getDealerOrder(@RequestParam String sequenceNumber, @RequestParam String versionId) throws Exception {	
     	return orderService.findDealerOrder(sequenceNumber, versionId);
     }
 
