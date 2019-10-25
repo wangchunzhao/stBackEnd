@@ -16,6 +16,7 @@ import com.qhc.frye.rest.controller.entity.Bom;
 import com.qhc.frye.rest.controller.entity.BomExplosion;
 import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.Configuration;
+import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.dao.CharacteristicConfigurationRepository;
@@ -46,7 +47,8 @@ public class MaterialService {
 	public final static String BOM_PATH_EXPORSION = "material/bom";
 	public final static String BOM_CONFIGURATION_DEFAULT = "default";
 	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
-			
+	
+	public final static String PATH_CHARACTERISTIC_DEFAULT_VALUE = "defaultCharacteristic/";
 
 	@Autowired
 	private MaterialRepository materialRepo;
@@ -55,7 +57,7 @@ public class MaterialService {
 	private SapLastUpdatedRepository lastUpdatedRepo;
 	
 	@Autowired
-	private BayernService<Map<String,List<Bom>>> bayernSer;
+	private BayernService bayernSer;
 	
 	@Autowired
 	private MaterialInfoRepository materialInfoRepo;
@@ -179,7 +181,29 @@ public class MaterialService {
 		for(String key:cs.keySet()) {
 			chas.add(cs.get(key));
 		}
+		//
+		List<DefaultCharacteristics>  dcl= this.getDefaultCharacteristicValueByMaterialCode(materialCode);
+		for(Characteristic c: chas) {
+			for(DefaultCharacteristics dc:dcl) {
+				if(c.getCode().equals(dc.getCharacteristic())) {
+					for(Configuration f:c.getConfigs()) {
+						if(f.getCode().equals(dc.getCharacterValue())) {
+							f.setDefault(true);
+						}else {
+							f.setDefault(false);
+						}
+					}
+				}
+			}
+		}
 		return chas;
+	}
+	
+	private List<DefaultCharacteristics> getDefaultCharacteristicValueByMaterialCode(String materialCode){
+		
+		List<DefaultCharacteristics>  dcl= bayernSer.getListInfo(PATH_CHARACTERISTIC_DEFAULT_VALUE+materialCode, DefaultCharacteristics.class);
+		
+		return dcl;
 	}
 	/**
 	 * 
@@ -187,7 +211,7 @@ public class MaterialService {
 	 * @return
 	 */
 	public BomExplosion findBOMWithPrice(Map<String,String> pars){
-		Map<String,List<Bom>> boms = bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
+		Map<String,List<Bom>> boms = (Map<String, List<Bom>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
 		
 		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
 			

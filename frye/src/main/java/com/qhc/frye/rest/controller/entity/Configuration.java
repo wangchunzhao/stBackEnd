@@ -10,6 +10,7 @@ package com.qhc.frye.rest.controller.entity;
 public class Configuration {
 	private String code;
 	private String name;
+	private boolean isDefault;
 	public String getCode() {
 		return code;
 	}
@@ -21,6 +22,12 @@ public class Configuration {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public boolean isDefault() {
+		return isDefault;
+	}
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 	
 

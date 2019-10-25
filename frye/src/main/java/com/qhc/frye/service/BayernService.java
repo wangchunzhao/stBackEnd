@@ -4,6 +4,7 @@
 package com.qhc.frye.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.qhc.frye.config.ApplicationConfig;
 import com.qhc.frye.service.exception.ExternalServerInternalException;
 import com.qhc.frye.service.exception.URLNotFoundException;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -91,7 +93,23 @@ public class BayernService<T> {
 				.bodyToMono(T);
 		return resp.block();
 	}
-
+	/**
+	 * 
+	 * @param path
+	 * @param T
+	 * @return
+	 */
+	public List<T> getListInfo(String path, Class<T> T) {
+		String url = config.getBayernURL()+ path;
+		WebClient webClient = WebClient.create(url);
+		Flux<T> userFlux = webClient.get().uri(url).retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new URLNotFoundException()))
+				.onStatus(HttpStatus::is5xxServerError,
+						clientResponse -> Mono.error(new ExternalServerInternalException()))
+				.bodyToFlux(T);
+		List<T> list = userFlux.collectList().block();
+		return list;
+	}
 	
 
 }
