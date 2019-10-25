@@ -13,7 +13,8 @@ import javax.persistence.Table;
 @Table(name = "k_order_view")
 public class KOrderView
 		implements Serializable {
-	
+	private static final long serialVersionUID = -6830633419653128937L;
+
 	/* Column(sequence_number) - 序列号 */
 	@Column(name="sequence_number",columnDefinition="CHAR",length=12)
 	private String sequenceNumber = null;
@@ -296,6 +297,22 @@ public class KOrderView
 	/* Column(form_opt_time) - 最后操作时间 */
 	@Column(name="form_opt_time")
 	private Date formOptTime = null;
+
+	/* Column(support_info_id) - SupportInfoId */
+	@Column(name="support_info_id", columnDefinition="INTEGER", length=10)
+	private Integer supportInfoId = null;
+
+	/* Column(contract_number) - 合同号 */
+	@Column(name="contract_number", columnDefinition="CHAR", length=45)
+	private String contractNumber = null;
+
+	/* Column(opterator_domain_id) - 支持经理id */
+	@Column(name="opterator_domain_id", columnDefinition="CHAR")
+	private String opteratorDomainId = null;
+
+	/* Column(support_info_opt_time) - 最后操作时间 */
+	@Column(name="support_info_opt_time", columnDefinition="TIMESTAMP")
+	private Date supportInfoOptTime = null;
 
 
 	public KOrderView(){
@@ -851,6 +868,38 @@ public class KOrderView
 
 	public void setFormOptTime(Date formOptTime) {
 		this.formOptTime = formOptTime;
+	}
+	 
+	public Integer getSupportInfoId() {
+		return this.supportInfoId;
+	}
+
+	public void setSupportInfoId(Integer supportInfoId) {
+		this.supportInfoId = supportInfoId;
+	}
+	 
+	public String getContractNumber() {
+		return this.contractNumber;
+	}
+
+	public void setContractNumber(String contractNumber) {
+		this.contractNumber = contractNumber;
+	}
+	 
+	public String getOpteratorDomainId() {
+		return this.opteratorDomainId;
+	}
+
+	public void setOpteratorDomainId(String opteratorDomainId) {
+		this.opteratorDomainId = opteratorDomainId;
+	}
+	 
+	public Date getSupportInfoOptTime() {
+		return this.supportInfoOptTime;
+	}
+
+	public void setSupportInfoOptTime(Date supportInfoOptTime) {
+		this.supportInfoOptTime = supportInfoOptTime;
 	}
 	 
 	@Override

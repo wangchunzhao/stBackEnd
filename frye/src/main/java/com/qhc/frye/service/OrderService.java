@@ -426,7 +426,7 @@ public class OrderService {
 	public String orderCreationForSAP(String sequenceNumber) {
 
 		// 1. 根据sequenceNumber组装数据
-		SapOrder sapOrder = assembleOrderForSAP(sequenceNumber);
+		SapOrder sapOrder = assembleSapOrder(sequenceNumber);
 
 		// 2. 调用bayernService同步SAP
 		bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
@@ -441,7 +441,7 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @return //
 	 */
-	private SapOrder assembleOrderForSAP(String sequenceNumber) {
+	private SapOrder assembleSapOrder(String sequenceNumber) {
 		List<KOrderVersionView> verions = orderVersionViewRepository
 				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
 
@@ -477,34 +477,33 @@ public class OrderService {
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-		header.setAuart(orderView.getOrderTypeCode());	// Sales order type/订单类型
-//		header.setVkorg(orderView);	// Sales org./销售组织
-//		header.setVtweg(orderView.);	// DC/分销渠道
-//		header.setName2(orderView.getCustomerName());	// Store name/店名
-//		header.setSpart(orderView.get);	// Division/产品组
-//		header.setVkbur();	// Sales office/销售办公室
-//		header.setVkgrp();	// Sales group/销售组
-//		header.setVbeln();	// SO number/销售订单编号
-//		header.setKvgr1();	// Customer grp.1/客户组1
-//		header.setKvgr2();	// Customer grp.2/客户组2
-//		header.setKvgr3();	// Customer grp.3/客户组3
-//		header.setBstzd();	// Additional/附加的
-//		header.setBstkdE();	// Ship-to PO/送达方-采购订单编号
-//		header.setVsart();	// Shipping type/装运类型
-//		header.setZterm();	// Payment terms/付款条款
-//		header.setKunnr();	// Sold-to party/售达方
-//		header.setWaerk();	// Currency/币别
-//		header.setInco1();	// Incoterms/国际贸易条款
-//		header.setInco1();	// Incoterms2/国际贸易条款2
+		header.setAuart(toString(orderView.getOrderTypeCode()));	// Sales order type/订单类型
+//		header.setVkorg(orderView);	// Sales org./销售组织 -- Fixed value/固定为 0841
+		header.setVtweg(toString(orderView.getContractorClassCode()));	// DC/分销渠道 -- 客户
+		header.setName2(orderView.getCustomerName());	// Store name/店名
+		header.setSpart(orderView.getSalesType());	// Division/产品组
+		header.setVkbur(toString(orderView.getOfficeCode()));	// Sales office/销售办公室 -- 大区
+		header.setVkgrp(toString(orderView.getGroupCode()));	// Sales group/销售组 -- 中心
+		header.setVbeln(toString(orderView.getContractNumber()));	// SO number/销售订单编号 -- 合同号
+		header.setKvgr1(toString(orderView.getIsConvenientStore()));	// Customer grp.1/客户组1 -- 是否便利店
+		header.setKvgr2(toString(orderView.getIsNew()));	// Customer grp.2/客户组2 -- 是否新客户
+		header.setKvgr3(toString(orderView.getIsReformed()));	// Customer grp.3/客户组3 -- 是否改造店
+		header.setBstzd(toString(orderView.getWarranty()));	// Additional/附加的 -- 保修年限
+//		header.setBstkdE();	// Ship-to PO/送达方-采购订单编号 -- 项目报备编号
+		header.setVsart(toString(orderView.getTransferTypeCode()));	// Shipping type/装运类型 -- 运输类型
+//		header.setZterm();	// Payment terms/付款条款 -- 结算方式
+//		header.setKunnr();	// Sold-to party/售达方 -- 签约单位
+		header.setWaerk(toString(orderView.getCurrencyCode()));	// Currency/币别 -- 币别
+		header.setInco1(toString(orderView.getIncotermContect()));	// Incoterms/国际贸易条款 -- 国际贸易条件
+//		header.setInco1();	// Incoterms2/国际贸易条款2 -- 国际贸易条件2
 //		// 折扣
-//		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额
-//		header.setVbbkz121(orderView.getcontractor);	// Sale rep./签约人
-//		header.setVbbkz109();	// Order clerk/合同管理员
-//		header.setVbbkz108();	// Contact info./授权人信息
-//		header.setVbbkz122();	// Survey info. for header /调研表相关内容
-//		header.setVbbkz106(vbbkz106); // Receiving method /收货方式
+		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额 -- 合同金额
+//		header.setVbbkz121(orderView.getcontractor);	// Sale rep./签约人 -- 客户经理
+//		header.setVbbkz109();	// Order clerk/合同管理员 -- 合同管理员
+//		header.setVbbkz108();	// Contact info./授权人信息 -- 授权人信息6个字段
+//		header.setVbbkz122();	// Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
+		header.setVbbkz106(orderView.getReceiveTermCode()); // Receiving method /收货方式 -- 收货方式
 
-//		List<ItemDetails> itemDetails = orderView.getItemsForm().getDetailsList();
 		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
 		for (ItemDetails itemDetail : itemDetails) {
 			int rowNumber = itemDetail.getRowNumber();
@@ -838,6 +837,17 @@ public class OrderService {
 
 	private boolean isEmpty(String v) {
 		return v == null || v.length() == 0;
+	}
+
+	private String toString(Object v) {
+		return toString(v, "");
+	}
+
+	private String toString(Object v, String defaultValue) {
+		if (v == null) {
+			return defaultValue;
+		}
+		return v.toString();
 	}
 
 }

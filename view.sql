@@ -254,8 +254,13 @@ SELECT o.sequence_number,
 	   f.comments as form_comments,
 	   f.operator as form_operator,
 	   f.type as form_type,
-	   f.opt_time as form_opt_time
+	   f.opt_time as form_opt_time,
+	   s.id as support_info_id,
+	   s.contract_number,
+	   s.opterator_domain_id,
+	   s.opt_time as support_info_opt_time
 FROM k_orders o 
+left join k_order_support_info s on s.k_orders_id = o.id
 left join k_order_version v on v.k_orders_id = o.id
 left join k_parent_order_version pv on pv.k_order_version_id = v.id
 left join k_order_info d on d.id = pv.k_order_info_id
