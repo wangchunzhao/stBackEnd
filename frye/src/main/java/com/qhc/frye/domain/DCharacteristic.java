@@ -20,9 +20,14 @@ public class DCharacteristic {
     @NotNull
     @Column(name="code",length=30)
 	private String code;
+	
 	@NotNull
     @Column(name="name",columnDefinition="TEXT")
 	private String name;
+	
+	@NotNull
+    @Column(name="is_optional",columnDefinition="BIT")
+	private boolean isOptional;
 	
 	public String getCode() {
 		return code;
@@ -36,6 +41,11 @@ public class DCharacteristic {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public boolean isOptional() {
+		return isOptional;
+	}
+	public void setOptional(boolean isOptional) {
+		this.isOptional = isOptional;
+	}
 
-	
 }

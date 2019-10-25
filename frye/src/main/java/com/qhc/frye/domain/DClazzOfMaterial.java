@@ -18,9 +18,14 @@ public class DClazzOfMaterial {
     @NotNull
     @Column(name="code",length=18)
 	private String code;
+	
 	@NotNull
     @Column(name="name",columnDefinition="TEXT")
 	private String name;
+	
+	@NotNull
+    @Column(name="is_reserved",columnDefinition="BIT")
+	private boolean isReserved;
 	
 	public String getCode() {
 		return code;
@@ -33,6 +38,12 @@ public class DClazzOfMaterial {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public boolean isReserved() {
+		return isReserved;
+	}
+	public void setReserved(boolean isReserved) {
+		this.isReserved = isReserved;
 	}
 	
 }
