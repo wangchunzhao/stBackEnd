@@ -43,7 +43,7 @@ public class MaterialService {
 	public final String MATERIAL_PRICE_TYPE_OUTSOURCING_PRICE = "ZH11";
 	public final String MATERIAL_PRICE_TYPE_INTERNAL_PRICE = "ZHCS";
 	
-	public final static String BOM_PATH_EXPORSION = "material/configuration";
+	public final static String BOM_PATH_EXPORSION = "material/bom";
 	public final static String BOM_CONFIGURATION_DEFAULT = "default";
 	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
 			

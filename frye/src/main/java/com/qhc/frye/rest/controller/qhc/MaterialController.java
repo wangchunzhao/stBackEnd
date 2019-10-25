@@ -118,29 +118,29 @@ public class MaterialController {
 	@ApiOperation(value = "保存或者修改MaterialClazz")
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
-	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) {
+	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz)  throws Exception{
 		characteristicSer.saveClass(clazz);
 	}
 
 	@ApiOperation(value = "保存或者修改CharacteristicValue")
 	@PutMapping(value = "material/characteristic")
 	@ResponseStatus(HttpStatus.OK)
-	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) {
+	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) throws Exception {
 		characteristicSer.saveCharacteristicValue(chaValues);
 	}
 	
 	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode) {
+	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode)  throws Exception{
 		return materialSer.getCharactersByClazzCode(clazzCode,materialCode);
 		
 	}
 	
 	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
-	@PostMapping(value = "material/configuration/{clazzCode}")
+	@PostMapping(value = "material/configuration")
 	@ResponseStatus(HttpStatus.OK)
-	public BomExplosion findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars) {
+	public BomExplosion findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars)  throws Exception{
 		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE)) {
 			return materialSer.findBOMWithPrice(pars);
 		}
