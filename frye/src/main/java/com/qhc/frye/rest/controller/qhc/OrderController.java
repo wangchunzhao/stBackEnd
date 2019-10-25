@@ -20,17 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.frye.dao.BAreaRepository;
-import com.qhc.frye.dao.BCityRepository;
-import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
-import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.AbsOrder;
-import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.DealerOrder;
 import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
@@ -38,10 +33,6 @@ import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
-import com.qhc.frye.service.BAreaService;
-import com.qhc.frye.service.BCityService;
-import com.qhc.frye.service.BProvinceService;
-import com.qhc.frye.service.MaterialService;
 import com.qhc.frye.service.OrderService;
 
 import io.swagger.annotations.Api;
@@ -71,9 +62,19 @@ public class OrderController {
 	@ApiOperation(value = "保存订单信息", notes = "保存订单信息")
 	@PostMapping(value = "order")
 	@ResponseStatus(HttpStatus.OK)
-	public void submitOrder(@RequestBody(required = true) OrderForm order) throws Exception {
+	public void submitOrder(@RequestBody(required = true) AbsOrder order) throws Exception {
 		//
-		orderService.save(order);
+		switch(order.getSubmitType()) {
+			case 1:
+				//set the status on order version
+				orderService.save(order);
+				break;
+			case 2:
+				//set the status on order version
+				orderService.save(order);
+				break;
+		}
+		
 	}
 
 	@ApiOperation(value = "查询订单类型", notes = "查询订单类型")
