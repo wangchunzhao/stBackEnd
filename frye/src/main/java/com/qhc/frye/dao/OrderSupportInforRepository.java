@@ -14,6 +14,6 @@ import com.qhc.frye.domain.OrderSupportInfo;
  *
  */
 public interface OrderSupportInforRepository extends JpaRepository<OrderSupportInfo, Integer>{
-	@Query("select * from k_order_support_info where k_orders_id = :orderId")
+	@Query(value="select * from k_order_support_info where k_orders_id = :orderId",nativeQuery = true)
 	public OrderSupportInfo findByOrderId(@Param("orderId") String orderId);
 }
