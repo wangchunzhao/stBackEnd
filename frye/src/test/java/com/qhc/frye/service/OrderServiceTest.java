@@ -42,6 +42,7 @@ class OrderServiceTest {
 	void testFindOrdersObject() {
 		OrderQuery query = new OrderQuery();
 		query.setLast(true);
+		query.setPageNo(1);
 		query.setPageSize(10);
 		query.setIncludeDetail(true);
 		PageHelper<AbsOrder> result = orderService.findOrders(query);
