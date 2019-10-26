@@ -29,7 +29,7 @@ public class KOrderVersion {
 	public String version;
 
 	@NotNull
-	@Column(name = "status", columnDefinition = "tinyint")
+	@Column(name = "status", columnDefinition = "tinyint",length=2)
 	private Integer status;
 
 	@NotNull
@@ -40,6 +40,21 @@ public class KOrderVersion {
 	@NotNull
 	@Column(name = "k_orders_id",columnDefinition="char",length=32)
 	private String orderId;
+	
+	@NotNull
+	@Column(name = "k_order_info_id",columnDefinition="char",length=32)
+	private String orderInfoId;
+	
+	@Column(name = "submit_date")
+	private Date submitDate;
+	
+	@Column(name = "bpm_submit_date")
+	private Date bpmSubmitDate;
+	
+	@Column(name = "opt_time")
+	private Date optTime;
+	
+	
 	
 	public String getId() {
 		return id;
@@ -81,4 +96,37 @@ public class KOrderVersion {
 		this.orderId = orderId;
 	}
 
+	public String getOrderInfoId() {
+		return orderInfoId;
+	}
+
+	public void setOrderInfoId(String orderInfoId) {
+		this.orderInfoId = orderInfoId;
+	}
+
+	public Date getSubmitDate() {
+		return submitDate;
+	}
+
+	public void setSubmitDate(Date submitDate) {
+		this.submitDate = submitDate;
+	}
+
+	public Date getBpmSubmitDate() {
+		return bpmSubmitDate;
+	}
+
+	public void setBpmSubmitDate(Date bpmSubmitDate) {
+		this.bpmSubmitDate = bpmSubmitDate;
+	}
+
+	public Date getOptTime() {
+		return optTime;
+	}
+
+	public void setOptTime(Date optTime) {
+		this.optTime = optTime;
+	}
+	
+	
 }
