@@ -192,6 +192,21 @@ public class OrderService {
 		over.setOrderId(sDorder.getId());
 		KOrderVersion kov = versionRepo.saveAndFlush(over);
 	}
+	/**
+	 * 
+	 * @param absOrder
+	 */
+	public void submit(AbsOrder order) {
+
+		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
+		OrderSupportInfo ori = order.getSupportInforOfOrder();
+		if (!order.getContractNumber().trim().isEmpty())
+			ori.setOrderId(sDorder.getId());
+		supportRepo.saveAndFlush(ori);
+		KOrderVersion over = order.getOrderVersion();
+		over.setOrderId(sDorder.getId());
+		KOrderVersion kov = versionRepo.saveAndFlush(over);
+	}
 
 	/**
 	 * 
