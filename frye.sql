@@ -272,18 +272,20 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_characteristic_value` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
-  `code` VARCHAR(30) NOT NULL,
+  `id` INT NOT NULL,
   `name` TEXT NOT NULL,
-  `sap_characteristic_code` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`code`),
-  UNIQUE INDEX `name_UNIQUE` (`code` ASC) VISIBLE,
-  INDEX `fk_sap_characteristic_value_sap_characteristic1_idx` (`sap_characteristic_code` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_characteristic_value_sap_characteristic1`
-    FOREIGN KEY (`sap_characteristic_code`)
-    REFERENCES `bohemian`.`sap_characteristic` (`code`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
+  `code` VARCHAR(45) NOT NULL,
+  `sap_color_characteristic_code` VARCHAR(45) NOT NULL,
+  `isDefault` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_sap_characteristic_value_sap_color_characteristic1_idx` (`sap_color_characteristic_code` ASC) VISIBLE,
+  UNIQUE INDEX `seq_code` (`code` ASC, `sap_color_characteristic_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_characteristic_value_sap_color_characteristic1`
+    FOREIGN KEY (`sap_color_characteristic_code`)
+    REFERENCES `bohemian`.`sap_color_characteristic` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -755,6 +757,64 @@ COMMENT = '订单';
 
 
 -- -----------------------------------------------------
+-- Table `bohemian`.`k_order_info`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
+  `id` CHAR(32) NOT NULL,
+  `last_operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
+  `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
+  `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
+  `is_reformed` TINYINT(1) NULL COMMENT '是否是改造店',
+  `is_convenient_store` TINYINT(1) NULL COMMENT '是否是便利店',
+  `is_new` TINYINT(1) NULL COMMENT '是不是新店',
+  `terminal_industry_code` VARCHAR(10) NULL COMMENT '终端店面的insustray code',
+  `terminal_industry_code_name` TEXT NULL COMMENT '终端店面的insustray code的名字',
+  `body_discount` DOUBLE(3,3) NULL COMMENT '柜体折扣',
+  `main_discount` DOUBLE(3,3) NULL COMMENT '机身折扣',
+  `install_term_code` VARCHAR(4) NULL COMMENT '安装code',
+  `install_term_name` TEXT NULL COMMENT '安装方式名称',
+  `receive_term_code` VARCHAR(4) NULL COMMENT '接货方式名称code',
+  `receive_term_name` TEXT NULL COMMENT '接货方式名称',
+  `contactor_1_id` VARCHAR(18) NULL COMMENT '第一联系人身份证',
+  `contactor_1_tel` VARCHAR(16) NULL COMMENT '第一联系人电话',
+  `contactor_2_id` VARCHAR(18) NULL COMMENT '第二联系人身份证',
+  `contactor_2_tel` VARCHAR(16) NULL COMMENT '第二联系人电话',
+  `contactor_3_id` VARCHAR(18) NULL COMMENT '第三联系人身份证',
+  `contactor_3_tel` VARCHAR(16) NULL COMMENT '第三联系人电话',
+  `freight` DECIMAL(13,2) NULL COMMENT '运费合计',
+  `warranty` INT NULL COMMENT '保修周期',
+  `currency_code` VARCHAR(3) NULL COMMENT '外币code',
+  `currency_name` TEXT NULL COMMENT '外币名称',
+  `exchange` DOUBLE(10,5) NULL COMMENT '汇率',
+  `contract_amount` DECIMAL(13,2) NULL COMMENT '原合同金额',
+  `contract_rmb_amount` DECIMAL(13,2) NULL COMMENT '合同人民币金额',
+  `sales_type` CHAR(2) NULL COMMENT '销售类型',
+  `tax_rate` DOUBLE NULL COMMENT '税率',
+  `incoterm_code` VARCHAR(45) NULL COMMENT '贸易条件code',
+  `incoterm_name` TEXT NULL COMMENT '贸易条件名称',
+  `incoterm_contect` TEXT NULL COMMENT '贸易条件',
+  `office_code` VARCHAR(45) NULL COMMENT '表单里的大区code',
+  `office_name` TEXT NULL COMMENT '大区名称',
+  `group_code` VARCHAR(45) NULL COMMENT '中心code',
+  `group_name` TEXT NULL COMMENT '中心名称',
+  `transfer_type_code` VARCHAR(45) NULL COMMENT '运输类型代码',
+  `transfer_type_name` TEXT NULL COMMENT '运输类型名称',
+  `is_term1` TINYINT(1) NULL COMMENT '柜体控制阀门件是否甲供',
+  `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
+  `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
+  `comments` TEXT NULL,
+  PRIMARY KEY USING BTREE (`id`),
+  UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin
+ROW_FORMAT = DYNAMIC;
+
+
+-- -----------------------------------------------------
 -- Table `bohemian`.`k_order_version`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
@@ -762,16 +822,26 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` CHAR(32) NOT NULL,
   `version` VARCHAR(45) NOT NULL COMMENT '版本名称',
-  `status` TINYINT(2) NOT NULL COMMENT '0:saved\n1:draft:submit to headquater\n2.approving:BPM\n3.approved',
-  `create_time` DATETIME NOT NULL COMMENT '版本创建时间',
+  `status` TINYINT(2) NOT NULL COMMENT '00 订单新建保存\n01 客户经理提交成功\n02 B2C审核提交成功\n03 工程人员提交成功\n04  支持经理提交成功\n05   订单审批通过\n06   订单更改审批通过\n07    订单更改保存\n08   订单更改提交成功\n09  已下推SAP\n10   BPM驳回\n11   Selling Tool驳回',
+  `create_time` DATETIME NOT NULL COMMENT '版本最早被创建时间，时间用来排序顺序',
+  `submit_date` DATETIME NULL COMMENT '最后一次提交时间，会有被驳回然后提交的时间',
+  `bpm_submit_time` DATETIME NULL COMMENT '提交bpm审批的时间，会有被驳回然后提交的时间',
+  `opt_time` DATETIME NULL COMMENT '最后状态变更的时间，销售和支持经理的变更时间，其它时间都有其它跟踪',
   `k_orders_id` CHAR(32) NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
   INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
+  INDEX `fk_k_order_version_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_order_version_k_orders1`
     FOREIGN KEY (`k_orders_id`)
     REFERENCES `bohemian`.`k_orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_k_order_version_k_order_info1`
+    FOREIGN KEY (`k_order_info_id`)
+    REFERENCES `bohemian`.`k_order_info` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -849,64 +919,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contacter` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`k_order_info`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
-  `id` CHAR(32) NOT NULL,
-  `last_operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
-  `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
-  `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
-  `is_reformed` TINYINT(1) NULL COMMENT '是否是改造店',
-  `is_convenient_store` TINYINT(1) NULL COMMENT '是否是便利店',
-  `is_new` TINYINT(1) NULL COMMENT '是不是新店',
-  `terminal_industry_code` VARCHAR(10) NULL COMMENT '终端店面的insustray code',
-  `terminal_industry_code_name` TEXT NULL COMMENT '终端店面的insustray code的名字',
-  `body_discount` DOUBLE(3,3) NULL COMMENT '柜体折扣',
-  `main_discount` DOUBLE(3,3) NULL COMMENT '机身折扣',
-  `install_term_code` VARCHAR(4) NULL COMMENT '安装code',
-  `install_term_name` TEXT NULL COMMENT '安装方式名称',
-  `receive_term_code` VARCHAR(4) NULL COMMENT '接货方式名称code',
-  `receive_term_name` TEXT NULL COMMENT '接货方式名称',
-  `contactor_1_id` VARCHAR(18) NULL COMMENT '第一联系人身份证',
-  `contactor_1_tel` VARCHAR(16) NULL COMMENT '第一联系人电话',
-  `contactor_2_id` VARCHAR(18) NULL COMMENT '第二联系人身份证',
-  `contactor_2_tel` VARCHAR(16) NULL COMMENT '第二联系人电话',
-  `contactor_3_id` VARCHAR(18) NULL COMMENT '第三联系人身份证',
-  `contactor_3_tel` VARCHAR(16) NULL COMMENT '第三联系人电话',
-  `freight` DECIMAL(13,2) NULL COMMENT '运费合计',
-  `warranty` INT NULL COMMENT '保修周期',
-  `currency_code` VARCHAR(3) NULL COMMENT '外币code',
-  `currency_name` TEXT NULL COMMENT '外币名称',
-  `exchange` DOUBLE(10,5) NULL COMMENT '汇率',
-  `contract_amount` DECIMAL(13,2) NULL COMMENT '原合同金额',
-  `contract_rmb_amount` DECIMAL(13,2) NULL COMMENT '合同人民币金额',
-  `sales_type` CHAR(2) NULL COMMENT '销售类型',
-  `tax_rate` DOUBLE NULL COMMENT '税率',
-  `incoterm_code` VARCHAR(45) NULL COMMENT '贸易条件code',
-  `incoterm_name` TEXT NULL COMMENT '贸易条件名称',
-  `incoterm_contect` TEXT NULL COMMENT '贸易条件',
-  `office_code` VARCHAR(45) NULL COMMENT '表单里的大区code',
-  `office_name` TEXT NULL COMMENT '大区名称',
-  `group_code` VARCHAR(45) NULL COMMENT '中心code',
-  `group_name` TEXT NULL COMMENT '中心名称',
-  `transfer_type_code` VARCHAR(45) NULL COMMENT '运输类型代码',
-  `transfer_type_name` TEXT NULL COMMENT '运输类型名称',
-  `is_term1` TINYINT(1) NULL COMMENT '柜体控制阀门件是否甲供',
-  `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
-  `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
-  `comments` TEXT NULL,
-  PRIMARY KEY USING BTREE (`id`),
-  UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin
-ROW_FORMAT = DYNAMIC;
 
 
 -- -----------------------------------------------------
@@ -995,7 +1007,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `item_category` VARCHAR(45) NOT NULL COMMENT '行项目类别',
   `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
   `k_forms_id` CHAR(32) NOT NULL,
-  `address` TEXT NULL COMMENT '运输目的地',
+  `address` TEXT NULL COMMENT '运输目的地，格式为{省 code:名字,市code:名字，区code:名字,address:名字}',
   `volume_cube` DECIMAL(13,2) NULL COMMENT '体积',
   `freight` DECIMAL(13,2) NULL COMMENT '运费',
   `retail_price` DECIMAL(13,2) NULL COMMENT '零售价格',
@@ -1088,40 +1100,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_bpm_dicision` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`k_parent_order_version`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_parent_order_version` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_parent_order_version` (
-  `opt_time` DATETIME NOT NULL,
-  `k_order_version_id` CHAR(32) NOT NULL COMMENT '当前版本',
-  `k_order_version_id_parent` CHAR(32) NOT NULL COMMENT '前版本',
-  `k_order_info_id` CHAR(32) NOT NULL,
-  PRIMARY KEY (`k_order_version_id`, `k_order_version_id_parent`),
-  INDEX `fk_k_parent_order_version_k_order_version2_idx` (`k_order_version_id_parent` ASC) VISIBLE,
-  INDEX `fk_k_parent_order_version_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_parent_order_version_k_order_version1`
-    FOREIGN KEY (`k_order_version_id`)
-    REFERENCES `bohemian`.`k_order_version` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_k_parent_order_version_k_order_version2`
-    FOREIGN KEY (`k_order_version_id_parent`)
-    REFERENCES `bohemian`.`k_order_version` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_k_parent_order_version_k_order_info1`
-    FOREIGN KEY (`k_order_info_id`)
-    REFERENCES `bohemian`.`k_order_info` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin
-COMMENT = '订单版本';
 
 
 -- -----------------------------------------------------
@@ -1405,15 +1383,68 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bohemian`.`sap_material_default_characteristic` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_default_characteristic` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `material_code` VARCHAR(18) NOT NULL,
-  `sap_characteristic_value_code` VARCHAR(30) NOT NULL,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  PRIMARY KEY (`id`),
-  INDEX `fk_sap_material_default_characteristic_sap_characteristic_v_idx` (`sap_characteristic_value_code` ASC) VISIBLE,
+  `sap_materials_code` VARCHAR(18) NOT NULL,
+  `sap_characteristic_code` VARCHAR(30) NOT NULL,
+  `sap_characteristic_value_id` INT NOT NULL,
+  PRIMARY KEY (`sap_materials_code`, `sap_characteristic_code`),
+  INDEX `fk_sap_material_default_characteristic_sap_materials1_idx` (`sap_materials_code` ASC) VISIBLE,
+  INDEX `fk_sap_material_default_characteristic_sap_characteristic1_idx` (`sap_characteristic_code` ASC) VISIBLE,
+  INDEX `fk_sap_material_default_characteristic_sap_characteristic_v_idx` (`sap_characteristic_value_id` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_material_default_characteristic_sap_materials1`
+    FOREIGN KEY (`sap_materials_code`)
+    REFERENCES `bohemian`.`sap_materials` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_sap_material_default_characteristic_sap_characteristic1`
+    FOREIGN KEY (`sap_characteristic_code`)
+    REFERENCES `bohemian`.`sap_characteristic` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_sap_material_default_characteristic_sap_characteristic_val1`
-    FOREIGN KEY (`sap_characteristic_value_code`)
-    REFERENCES `bohemian`.`sap_characteristic_value` (`code`)
+    FOREIGN KEY (`sap_characteristic_value_id`)
+    REFERENCES `bohemian`.`sap_characteristic_value` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_color_characteristic`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_color_characteristic` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_color_characteristic` (
+  `code` VARCHAR(45) NOT NULL,
+  `name` TEXT NOT NULL,
+  `sap_materials_code` VARCHAR(18) NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  INDEX `fk_sap_color_characteristic_sap_materials1_idx` (`sap_materials_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_color_characteristic_sap_materials1`
+    FOREIGN KEY (`sap_materials_code`)
+    REFERENCES `bohemian`.`sap_materials` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_characteristic_value`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_characteristic_value` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_characteristic_value` (
+  `id` INT NOT NULL,
+  `name` TEXT NOT NULL,
+  `code` VARCHAR(45) NOT NULL,
+  `sap_color_characteristic_code` VARCHAR(45) NOT NULL,
+  `isDefault` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_sap_characteristic_value_sap_color_characteristic1_idx` (`sap_color_characteristic_code` ASC) VISIBLE,
+  UNIQUE INDEX `seq_code` (`code` ASC, `sap_color_characteristic_code` ASC) VISIBLE,
+  CONSTRAINT `fk_sap_characteristic_value_sap_color_characteristic1`
+    FOREIGN KEY (`sap_color_characteristic_code`)
+    REFERENCES `bohemian`.`sap_color_characteristic` (`code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1433,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `is_optional` INT, `value_code` INT, `value_name` INT, `material_code` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `sap_characteristic_code` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1526,22 +1557,8 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-    SELECT 
-        c.sap_clazz_code,
-        k.code AS key_code,
-        k.name AS key_name,
-        k.is_optional,
-        v.code AS value_code,
-        v.name AS value_name,
-        m.material_code
-    FROM
-        sap_clazz_and_character c
-            LEFT JOIN
-        sap_characteristic k ON c.sap_characteristic_code = k.code
-            LEFT JOIN
-        sap_characteristic_value v ON v.sap_characteristic_code = k.code
-            LEFT JOIN
-        sap_material_default_characteristic m ON m.sap_characteristic_value_code = v.code;
+	SELECT*
+	FROM sap_clazz_and_character c;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
