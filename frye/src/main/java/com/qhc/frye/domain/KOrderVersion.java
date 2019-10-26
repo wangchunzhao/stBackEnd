@@ -48,7 +48,7 @@ public class KOrderVersion {
 	@Column(name = "submit_date")
 	private Date submitDate;
 	
-	@Column(name = "bpm_submit_date")
+	@Column(name = "bpm_submit_time")
 	private Date bpmSubmitDate;
 	
 	@Column(name = "opt_time")
