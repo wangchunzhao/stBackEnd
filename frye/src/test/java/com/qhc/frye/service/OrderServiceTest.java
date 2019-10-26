@@ -28,7 +28,7 @@ class OrderServiceTest {
 	
 	@Test
 	void testFindOrderVersionsByOrderIdString() {
-		List<OrderVersion> versions = orderService.findOrderVersionsByOrderId("123");
+		List<OrderVersion> versions = orderService.findOrderVersions("123");
 		System.out.println(versions);
 	}
 	

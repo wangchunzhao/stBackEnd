@@ -148,11 +148,11 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value="根据orderId查询订单版本历史", notes="根据orderId查询订单版本历史")
-    @GetMapping(value = "order/{orderId}/version")
+    @ApiOperation(value="根据sequenceNumber查询订单版本历史", notes="根据sequenceNumber查询订单版本历史")
+    @GetMapping(value = "order/{sequenceNumber}/version")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderVersion> orderVersions(@PathVariable String orderId) throws Exception {	
-    	return orderService.findOrderVersionsByOrderId(orderId);
+    public List<OrderVersion> orderVersions(@PathVariable String sequenceNumber) throws Exception {	
+    	return orderService.findOrderVersions(sequenceNumber);
     }
     
     /**

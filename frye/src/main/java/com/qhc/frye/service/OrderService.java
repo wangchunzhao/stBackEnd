@@ -85,9 +85,6 @@ public class OrderService {
 	private SalesTypeRepository salesTypeRepo;
 
 	@Autowired
-	private KOrderVersionRepository versionRepo;
-
-	@Autowired
 	private DOrderRepository dOrderRepository;
 
 	@Autowired
@@ -119,9 +116,6 @@ public class OrderService {
 
 	@Autowired
 	private PaymentTermRepository paymentRepo;
-
-	@Autowired
-	private KParentOrderVersionRepository orderParentVersionRepository;
 
 	@Autowired
 	private KOrderVersionViewRepository orderVersionViewRepository;
@@ -669,24 +663,24 @@ public class OrderService {
 	/**
 	 * 查询订单版本历史
 	 * 
-	 * @param orderId
+	 * @param sequenceNubmer
 	 * @return
 	 */
-	public List<OrderVersion> findOrderVersionsByOrderId(String orderId) {
-		List<KOrderVersion> versions = versionRepo.findByOrderIdOrderByCreateTime(orderId);
+	public List<OrderVersion> findOrderVersions(String sequenceNumber) {
+		List<KOrderVersionView> versions = orderVersionViewRepository.findBySequenceNumberOrderByCreateTime(sequenceNumber);
 		List<OrderVersion> list = new ArrayList<>(versions.size());
-		for (KOrderVersion version : versions) {
-			String versionId = version.getId();
-			KParentOrderVersion parentVersion = orderParentVersionRepository.findByOrderVersionId(versionId);
+		for (KOrderVersionView version : versions) {
+			String versionId = version.getVersionId();
 
 			OrderVersion v = new OrderVersion();
 			list.add(v);
 			v.setCreateTime(version.getCreateTime());
-			v.setId(version.getId());
-			v.setkOrderInfoId(parentVersion.getOrderInfoId());
+			v.setId(versionId);
+			v.setkOrderInfoId(version.getOrderInfoId());
 			v.setkOrdersId(version.getOrderId());
-			v.setOptTime(parentVersion.getOptTime());
-			v.setParentVersionId(parentVersion.getParentOrderVersionId());
+			v.setOptTime(version.getOptTime());
+			v.setSubmitDate(version.getSubmitDate());
+			v.setBpmSubmitTime(version.getBpmSubmitTime());
 		}
 
 		return list;
