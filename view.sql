@@ -247,7 +247,6 @@ SELECT o.sequence_number,
 	   v.submit_date,
 	   v.bpm_submit_time
 	   v.opt_time, 
-	   v.k_order_version_id_parent as parent_version_id, 
 	   v.k_order_info_id as order_info_id,
 	   d.*,
 	   f.id as form_id,

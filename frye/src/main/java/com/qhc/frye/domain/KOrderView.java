@@ -83,13 +83,17 @@ public class KOrderView
 	@Column(name="version_create_time")
 	private Date versionCreateTime = null;
 
+	/* Column(opt_time) - submitDate */
+	@Column(name="submit_date")
+	private Date submitDate = null;
+
+	/* Column(opt_time) - bpmSubmitTime */
+	@Column(name="bpm_submit_time")
+	private Date bpmSubmitTime = null;
+
 	/* Column(opt_time) - OptTime */
 	@Column(name="opt_time")
 	private Date optTime = null;
-
-	/* Column(parent_version_id) - 前版本 */
-	@Column(name="parent_version_id",columnDefinition="CHAR",length=32)
-	private String parentVersionId = null;
 
 	/* Column(order_info_id) - OrderInfoId */
 	@Column(name="order_info_id",columnDefinition="CHAR",length=32)
@@ -446,20 +450,28 @@ public class KOrderView
 		this.versionCreateTime = versionCreateTime;
 	}
 	 
+	public Date getSubmitDate() {
+		return submitDate;
+	}
+
+	public void setSubmitDate(Date submitDate) {
+		this.submitDate = submitDate;
+	}
+
+	public Date getBpmSubmitTime() {
+		return bpmSubmitTime;
+	}
+
+	public void setBpmSubmitTime(Date bpmSubmitTime) {
+		this.bpmSubmitTime = bpmSubmitTime;
+	}
+
 	public Date getOptTime() {
 		return this.optTime;
 	}
 
 	public void setOptTime(Date optTime) {
 		this.optTime = optTime;
-	}
-	 
-	public String getParentVersionId() {
-		return this.parentVersionId;
-	}
-
-	public void setParentVersionId(String parentVersionId) {
-		this.parentVersionId = parentVersionId;
 	}
 	 
 	public String getOrderInfoId() {
@@ -923,7 +935,6 @@ public class KOrderView
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((versionCreateTime == null) ? 0 : versionCreateTime.hashCode());
 		result = prime * result + ((optTime == null) ? 0 : optTime.hashCode());
-		result = prime * result + ((parentVersionId == null) ? 0 : parentVersionId.hashCode());
 		result = prime * result + ((orderInfoId == null) ? 0 : orderInfoId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastOperator == null) ? 0 : lastOperator.hashCode());
@@ -1007,7 +1018,6 @@ public class KOrderView
 			&&(this.status == null ? other.status == null : this.status.equals(other.status))
 			&&(this.versionCreateTime == null ? other.versionCreateTime == null : this.versionCreateTime.equals(other.versionCreateTime))
 			&&(this.optTime == null ? other.optTime == null : this.optTime.equals(other.optTime))
-			&&(this.parentVersionId == null ? other.parentVersionId == null : this.parentVersionId.equals(other.parentVersionId))
 			&&(this.orderInfoId == null ? other.orderInfoId == null : this.orderInfoId.equals(other.orderInfoId))
 			&&(this.id == null ? other.id == null : this.id.equals(other.id))
 			&&(this.lastOperator == null ? other.lastOperator == null : this.lastOperator.equals(other.lastOperator))
@@ -1082,7 +1092,6 @@ public class KOrderView
 	        + "status = " + this.status + tab
 	        + "versionCreateTime = " + this.versionCreateTime + tab
 	        + "optTime = " + this.optTime + tab
-	        + "parentVersionId = " + this.parentVersionId + tab
 	        + "orderInfoId = " + this.orderInfoId + tab
 	        + "id = " + this.id + tab
 	        + "lastOperator = " + this.lastOperator + tab
