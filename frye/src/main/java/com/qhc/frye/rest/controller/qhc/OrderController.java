@@ -31,6 +31,7 @@ import com.qhc.frye.rest.controller.entity.OrderForm;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.service.OrderService;
@@ -163,7 +164,7 @@ public class OrderController {
     @ApiOperation(value="查询订单", notes="查询订单")
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
-    public List<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
+    public PageHelper<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
     	return orderService.findOrders(query);
     }
     

@@ -12,6 +12,7 @@ import com.qhc.frye.domain.KOrderView;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 
 @SpringBootTest
@@ -43,7 +44,7 @@ class OrderServiceTest {
 		query.setLast(true);
 		query.setPageSize(10);
 		query.setIncludeDetail(true);
-		List<AbsOrder> result = orderService.findOrders(query);
+		PageHelper<AbsOrder> result = orderService.findOrders(query);
 		System.out.println(result);
 	}
 
