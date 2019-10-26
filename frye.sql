@@ -757,64 +757,6 @@ COMMENT = '订单';
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`k_order_info`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
-  `id` CHAR(32) NOT NULL,
-  `last_operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
-  `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
-  `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
-  `is_reformed` TINYINT(1) NULL COMMENT '是否是改造店',
-  `is_convenient_store` TINYINT(1) NULL COMMENT '是否是便利店',
-  `is_new` TINYINT(1) NULL COMMENT '是不是新店',
-  `terminal_industry_code` VARCHAR(10) NULL COMMENT '终端店面的insustray code',
-  `terminal_industry_code_name` TEXT NULL COMMENT '终端店面的insustray code的名字',
-  `body_discount` DOUBLE(3,3) NULL COMMENT '柜体折扣',
-  `main_discount` DOUBLE(3,3) NULL COMMENT '机身折扣',
-  `install_term_code` VARCHAR(4) NULL COMMENT '安装code',
-  `install_term_name` TEXT NULL COMMENT '安装方式名称',
-  `receive_term_code` VARCHAR(4) NULL COMMENT '接货方式名称code',
-  `receive_term_name` TEXT NULL COMMENT '接货方式名称',
-  `contactor_1_id` VARCHAR(18) NULL COMMENT '第一联系人身份证',
-  `contactor_1_tel` VARCHAR(16) NULL COMMENT '第一联系人电话',
-  `contactor_2_id` VARCHAR(18) NULL COMMENT '第二联系人身份证',
-  `contactor_2_tel` VARCHAR(16) NULL COMMENT '第二联系人电话',
-  `contactor_3_id` VARCHAR(18) NULL COMMENT '第三联系人身份证',
-  `contactor_3_tel` VARCHAR(16) NULL COMMENT '第三联系人电话',
-  `freight` DECIMAL(13,2) NULL COMMENT '运费合计',
-  `warranty` INT NULL COMMENT '保修周期',
-  `currency_code` VARCHAR(3) NULL COMMENT '外币code',
-  `currency_name` TEXT NULL COMMENT '外币名称',
-  `exchange` DOUBLE(10,5) NULL COMMENT '汇率',
-  `contract_amount` DECIMAL(13,2) NULL COMMENT '原合同金额',
-  `contract_rmb_amount` DECIMAL(13,2) NULL COMMENT '合同人民币金额',
-  `sales_type` CHAR(2) NULL COMMENT '销售类型',
-  `tax_rate` DOUBLE NULL COMMENT '税率',
-  `incoterm_code` VARCHAR(45) NULL COMMENT '贸易条件code',
-  `incoterm_name` TEXT NULL COMMENT '贸易条件名称',
-  `incoterm_contect` TEXT NULL COMMENT '贸易条件',
-  `office_code` VARCHAR(45) NULL COMMENT '表单里的大区code',
-  `office_name` TEXT NULL COMMENT '大区名称',
-  `group_code` VARCHAR(45) NULL COMMENT '中心code',
-  `group_name` TEXT NULL COMMENT '中心名称',
-  `transfer_type_code` VARCHAR(45) NULL COMMENT '运输类型代码',
-  `transfer_type_name` TEXT NULL COMMENT '运输类型名称',
-  `is_term1` TINYINT(1) NULL COMMENT '柜体控制阀门件是否甲供',
-  `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
-  `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
-  `comments` TEXT NULL,
-  PRIMARY KEY USING BTREE (`id`),
-  UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin
-ROW_FORMAT = DYNAMIC;
-
-
--- -----------------------------------------------------
 -- Table `bohemian`.`k_order_version`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
@@ -919,6 +861,64 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contacter` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_order_info`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_info` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
+  `id` CHAR(32) NOT NULL,
+  `last_operator` VARCHAR(128) NOT NULL COMMENT '最后操作人',
+  `last_opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
+  `customer_name` TEXT NOT NULL COMMENT '//店名 customer name',
+  `is_reformed` TINYINT(1) NULL COMMENT '是否是改造店',
+  `is_convenient_store` TINYINT(1) NULL COMMENT '是否是便利店',
+  `is_new` TINYINT(1) NULL COMMENT '是不是新店',
+  `terminal_industry_code` VARCHAR(10) NULL COMMENT '终端店面的insustray code',
+  `terminal_industry_code_name` TEXT NULL COMMENT '终端店面的insustray code的名字',
+  `body_discount` DOUBLE(3,3) NULL COMMENT '柜体折扣',
+  `main_discount` DOUBLE(3,3) NULL COMMENT '机身折扣',
+  `install_term_code` VARCHAR(4) NULL COMMENT '安装code',
+  `install_term_name` TEXT NULL COMMENT '安装方式名称',
+  `receive_term_code` VARCHAR(4) NULL COMMENT '接货方式名称code',
+  `receive_term_name` TEXT NULL COMMENT '接货方式名称',
+  `contactor_1_id` VARCHAR(18) NULL COMMENT '第一联系人身份证',
+  `contactor_1_tel` VARCHAR(16) NULL COMMENT '第一联系人电话',
+  `contactor_2_id` VARCHAR(18) NULL COMMENT '第二联系人身份证',
+  `contactor_2_tel` VARCHAR(16) NULL COMMENT '第二联系人电话',
+  `contactor_3_id` VARCHAR(18) NULL COMMENT '第三联系人身份证',
+  `contactor_3_tel` VARCHAR(16) NULL COMMENT '第三联系人电话',
+  `freight` DECIMAL(13,2) NULL COMMENT '运费合计',
+  `warranty` INT NULL COMMENT '保修周期',
+  `currency_code` VARCHAR(3) NULL COMMENT '外币code',
+  `currency_name` TEXT NULL COMMENT '外币名称',
+  `exchange` DOUBLE(10,5) NULL COMMENT '汇率',
+  `contract_amount` DECIMAL(13,2) NULL COMMENT '原合同金额',
+  `contract_rmb_amount` DECIMAL(13,2) NULL COMMENT '合同人民币金额',
+  `sales_type` CHAR(2) NULL COMMENT '销售类型',
+  `tax_rate` DOUBLE NULL COMMENT '税率',
+  `incoterm_code` VARCHAR(45) NULL COMMENT '贸易条件code',
+  `incoterm_name` TEXT NULL COMMENT '贸易条件名称',
+  `incoterm_contect` TEXT NULL COMMENT '贸易条件',
+  `office_code` VARCHAR(45) NULL COMMENT '表单里的大区code',
+  `office_name` TEXT NULL COMMENT '大区名称',
+  `group_code` VARCHAR(45) NULL COMMENT '中心code',
+  `group_name` TEXT NULL COMMENT '中心名称',
+  `transfer_type_code` VARCHAR(45) NULL COMMENT '运输类型代码',
+  `transfer_type_name` TEXT NULL COMMENT '运输类型名称',
+  `is_term1` TINYINT(1) NULL COMMENT '柜体控制阀门件是否甲供',
+  `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
+  `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
+  `comments` TEXT NULL,
+  PRIMARY KEY USING BTREE (`id`),
+  UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin
+ROW_FORMAT = DYNAMIC;
 
 
 -- -----------------------------------------------------

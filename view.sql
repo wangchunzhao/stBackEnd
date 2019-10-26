@@ -42,8 +42,7 @@ k.sequence_number as contract_seq
 			a.k_order_version_id,
 			a.k_orders_id,
 			a. STATUS,
-			b.k_order_info_id,
-			b.k_order_version_id_parent
+			b.k_order_info_id
 		FROM
 			(
 				SELECT
@@ -57,9 +56,9 @@ k.sequence_number as contract_seq
 				GROUP BY
 					k_orders_id
 			) a,
-			k_parent_order_version b
+			k_order_version b
 		WHERE
-			a.k_order_version_id = b.k_order_version_id) j
+			a.k_order_version_id = b.id) j
 left join k_contract k
   on j.k_order_version_id = k.k_order_version_id
 	) c,
@@ -161,7 +160,7 @@ CREATE VIEW k_speical_order_vo_view AS SELECT
 	CONCAT(
 		a.k_orders_id,
 		'_',
-		b.k_order_version_id,
+		a.k_order_version_id,
 		'_',
 		c.id,
 		'_',
@@ -192,11 +191,11 @@ FROM
 		ORDER BY
 			create_time DESC
 	) a,
-	k_parent_order_version b,
+	k_order_version b,
 	k_order_info c,
 	k_orders d
 WHERE
-	a.k_order_version_id = b.k_order_version_id
+	a.k_order_version_id = b.id
 	
 AND b.k_order_info_id = c.id
 AND a.k_orders_id = d.id
@@ -215,7 +214,7 @@ SELECT o.sequence_number,
 	   v.status, 
 	   v.create_time, 
 	   v.submit_date,
-	   v.bpm_submit_time
+	   v.bpm_submit_time,
 	   v.opt_time, 
 	   v.k_order_info_id as order_info_id
 FROM k_orders o 
@@ -245,7 +244,7 @@ SELECT o.sequence_number,
 	   v.status, 
 	   v.create_time as version_create_time,  
 	   v.submit_date,
-	   v.bpm_submit_time
+	   v.bpm_submit_time,
 	   v.opt_time, 
 	   v.k_order_info_id as order_info_id,
 	   d.*,
@@ -263,7 +262,7 @@ SELECT o.sequence_number,
 FROM k_orders o 
 left join k_order_support_info s on s.k_orders_id = o.id
 left join k_order_version v on v.k_orders_id = o.id
-left join k_order_info d on d.id = pv.k_order_info_id
+left join k_order_info d on d.id = v.k_order_info_id
 left join k_forms f on f.k_order_info_id = d.id;
 
 
