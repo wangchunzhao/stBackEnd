@@ -1,6 +1,7 @@
 package com.qhc.frye.service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -15,6 +16,10 @@ import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.BAreaRepository;
@@ -536,18 +541,21 @@ public class OrderService {
 			item.setZmeng(itemDetail.getAmount().intValue());
 			// Req.dlv.date/请求发货日期
 //			item.setEdatu(itemDetail.getDeliveryDate());
-			// Item category/行项目类别
+			// TODO Item category/行项目类别 -- ???
 			item.setPstyv(itemDetail.getItemCategory());
 			// Item usage/项目用途
-			item.setVkaus(itemDetail.getItemCategory());
+			item.setVkaus(itemDetail.getItemRequirementPlan());
 
 			// Ship-to address/送达方地址
-//			item.setStreet(itemDetail.getAddress());
-//			// Province/省
+			// json格式，{省code:省名称，市code:市名称,区code:区名称,address:街道}
+//			String address = itemDetail.getAddress(); 
+			// 街道名称
+//			item.setStreet(街道); 
+//			// Province/省 -- 省code
 //			item.setRegion();
-//			// City/市
+//			// City/市 -- 市名称
 //			item.setCity1();
-//			// District/区
+//			// District/区 -- 区名称
 //			item.setCity2();
 
 			// B2C note/B2C备注
@@ -587,7 +595,7 @@ public class OrderService {
 			prices.add(price1);
 			// ZH08：转移价合计/成本合计
 			SapOrderPrice price2 = new SapOrderPrice();
-			price2.setPosnr(itemDetail.getRowNumber());
+			price2.setPosnr(rowNumber);
 			price2.setKschl("ZH08");
 			price2.setKbetr(itemDetail.getTransfterPrice());
 			prices.add(price2);
@@ -603,6 +611,7 @@ public class OrderService {
 //					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
 //					vbbpz120 = (vbbpz120 == null || vbbpz120.length() == 0) ? tmp : "," + tmp;
 //					item.setVbbpz120(vbbpz120);
+//					continue;
 //				}
 
 				// Item/行项目编号
@@ -688,6 +697,8 @@ public class OrderService {
 		OrderQuery orderQuery = new OrderQuery();
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersionId(versionId);
+		orderQuery.setIncludeDetail(true);
+		
 		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = findOrders(orderQuery);
 		
 		if (orders.size() > 0) {
@@ -706,11 +717,12 @@ public class OrderService {
 	public List<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(OrderQuery orderQuery) {
 		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = new ArrayList<>();
 
-		List<KOrderView> orderViews = queryOrderView(orderQuery);
+		List<KOrderView> orderViews = queryOrderView(orderQuery).getContent();
 		for (KOrderView orderView : orderViews) {
 			String orderId = orderView.getOrderId();
 			String orderInfoId = orderView.getOrderInfoId();
 			String orderType = orderView.getOrderTypeCode();
+			String formId = orderView.getFormId();
 
 			com.qhc.frye.rest.controller.entity.form.AbsOrder order = null;
 			switch(orderType) {
@@ -740,36 +752,43 @@ public class OrderService {
 //			order.setContactor1Tel(orderView.getContactor1Tel());
 			order.setConfirmTypeCode(orderView.getReceiveTermCode());
 			order.setConfirmTypeName(orderView.getReceiveTermName());
-
-			// TODO Attached File
-//			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
-			List<String> attachmentNames = new ArrayList<String>();
-//			for(KAttachment attachment : attachments) {
-//				attachmentNames.add(attachment.getFileName());
-//			}
-			order.setAttachedFileName(attachmentNames);
-
-			// 收货地址
-			List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderId);
-			List<OrderAddress> addresses = new ArrayList<OrderAddress>(addressList.size());
-			for (KOrderView kOrderView : orderViews) {
-				OrderAddress address = new OrderAddress();
-				addresses.add(address);
-				BeanUtils.copyProperties(kOrderView, address);
+			
+			if (orderQuery.isIncludeDetail()) {
+				assembleOrderDetail(order, orderId, orderInfoId, formId);
 			}
-			order.setOrderAddress(addresses);
-
-			// TODO billing plan
-			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-//			order.setBillingPlans(billingPlanList);
-
-			// TODO bpm dicision
-
-			// TODO items
-			assembleItems(order, orderView);
 		}
 
 		return orders;
+	}
+
+	private void assembleOrderDetail(com.qhc.frye.rest.controller.entity.form.AbsOrder order, String orderId,
+			String orderInfoId, String formId) {
+		// TODO Attached File
+//			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
+		List<String> attachmentNames = new ArrayList<String>();
+//			for(KAttachment attachment : attachments) {
+//				attachmentNames.add(attachment.getFileName());
+//			}
+		order.setAttachedFileName(attachmentNames);
+
+		// 收货地址
+		List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderId);
+		List<OrderAddress> addresses = new ArrayList<OrderAddress>(addressList.size());
+		for (KDelieveryAddress delieveryAddress : addressList) {
+			OrderAddress address = new OrderAddress();
+			addresses.add(address);
+			BeanUtils.copyProperties(delieveryAddress, address);
+		}
+		order.setOrderAddress(addresses);
+
+		// TODO billing plan
+		List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+//			order.setBillingPlans(billingPlanList);
+
+		// TODO bpm dicision
+
+		// TODO items
+		assembleItems(order, formId);
 	}
 
 	/**
@@ -778,15 +797,7 @@ public class OrderService {
 	 * @param orderQuery
 	 * @return
 	 */
-	private List<KOrderView> queryOrderView(OrderQuery orderQuery) {
-		// String countSql = "";
-		// Query countQuery = entityManager.createNativeQuery(countSql);
-		// for (Map.Entry<String,Object> entry : params.entrySet())
-		// {
-		// countQuery.setParameter(entry.getKey(),entry.getValue());
-		// }
-		// BigInteger totalCount = (BigInteger)countQuery.getSingleResult();
-
+	private Page<KOrderView> queryOrderView(OrderQuery orderQuery) {
 		StringBuilder querySql = new StringBuilder();
 		Map<String, Object> params = new HashMap<>();
 		querySql.append("select * from k_order_view where 1=1 ");
@@ -810,23 +821,39 @@ public class OrderService {
 			querySql.append(" and status = :status"); // .append(query.getStatus());
 			params.put("status", orderQuery.getStatus());
 		}
+		if (orderQuery.isLast()) {
+			querySql.append(" and create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
+		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		// query.setFirstResult((int) pageable.getOffset());
-		// query.setMaxResults(pageable.getPageSize());
-
-		// Page<RankEntity> page = new
-		// PageImpl<>(rankEntities,pageable,totalCount.longValue());
+		
+		// 设置分页信息
+		int pageNo = orderQuery.getPageNo() == null ? 0 : orderQuery.getPageNo().intValue();
+		int pageSize = orderQuery.getPageSize() == null ? 10000 : orderQuery.getPageSize();
+		query.setFirstResult(pageNo * pageSize);
+		query.setMaxResults(pageSize);
 
 		List<KOrderView> orderViews = query.getResultList();
-		return orderViews;
+		
+		// 统计总记录数
+		String countSql = querySql.toString();
+		countSql = "select count(1) " + countSql.substring(countSql.indexOf("from"));
+		Query countQuery = entityManager.createNativeQuery(countSql);
+		for (Map.Entry<String,Object> entry : params.entrySet()) {
+			countQuery.setParameter(entry.getKey(),entry.getValue());
+		}
+		BigInteger totalCount = (BigInteger)countQuery.getSingleResult();
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Page<KOrderView> page = new PageImpl<KOrderView>(orderViews,pageable,totalCount.longValue());
+
+		return page;
 	}
 
-	private void assembleItems(com.qhc.frye.rest.controller.entity.form.AbsOrder order, KOrderView orderView) {
-		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(orderView.getFormId());
+	private void assembleItems(com.qhc.frye.rest.controller.entity.form.AbsOrder order, String formId) {
+		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
 		// 旧的AbsOrder格式
 //		ItemsForm form = new ItemsForm();
 ////		order.setItemsForm(form);
