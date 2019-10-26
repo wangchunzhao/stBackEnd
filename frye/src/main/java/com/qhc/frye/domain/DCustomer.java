@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "sap_customer")
 public class DCustomer implements Serializable{
-
+	private final static int FACTOR = 37;
 	/**
 	 * 
 	 */
@@ -112,7 +112,7 @@ public class DCustomer implements Serializable{
 	}
 	@Override
 	public int hashCode() {
-		return this.getCode().hashCode();
+		return this.getCode().hashCode()*FACTOR;
 	}
 	public String getClazzName() {
 		return clazzName;

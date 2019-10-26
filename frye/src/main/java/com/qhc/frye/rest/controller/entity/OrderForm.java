@@ -14,6 +14,6 @@ public class OrderForm extends AbsOrder {
 	}
 	
 	public OrderForm(String jason) {
-		super(jason);
+		//super(jason);
 	}
 }
