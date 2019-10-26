@@ -67,6 +67,7 @@ import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
+import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.ProductItem;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
@@ -709,7 +710,7 @@ public class OrderService {
 		orderQuery.setVersionId(versionId);
 		orderQuery.setIncludeDetail(true);
 		
-		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = findOrders(orderQuery);
+		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = findOrders(orderQuery).getRows();
 		
 		if (orders.size() > 0) {
 			order = (DealerOrder)orders.get(0);
@@ -724,10 +725,11 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public List<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(OrderQuery orderQuery) {
+	public PageHelper<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(OrderQuery orderQuery) {
 		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = new ArrayList<>();
 
-		List<KOrderView> orderViews = queryOrderView(orderQuery).getContent();
+		PageHelper<KOrderView> page = queryOrderView(orderQuery);
+		List<KOrderView> orderViews = queryOrderView(orderQuery).getRows();
 		for (KOrderView orderView : orderViews) {
 			String orderId = orderView.getOrderId();
 			String orderInfoId = orderView.getOrderInfoId();
@@ -768,7 +770,10 @@ public class OrderService {
 			}
 		}
 
-		return orders;
+		PageHelper p = new PageHelper();
+		p.setRows(orders);
+		p.setTotal(page.getTotal());
+		return p;
 	}
 
 	private void assembleOrderDetail(com.qhc.frye.rest.controller.entity.form.AbsOrder order, String orderId,
@@ -807,7 +812,7 @@ public class OrderService {
 	 * @param orderQuery
 	 * @return
 	 */
-	private Page<KOrderView> queryOrderView(OrderQuery orderQuery) {
+	private PageHelper<KOrderView> queryOrderView(OrderQuery orderQuery) {
 		StringBuilder querySql = new StringBuilder();
 		Map<String, Object> params = new HashMap<>();
 		querySql.append("select * from k_order_view where 1=1 ");
@@ -856,8 +861,9 @@ public class OrderService {
 			countQuery.setParameter(entry.getKey(),entry.getValue());
 		}
 		BigInteger totalCount = (BigInteger)countQuery.getSingleResult();
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		Page<KOrderView> page = new PageImpl<KOrderView>(orderViews,pageable,totalCount.longValue());
+		PageHelper page = new PageHelper<AbsOrder>();
+		page.setRows(orderViews);
+		page.setTotal(totalCount.intValue());
 
 		return page;
 	}
