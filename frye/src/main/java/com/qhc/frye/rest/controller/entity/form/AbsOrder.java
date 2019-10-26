@@ -27,6 +27,7 @@ public abstract class AbsOrder {
 	private String customerClazzName;//客户性质分类名称
 	private String terminalType;//终端客户性质
 	private String contracterCode;//签约单位 Contract unit
+	private String contracterName;//签约单位 Contract Name
 	private String customerName;//店名 customer name
 	private int isConvenientStore;//是否便利店 convenience store
 	private String salesCode;//客户经理 Customer manager
@@ -51,7 +52,7 @@ public abstract class AbsOrder {
 	private double currencyExchange;//汇率 exchange rate
 	private double itemsAmount;//购销明细金额合计 Aggregate amount
 	private String contractManager;//合同管理员
-	private Date inputDate;//录入日期
+	private Date optTime;//新建时为录入日期/其它为修改时间
 	
 	/*
 	 * 合同详细信息 Contract details
@@ -172,13 +173,14 @@ public abstract class AbsOrder {
 	public void setContractManager(String contractManager) {
 		this.contractManager = contractManager;
 	}
-	public Date getInputDate() {
-		return inputDate;
-	}
-	public void setInputDate(Date inputDate) {
-		this.inputDate = inputDate;
-	}
+	
 		
+	public Date getOptTime() {
+		return optTime;
+	}
+	public void setOptTime(Date optTime) {
+		this.optTime = optTime;
+	}
 	public List<AbsItem> getItems() {
 		return items;
 	}
@@ -459,6 +461,12 @@ public abstract class AbsOrder {
 	}
 	public void setUserOfficeCode(String userOfficeCode) {
 		this.userOfficeCode = userOfficeCode;
+	}
+	public String getContracterName() {
+		return contracterName;
+	}
+	public void setContracterName(String contracterName) {
+		this.contracterName = contracterName;
 	}
 	
 }

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class DOrder implements Serializable{
-	
+	private final static int FACTOR = 43;
 	/**
 	 * 
 	 */
@@ -41,6 +42,7 @@ public class DOrder implements Serializable{
 	
 	@NotNull
 	@Column(name="create_time",columnDefinition="datetime")
+	@CreatedDate
 	public Date createTime;
 	
 	@NotNull
@@ -170,10 +172,21 @@ public class DOrder implements Serializable{
 	public void setOfficeCode(String officeCode) {
 		this.officeCode = officeCode;
 	}
+	@Override
+	public int hashCode() {
+		return this.getSequenceNumber().hashCode()*FACTOR;
+	}
 	
-	
-
-	
+	@Override
+	public boolean equals(Object o) {
+		if(o.getClass().equals(this.getClass()) ) {
+			DOrder obj = (DOrder)o;
+			if(obj.getSequenceNumber().equals(this.getSequenceNumber())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 }

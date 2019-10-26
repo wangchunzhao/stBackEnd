@@ -61,7 +61,8 @@ import com.qhc.frye.domain.PaymentTerm;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
-import com.qhc.frye.rest.controller.entity.AbsOrder;
+import com.qhc.frye.rest.controller.entity.form.AbsOrder;
+import com.qhc.frye.rest.controller.entity.form.BaseOrder;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -186,32 +187,40 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(AbsOrder order) {
+	public void save(AbsOrder order,boolean fromSupportor) {
 
-		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
-		OrderSupportInfo ori = order.getSupportInforOfOrder();
-		if (!order.getContractNumber().trim().isEmpty())
-			ori.setOrderId(sDorder.getId());
-		supportRepo.saveAndFlush(ori);
-		KOrderVersion over = order.getOrderVersion();
-		over.setOrderId(sDorder.getId());
-		KOrderVersion kov = versionRepo.saveAndFlush(over);
+		String seq = order.getSequenceNumber();
+		DOrder dorder = dOrderRepository.findBySequence(order.getSequenceNumber());
+		BaseOrder baseOrder = (BaseOrder)order;
+		dorder = baseOrder.toDOrder();
+		dorder = dOrderRepository.save(dorder);
+		//
+		if(fromSupportor) {
+			OrderSupportInfo supportInfo = baseOrder.toSupportInforOfOrder();
+			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
+			if(osi.getId()!=0) {
+				supportInfo.setId(osi.getId());
+			}
+			supportRepo.save(supportInfo);
+		}
+		//
+		//KOrderVersion over = order.getOrderVersion();
 	}
 	/**
 	 * 
 	 * @param absOrder
 	 */
-	public void submit(AbsOrder order) {
-
-		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
-		OrderSupportInfo ori = order.getSupportInforOfOrder();
-		if (!order.getContractNumber().trim().isEmpty())
-			ori.setOrderId(sDorder.getId());
-		supportRepo.saveAndFlush(ori);
-		KOrderVersion over = order.getOrderVersion();
-		over.setOrderId(sDorder.getId());
-		KOrderVersion kov = versionRepo.saveAndFlush(over);
-	}
+//	public void submit(AbsOrder order) {
+//
+//		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
+//		OrderSupportInfo ori = order.getSupportInforOfOrder();
+//		if (!order.getContractNumber().trim().isEmpty())
+//			ori.setOrderId(sDorder.getId());
+//		supportRepo.saveAndFlush(ori);
+//		KOrderVersion over = order.getOrderVersion();
+//		over.setOrderId(sDorder.getId());
+//		KOrderVersion kov = versionRepo.saveAndFlush(over);
+//	}
 
 	/**
 	 * 
@@ -228,87 +237,88 @@ public class OrderService {
 
 	public List<SapSalesGroup> findGrossProfitBySalesOrder(SalesOrder saleOrder, List<SapSalesGroup> salesGroups) {
 
-		List<ItemDetails> details = new ArrayList<ItemDetails>();
-		;
-		if (saleOrder.getItemsForm() != null) {
-			details = saleOrder.getItemsForm().getDetailsList();
-		}
-		// 提交类型 3.margin 4.wtw margin
-		int submitType = saleOrder.getSubmitType();
-
-		// 税率
-		Double taxRate = saleOrder.getTaxRate();
-
-		// 物料类型表
-		// sapSalesGroups
-
-		// 毛利表
-		BigDecimal sumAmount = BigDecimal.ZERO;// 金额
-		BigDecimal sumExcludingTaxAmount = BigDecimal.ZERO;// 不含税金额
-		BigDecimal sumCost = BigDecimal.ZERO;// 成本
-		BigDecimal sumGrossProfit = BigDecimal.ZERO;// 毛利
-		Double sumGrossProfitMargin = 0D;// 毛利率
-		if (details != null && details.size() > 0) {
-			for (SapSalesGroup entity : salesGroups) {
-				BigDecimal amount = BigDecimal.ZERO;// 金额
-				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
-				BigDecimal cost = BigDecimal.ZERO;// 成本
-				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
-				Double grossProfitMargin = 0D;// 毛利率
-
-				for (ItemDetails item : details) {
-					if (item.getMaterialCode().equals(entity.getCode())) {
-						// 总金额
-						amount = amount.add(item.getAmount());
-						// 总金额减去税金 = 不含税金额
-						excludingTaxAmount = excludingTaxAmount
-								.subtract(sumAmount.multiply(BigDecimal.valueOf(taxRate)));
-						// 成本
-						if (submitType == 3) {
-							cost = cost.add(item.getStandardPrice());
-						}
-						if (submitType == 4) {
-							cost = cost.add(item.getTransfterPrice());
-						}
-						// 毛利
-						grossProfit = excludingTaxAmount.subtract(cost);
-						// 毛利率
-						grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
-
-					}
-				}
-
-				entity.setAmount(amount);
-				entity.setExcludingTaxAmount(excludingTaxAmount);
-				entity.setCost(cost);
-				entity.setGrossProfit(grossProfit);
-				entity.setGrossProfitMargin(grossProfitMargin);
-
-				sumAmount = sumAmount.add(amount);
-				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
-				sumCost = sumCost.add(cost);
-				sumGrossProfit = sumGrossProfit.add(grossProfit);
-				sumAmount = sumAmount.add(amount);
-			}
-
-		}
-
-		SapSalesGroup sumssg = new SapSalesGroup();
-		sumssg.setAmount(sumAmount);
-		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount);
-		sumssg.setCost(sumCost);
-		sumssg.setGrossProfit(sumGrossProfit);
-		if (salesGroups.size() != 0) {
-			sumssg.setGrossProfitMargin(sumGrossProfitMargin / salesGroups.size());
-		} else {
-			sumssg.setGrossProfitMargin(0D);
-		}
-		sumssg.setCode("sum");
-		sumssg.setName("合计");
-
-		salesGroups.add(sumssg);
-
-		return salesGroups;
+//		List<ItemDetails> details = new ArrayList<ItemDetails>();
+//		;
+//		if (saleOrder.getItemsForm() != null) {
+//			details = saleOrder.getItemsForm().getDetailsList();
+//		}
+//		// 提交类型 3.margin 4.wtw margin
+//		int submitType = saleOrder.getSubmitType();
+//
+//		// 税率
+//		Double taxRate = saleOrder.getTaxRate();
+//
+//		// 物料类型表
+//		// sapSalesGroups
+//
+//		// 毛利表
+//		BigDecimal sumAmount = BigDecimal.ZERO;// 金额
+//		BigDecimal sumExcludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+//		BigDecimal sumCost = BigDecimal.ZERO;// 成本
+//		BigDecimal sumGrossProfit = BigDecimal.ZERO;// 毛利
+//		Double sumGrossProfitMargin = 0D;// 毛利率
+//		if (details != null && details.size() > 0) {
+//			for (SapSalesGroup entity : salesGroups) {
+//				BigDecimal amount = BigDecimal.ZERO;// 金额
+//				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+//				BigDecimal cost = BigDecimal.ZERO;// 成本
+//				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
+//				Double grossProfitMargin = 0D;// 毛利率
+//
+//				for (ItemDetails item : details) {
+//					if (item.getMaterialCode().equals(entity.getCode())) {
+//						// 总金额
+//						amount = amount.add(item.getAmount());
+//						// 总金额减去税金 = 不含税金额
+//						excludingTaxAmount = excludingTaxAmount
+//								.subtract(sumAmount.multiply(BigDecimal.valueOf(taxRate)));
+//						// 成本
+//						if (submitType == 3) {
+//							cost = cost.add(item.getStandardPrice());
+//						}
+//						if (submitType == 4) {
+//							cost = cost.add(item.getTransfterPrice());
+//						}
+//						// 毛利
+//						grossProfit = excludingTaxAmount.subtract(cost);
+//						// 毛利率
+//						grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
+//
+//					}
+//				}
+//
+//				entity.setAmount(amount);
+//				entity.setExcludingTaxAmount(excludingTaxAmount);
+//				entity.setCost(cost);
+//				entity.setGrossProfit(grossProfit);
+//				entity.setGrossProfitMargin(grossProfitMargin);
+//
+//				sumAmount = sumAmount.add(amount);
+//				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
+//				sumCost = sumCost.add(cost);
+//				sumGrossProfit = sumGrossProfit.add(grossProfit);
+//				sumAmount = sumAmount.add(amount);
+//			}
+//
+//		}
+//
+//		SapSalesGroup sumssg = new SapSalesGroup();
+//		sumssg.setAmount(sumAmount);
+//		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount);
+//		sumssg.setCost(sumCost);
+//		sumssg.setGrossProfit(sumGrossProfit);
+//		if (salesGroups.size() != 0) {
+//			sumssg.setGrossProfitMargin(sumGrossProfitMargin / salesGroups.size());
+//		} else {
+//			sumssg.setGrossProfitMargin(0D);
+//		}
+//		sumssg.setCode("sum");
+//		sumssg.setName("合计");
+//
+//		salesGroups.add(sumssg);
+//
+//		return salesGroups;
+		return null;
 	}
 
 	public Double CalculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
