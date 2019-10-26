@@ -71,7 +71,9 @@ import com.qhc.frye.rest.controller.entity.SapOrderItem;
 import com.qhc.frye.rest.controller.entity.SapOrderPlan;
 import com.qhc.frye.rest.controller.entity.SapOrderPrice;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
+import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
+import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
 
 @Service
@@ -696,14 +698,18 @@ public class OrderService {
 			String orderType = orderView.getOrderTypeCode();
 
 			com.qhc.frye.rest.controller.entity.form.AbsOrder order = null;
-			if (orderType.equals("dealer")) {
-				order = new DealerOrder();
-			} else if (orderType.equals("keyaccount")) {
-//	    		 order = new KeyAccountOrder();
-			} else if (orderType.equals("bulk")) {
-//	    		 order = new BulkOrder();
-			} else {
-				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+			switch(orderType) {
+				case "dealer":
+					order = new DealerOrder();
+					break;
+				case "keyaccount":
+					order = new KeyAccountOrder();
+					break;
+				case "bulk":
+		    		order = new BulkOrder();
+		    		break;
+				default:
+					throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
 			}
 			orders.add(order);
 
