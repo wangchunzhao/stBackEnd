@@ -156,7 +156,7 @@ public class MaterialService {
 	 * @return
 	 */
 	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode){
-		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode,materialCode);
+		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
 		List<Characteristic> chas = new ArrayList<Characteristic>();
 		Map<String,Characteristic> cs = new HashMap<String,Characteristic>();
 		for(CharacteristicConfiguration cc:ccs) {
@@ -164,7 +164,7 @@ public class MaterialService {
 				Characteristic ch = new Characteristic();
 				ch.setCode(cc.getKeyCode());
 				ch.setName(cc.getKeyName());
-				ch.setOptional(cc.isOptional());
+				//ch.setOptional(cc.isOptional());
 				ch.setClassCode(clazzCode);
 				cs.put(cc.getKeyCode(), ch);
 				Configuration con = new Configuration();

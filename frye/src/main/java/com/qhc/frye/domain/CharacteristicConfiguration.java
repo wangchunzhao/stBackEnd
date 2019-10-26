@@ -31,12 +31,7 @@ public class CharacteristicConfiguration {
 	
 	@Column(name = "key_name",columnDefinition ="TEXT")
 	private String keyName;
-	
-	@Column(name = "is_optional",columnDefinition ="BIT")
-	private boolean isOptional;
-	
-	@Column(name = "material_code",columnDefinition ="CHAR")
-	private String materialCode;
+
 
 	public String getValCode() {
 		return valCode;
@@ -76,22 +71,6 @@ public class CharacteristicConfiguration {
 
 	public void setKeyName(String keyName) {
 		this.keyName = keyName;
-	}
-
-	public boolean isOptional() {
-		return isOptional;
-	}
-
-	public void setOptional(boolean isOptional) {
-		this.isOptional = isOptional;
-	}
-
-	public String getMaterialCode() {
-		return materialCode;
-	}
-
-	public void setMaterialCode(String materialCode) {
-		this.materialCode = materialCode;
 	}
 
 
