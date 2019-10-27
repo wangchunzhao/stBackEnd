@@ -242,9 +242,9 @@ public class BaseOrder extends AbsOrder{
 	 * 
 	 * @return
 	 */
-	public List<KCharacteristics> toCharacteristics(List<AbsItem> items){
+	public List<KCharacteristics> toCharacteristics(List<ItemDetails> details){
 		List<KCharacteristics> kcList = new ArrayList<KCharacteristics>();
-		for(AbsItem item:items) {
+		for(AbsItem item:this.getItems()) {
 			for(AbsCharacteristic ac :item.getConfigs()) {
 				KCharacteristics temp = new KCharacteristics();
 				temp.setKeyCode(ac.getConfigCode());

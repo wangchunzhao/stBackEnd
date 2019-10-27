@@ -27,6 +27,8 @@ import com.qhc.frye.dao.ItemDetailRepository;
 import com.qhc.frye.dao.KBiddingPlanRepository;
 import com.qhc.frye.dao.KCharacteristicsRepository;
 import com.qhc.frye.dao.KDelieveryAddressRepository;
+import com.qhc.frye.dao.KOrderFormRepository;
+import com.qhc.frye.dao.KOrderInfoRepository;
 import com.qhc.frye.dao.KOrderVersionRepository;
 import com.qhc.frye.dao.KOrderVersionViewRepository;
 import com.qhc.frye.dao.KOrderViewRepository;
@@ -43,9 +45,11 @@ import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
+import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KDelieveryAddress;
+import com.qhc.frye.domain.KOrderInfo;
 import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.KOrderVersionView;
 import com.qhc.frye.domain.KOrderView;
@@ -70,6 +74,7 @@ import com.qhc.frye.rest.controller.entity.SapOrderHeader;
 import com.qhc.frye.rest.controller.entity.SapOrderItem;
 import com.qhc.frye.rest.controller.entity.SapOrderPlan;
 import com.qhc.frye.rest.controller.entity.SapOrderPrice;
+import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
 import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
@@ -136,8 +141,8 @@ public class OrderService {
 	@Autowired
 	private KDelieveryAddressRepository deliveryAddressRepository;
 
-//	@Autowired
-//	private AttachementRepository attachementRepository;
+	@Autowired
+	private KOrderInfoRepository orderInfoRepo;
 
 	@Autowired
 	private ConstantService constService;
@@ -147,6 +152,9 @@ public class OrderService {
 
 	@Autowired
 	private BayernService<SapOrder> bayernService;
+	
+	@Autowired
+	private KOrderFormRepository formRepo;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -197,17 +205,82 @@ public class OrderService {
 		//
 		
 		//
+		String orderId = null;
 		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
 		if(lversion!=null) {
 			if(lversion.getStatus().equals("05")||lversion.getStatus().equals("06")||lversion.getStatus().equals("10")) {
 				lversion = new KOrderVersion();
-			}else {
-				
 			}
+			
 				
 		}else {
-			//order.getor
+			KOrderInfo kOrderInfo = baseOrder.toOrderInfo();
+			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+			lversion.setOrderId(kOrderInfo.getId());
+			//
+			List<KDelieveryAddress> adds=baseOrder.toAddress(kOrderInfo.getId());
+			deliveryAddressRepository.saveAll(adds);
+			
+			ItemsForm form = baseOrder.toForm(kOrderInfo.getId());
+			form = formRepo.save(form);
+			
+//			List<ItemDetails> details = baseOrder.toDetails(form.getId());
+//			details =itemDetailRepository.saveAll(details);
+			String formId = form.getId();
+			//
+			for(AbsItem item: baseOrder.getItems()) {
+				ItemDetails temp = new ItemDetails();
+				temp.setRowNumber(item.getRowNumber());
+				temp.setMaterialCode(item.getMaterialCode());
+				temp.setMaterialName(item.getMaterialName());
+				if(item.getIsVirtual()==0)
+					temp.setVirtual(false);
+				else
+					temp.setVirtual(true);
+				temp.setMaterialAttribute(item.isPurchased());
+				temp.setQuantity(item.getQuantity());
+				temp.setMeasureUnitCode(item.getUnitCode());
+				temp.setAmount(new BigDecimal(item.getRetailPrice()*item.getQuantity()));
+				temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
+				temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
+				temp.setB2cComments(item.getB2cComments());
+				temp.setB2cEstimationAmount(new BigDecimal(item.getB2CPriceEstimated()));
+				temp.setB2cEstimationCost(new BigDecimal(item.getB2CCostOfEstimated()));
+				temp.setMaterialCode(item.getMaterialCode());
+				temp.setMaterialGroupCode(item.getGroupCode());
+				temp.setMaterialGroupName(item.getGroupName());
+				temp.setDiscount(item.getDiscount());
+				temp.setItemCategory(item.getItemCategory());
+				temp.setItemRequirementPlan(item.getItemRequirementPlan());
+				temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
+				temp.setFreight(new BigDecimal(item.getFeight()));
+				temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
+				temp.setDelieveryDate(item.getDeliveryDate());
+				temp.setSpecialNeed(item.getSpecialComments());
+				temp.setMosaicImage(item.getMosaicImage());
+				temp.setAttachedImage(item.getAttachedImage());
+				temp.setRequestBrand(item.getRequestBrand());
+				temp.setRequestCircuit(item.getRequestCircult());
+				temp.setRequestPackage(item.getRequestPackage());
+				temp.setRequestNameplate(item.getRequestNameplate());
+				temp.setComments(item.getComments());
+				temp.setColorComments(item.getColorComments());
+				//
+				temp.setkFormsId(formId);
+				//
+				temp = itemDetailRepository.save(temp);
+				for(AbsCharacteristic ac :item.getConfigs()) {
+					KCharacteristics tc = new KCharacteristics();
+					tc.setKeyCode(ac.getConfigCode());
+					tc.setValueCode(ac.getConfigValueCode());
+					
+					tc = characteristicsRepository.save(tc);
+				}
+				
+			}
+			
 		}
+
 	}
 	/**
 	 * 
