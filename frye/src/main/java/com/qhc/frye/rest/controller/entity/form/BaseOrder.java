@@ -12,6 +12,7 @@ import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KAttachment;
 import com.qhc.frye.domain.KBiddingPlan;
+import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KDelieveryAddress;
 import com.qhc.frye.domain.KOrderInfo;
 import com.qhc.frye.domain.KOrderVersion;
@@ -223,13 +224,35 @@ public class BaseOrder extends AbsOrder{
 			temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
 			temp.setDelieveryDate(item.getDeliveryDate());
 			temp.setSpecialNeed(item.getSpecialComments());
-			//temp.setmo
+			temp.setMosaicImage(item.getMosaicImage());
+			temp.setAttachedImage(item.getAttachedImage());
+			temp.setRequestBrand(item.getRequestBrand());
+			temp.setRequestCircuit(item.getRequestCircult());
+			temp.setRequestPackage(item.getRequestPackage());
+			temp.setRequestNameplate(item.getRequestNameplate());
+			temp.setComments(item.getComments());
+			temp.setColorComments(item.getColorComments());
 			//
 			temp.setkFormsId(formId);
 			idList.add(temp);
 		}
 		return idList;
 	}
-	
-	//public List<>
+	/**
+	 * 
+	 * @return
+	 */
+	public List<KCharacteristics> toCharacteristics(List<AbsItem> items){
+		List<KCharacteristics> kcList = new ArrayList<KCharacteristics>();
+		for(AbsItem item:items) {
+			for(AbsCharacteristic ac :item.getConfigs()) {
+				KCharacteristics temp = new KCharacteristics();
+				temp.setKeyCode(ac.getConfigCode());
+				temp.setValueCode(ac.getConfigValueCode());
+				
+				kcList.add(temp);
+			}
+		}
+		return kcList;
+	}
 }
