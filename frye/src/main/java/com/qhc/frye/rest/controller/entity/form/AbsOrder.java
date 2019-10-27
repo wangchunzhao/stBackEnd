@@ -34,6 +34,7 @@ public abstract class AbsOrder {
 	private String salesName;//客户经理 Customer manager
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
 	private int isNew;//是否新客户 new customer
+	private int isReformed;//是否改造店
 	/**
 	 * 合同详细信息 Contract details
 	 */
@@ -52,7 +53,11 @@ public abstract class AbsOrder {
 	private double currencyExchange;//汇率 exchange rate
 	private double itemsAmount;//购销明细金额合计 Aggregate amount
 	private String contractManager;//合同管理员
-	private Date optTime;//新建时为录入日期/其它为修改时间
+	private Date createTime;//创建时间
+	private double bodyDiscount;
+	private double mainDiscount;
+	private double approvedDiscount;
+	
 	
 	/*
 	 * 合同详细信息 Contract details
@@ -95,11 +100,11 @@ public abstract class AbsOrder {
 	private List<AbsItem> items;
 	private String comments;//备注
 	private List<OrderAddress> orderAddress;//合同明细地址
+	private List<BiddingPayment> payments;//付款条件或bidding plan 
 	
 	private String orderVersion;//当前版本,创建时steigenberger创建
 	private String userOfficeCode;//用户所在销售办公室
-	
-	
+		
 	public String getOrderVersion() {
 		return orderVersion;
 	}
@@ -200,6 +205,7 @@ public abstract class AbsOrder {
 	//
 	private int submitType;
 	private String currentUser;//当前session用户
+	private Date optTime;//新建时为录入日期/其它为修改时间
 	//
 	
 	
@@ -468,5 +474,41 @@ public abstract class AbsOrder {
 	public void setContracterName(String contracterName) {
 		this.contracterName = contracterName;
 	}
-	
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public int getIsReformed() {
+		return isReformed;
+	}
+	public void setIsReformed(int isReformed) {
+		this.isReformed = isReformed;
+	}
+	public double getBodyDiscount() {
+		return bodyDiscount;
+	}
+	public void setBodyDiscount(double bodyDiscount) {
+		this.bodyDiscount = bodyDiscount;
+	}
+	public double getMainDiscount() {
+		return mainDiscount;
+	}
+	public void setMainDiscount(double mainDiscount) {
+		this.mainDiscount = mainDiscount;
+	}
+	public double getApprovedDiscount() {
+		return approvedDiscount;
+	}
+	public void setApprovedDiscount(double approvedDiscount) {
+		this.approvedDiscount = approvedDiscount;
+	}
+	public List<BiddingPayment> getPayments() {
+		return payments;
+	}
+	public void setPayments(List<BiddingPayment> payments) {
+		this.payments = payments;
+	}
+		
 }

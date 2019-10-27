@@ -45,7 +45,7 @@ public class KOrderInfo {
 	private Integer	isConvenientStore	;//	是否便利店
 	
 	@Column(name="is_new",columnDefinition ="BIT")
-	private Integer	isNew	;//	是不是新店
+	private boolean	isNew	;//	是不是新店
 	
 	@Column(name="terminal_industry_code")
 	private String	terminalIndustryCode;
@@ -101,7 +101,7 @@ public class KOrderInfo {
 	private String	currencyName;//币别
 	
 	@Column(name="exchange",columnDefinition = "DOUBLE")
-	private Double	exchange;//汇率
+	private double	exchange;//汇率
 	
 	
 	@Column(name = "contract_amount"/* ,columnDefinition = "DOUBLE" */)
@@ -116,7 +116,7 @@ public class KOrderInfo {
 	
 	
 	@Column(name="tax_rate",columnDefinition = "DOUBLE")
-	private Double	taxRate	;//
+	private double	taxRate	;//
 	
 	
 	
@@ -149,13 +149,13 @@ public class KOrderInfo {
 	private String	transferTypeName;//	
 	
 	@Column(name="is_term1",columnDefinition ="BIT")
-	private Integer	isTerm1	;//
+	private boolean	isTerm1	;//
 	
 	@Column(name="is_term2",columnDefinition ="BIT")
-	private Integer	isTerm2	;//
+	private boolean	isTerm2	;//
 	
 	@Column(name="is_term3",columnDefinition ="BIT")
-	private Integer	isTerm3	;//
+	private boolean	isTerm3	;//
 	
 	@Column(name="comments",columnDefinition="TEXT")
 	private String	comments;
@@ -176,11 +176,39 @@ public class KOrderInfo {
 	
 	
 	
-	
-	
-	
-	
 
+
+	public boolean isTerm1() {
+		return isTerm1;
+	}
+
+	public void setTerm1(boolean isTerm1) {
+		this.isTerm1 = isTerm1;
+	}
+
+	public boolean isTerm2() {
+		return isTerm2;
+	}
+
+	public void setTerm2(boolean isTerm2) {
+		this.isTerm2 = isTerm2;
+	}
+
+	public boolean isTerm3() {
+		return isTerm3;
+	}
+
+	public void setTerm3(boolean isTerm3) {
+		this.isTerm3 = isTerm3;
+	}
+
+	public void setExchange(double exchange) {
+		this.exchange = exchange;
+	}
+
+	public void setTaxRate(double taxRate) {
+		this.taxRate = taxRate;
+	}
 
 	public ItemsForm getForm() {
 		return form;
@@ -251,17 +279,15 @@ public class KOrderInfo {
 	public void setIsConvenientStore(Integer isConvenientStore) {
 		this.isConvenientStore = isConvenientStore;
 	}
+	
 
-
-	public Integer getIsNew() {
+	public boolean isNew() {
 		return isNew;
 	}
 
-
-	public void setIsNew(Integer isNew) {
+	public void setNew(boolean isNew) {
 		this.isNew = isNew;
 	}
-
 
 	public String getTerminalIndustryCode() {
 		return terminalIndustryCode;
@@ -587,34 +613,7 @@ public class KOrderInfo {
 	}
 
 
-	public Integer getIsTerm1() {
-		return isTerm1;
-	}
-
-
-	public void setIsTerm1(Integer isTerm1) {
-		this.isTerm1 = isTerm1;
-	}
-
-
-	public Integer getIsTerm2() {
-		return isTerm2;
-	}
-
-
-	public void setIsTerm2(Integer isTerm2) {
-		this.isTerm2 = isTerm2;
-	}
-
-
-	public Integer getIsTerm3() {
-		return isTerm3;
-	}
-
-
-	public void setIsTerm3(Integer isTerm3) {
-		this.isTerm3 = isTerm3;
-	}
+	
 
 
 	public String getComments() {

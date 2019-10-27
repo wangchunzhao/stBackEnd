@@ -195,6 +195,8 @@ public class OrderService {
 			supportRepo.save(supportInfo);
 		}
 		//
+		
+		//
 		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
 		if(lversion!=null) {
 			if(lversion.getStatus().equals("05")||lversion.getStatus().equals("06")||lversion.getStatus().equals("10")) {
@@ -203,6 +205,8 @@ public class OrderService {
 				
 			}
 				
+		}else {
+			//order.getor
 		}
 	}
 	/**
