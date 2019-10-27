@@ -47,7 +47,7 @@ public class ItemDetails implements Serializable{
 	//体积
 	@NotNull
 	@Column(name = "volume_cube")
-	public double volumeCube;
+	public BigDecimal volumeCube;
 	
 	//物料属性
 	@NotNull
@@ -86,7 +86,7 @@ public class ItemDetails implements Serializable{
 	public Integer rowNumber;
 	
 	@Column(name = "retail_price")
-	public double retailPrice;
+	public BigDecimal retailPrice;
 	
 	@Column(name = "material_group_code")
 	public String materialGroupCode;
@@ -119,36 +119,36 @@ public class ItemDetails implements Serializable{
 	public boolean isVirtual;
 	
 	@Column(name = "b2c_estimation_amount")
-	public double b2cEstimationAmount;
+	public BigDecimal b2cEstimationAmount;
 	
 	@Column(name = "b2c_estimation_cost")
-	public double b2cEstimationCost;
+	public BigDecimal b2cEstimationCost;
 	
 	@Column(name = "delievery_date")
 	public Date delieveryDate;
 	
-	@Column(name = "mosaic_image")
+	@Column(name = "mosaic_image",columnDefinition = "TEXT")
 	public String mosaicImage;
 	
-	@Column(name = "attached_image")
+	@Column(name = "attached_image",columnDefinition = "TEXT")
 	public String attachedImage;
 	
-	@Column(name = "request_brand")
+	@Column(name = "request_brand",columnDefinition = "TEXT")
 	public String requestBrand;
 	
-	@Column(name = "request_package")
+	@Column(name = "request_package",columnDefinition = "TEXT")
 	public String requestPackage;
 	
-	@Column(name = "request_nameplate")
+	@Column(name = "request_nameplate",columnDefinition = "TEXT")
 	public String requestNameplate;
 	
-	@Column(name = "request_circuit")
+	@Column(name = "request_circuit",columnDefinition = "TEXT")
 	public String requestCircuit;
 	
-	@Column(name = "comments")
+	@Column(name = "comments",columnDefinition = "TEXT")
 	public String comments;
 	
-	@Column(name = "color_comments")
+	@Column(name = "color_comments",columnDefinition = "TEXT")
 	public String colorComments;
 	
 	public String getMosaicImage() {
@@ -231,35 +231,38 @@ public class ItemDetails implements Serializable{
 		this.delieveryDate = delieveryDate;
 	}
 
-	public double getRetailPrice() {
+	
+
+	public BigDecimal getRetailPrice() {
 		return retailPrice;
 	}
 
-	public void setRetailPrice(double retailPrice) {
+	public void setRetailPrice(BigDecimal retailPrice) {
 		this.retailPrice = retailPrice;
 	}
 
-	public double getVolumeCube() {
+	public BigDecimal getVolumeCube() {
 		return volumeCube;
 	}
 
-	public void setVolumeCube(double volumeCube) {
+	public void setVolumeCube(BigDecimal volumeCube) {
 		this.volumeCube = volumeCube;
 	}
 
-	public double getB2cEstimationAmount() {
+	public BigDecimal getB2cEstimationAmount() {
 		return b2cEstimationAmount;
 	}
 
-	public void setB2cEstimationAmount(double b2cEstimationAmount) {
+	public void setB2cEstimationAmount(BigDecimal b2cEstimationAmount) {
 		this.b2cEstimationAmount = b2cEstimationAmount;
 	}
 
-	public double getB2cEstimationCost() {
+	
+	public BigDecimal getB2cEstimationCost() {
 		return b2cEstimationCost;
 	}
 
-	public void setB2cEstimationCost(double b2cEstimationCost) {
+	public void setB2cEstimationCost(BigDecimal b2cEstimationCost) {
 		this.b2cEstimationCost = b2cEstimationCost;
 	}
 

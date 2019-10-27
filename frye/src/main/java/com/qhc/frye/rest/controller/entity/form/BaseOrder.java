@@ -187,6 +187,11 @@ public class BaseOrder extends AbsOrder{
 		temp.setkOrderInfoId(orderInfoId);
 		return temp;
 	}
+	/**
+	 * 
+	 * @param formId
+	 * @return
+	 */
 	public List<ItemDetails> toDetails(String formId) {
 		List<ItemDetails> idList = new ArrayList<ItemDetails>();
 		for(AbsItem item: this.getItems()) {
@@ -205,17 +210,17 @@ public class BaseOrder extends AbsOrder{
 			temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
 			temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
 			temp.setB2cComments(item.getB2cComments());
-			temp.setB2cEstimationAmount(item.getB2CPriceEstimated());
-			temp.setB2cEstimationCost(item.getB2CCostOfEstimated());
+			temp.setB2cEstimationAmount(new BigDecimal(item.getB2CPriceEstimated()));
+			temp.setB2cEstimationCost(new BigDecimal(item.getB2CCostOfEstimated()));
 			temp.setMaterialCode(item.getMaterialCode());
 			temp.setMaterialGroupCode(item.getGroupCode());
 			temp.setMaterialGroupName(item.getGroupName());
 			temp.setDiscount(item.getDiscount());
 			temp.setItemCategory(item.getItemCategory());
 			temp.setItemRequirementPlan(item.getItemRequirementPlan());
-			temp.setVolumeCube(item.getVolumeCube());
+			temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
 			temp.setFreight(new BigDecimal(item.getFeight()));
-			temp.setRetailPrice(item.getRetailPrice());
+			temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
 			temp.setDelieveryDate(item.getDeliveryDate());
 			temp.setSpecialNeed(item.getSpecialComments());
 			//temp.setmo
@@ -225,4 +230,6 @@ public class BaseOrder extends AbsOrder{
 		}
 		return idList;
 	}
+	
+	//public List<>
 }
