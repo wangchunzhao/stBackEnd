@@ -46,6 +46,7 @@ import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KDelieveryAddress;
+import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.KOrderVersionView;
 import com.qhc.frye.domain.KOrderView;
 import com.qhc.frye.domain.OrderSupportInfo;
@@ -116,6 +117,9 @@ public class OrderService {
 
 	@Autowired
 	private KOrderVersionViewRepository orderVersionViewRepository;
+	
+	@Autowired
+	private KOrderVersionRepository orderVersionRepo;
 
 	@Autowired
 	private KOrderViewRepository orderViewRepository;
@@ -191,7 +195,15 @@ public class OrderService {
 			supportRepo.save(supportInfo);
 		}
 		//
-		//KOrderVersion over = order.getOrderVersion();
+		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
+		if(lversion!=null) {
+			if(lversion.getStatus().equals("05")||lversion.getStatus().equals("06")||lversion.getStatus().equals("10")) {
+				lversion = new KOrderVersion();
+			}else {
+				
+			}
+				
+		}
 	}
 	/**
 	 * 
@@ -417,12 +429,12 @@ public class OrderService {
 
 		// 物料评估类 与 物料在订单上的分类映射
 		oo.setMaterialGroupMapGroupOrder(constService.findMaterialGroupMapGroupOrders());
+		
+		// 销售区域Sales Offices
+		oo.setOffices(constService.findSalesOffices());
 
 		// 销售区域Sales Goups
 		oo.setGroups(constService.findSalesGroups());
-
-		// 销售区域Sales Offices
-		oo.setOffices(constService.findSalesOffices());
 
 		// 运输方式ShippingTypes
 		oo.setShippingTypes(constService.findShippingTypes());
