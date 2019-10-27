@@ -2,6 +2,7 @@ package com.qhc.frye.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,10 +44,10 @@ public class ItemDetails implements Serializable{
 	@Column(name = "material_name",columnDefinition = "TEXT")
 	public String materialName;
 	
-	//物料专用号
-//	@NotNull
-//	@Column(name = "material_specific_Number")
-//	public String materialSpecificNumber;
+	//体积
+	@NotNull
+	@Column(name = "volume_cube")
+	public double volumeCube;
 	
 	//物料属性
 	@NotNull
@@ -69,9 +70,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "measure_unit_code")
 	public String measureUnitCode;
 	
-//	@NotNull
-//	@Column(name = "measure_unit_name",columnDefinition = "TEXT")
-//	public String measureUnitName;
+	@NotNull
+	@Column(name = "special_need",columnDefinition = "TEXT")
+	public String specialNeed;
 
 	
 	@Column(name = "b2c_comments",columnDefinition = "TEXT")
@@ -84,9 +85,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "row_number")
 	public Integer rowNumber;
 	
-//	@Column(name = "special_code")
-//	public String specialCode;
-//	
+	@Column(name = "retail_price")
+	public double retailPrice;
+	
 	@Column(name = "material_group_code")
 	public String materialGroupCode;
 	
@@ -114,13 +115,162 @@ public class ItemDetails implements Serializable{
 	@Column(name = "standard_price")
 	public BigDecimal standardPrice;
 	
+	@Column(name = "is_virtual")
+	public boolean isVirtual;
 	
+	@Column(name = "b2c_estimation_amount")
+	public double b2cEstimationAmount;
 	
+	@Column(name = "b2c_estimation_cost")
+	public double b2cEstimationCost;
 	
+	@Column(name = "delievery_date")
+	public Date delieveryDate;
 	
+	@Column(name = "mosaic_image")
+	public String mosaicImage;
 	
+	@Column(name = "attached_image")
+	public String attachedImage;
+	
+	@Column(name = "request_brand")
+	public String requestBrand;
+	
+	@Column(name = "request_package")
+	public String requestPackage;
+	
+	@Column(name = "request_nameplate")
+	public String requestNameplate;
+	
+	@Column(name = "request_circuit")
+	public String requestCircuit;
+	
+	@Column(name = "comments")
+	public String comments;
+	
+	@Column(name = "color_comments")
+	public String colorComments;
+	
+	public String getMosaicImage() {
+		return mosaicImage;
+	}
 
-	
+	public void setMosaicImage(String mosaicImage) {
+		this.mosaicImage = mosaicImage;
+	}
+
+	public String getAttachedImage() {
+		return attachedImage;
+	}
+
+	public void setAttachedImage(String attachedImage) {
+		this.attachedImage = attachedImage;
+	}
+
+	public String getRequestBrand() {
+		return requestBrand;
+	}
+
+	public void setRequestBrand(String requestBrand) {
+		this.requestBrand = requestBrand;
+	}
+
+	public String getRequestPackage() {
+		return requestPackage;
+	}
+
+	public void setRequestPackage(String requestPackage) {
+		this.requestPackage = requestPackage;
+	}
+
+	public String getRequestNameplate() {
+		return requestNameplate;
+	}
+
+	public void setRequestNameplate(String requestNameplate) {
+		this.requestNameplate = requestNameplate;
+	}
+
+	public String getRequestCircuit() {
+		return requestCircuit;
+	}
+
+	public void setRequestCircuit(String requestCircuit) {
+		this.requestCircuit = requestCircuit;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public String getColorComments() {
+		return colorComments;
+	}
+
+	public void setColorComments(String colorComments) {
+		this.colorComments = colorComments;
+	}
+
+	public String getSpecialNeed() {
+		return specialNeed;
+	}
+
+	public void setSpecialNeed(String specialNeed) {
+		this.specialNeed = specialNeed;
+	}
+
+	public Date getDelieveryDate() {
+		return delieveryDate;
+	}
+
+	public void setDelieveryDate(Date delieveryDate) {
+		this.delieveryDate = delieveryDate;
+	}
+
+	public double getRetailPrice() {
+		return retailPrice;
+	}
+
+	public void setRetailPrice(double retailPrice) {
+		this.retailPrice = retailPrice;
+	}
+
+	public double getVolumeCube() {
+		return volumeCube;
+	}
+
+	public void setVolumeCube(double volumeCube) {
+		this.volumeCube = volumeCube;
+	}
+
+	public double getB2cEstimationAmount() {
+		return b2cEstimationAmount;
+	}
+
+	public void setB2cEstimationAmount(double b2cEstimationAmount) {
+		this.b2cEstimationAmount = b2cEstimationAmount;
+	}
+
+	public double getB2cEstimationCost() {
+		return b2cEstimationCost;
+	}
+
+	public void setB2cEstimationCost(double b2cEstimationCost) {
+		this.b2cEstimationCost = b2cEstimationCost;
+	}
+
+	public boolean isVirtual() {
+		return isVirtual;
+	}
+
+	public void setVirtual(boolean isVirtual) {
+		this.isVirtual = isVirtual;
+	}
+
 	public String getId() {
 		return id;
 	}
