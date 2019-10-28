@@ -35,6 +35,8 @@ import com.qhc.frye.rest.controller.entity.Customer;
 @Service
 public class CustomerService {
 	
+	public final static int QUANTITY_PAGE= 20;
+	
 	public final static long DEFAULT_DATE = 1008005271098L;
 	
 	@Autowired
@@ -76,9 +78,9 @@ public class CustomerService {
 		
 		if(clazzCode==null || clazzCode.isEmpty()) {
 			
-			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,2));
+			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,QUANTITY_PAGE));
 		}else {
-			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,2));
+			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,QUANTITY_PAGE));
 		}
 		for(DCustomer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));

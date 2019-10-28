@@ -26,6 +26,8 @@ import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
+import com.qhc.frye.rest.controller.entity.form.BaseOrder;
+import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
@@ -61,7 +63,7 @@ public class OrderController {
 	@ApiOperation(value = "保存订单信息", notes = "保存订单信息")
 	@PostMapping(value = "order")
 	@ResponseStatus(HttpStatus.OK)
-	public void submitOrder(@RequestBody(required = true) AbsOrder order) throws Exception {
+	public void submitOrder(@RequestBody(required = true) DealerOrder order) throws Exception {
 		//
 		switch(order.getSubmitType()) {
 			case 1:

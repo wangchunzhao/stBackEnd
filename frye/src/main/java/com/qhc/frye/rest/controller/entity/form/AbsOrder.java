@@ -104,6 +104,13 @@ public abstract class AbsOrder {
 	
 	private String orderVersion;//当前版本,创建时steigenberger创建
 	private String userOfficeCode;//用户所在销售办公室
+	
+	public AbsOrder() {
+		
+	}
+	public AbsOrder(String json) {
+		
+	}
 		
 	public String getOrderVersion() {
 		return orderVersion;
