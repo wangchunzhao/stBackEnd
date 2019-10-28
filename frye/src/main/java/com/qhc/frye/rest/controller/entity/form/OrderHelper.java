@@ -5,6 +5,7 @@ package com.qhc.frye.rest.controller.entity.form;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.qhc.frye.domain.DOrder;
@@ -43,6 +44,7 @@ public class OrderHelper {
 		dorder.setContractorClassCode(order.getCustomerClazzCode());//customer class
 		dorder.setContractorClassName(order.getCustomerClazzName());//customer class name
 		dorder.setOfficeCode(order.getUserOfficeCode());
+		dorder.setCreateTime(new Date());
 		return dorder;
 	}
 	/*
