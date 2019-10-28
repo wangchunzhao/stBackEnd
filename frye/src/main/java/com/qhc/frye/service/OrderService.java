@@ -916,8 +916,8 @@ public class OrderService {
 			params.put("orderId", orderQuery.getOrderId());
 		}
 		if (!isEmpty(orderQuery.getSequenceNumber())) {
-			querySql.append(" and sequence_number = :sequenceNumber");// .append(query.getSequenceNumber());
-			params.put("sequenceNumber", orderQuery.getSequenceNumber());
+			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
+			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
 		}
 		if (!isEmpty(orderQuery.getVersionId())) {
 			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
@@ -934,6 +934,22 @@ public class OrderService {
 		if (orderQuery.isLast()) {
 			querySql.append(" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
 		}
+		if (!isEmpty(orderQuery.getOfficeCode())) {
+			querySql.append(" and office_code = :officeCode"); // .append(query.getStatus());
+			params.put("officeCode", orderQuery.getOfficeCode());
+		}
+		if (!isEmpty(orderQuery.getOrderType())) {
+			querySql.append(" and order_type_code = :orderType"); // .append(query.getStatus());
+			params.put("orderType", orderQuery.getOrderType());
+		}
+		if (!isEmpty(orderQuery.getContractNumber())) {
+			querySql.append(" and contract_number like :contractNumber"); // .append(query.getStatus());
+			params.put("contractNumber", "%" + orderQuery.getContractNumber() + "%");
+		}
+//		if (!isEmpty(orderQuery.getContractorName())) {
+//			querySql.append(" and contractor_name like :contractorNumber"); // .append(query.getStatus());
+//			params.put("contractorNumber", "%" + orderQuery.getContractorName() + "%");
+//		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
