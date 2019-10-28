@@ -1464,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `sap_characteristic_code` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1557,8 +1557,20 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-	SELECT*
-	FROM sap_clazz_and_character c;
+	SELECT 
+        l.sap_clazz_code,
+        c.code AS key_code,
+        c.name AS key_name,
+        v.code AS value_code,
+        v.name AS value_name
+    FROM
+        sap_clazz_and_character l
+            LEFT JOIN
+        sap_characteristic c ON l.sap_characteristic_code = c.code
+            RIGHT JOIN
+        sap_characteristic_value v ON c.code = v.sap_characteristic_code
+    WHERE
+        l.sap_clazz_code = '1';
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
