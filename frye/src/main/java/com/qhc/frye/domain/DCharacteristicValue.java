@@ -18,6 +18,10 @@ import javax.validation.constraints.NotNull;
 public class DCharacteristicValue {
 	
 	@Id
+	@NotNull
+    @Column(name="id")
+	private int id;
+	
     @NotNull
     @Column(name="code",length=30)
 	private String code;
@@ -48,6 +52,12 @@ public class DCharacteristicValue {
 	}
 	public void setCharacter(String character) {
 		this.character = character;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 		
 

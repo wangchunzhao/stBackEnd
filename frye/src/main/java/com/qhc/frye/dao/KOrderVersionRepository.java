@@ -19,6 +19,6 @@ import com.qhc.frye.domain.KOrderVersion;
 public interface KOrderVersionRepository extends JpaRepository<KOrderVersion, String> {
 	
 	public List<KOrderVersion> findByOrderIdOrderByCreateTime(String orderId);
-	@Query(value="select * from k_order_version where k_order_id=:orderId sort by create_time desc limit 1",nativeQuery=true)
+	@Query(value="select * from k_order_version where k_orders_id=:orderId order by create_time desc limit 1",nativeQuery=true)
 	public KOrderVersion findLastOneByOrderId(@Param("orderId")String orderId);
 }

@@ -736,17 +736,17 @@ DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `id` CHAR(32) NOT NULL,
-  `sequence_number` CHAR(12) NOT NULL COMMENT '序列号',
-  `order_type_code` CHAR(4) NOT NULL COMMENT '//dealer or keyaccount or bulk',
+  `sequence_number` VARCHAR(12) NOT NULL COMMENT '序列号',
+  `order_type_code` VARCHAR(4) NOT NULL COMMENT '//dealer or keyaccount or bulk',
   `create_time` DATETIME NOT NULL COMMENT '创建时间',
   `owner_domain_id` VARCHAR(128) NOT NULL COMMENT 'creator or changed owner/sale code',
   `owner_name` TEXT NOT NULL COMMENT '创建人员姓名',
   `sales_tel` VARCHAR(45) NULL COMMENT 'sales name',
   `contractor_code` VARCHAR(10) NOT NULL COMMENT 'contracter Code/ customer code',
   `contractor_name` TEXT NOT NULL,
-  `contractor_class_code` CHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
+  `contractor_class_code` VARCHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
   `contractor_class_name` TEXT NOT NULL COMMENT '经销商/直签',
-  `office_code` CHAR(4) NOT NULL COMMENT '销售员所属区域',
+  `office_code` VARCHAR(4) NOT NULL COMMENT '销售员所属区域',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `sequence_number_UNIQUE` (`sequence_number` ASC) VISIBLE)
@@ -1464,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `value_code` INT, `value_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `sap_characteristic_code` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1557,20 +1557,8 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-    SELECT 
-        l.sap_clazz_code,
-        c.code AS key_code,
-        c.name AS key_name,
-        v.code AS value_code,
-        v.name AS value_name
-    FROM
-        sap_clazz_and_character l
-            LEFT JOIN
-        sap_characteristic c ON l.sap_characteristic_code = c.code
-            RIGHT JOIN
-        sap_characteristic_value v ON c.code = v.sap_characteristic_code
-    WHERE
-        l.sap_clazz_code = '1';
+	SELECT*
+	FROM sap_clazz_and_character c;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
