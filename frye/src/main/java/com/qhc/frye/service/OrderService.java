@@ -68,18 +68,18 @@ import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.ProductItem;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
-import com.qhc.frye.rest.controller.entity.SapOrder;
-import com.qhc.frye.rest.controller.entity.SapOrderCharacteristics;
-import com.qhc.frye.rest.controller.entity.SapOrderHeader;
-import com.qhc.frye.rest.controller.entity.SapOrderItem;
-import com.qhc.frye.rest.controller.entity.SapOrderPlan;
-import com.qhc.frye.rest.controller.entity.SapOrderPrice;
 import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
 import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
+import com.qhc.frye.rest.controller.entity.sap.SapOrder;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderHeader;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderItem;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderPlan;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderPrice;
 
 @Service
 public class OrderService {
@@ -627,9 +627,9 @@ public class OrderService {
 			item.setZmeng(itemDetail.getAmount().intValue());
 			// Req.dlv.date/请求发货日期
 //			item.setEdatu(itemDetail.getDeliveryDate());
-			// TODO Item category/行项目类别 -- ???
+			// Item category/行项目类别 -- 项目类别
 			item.setPstyv(itemDetail.getItemCategory());
-			// Item usage/项目用途
+			// Item usage/项目用途 -- 项目需求计划
 			item.setVkaus(itemDetail.getItemRequirementPlan());
 
 			// Ship-to address/送达方地址
@@ -647,28 +647,28 @@ public class OrderService {
 			// B2C note/B2C备注
 			item.setVbbp0006(itemDetail.getB2cComments());
 			// Survey info. for item /调研表基本信息
-//			StringBuilder sb = new StringBuilder(128);
-//			if(!StringUtils.isEmpty(item.getRequestBrand()) ) {
-//				sb.append(",").append(item.getRequestBrand());
-//			}
-//			if(!StringUtils.isEmpty(item.getRequestPackage()) ) {
-//				sb.append(",").append(item.getRequestPackage());
-//			}
-//			if(!StringUtils.isEmpty(item.getRequestNameplate()) ) {
-//				sb.append(",").append(item.getRequestNameplate());
-//			}
-//			if(!StringUtils.isEmpty(item.getRequestCircuit()) ) {
-//				sb.append(",").append(item.getRequestCircuit());
-//			}
-//			item.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
+			StringBuilder sb = new StringBuilder(128);
+			if(!isEmpty(itemDetail.getRequestBrand()) ) {
+				sb.append(",").append(itemDetail.getRequestBrand());
+			}
+			if(!isEmpty(itemDetail.getRequestPackage()) ) {
+				sb.append(",").append(itemDetail.getRequestPackage());
+			}
+			if(!isEmpty(itemDetail.getRequestNameplate()) ) {
+				sb.append(",").append(itemDetail.getRequestNameplate());
+			}
+			if(!isEmpty(itemDetail.getRequestCircuit()) ) {
+				sb.append(",").append(itemDetail.getRequestCircuit());
+			}
+			item.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
 			// Special note/特殊备注
-//			item.setVbbpz117(item.getSpecialNeed());
+			item.setVbbpz117(itemDetail.getSpecialNeed());
 			// Color option/颜色可选项 -- Characteristics中处理
 //			item.setVbbpz120(String);
 			// Survey info. Note/调研表备注
-//			item.setVbbp0007(item.getComments());
+			item.setVbbp0007(itemDetail.getComments());
 			// Color Note/颜色备注
-//			item.setVbbpz118(itemDetail.getColorComments());
+			item.setVbbpz118(itemDetail.getColorComments());
 
 			items.add(item);
 
@@ -677,7 +677,7 @@ public class OrderService {
 			SapOrderPrice price1 = new SapOrderPrice();
 			price1.setPosnr(rowNumber);
 			price1.setKschl("ZH05");
-//			price1.setKbetr(itemDetails.getSaleAmount());
+			price1.setKbetr(itemDetail.getAmount());
 			prices.add(price1);
 			// ZH08：转移价合计/成本合计
 			SapOrderPrice price2 = new SapOrderPrice();
@@ -691,14 +691,14 @@ public class OrderService {
 			for (KCharacteristics charac : characList) {
 				SapOrderCharacteristics c = new SapOrderCharacteristics();
 
-//				if (charac.getIsConfigurable() == 1) {
-//					// 设置 Item 的 Color option/颜色可选项
-//					String vbbpz120 = item.getVbbpz120();
-//					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
-//					vbbpz120 = (vbbpz120 == null || vbbpz120.length() == 0) ? tmp : "," + tmp;
-//					item.setVbbpz120(vbbpz120);
-//					continue;
-//				}
+				if (charac.getIsConfigurable() == 1) {
+					// 设置 Item 的 Color option/颜色可选项
+					String vbbpz120 = item.getVbbpz120();
+					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
+					vbbpz120 = (vbbpz120 == null || vbbpz120.length() == 0) ? tmp : "," + tmp;
+					item.setVbbpz120(vbbpz120);
+					continue;
+				}
 
 				// Item/行项目编号
 				c.setPosnr(rowNumber);

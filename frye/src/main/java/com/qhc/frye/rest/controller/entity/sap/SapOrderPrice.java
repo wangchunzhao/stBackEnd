@@ -1,4 +1,4 @@
-package com.qhc.frye.rest.controller.entity;
+package com.qhc.frye.rest.controller.entity.sap;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
