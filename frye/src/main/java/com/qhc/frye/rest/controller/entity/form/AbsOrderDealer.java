@@ -27,6 +27,13 @@ public abstract class AbsOrderDealer extends AbsOrder {
 	private double approvedDicount;//批准的折扣、标准折扣
 	
 	private String paymentType;//结算方式
+	
+	public AbsOrderDealer() {
+		
+	}
+	public AbsOrderDealer(String json) {
+		
+	}
 
 	public String getRecordCode() {
 		return recordCode;
