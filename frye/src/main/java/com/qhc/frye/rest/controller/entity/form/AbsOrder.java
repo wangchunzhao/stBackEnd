@@ -102,7 +102,9 @@ public abstract class AbsOrder {
 	private List<OrderAddress> orderAddress;//合同明细地址
 	private List<BiddingPayment> payments;//付款条件或bidding plan 
 	
-	private String orderVersion;//当前版本,创建时steigenberger创建
+	private String currentVersion;//当前版本,创建时steigenberger创建
+	private String currentVersionStatus;
+	private List<String> versions;
 	private String userOfficeCode;//用户所在销售办公室
 	
 	public AbsOrder() {
@@ -112,13 +114,25 @@ public abstract class AbsOrder {
 		
 	}
 		
-	public String getOrderVersion() {
-		return orderVersion;
+	
+	public String getCurrentVersion() {
+		return currentVersion;
 	}
-	public void setOrderVersion(String orderVersion) {
-		this.orderVersion = orderVersion;
+	public void setCurrentVersion(String currentVersion) {
+		this.currentVersion = currentVersion;
 	}
-
+	public String getCurrentVersionStatus() {
+		return currentVersionStatus;
+	}
+	public void setCurrentVersionStatus(String currentVersionStatus) {
+		this.currentVersionStatus = currentVersionStatus;
+	}
+	public List<String> getVersions() {
+		return versions;
+	}
+	public void setVersions(List<String> versions) {
+		this.versions = versions;
+	}
 	public String getIncotermName() {
 		return incotermName;
 	}

@@ -73,6 +73,7 @@ import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
+import com.qhc.frye.rest.controller.entity.form.OrderHelper;
 import com.qhc.frye.rest.controller.entity.form.ProductItem;
 import com.qhc.frye.rest.controller.entity.sap.SapOrder;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
@@ -193,12 +194,12 @@ public class OrderService {
 
 		String seq = order.getSequenceNumber();
 		DOrder dorder = dOrderRepository.findBySequence(order.getSequenceNumber());
-		BaseOrder baseOrder = (BaseOrder)order;
-		dorder = baseOrder.toDOrder();
+		OrderHelper ohelper = new OrderHelper(order);
+		dorder = ohelper.toDOrder();
 		dorder = dOrderRepository.save(dorder);
 		//
 		if(fromSupportor) {
-			OrderSupportInfo supportInfo = baseOrder.toSupportInforOfOrder();
+			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
 			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
 			if(osi.getId()!=0) {
 				supportInfo.setId(osi.getId());
@@ -217,21 +218,21 @@ public class OrderService {
 			
 				
 		}else {
-			KOrderInfo kOrderInfo = baseOrder.toOrderInfo();
+			KOrderInfo kOrderInfo = ohelper.toOrderInfo();
 			kOrderInfo = orderInfoRepo.save(kOrderInfo);
 			lversion.setOrderId(kOrderInfo.getId());
 			//
-			List<KDelieveryAddress> adds=baseOrder.toAddress(kOrderInfo.getId());
+			List<KDelieveryAddress> adds=ohelper.toAddress(kOrderInfo.getId());
 			deliveryAddressRepository.saveAll(adds);
 			
-			ItemsForm form = baseOrder.toForm(kOrderInfo.getId());
+			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			form = formRepo.save(form);
 			
 //			List<ItemDetails> details = baseOrder.toDetails(form.getId());
 //			details =itemDetailRepository.saveAll(details);
 			String formId = form.getId();
 			//
-			for(AbsItem item: baseOrder.getItems()) {
+			for(AbsItem item: order.getItems()) {
 				ItemDetails temp = new ItemDetails();
 				temp.setRowNumber(item.getRowNumber());
 				temp.setMaterialCode(item.getMaterialCode());
