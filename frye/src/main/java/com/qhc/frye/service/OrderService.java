@@ -68,18 +68,18 @@ import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.ProductItem;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
-import com.qhc.frye.rest.controller.entity.SapOrder;
-import com.qhc.frye.rest.controller.entity.SapOrderCharacteristics;
-import com.qhc.frye.rest.controller.entity.SapOrderHeader;
-import com.qhc.frye.rest.controller.entity.SapOrderItem;
-import com.qhc.frye.rest.controller.entity.SapOrderPlan;
-import com.qhc.frye.rest.controller.entity.SapOrderPrice;
 import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
 import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
+import com.qhc.frye.rest.controller.entity.sap.SapOrder;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderHeader;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderItem;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderPlan;
+import com.qhc.frye.rest.controller.entity.sap.SapOrderPrice;
 
 @Service
 public class OrderService {
