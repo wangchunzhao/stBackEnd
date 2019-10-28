@@ -159,10 +159,10 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value="查询订单", notes="查询订单")
+    @ApiOperation(value="查询订单列表", notes="查询订单列表")
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
-    public PageHelper<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
+    public PageHelper<AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
     	return orderService.findOrders(query);
     }
     
@@ -172,11 +172,24 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value="查询Dealer订单详情", notes="查询Dealer订单详情")
-    @GetMapping(value = "order/dealerOrder")
+    @ApiOperation(value="查询订单详情", notes="查询订单详情")
+    @GetMapping(value = "order/detail")
     @ResponseStatus(HttpStatus.OK)
-    public com.qhc.frye.rest.controller.entity.form.DealerOrder getDealerOrder(@RequestParam String sequenceNumber, @RequestParam String versionId) throws Exception {	
-    	return orderService.findDealerOrder(sequenceNumber, versionId);
+    public AbsOrder getOrder(@RequestParam String sequenceNumber, @RequestParam String version) throws Exception {	
+    	return orderService.findOrder(sequenceNumber, version);
+    }
+    
+    /**
+     * 查询订单
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value="查询订单类型", notes="查询订单类型")
+    @GetMapping(value = "order/type")
+    @ResponseStatus(HttpStatus.OK)
+    public String getDealerOrder(@RequestParam String sequenceNumber) throws Exception {	
+    	return orderService.getOrderType(sequenceNumber);
     }
 
 }

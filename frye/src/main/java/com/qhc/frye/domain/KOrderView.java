@@ -257,15 +257,15 @@ public class KOrderView
 
 	/* Column(is_term1) - 柜体控制阀门件是否甲供 */
 	@Column(name="is_term1",columnDefinition="BIT")
-	private Integer isTerm1 = null;
+	private int isTerm1;
 
 	/* Column(is_term2) - 分体柜是否远程监控 */
 	@Column(name="is_term2",columnDefinition="BIT")
-	private Integer isTerm2 = null;
+	private int isTerm2;
 
 	/* Column(is_term3) - 立体柜是否在地下室 */
 	@Column(name="is_term3",columnDefinition="BIT")
-	private Integer isTerm3 = null;
+	private int isTerm3;
 
 	/* Column(comments) - Comments */
 	@Column(name="comments",columnDefinition="TEXT")
@@ -975,9 +975,9 @@ public class KOrderView
 		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result + ((transferTypeCode == null) ? 0 : transferTypeCode.hashCode());
 		result = prime * result + ((transferTypeName == null) ? 0 : transferTypeName.hashCode());
-		result = prime * result + ((isTerm1 == null) ? 0 : isTerm1.hashCode());
-		result = prime * result + ((isTerm2 == null) ? 0 : isTerm2.hashCode());
-		result = prime * result + ((isTerm3 == null) ? 0 : isTerm3.hashCode());
+//		result = prime * result + ((isTerm1 == null) ? 0 : isTerm1.hashCode());
+//		result = prime * result + ((isTerm2 == null) ? 0 : isTerm2.hashCode());
+//		result = prime * result + ((isTerm3 == null) ? 0 : isTerm3.hashCode());
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((formId == null) ? 0 : formId.hashCode());
 		result = prime * result + ((earliestDeliveryDate == null) ? 0 : earliestDeliveryDate.hashCode());
@@ -1058,9 +1058,9 @@ public class KOrderView
 			&&(this.groupName == null ? other.groupName == null : this.groupName.equals(other.groupName))
 			&&(this.transferTypeCode == null ? other.transferTypeCode == null : this.transferTypeCode.equals(other.transferTypeCode))
 			&&(this.transferTypeName == null ? other.transferTypeName == null : this.transferTypeName.equals(other.transferTypeName))
-			&&(this.isTerm1 == null ? other.isTerm1 == null : this.isTerm1.equals(other.isTerm1))
-			&&(this.isTerm2 == null ? other.isTerm2 == null : this.isTerm2.equals(other.isTerm2))
-			&&(this.isTerm3 == null ? other.isTerm3 == null : this.isTerm3.equals(other.isTerm3))
+//			&&(this.isTerm1 == null ? other.isTerm1 == null : this.isTerm1.equals(other.isTerm1))
+//			&&(this.isTerm2 == null ? other.isTerm2 == null : this.isTerm2.equals(other.isTerm2))
+//			&&(this.isTerm3 == null ? other.isTerm3 == null : this.isTerm3.equals(other.isTerm3))
 			&&(this.comments == null ? other.comments == null : this.comments.equals(other.comments))
 			&&(this.formId == null ? other.formId == null : this.formId.equals(other.formId))
 			&&(this.earliestDeliveryDate == null ? other.earliestDeliveryDate == null : this.earliestDeliveryDate.equals(other.earliestDeliveryDate))

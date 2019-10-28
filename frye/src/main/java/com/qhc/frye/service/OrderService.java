@@ -66,7 +66,6 @@ import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
-import com.qhc.frye.rest.controller.entity.ProductItem;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
 import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
@@ -74,6 +73,7 @@ import com.qhc.frye.rest.controller.entity.form.BulkOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
+import com.qhc.frye.rest.controller.entity.form.ProductItem;
 import com.qhc.frye.rest.controller.entity.sap.SapOrder;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderHeader;
@@ -83,6 +83,9 @@ import com.qhc.frye.rest.controller.entity.sap.SapOrderPrice;
 
 @Service
 public class OrderService {
+	private final static String ORDER_TYPE_DEALER = "ZH0D"; //'经销商订单'
+	private final static String ORDER_TYPE_BULK = "ZH0M"; // '备货订单'
+	private final static String ORDER_TYPE_KEYACCOUNT = "ZH0T"; // '大客户订单'
 
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
@@ -773,22 +776,38 @@ public class OrderService {
 	}
 
 	/**
+	 * 查询订单类型
+	 * 
+	 * @param sequenceNumber
+	 * @return
+	 */
+	public String getOrderType(String sequenceNumber) {
+		String orderTypeCode = null;
+		DOrder order = dOrderRepository.findBySequence(sequenceNumber);
+		if (order != null) {
+			orderTypeCode = order.getOrderTypeCode();
+		}
+		
+		return orderTypeCode;
+	}
+
+	/**
 	 * 查询订单
 	 * 
 	 * @param query
 	 * @return
 	 */
-	public DealerOrder findDealerOrder(String sequenceNumber, String versionId) {
-		DealerOrder order = null;
+	public AbsOrder findOrder(String sequenceNumber, String version) {
+		AbsOrder order = null;
 		OrderQuery orderQuery = new OrderQuery();
 		orderQuery.setSequenceNumber(sequenceNumber);
-		orderQuery.setVersionId(versionId);
+		orderQuery.setVersion(version);
 		orderQuery.setIncludeDetail(true);
 		
-		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = findOrders(orderQuery).getRows();
+		List<AbsOrder> orders = findOrders(orderQuery).getRows();
 		
 		if (orders.size() > 0) {
-			order = (DealerOrder)orders.get(0);
+			order = orders.get(0);
 		}
 		
 		return order;
@@ -800,26 +819,26 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public PageHelper<com.qhc.frye.rest.controller.entity.form.AbsOrder> findOrders(OrderQuery orderQuery) {
-		List<com.qhc.frye.rest.controller.entity.form.AbsOrder> orders = new ArrayList<>();
+	public PageHelper<AbsOrder> findOrders(OrderQuery orderQuery) {
+		List<AbsOrder> orders = new ArrayList<>();
 
 		PageHelper<KOrderView> page = queryOrderView(orderQuery);
-		List<KOrderView> orderViews = queryOrderView(orderQuery).getRows();
+		List<KOrderView> orderViews = page.getRows();
 		for (KOrderView orderView : orderViews) {
 			String orderId = orderView.getOrderId();
 			String orderInfoId = orderView.getOrderInfoId();
 			String orderType = orderView.getOrderTypeCode();
 			String formId = orderView.getFormId();
 
-			com.qhc.frye.rest.controller.entity.form.AbsOrder order = null;
+			AbsOrder order = null;
 			switch(orderType) {
-				case "dealer":
+				case ORDER_TYPE_DEALER:
 					order = new DealerOrder();
 					break;
-				case "keyaccount":
+				case ORDER_TYPE_KEYACCOUNT:
 					order = new KeyAccountOrder();
 					break;
-				case "bulk":
+				case ORDER_TYPE_BULK:
 		    		order = new BulkOrder();
 		    		break;
 				default:
@@ -851,7 +870,7 @@ public class OrderService {
 		return p;
 	}
 
-	private void assembleOrderDetail(com.qhc.frye.rest.controller.entity.form.AbsOrder order, String orderId,
+	private void assembleOrderDetail(AbsOrder order, String orderId,
 			String orderInfoId, String formId) {
 		// TODO Attached File
 //			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
@@ -907,12 +926,12 @@ public class OrderService {
 			querySql.append(" and version = :version"); // .append(query.getVersion());
 			params.put("version", orderQuery.getVersion());
 		}
-		if (!isEmpty(orderQuery.getVersion())) {
+		if (!isEmpty(orderQuery.getStatus())) {
 			querySql.append(" and status = :status"); // .append(query.getStatus());
 			params.put("status", orderQuery.getStatus());
 		}
 		if (orderQuery.isLast()) {
-			querySql.append(" and create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
+			querySql.append(" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
 		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
@@ -943,7 +962,7 @@ public class OrderService {
 		return page;
 	}
 
-	private void assembleItems(com.qhc.frye.rest.controller.entity.form.AbsOrder order, String formId) {
+	private void assembleItems(AbsOrder order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
 		// 旧的AbsOrder格式
 //		ItemsForm form = new ItemsForm();
@@ -971,8 +990,9 @@ public class OrderService {
 		List<AbsItem> items = new ArrayList<AbsItem>(detailsList.size()); 
 		for (ItemDetails itemDetails : detailsList) { 
 			String itemId = itemDetails.getId();
-			com.qhc.frye.rest.controller.entity.form.ProductItem item = new com.qhc.frye.rest.controller.entity.form.ProductItem();
+			ProductItem item = new ProductItem();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
+			
 			items.add(item);
 			
 			// TODO item b2c
