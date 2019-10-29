@@ -60,6 +60,7 @@ import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 import com.qhc.frye.rest.controller.entity.form.BaseOrder;
+import com.qhc.frye.rest.controller.entity.form.BiddingPayment;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -725,14 +726,14 @@ public class OrderService {
 		// header的付款条款为billing plan 的 code
 		List<KBiddingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		for (KBiddingPlan kBiddingPlan : planList) {
-//			if (orderType.equals("dealer")) {
-//				header.setZterm(kBiddingPlan.getCode());
-//				break;
-//			}
-			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals("dealer")) {
+			if (orderType.equals(ORDER_TYPE_DEALER)) {
 				header.setZterm(kBiddingPlan.getCode());
 				break;
 			}
+//			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals(ORDER_TYPE_DEALER)) {
+//				header.setZterm(kBiddingPlan.getCode());
+//				break;
+//			}
 			
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
@@ -913,9 +914,19 @@ public class OrderService {
 		}
 		order.setOrderAddress(addresses);
 
-		// TODO billing plan
+		//  billing plan
 		List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-//			order.setBillingPlans(billingPlanList);
+		List<BiddingPayment> payments = new ArrayList<BiddingPayment>();
+		for (KBiddingPlan kBiddingPlan : billingPlanList) {
+			BiddingPayment payment = new BiddingPayment();
+			payment.setPayDate(kBiddingPlan.getPayDate());
+			payment.setPercentage(kBiddingPlan.getAmount() == null ? 0 : kBiddingPlan.getAmount().doubleValue());
+			payment.setReason(kBiddingPlan.getReason());
+			payment.setTermCode(kBiddingPlan.getCode());
+			payment.setTermName(kBiddingPlan.getName());
+			payments.add(payment);
+		}
+		order.setPayments(payments);
 
 		// TODO bpm dicision
 
@@ -1003,28 +1014,6 @@ public class OrderService {
 
 	private void assembleItems(AbsOrder order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
-		// 旧的AbsOrder格式
-//		ItemsForm form = new ItemsForm();
-////		order.setItemsForm(form);
-//		form.setComments(orderView.getFormComments());
-//		form.setEarliestDeliveryDate(orderView.getEarliestDeliveryDate());
-//		form.setEarliestProductDate(orderView.getEarliestProductDate());
-//		form.setId(orderView.getFormId());
-//		form.setkOrderInfoId(orderView.getOrderInfoId());
-//		form.setOperator(orderView.getFormOperator());
-//		form.setOptTime(orderView.getFormOptTime());
-//		form.setType(orderView.getFormType());
-//
-//		form.setDetailsList(detailsList);
-//		for (ItemDetails itemDetails : detailsList) {
-//			String itemId = itemDetails.getId();
-//			// TODO item b2c
-//			// TODO characteristics
-//			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-//			// TODO configure material
-//			// TODO attached info
-//		}
-		
 		// 新的AbsOrder
 		List<AbsItem> items = new ArrayList<AbsItem>(detailsList.size()); 
 		for (ItemDetails itemDetails : detailsList) { 
