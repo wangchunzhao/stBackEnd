@@ -60,6 +60,7 @@ import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 import com.qhc.frye.rest.controller.entity.form.BaseOrder;
+import com.qhc.frye.rest.controller.entity.form.BiddingPayment;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -463,27 +464,27 @@ public class OrderService {
 			st.put(dst.getCode(), dst.getName());
 		}
 		//
-		Map<String, Map<String, String>> offices = oo.getOffices();
-		List<SapSalesOffice> ssos = officeRepo.findAll();
-		for (SapSalesOffice so : ssos) {
-			String tcode = so.getTypeCode();
-			Map<String, String> vals = new HashMap<String, String>();
-			vals.put(so.getCode(), so.getName());
-			if (offices.putIfAbsent(tcode, vals) != null) {
-				offices.get(tcode).put(so.getCode(), so.getName());
-			}
-		}
-		//
-		Map<String, Map<String, String>> groups = oo.getGroups();
-		List<SapSalesGroup> ssgs = groupsRepo.findAll();
-		for (SapSalesGroup ssg : ssgs) {
-			String ocode = ssg.getOfficeCode();
-			Map<String, String> vals = new HashMap<String, String>();
-			vals.put(ssg.getCode(), ssg.getName());
-			if (groups.putIfAbsent(ocode, vals) != null) {
-				groups.get(ocode).put(ssg.getCode(), ssg.getName());
-			}
-		}
+//		Map<String, Map<String, String>> offices = oo.getOffices();
+//		List<SapSalesOffice> ssos = officeRepo.findAll();
+//		for (SapSalesOffice so : ssos) {
+//			String tcode = so.getTypeCode();
+//			Map<String, String> vals = new HashMap<String, String>();
+//			vals.put(so.getCode(), so.getName());
+//			if (offices.putIfAbsent(tcode, vals) != null) {
+//				offices.get(tcode).put(so.getCode(), so.getName());
+//			}
+//		}
+//		//
+//		Map<String, Map<String, String>> groups = oo.getGroups();
+//		List<SapSalesGroup> ssgs = groupsRepo.findAll();
+//		for (SapSalesGroup ssg : ssgs) {
+//			String ocode = ssg.getOfficeCode();
+//			Map<String, String> vals = new HashMap<String, String>();
+//			vals.put(ssg.getCode(), ssg.getName());
+//			if (groups.putIfAbsent(ocode, vals) != null) {
+//				groups.get(ocode).put(ssg.getCode(), ssg.getName());
+//			}
+//		}
 		//
 		Map<String, Double> taxRate = oo.getTaxRate();
 		taxRate.put("10", 0.13);
@@ -537,6 +538,12 @@ public class OrderService {
 
 		// 收货方式ReceiveTerms
 		oo.setReceiveTerms(constService.findReceiveTerms());
+		
+		// 国际贸易条款
+		oo.setIntercoms(constService.findIncoterms());
+		
+		// 币种
+		oo.setExchangeRate(constService.findCurrencies());
 
 		return oo;
 	}
@@ -592,7 +599,7 @@ public class OrderService {
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
 		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
-		String orderType = orderView.getOrderTypeCode();
+		String orderType = orderView.getOrderType();
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -602,7 +609,7 @@ public class OrderService {
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-		header.setAuart(toString(orderView.getOrderTypeCode()));	// Sales order type/订单类型
+		header.setAuart(toString(orderView.getOrderType()));	// Sales order type/订单类型
 		header.setVkorg("0841");	// Sales org./销售组织 -- Fixed value/固定为 0841
 		header.setVtweg(toString(orderView.getContractorClassCode()));	// DC/分销渠道 -- 客户
 		header.setName2(orderView.getCustomerName());	// Store name/店名
@@ -734,14 +741,14 @@ public class OrderService {
 		// header的付款条款为billing plan 的 code
 		List<KBiddingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		for (KBiddingPlan kBiddingPlan : planList) {
-//			if (orderType.equals("dealer")) {
-//				header.setZterm(kBiddingPlan.getCode());
-//				break;
-//			}
-			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals("dealer")) {
+			if (orderType.equals(ORDER_TYPE_DEALER)) {
 				header.setZterm(kBiddingPlan.getCode());
 				break;
 			}
+//			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals(ORDER_TYPE_DEALER)) {
+//				header.setZterm(kBiddingPlan.getCode());
+//				break;
+//			}
 			
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
@@ -843,7 +850,7 @@ public class OrderService {
 		for (KOrderView orderView : orderViews) {
 			String orderId = orderView.getOrderId();
 			String orderInfoId = orderView.getOrderInfoId();
-			String orderType = orderView.getOrderTypeCode();
+			String orderType = orderView.getOrderType();
 			String formId = orderView.getFormId();
 
 			AbsOrder order = null;
@@ -864,16 +871,32 @@ public class OrderService {
 
 			BeanUtils.copyProperties(orderView, order);
 			order.setSequenceNumber(orderView.getSequenceNumber());
-//			order.setAddress(orderView.);
-//			order.setApprovedDicount(orderView);
-//			order.setBodyDiscount(orderView.getBodyDiscount());
-//			order.setCityCode(orderView.getci);
-//			order.setComments(orderView.getComments());
-//			order.setConfirmTypeCode(orderView.getconf);
-//			order.setContactor1Id(orderView.getContactor1Id());
-//			order.setContactor1Tel(orderView.getContactor1Tel());
 			order.setConfirmTypeCode(orderView.getReceiveTermCode());
 			order.setConfirmTypeName(orderView.getReceiveTermName());
+			order.setCurrentVersion(orderView.getVersion());
+			order.setCurrentVersionStatus(toString(orderView.getStatus()));
+			order.setSaleType(orderView.getSalesType());
+			order.setSalesTelnumber(orderView.getSalesTel());
+			order.setSalesCode(orderView.getOwnerDomainId());
+			order.setSalesName(orderView.getOwnerName());
+			order.setContracterCode(orderView.getContractorCode());
+			order.setContracterName(orderView.getContractorName());
+			order.setCustomerClazzCode(orderView.getContractorClassCode());
+			order.setCustomerClazzName(orderView.getContractorClassName());
+			order.setIncoterm(orderView.getIncotermCode());
+			order.setUserOfficeCode(orderView.getSalesOfficeCode());
+			order.setContractManager(orderView.getOpteratorDomainId());
+			order.setCurrency(orderView.getCurrencyCode());
+			order.setInstallCode(orderView.getInstallTermCode());
+			order.setInstallName(orderView.getInstallTermName());
+			order.setTerminalType(orderView.getTerminalIndustryCode());
+			
+			if (order instanceof DealerOrder) {
+				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+				if (billingPlanList.size() > 0) {
+					((DealerOrder) order).setPaymentType(billingPlanList.get(0).getCode());
+				}
+			}
 			
 			if (orderQuery.isIncludeDetail()) {
 				assembleOrderDetail(order, orderId, orderInfoId, formId);
@@ -906,9 +929,19 @@ public class OrderService {
 		}
 		order.setOrderAddress(addresses);
 
-		// TODO billing plan
+		//  billing plan
 		List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-//			order.setBillingPlans(billingPlanList);
+		List<BiddingPayment> payments = new ArrayList<BiddingPayment>();
+		for (KBiddingPlan kBiddingPlan : billingPlanList) {
+			BiddingPayment payment = new BiddingPayment();
+			payment.setPayDate(kBiddingPlan.getPayDate());
+			payment.setPercentage(kBiddingPlan.getAmount() == null ? 0 : kBiddingPlan.getAmount().doubleValue());
+			payment.setReason(kBiddingPlan.getReason());
+			payment.setTermCode(kBiddingPlan.getCode());
+			payment.setTermName(kBiddingPlan.getName());
+			payments.add(payment);
+		}
+		order.setPayments(payments);
 
 		// TODO bpm dicision
 
@@ -961,10 +994,10 @@ public class OrderService {
 			querySql.append(" and contract_number like :contractNumber"); // .append(query.getStatus());
 			params.put("contractNumber", "%" + orderQuery.getContractNumber() + "%");
 		}
-//		if (!isEmpty(orderQuery.getContractorName())) {
-//			querySql.append(" and contractor_name like :contractorNumber"); // .append(query.getStatus());
-//			params.put("contractorNumber", "%" + orderQuery.getContractorName() + "%");
-//		}
+		if (!isEmpty(orderQuery.getContracterName())) {
+			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
+			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
+		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -996,28 +1029,6 @@ public class OrderService {
 
 	private void assembleItems(AbsOrder order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
-		// 旧的AbsOrder格式
-//		ItemsForm form = new ItemsForm();
-////		order.setItemsForm(form);
-//		form.setComments(orderView.getFormComments());
-//		form.setEarliestDeliveryDate(orderView.getEarliestDeliveryDate());
-//		form.setEarliestProductDate(orderView.getEarliestProductDate());
-//		form.setId(orderView.getFormId());
-//		form.setkOrderInfoId(orderView.getOrderInfoId());
-//		form.setOperator(orderView.getFormOperator());
-//		form.setOptTime(orderView.getFormOptTime());
-//		form.setType(orderView.getFormType());
-//
-//		form.setDetailsList(detailsList);
-//		for (ItemDetails itemDetails : detailsList) {
-//			String itemId = itemDetails.getId();
-//			// TODO item b2c
-//			// TODO characteristics
-//			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-//			// TODO configure material
-//			// TODO attached info
-//		}
-		
 		// 新的AbsOrder
 		List<AbsItem> items = new ArrayList<AbsItem>(detailsList.size()); 
 		for (ItemDetails itemDetails : detailsList) { 

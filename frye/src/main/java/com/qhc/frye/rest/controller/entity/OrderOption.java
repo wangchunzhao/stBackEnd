@@ -60,6 +60,9 @@ public class OrderOption {
 	// 收货方式
 	private Map<String,String> receiveTerms;
 	
+	// 国际贸易条款
+	private Map<String, String> intercoms;
+	
 	public OrderOption() {
 		Date  date =new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -85,6 +88,7 @@ public class OrderOption {
 		this.materialGroupOrders = new HashMap<String,String>();
 		this.materialGroupMapGroupOrder = new HashMap<String,String>();
 		this.shippingTypes = new HashMap<String, String>();
+		this.intercoms = new HashMap<String, String>();
 	}
 
 	public String getSequenceNumber() {
@@ -239,5 +243,13 @@ public class OrderOption {
 
 	public void setReceiveTerms(Map<String, String> receiveTerms) {
 		this.receiveTerms = receiveTerms;
+	}
+
+	public Map<String, String> getIntercoms() {
+		return intercoms;
+	}
+
+	public void setIntercoms(Map<String, String> intercoms) {
+		this.intercoms = intercoms;
 	}
 }
