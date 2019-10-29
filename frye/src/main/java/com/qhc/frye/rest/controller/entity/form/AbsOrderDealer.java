@@ -3,6 +3,8 @@
  */
 package com.qhc.frye.rest.controller.entity.form;
 
+import java.util.List;
+
 /**
  * @author wang@dxc.com
  *
@@ -98,6 +100,6 @@ public abstract class AbsOrderDealer extends AbsOrder {
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
 	}
-	
+
 	
 }

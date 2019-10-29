@@ -97,7 +97,7 @@ public abstract class AbsOrder {
 	 * 购销明细 Purchase and sale subsidiar
 	 */
 	//private List<ProductItem> items;//购销明细
-	private List<AbsItem> items;
+	private List<BaseItem> items;
 	private String comments;//备注
 	private List<OrderAddress> orderAddress;//合同明细地址
 	private List<BiddingPayment> payments;//付款条件或bidding plan 
@@ -113,8 +113,13 @@ public abstract class AbsOrder {
 	public AbsOrder(String json) {
 		
 	}
-		
 	
+	public List<BaseItem> getItems() {
+		return items;
+	}
+	public void setItems(List<BaseItem> items) {
+		this.items = items;
+	}
 	public String getCurrentVersion() {
 		return currentVersion;
 	}
@@ -207,12 +212,7 @@ public abstract class AbsOrder {
 	public void setOptTime(Date optTime) {
 		this.optTime = optTime;
 	}
-	public List<AbsItem> getItems() {
-		return items;
-	}
-	public void setItems(List<AbsItem> items) {
-		this.items = items;
-	}
+	
 	public List<OrderAddress> getOrderAddress() {
 		return orderAddress;
 	}
