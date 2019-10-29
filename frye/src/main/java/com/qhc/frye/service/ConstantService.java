@@ -207,7 +207,7 @@ public class ConstantService {
 	}
 
 	public Map<String, Map<String, String>> findSalesGroups() {
-		if (salesOffices != null)
+		if (salesGroups != null)
 			if (salesGroups == null || salesGroups.isEmpty()) {
 				List<SapSalesGroup> list = salesGroupRepository.findAll(Sort.by(Order.asc("code")));
 				salesGroups = new HashMap<String, Map<String, String>>();
