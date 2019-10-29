@@ -30,18 +30,18 @@ public class ItemsForm implements Serializable{
     @GeneratedValue(generator = "jpa-uuid")
 	public String id;
 	
-	@NotNull
+	
 	@Column(name = "earliest_product_date")
 	public Date earliestProductDate;//最早交货时间
 	
-	@NotNull
+	
 	@Column(name = "earliest_delivery_date")
 	public Date earliestDeliveryDate;//最早发货时间
 	
 	@Column(name = "comments",columnDefinition ="TEXT")
 	public String comments;
 	
-
+	@NotNull
 	@Column(name = "k_order_info_id",columnDefinition ="CHAR",length=32)
 	public String kOrderInfoId;
 

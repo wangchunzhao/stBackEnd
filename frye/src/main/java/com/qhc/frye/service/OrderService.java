@@ -190,13 +190,18 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(AbsOrder order,boolean fromSupportor) {
+	public void save(final AbsOrder order,boolean fromSupportor) {
 
 		String seq = order.getSequenceNumber();
-		DOrder dorder = dOrderRepository.findBySequence(order.getSequenceNumber());
+		
 		OrderHelper ohelper = new OrderHelper(order);
-		dorder = ohelper.toDOrder();
-		dorder = dOrderRepository.save(dorder);
+		DOrder dorder = ohelper.toDOrder();
+		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
+		if(forder!=null) {
+			dorder.setId(forder.getId());
+		}
+		dorder = dOrderRepository.saveAndFlush(dorder);
+		
 		//
 		if(fromSupportor) {
 			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
@@ -220,16 +225,25 @@ public class OrderService {
 		}else {
 			KOrderInfo kOrderInfo = ohelper.toOrderInfo();
 			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-			lversion.setOrderId(kOrderInfo.getId());
-			//
+			//版本
+			lversion = ohelper.toOrderVersion();
+			lversion.setOrderId(forder.getId());
+			lversion.setOrderInfoId(kOrderInfo.getId());
+			//订单版本保存
+			orderVersionRepo.save(lversion);
+			//订单地址
 			List<KDelieveryAddress> adds=ohelper.toAddress(kOrderInfo.getId());
 			deliveryAddressRepository.saveAll(adds);
+			//bidding plan
+			List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
+			biddingPlanRepository.saveAll(bidding);
+			//attachment
 			
+			
+			//form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			form = formRepo.save(form);
 			
-//			List<ItemDetails> details = baseOrder.toDetails(form.getId());
-//			details =itemDetailRepository.saveAll(details);
 			String formId = form.getId();
 			//
 			for(AbsItem item: order.getItems()) {
@@ -282,6 +296,7 @@ public class OrderService {
 				}
 				
 			}
+			
 			
 		}
 

@@ -35,7 +35,7 @@ import com.qhc.frye.rest.controller.entity.Customer;
 @Service
 public class CustomerService {
 	
-	public final static int QUANTITY_PAGE= 20;
+	public final static int QUANTITY_PAGE= 10;
 	
 	public final static long DEFAULT_DATE = 1008005271098L;
 	
