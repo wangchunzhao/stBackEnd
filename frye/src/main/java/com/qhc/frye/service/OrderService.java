@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.AttachementRepository;
 import com.qhc.frye.dao.BAreaRepository;
 import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
@@ -46,6 +47,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
+import com.qhc.frye.domain.KAttachment;
 import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KDelieveryAddress;
@@ -75,6 +77,7 @@ import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
 import com.qhc.frye.rest.controller.entity.form.OrderHelper;
+import com.qhc.frye.rest.controller.entity.form.ProductCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.ProductItem;
 import com.qhc.frye.rest.controller.entity.sap.SapOrder;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
@@ -148,6 +151,9 @@ public class OrderService {
 
 	@Autowired
 	private KOrderInfoRepository orderInfoRepo;
+
+	@Autowired
+	private AttachementRepository attachementRepository;
 
 	@Autowired
 	private ConstantService constService;
@@ -896,12 +902,12 @@ public class OrderService {
 
 	private void assembleOrderDetail(AbsOrder order, String orderId,
 			String orderInfoId, String formId) {
-		// TODO Attached File
-//			List<> attachments = attachementRepository.findByOrderInfoId(orderInfoId);
+		// Attached File
+		List<KAttachment> attachments = attachementRepository.findByOrderInfo(orderInfoId);
 		List<String> attachmentNames = new ArrayList<String>();
-//			for(KAttachment attachment : attachments) {
-//				attachmentNames.add(attachment.getFileName());
-//			}
+		for(KAttachment attachment : attachments) {
+			attachmentNames.add(attachment.getFileName());
+		}
 		order.setAttachedFileName(attachmentNames);
 
 		// 收货地址
@@ -1020,12 +1026,38 @@ public class OrderService {
 			String itemId = itemDetails.getId();
 			ProductItem item = new ProductItem();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
+			item.setDeliveryDate(itemDetails.getDelieveryDate());
+			item.setShippDate(itemDetails.getDelieveryDate());
+			item.setUnitCode(itemDetails.getMeasureUnitCode());
+//			item.setUnitName(unitName);
+//			item.setProduceDate(produceDate);
+//			item.setOnStoreDate(onStoreDate);
+			item.setGroupCode(itemDetails.getMaterialGroupCode());
+			item.setGroupName(itemDetails.getMaterialGroupName());
+			item.setSpecialComments(itemDetails.getSpecialNeed());
+			item.setConfigComments(itemDetails.getComments());
+			item.setMosaicImage(itemDetails.getMosaicImage());
+			item.setRequestCircult(itemDetails.getRequestCircuit());
 			
 			items.add(item);
 			
 			// TODO item b2c
-			// TODO characteristics
-//			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+			// characteristics
+			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+			List<AbsCharacteristic> configs = new ArrayList<AbsCharacteristic>();
+			for (KCharacteristics charac : characs) {
+				if(toString(charac.getIsConfigurable()).equals("1")) {
+					item.setConfigurable(true);
+				}
+				
+				ProductCharacteristic c = new ProductCharacteristic();
+				c.setConfigCode(charac.getKeyCode());
+				c.setConfigValueCode(charac.getValueCode());
+				c.setOption(toString(charac.getIsConfigurable()));
+				
+				configs.add(c);
+			}
+			item.setConfigs(configs);
 			// TODO configure material
 			// TODO attached info
 		}
