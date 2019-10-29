@@ -54,8 +54,16 @@ public class LocationService {
 			SapSalesOffice sso = new SapSalesOffice();
 			sso.setCode(sg.getOfficeCode());
 			sso.setName(sg.getOfficeName());
-			//只有内销，出口没有大区，冷库对应冷酷
-			sso.setTypeCode("10");
+			//出口
+			if("S007".equals(sg.getOfficeCode())) {
+				sso.setTypeCode("20");
+			}else if("S006".equals(sg.getOfficeCode())) {
+				//冷库
+				sso.setTypeCode("30");
+			}else {
+				//内销
+				sso.setTypeCode("10");
+			}
 			groups.add(ssg);
 			offices.add(sso);
 		}
