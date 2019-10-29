@@ -583,7 +583,7 @@ public class OrderService {
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
 		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
-		String orderType = orderView.getOrderTypeCode();
+		String orderType = orderView.getOrderType();
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -593,7 +593,7 @@ public class OrderService {
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-		header.setAuart(toString(orderView.getOrderTypeCode()));	// Sales order type/订单类型
+		header.setAuart(toString(orderView.getOrderType()));	// Sales order type/订单类型
 		header.setVkorg("0841");	// Sales org./销售组织 -- Fixed value/固定为 0841
 		header.setVtweg(toString(orderView.getContractorClassCode()));	// DC/分销渠道 -- 客户
 		header.setName2(orderView.getCustomerName());	// Store name/店名
@@ -834,7 +834,7 @@ public class OrderService {
 		for (KOrderView orderView : orderViews) {
 			String orderId = orderView.getOrderId();
 			String orderInfoId = orderView.getOrderInfoId();
-			String orderType = orderView.getOrderTypeCode();
+			String orderType = orderView.getOrderType();
 			String formId = orderView.getFormId();
 
 			AbsOrder order = null;
@@ -855,16 +855,25 @@ public class OrderService {
 
 			BeanUtils.copyProperties(orderView, order);
 			order.setSequenceNumber(orderView.getSequenceNumber());
-//			order.setAddress(orderView.);
-//			order.setApprovedDicount(orderView);
-//			order.setBodyDiscount(orderView.getBodyDiscount());
-//			order.setCityCode(orderView.getci);
-//			order.setComments(orderView.getComments());
-//			order.setConfirmTypeCode(orderView.getconf);
-//			order.setContactor1Id(orderView.getContactor1Id());
-//			order.setContactor1Tel(orderView.getContactor1Tel());
 			order.setConfirmTypeCode(orderView.getReceiveTermCode());
 			order.setConfirmTypeName(orderView.getReceiveTermName());
+			order.setCurrentVersion(orderView.getVersion());
+			order.setCurrentVersionStatus(toString(orderView.getStatus()));
+			order.setSaleType(orderView.getSalesType());
+			order.setSalesTelnumber(orderView.getSalesTel());
+			order.setSalesCode(orderView.getOwnerDomainId());
+			order.setSalesName(orderView.getOwnerName());
+			order.setContracterCode(orderView.getContractorCode());
+			order.setContracterName(orderView.getContractorName());
+			order.setCustomerClazzCode(orderView.getContractorClassCode());
+			order.setCustomerClazzName(orderView.getContractorClassName());
+			order.setIncoterm(orderView.getIncotermCode());
+			order.setUserOfficeCode(orderView.getSalesOfficeCode());
+			order.setContractManager(orderView.getOpteratorDomainId());
+			order.setCurrency(orderView.getCurrencyCode());
+			order.setInstallCode(orderView.getInstallTermCode());
+			order.setInstallName(orderView.getInstallTermName());
+//			order.setTerminalType(orderView.getin);
 			
 			if (orderQuery.isIncludeDetail()) {
 				assembleOrderDetail(order, orderId, orderInfoId, formId);
@@ -952,10 +961,10 @@ public class OrderService {
 			querySql.append(" and contract_number like :contractNumber"); // .append(query.getStatus());
 			params.put("contractNumber", "%" + orderQuery.getContractNumber() + "%");
 		}
-//		if (!isEmpty(orderQuery.getContractorName())) {
-//			querySql.append(" and contractor_name like :contractorNumber"); // .append(query.getStatus());
-//			params.put("contractorNumber", "%" + orderQuery.getContractorName() + "%");
-//		}
+		if (!isEmpty(orderQuery.getContracterName())) {
+			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
+			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
+		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {

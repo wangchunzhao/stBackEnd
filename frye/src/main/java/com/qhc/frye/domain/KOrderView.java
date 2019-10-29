@@ -21,7 +21,7 @@ public class KOrderView
 
 	/* Column(order_type_code) - //dealer or keyaccount or bulk */
 	@Column(name="order_type_code",columnDefinition="CHAR",length=4)
-	private String orderTypeCode = null;
+	private String orderType = null;
 
 	/* Column(create_time) - 创建时间 */
 	@Column(name="create_time")
@@ -330,12 +330,12 @@ public class KOrderView
 		this.sequenceNumber = sequenceNumber;
 	}
 	 
-	public String getOrderTypeCode() {
-		return this.orderTypeCode;
+	public String getOrderType() {
+		return this.orderType;
 	}
 
-	public void setOrderTypeCode(String orderTypeCode) {
-		this.orderTypeCode = orderTypeCode;
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
 	}
 	 
 	public Date getCreateTime() {
@@ -919,7 +919,7 @@ public class KOrderView
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((sequenceNumber == null) ? 0 : sequenceNumber.hashCode());
-		result = prime * result + ((orderTypeCode == null) ? 0 : orderTypeCode.hashCode());
+		result = prime * result + ((orderType == null) ? 0 : orderType.hashCode());
 		result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
 		result = prime * result + ((ownerDomainId == null) ? 0 : ownerDomainId.hashCode());
 		result = prime * result + ((ownerName == null) ? 0 : ownerName.hashCode());
@@ -1002,7 +1002,7 @@ public class KOrderView
 		}
 		final KOrderView other = (KOrderView) obj;
 		return (this.sequenceNumber == null ? other.sequenceNumber == null : this.sequenceNumber.equals(other.sequenceNumber))
-			&&(this.orderTypeCode == null ? other.orderTypeCode == null : this.orderTypeCode.equals(other.orderTypeCode))
+			&&(this.orderType == null ? other.orderType == null : this.orderType.equals(other.orderType))
 			&&(this.createTime == null ? other.createTime == null : this.createTime.equals(other.createTime))
 			&&(this.ownerDomainId == null ? other.ownerDomainId == null : this.ownerDomainId.equals(other.ownerDomainId))
 			&&(this.ownerName == null ? other.ownerName == null : this.ownerName.equals(other.ownerName))
@@ -1076,7 +1076,7 @@ public class KOrderView
 	    String str = "";
 	    str = "KOrderView ( "
 	        + "sequenceNumber = " + this.sequenceNumber + tab
-	        + "orderTypeCode = " + this.orderTypeCode + tab
+	        + "orderTypeCode = " + this.orderType + tab
 	        + "createTime = " + this.createTime + tab
 	        + "ownerDomainId = " + this.ownerDomainId + tab
 	        + "ownerName = " + this.ownerName + tab
