@@ -58,10 +58,10 @@ import com.qhc.frye.domain.KOrderView;
 import com.qhc.frye.domain.OrderSupportInfo;
 import com.qhc.frye.domain.PaymentTerm;
 import com.qhc.frye.domain.SapSalesGroup;
-import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
-import com.qhc.frye.rest.controller.entity.form.BaseOrder;
+import com.qhc.frye.rest.controller.entity.form.BaseChracteristic;
+import com.qhc.frye.rest.controller.entity.form.BaseItem;
 import com.qhc.frye.rest.controller.entity.form.BiddingPayment;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
@@ -77,8 +77,6 @@ import com.qhc.frye.rest.controller.entity.form.DealerOrder;
 import com.qhc.frye.rest.controller.entity.form.KeyAccountOrder;
 import com.qhc.frye.rest.controller.entity.form.OrderAddress;
 import com.qhc.frye.rest.controller.entity.form.OrderHelper;
-import com.qhc.frye.rest.controller.entity.form.ProductCharacteristic;
-import com.qhc.frye.rest.controller.entity.form.ProductItem;
 import com.qhc.frye.rest.controller.entity.sap.SapOrder;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderCharacteristics;
 import com.qhc.frye.rest.controller.entity.sap.SapOrderHeader;
@@ -1036,10 +1034,10 @@ public class OrderService {
 	private void assembleItems(AbsOrder order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
 		// 新的AbsOrder
-		List<AbsItem> items = new ArrayList<AbsItem>(detailsList.size()); 
+		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size()); 
 		for (ItemDetails itemDetails : detailsList) { 
 			String itemId = itemDetails.getId();
-			ProductItem item = new ProductItem();
+			BaseItem item = new BaseItem();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
 			item.setDeliveryDate(itemDetails.getDelieveryDate());
 			item.setShippDate(itemDetails.getDelieveryDate());
@@ -1059,13 +1057,13 @@ public class OrderService {
 			// TODO item b2c
 			// characteristics
 			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-			List<AbsCharacteristic> configs = new ArrayList<AbsCharacteristic>();
+			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
 			for (KCharacteristics charac : characs) {
 				if(toString(charac.getIsConfigurable()).equals("1")) {
 					item.setConfigurable(true);
 				}
 				
-				ProductCharacteristic c = new ProductCharacteristic();
+				BaseChracteristic c = new BaseChracteristic();
 				c.setConfigCode(charac.getKeyCode());
 				c.setConfigValueCode(charac.getValueCode());
 				c.setOption(toString(charac.getIsConfigurable()));
