@@ -111,7 +111,7 @@ public class MaterialService {
 		if( pageNo >0){
 			pageNo = pageNo-1;
 		}
-		Page<DMaterial> dms = materialRepo.findAllByName(name,PageRequest.of(pageNo,2));
+		Page<DMaterial> dms = materialRepo.findAllByName(name,PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
 		PageHelper<DMaterial> ph = new PageHelper<DMaterial>(dms);
 		return ph;
 	}
@@ -121,9 +121,10 @@ public class MaterialService {
 	 * @return corresponded material information
 	 */
 	public Material getMaterialsById(String code){
-		Material m = new Material();
+		Material m = null;
 		List<MaterialPrice> dmo = materialInfoRepo.findByMaterialId(code);
 		for(MaterialPrice mp:dmo) {
+			m = new Material();
 			m.setCode(mp.getCode());
 			m.setDescription(mp.getDescription());
 			m.setConfigurable(mp.isConfigurable());

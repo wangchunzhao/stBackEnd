@@ -16,6 +16,7 @@ import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
 import com.qhc.frye.domain.KDelieveryAddress;
 import com.qhc.frye.domain.KOrderInfo;
+import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.OrderSupportInfo;
 
 /**
@@ -65,6 +66,8 @@ public class OrderHelper {
 	public KOrderInfo toOrderInfo() {
 		KOrderInfo temp = new KOrderInfo();
 		temp.setLastOperator(order.getCurrentUser());
+		if(order.getOptTime()==null)
+			order.setOptTime(new Date());
 		temp.setLastOptTime(order.getOptTime());
 		temp.setCustomerName(order.getCustomerName());
 		//
@@ -129,15 +132,17 @@ public class OrderHelper {
 	 */
 	public List<KBiddingPlan> toBiddingPlan(String orderInfoId) {
 		List<KBiddingPlan> kbList = new ArrayList<KBiddingPlan>();
-		for(BiddingPayment bp:order.getPayments()) {
-			KBiddingPlan temp = new KBiddingPlan();
-			temp.setCode(bp.getTermCode());
-			temp.setName(bp.getTermName());
-			temp.setAmount(new BigDecimal(bp.getPercentage()));
-			temp.setPayDate(bp.getPayDate());
-			temp.setReason(bp.getReason());
-			temp.setOrderInfoId(orderInfoId);
-			kbList.add(temp);
+		if(order.getPayments()!=null) {
+			for(BiddingPayment bp:order.getPayments()) {
+				KBiddingPlan temp = new KBiddingPlan();
+				temp.setCode(bp.getTermCode());
+				temp.setName(bp.getTermName());
+				temp.setAmount(new BigDecimal(bp.getPercentage()));
+				temp.setPayDate(bp.getPayDate());
+				temp.setReason(bp.getReason());
+				temp.setOrderInfoId(orderInfoId);
+				kbList.add(temp);
+			}
 		}
 		return kbList;
 	}
@@ -256,5 +261,13 @@ public class OrderHelper {
 			}
 		}
 		return kcList;
+	}
+	public KOrderVersion toOrderVersion() {
+		KOrderVersion temp = new KOrderVersion();
+		temp.setStatus(0);
+		temp.setVersion(order.getCurrentVersion());
+		temp.setCreateTime(order.getCreateTime());
+		
+		return temp;
 	}
 }
