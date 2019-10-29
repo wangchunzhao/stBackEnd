@@ -207,21 +207,20 @@ public class ConstantService {
 	}
 
 	public Map<String, Map<String, String>> findSalesGroups() {
-		if (salesGroups != null)
-			if (salesGroups == null || salesGroups.isEmpty()) {
-				List<SapSalesGroup> list = salesGroupRepository.findAll(Sort.by(Order.asc("code")));
-				salesGroups = new HashMap<String, Map<String, String>>();
+		if (salesGroups == null || salesGroups.isEmpty()) {
+			List<SapSalesGroup> list = salesGroupRepository.findAll(Sort.by(Order.asc("code")));
+			salesGroups = new HashMap<String, Map<String, String>>();
 
-				for (SapSalesGroup sapSalesGroup : list) {
-					String officeCode = sapSalesGroup.getOfficeCode();
-					Map<String, String> group = salesGroups.get(officeCode);
-					if (group == null) {
-						group = new HashMap<>();
-						salesOffices.put(officeCode, group);
-					}
-					group.put(sapSalesGroup.getCode(), sapSalesGroup.getName());
+			for (SapSalesGroup sapSalesGroup : list) {
+				String officeCode = sapSalesGroup.getOfficeCode();
+				Map<String, String> group = salesGroups.get(officeCode);
+				if (group == null) {
+					group = new HashMap<>();
+					salesGroups.put(officeCode, group);
 				}
+				group.put(sapSalesGroup.getCode(), sapSalesGroup.getName());
 			}
+		}
 
 		return salesGroups;
 	}

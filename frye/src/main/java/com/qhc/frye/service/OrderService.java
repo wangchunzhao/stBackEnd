@@ -873,7 +873,14 @@ public class OrderService {
 			order.setCurrency(orderView.getCurrencyCode());
 			order.setInstallCode(orderView.getInstallTermCode());
 			order.setInstallName(orderView.getInstallTermName());
-//			order.setTerminalType(orderView.getin);
+			order.setTerminalType(orderView.getTerminalIndustryCode());
+			
+			if (order instanceof DealerOrder) {
+				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+				if (billingPlanList.size() > 0) {
+					((DealerOrder) order).setPaymentType(billingPlanList.get(0).getCode());
+				}
+			}
 			
 			if (orderQuery.isIncludeDetail()) {
 				assembleOrderDetail(order, orderId, orderInfoId, formId);
