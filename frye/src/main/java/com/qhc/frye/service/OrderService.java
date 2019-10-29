@@ -448,27 +448,27 @@ public class OrderService {
 			st.put(dst.getCode(), dst.getName());
 		}
 		//
-		Map<String, Map<String, String>> offices = oo.getOffices();
-		List<SapSalesOffice> ssos = officeRepo.findAll();
-		for (SapSalesOffice so : ssos) {
-			String tcode = so.getTypeCode();
-			Map<String, String> vals = new HashMap<String, String>();
-			vals.put(so.getCode(), so.getName());
-			if (offices.putIfAbsent(tcode, vals) != null) {
-				offices.get(tcode).put(so.getCode(), so.getName());
-			}
-		}
-		//
-		Map<String, Map<String, String>> groups = oo.getGroups();
-		List<SapSalesGroup> ssgs = groupsRepo.findAll();
-		for (SapSalesGroup ssg : ssgs) {
-			String ocode = ssg.getOfficeCode();
-			Map<String, String> vals = new HashMap<String, String>();
-			vals.put(ssg.getCode(), ssg.getName());
-			if (groups.putIfAbsent(ocode, vals) != null) {
-				groups.get(ocode).put(ssg.getCode(), ssg.getName());
-			}
-		}
+//		Map<String, Map<String, String>> offices = oo.getOffices();
+//		List<SapSalesOffice> ssos = officeRepo.findAll();
+//		for (SapSalesOffice so : ssos) {
+//			String tcode = so.getTypeCode();
+//			Map<String, String> vals = new HashMap<String, String>();
+//			vals.put(so.getCode(), so.getName());
+//			if (offices.putIfAbsent(tcode, vals) != null) {
+//				offices.get(tcode).put(so.getCode(), so.getName());
+//			}
+//		}
+//		//
+//		Map<String, Map<String, String>> groups = oo.getGroups();
+//		List<SapSalesGroup> ssgs = groupsRepo.findAll();
+//		for (SapSalesGroup ssg : ssgs) {
+//			String ocode = ssg.getOfficeCode();
+//			Map<String, String> vals = new HashMap<String, String>();
+//			vals.put(ssg.getCode(), ssg.getName());
+//			if (groups.putIfAbsent(ocode, vals) != null) {
+//				groups.get(ocode).put(ssg.getCode(), ssg.getName());
+//			}
+//		}
 		//
 		Map<String, Double> taxRate = oo.getTaxRate();
 		taxRate.put("10", 0.13);
@@ -522,6 +522,12 @@ public class OrderService {
 
 		// 收货方式ReceiveTerms
 		oo.setReceiveTerms(constService.findReceiveTerms());
+		
+		// 国际贸易条款
+		oo.setIntercoms(constService.findIncoterms());
+		
+		// 币种
+		oo.setExchangeRate(constService.findCurrencies());
 
 		return oo;
 	}

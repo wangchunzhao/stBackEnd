@@ -7,22 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.BMaterialGroupOrderRepository;
+import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.CustomerClassRepository;
 import com.qhc.frye.dao.DIndustryCodeRepository;
 import com.qhc.frye.dao.DReceiveTermsRepository;
 import com.qhc.frye.dao.DShippingTypeRepository;
+import com.qhc.frye.dao.IncotermRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SapMaterialGroupsRepository;
 import com.qhc.frye.domain.BMaterialGroupOrder;
 import com.qhc.frye.domain.CustomerClass;
+import com.qhc.frye.domain.DCurrency;
+import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DIndustryCode;
 import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DReceiveTerms;
@@ -30,6 +35,7 @@ import com.qhc.frye.domain.DShippingType;
 import com.qhc.frye.domain.OrderTypeCustomerClass;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
+import com.qhc.frye.rest.controller.entity.Currency;
 
 /**
  * @author wang@dxc.com
@@ -66,6 +72,12 @@ public class ConstantService {
 
 	@Autowired
 	private DReceiveTermsRepository receiveTermsRepository;
+	
+	@Autowired
+	private CurrencyRepository currencyRepository;
+	
+	@Autowired
+	private IncotermRepository incotermRepository;
 
 	public static Map<String, String> customerClazz;
 
@@ -86,6 +98,10 @@ public class ConstantService {
 	public static Map<String, String> shippingTypes = null;
 
 	public static Map<String, String> receiveTerms = null;
+	
+	public static Map<String, String> incoterms = null;
+	
+	public static Map<String, Currency> currencies = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -234,6 +250,34 @@ public class ConstantService {
 		}
 
 		return receiveTerms;
+	}
+	
+	public Map<String, String> findIncoterms() {
+		if (incoterms == null || incoterms.isEmpty()) {
+			List<DIncoterm> list = incotermRepository.findAll(Sort.by(Order.asc("code")));
+			incoterms = new HashMap<String, String>();
+
+			for (DIncoterm dIncoterm : list) {
+				incoterms.put(dIncoterm.getCode(), dIncoterm.getName());
+			}
+		}
+
+		return incoterms;
+	}
+	
+	public Map<String, Currency> findCurrencies() {
+		if (currencies == null || currencies.isEmpty()) {
+			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
+			currencies = new HashMap<String, Currency>();
+
+			for (DCurrency dCurrency : list) {
+				Currency currency = new Currency();
+				BeanUtils.copyProperties(dCurrency, currency);
+				currencies.put(dCurrency.getCode(), currency);
+			}
+		}
+
+		return currencies;
 	}
 
 }
