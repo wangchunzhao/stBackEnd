@@ -262,45 +262,8 @@ public class OrderService {
 		String formId = form.getId();
 		//
 		for (AbsItem item : order.getItems()) {
-			ItemDetails temp = new ItemDetails();
-			temp.setRowNumber(item.getRowNumber());
-			temp.setMaterialCode(item.getMaterialCode());
-			temp.setMaterialName(item.getMaterialName());
-			if (item.getIsVirtual() == 0)
-				temp.setVirtual(false);
-			else
-				temp.setVirtual(true);
-			temp.setMaterialAttribute(item.isPurchased());
-			temp.setQuantity(item.getQuantity());
-			temp.setMeasureUnitCode(item.getUnitCode());
-			temp.setAmount(new BigDecimal(item.getRetailPrice() * item.getQuantity()));
-			temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
-			temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
-			temp.setB2cComments(item.getB2cComments());
-			temp.setB2cEstimationAmount(new BigDecimal(item.getB2CPriceEstimated()));
-			temp.setB2cEstimationCost(new BigDecimal(item.getB2CCostOfEstimated()));
-			temp.setMaterialCode(item.getMaterialCode());
-			temp.setMaterialGroupCode(item.getGroupCode());
-			temp.setMaterialGroupName(item.getGroupName());
-			temp.setDiscount(item.getDiscount());
-			temp.setItemCategory(item.getItemCategory());
-			temp.setItemRequirementPlan(item.getItemRequirementPlan());
-			temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
-			temp.setFreight(new BigDecimal(item.getFeight()));
-			temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
-			temp.setDelieveryDate(item.getDeliveryDate());
-			temp.setSpecialNeed(item.getSpecialComments());
-			temp.setMosaicImage(item.getMosaicImage());
-			temp.setAttachedImage(item.getAttachedImage());
-			temp.setRequestBrand(item.getRequestBrand());
-			temp.setRequestCircuit(item.getRequestCircult());
-			temp.setRequestPackage(item.getRequestPackage());
-			temp.setRequestNameplate(item.getRequestNameplate());
-			temp.setComments(item.getComments());
-			temp.setColorComments(item.getColorComments());
 			//
-			temp.setkFormsId(formId);
-			//
+			ItemDetails temp = OrderHelper.item2Detail(item, formId);
 			temp = itemDetailRepository.save(temp);
 			for (AbsCharacteristic ac : item.getConfigs()) {
 				KCharacteristics tc = new KCharacteristics();
