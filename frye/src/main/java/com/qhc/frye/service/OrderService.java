@@ -215,9 +215,10 @@ public class OrderService {
 		if (forder != null) {
 			dorder.setId(forder.getId());
 		}
+		//save order header
 		dorder = dOrderRepository.saveAndFlush(dorder);
 
-		//
+		//for support manager
 		if (fromSupportor) {
 			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
 			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
@@ -230,22 +231,52 @@ public class OrderService {
 
 		//
 		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
-		kOrderInfo = orderInfoRepo.save(kOrderInfo);
 
 		String orderId = null;
 		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
 		if (lversion != null) {
-			// 订单版本保存
-			KOrderVersion v = ohelper.toOrderVersion();
-			v.setId(lversion.getId());
-			orderVersionRepo.save(v);
+			// 订单原版本保存
+			KOrderVersion v = ohelper.keepOrderVersion(lversion);
+			v = orderVersionRepo.save(v);
+			//订单主键为原订单
+			kOrderInfo.setId(v.getOrderInfoId());
+			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+			//order form
+			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
+			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
+			if(oldForm==null)
+				form = formRepo.save(form);
+			else {
+				form.setId(oldForm.getId());
+				formRepo.save(form);
+				List<ItemDetails> items = itemDetailRepository.findByKFormsId(form.getId());
+				
+			}
 		} else {
-			// 版本
+			
+			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+			// 新订单版本版本
 			lversion = ohelper.toOrderVersion();
 			lversion.setOrderId(forder.getId());
 			lversion.setOrderInfoId(kOrderInfo.getId());
 			// 订单版本保存
 			orderVersionRepo.save(lversion);
+			// form
+			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
+			form = formRepo.save(form);
+			
+			String formId = form.getId();
+			//detail
+			for (AbsItem item : order.getItems()) {
+				//
+				ItemDetails temp = OrderHelper.itemConversion(item, formId);
+				temp = itemDetailRepository.save(temp);
+				for (AbsCharacteristic ac : item.getConfigs()) {
+					KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+					characteristicsRepository.save(cha);
+				}
+
+			}
 		}
 		// 订单地址
 		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
@@ -254,23 +285,6 @@ public class OrderService {
 		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
 		biddingPlanRepository.saveAll(bidding);
 		// attachment
-
-		// form
-		ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-		form = formRepo.save(form);
-
-		String formId = form.getId();
-		//
-		for (AbsItem item : order.getItems()) {
-			//
-			ItemDetails temp = OrderHelper.itemConversion(item, formId);
-			temp = itemDetailRepository.save(temp);
-			for (AbsCharacteristic ac : item.getConfigs()) {
-				KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-				characteristicsRepository.save(cha);
-			}
-
-		}
 
 	}
 	/**

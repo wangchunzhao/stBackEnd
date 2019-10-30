@@ -271,7 +271,14 @@ public class OrderHelper {
 		temp.setStatus(0);
 		temp.setVersion(order.getCurrentVersion());
 		temp.setCreateTime(order.getCreateTime());
-		
+		temp.setOptTime(order.getOptTime());
+		return temp;
+	}
+	public KOrderVersion keepOrderVersion(KOrderVersion old) {
+		KOrderVersion temp = toOrderVersion();
+		temp.setId(old.getId());
+		temp.setOrderId(old.getOrderId());
+		temp.setOrderInfoId(old.getOrderInfoId());
 		return temp;
 	}
 	public static ItemDetails itemConversion(final AbsItem  item,final String formId) {
