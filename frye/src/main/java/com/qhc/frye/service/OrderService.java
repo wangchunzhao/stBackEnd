@@ -553,6 +553,9 @@ public class OrderService {
 		
 		// 币种
 		oo.setExchangeRate(constService.findCurrencies());
+		
+		// 安装方式
+		oo.setInstallationTerms(constService.findInstallationTerms());
 
 		return oo;
 	}

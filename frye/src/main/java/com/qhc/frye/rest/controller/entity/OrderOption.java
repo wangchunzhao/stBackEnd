@@ -63,6 +63,9 @@ public class OrderOption {
 	// 国际贸易条款
 	private Map<String, String> intercoms;
 	
+	// 安装方式
+	private Map<String, String> installationTerms;
+	
 	public OrderOption() {
 		Date  date =new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -89,6 +92,7 @@ public class OrderOption {
 		this.materialGroupMapGroupOrder = new HashMap<String,String>();
 		this.shippingTypes = new HashMap<String, String>();
 		this.intercoms = new HashMap<String, String>();
+		this.installationTerms = new HashMap<String, String>();
 	}
 
 	public String getSequenceNumber() {
@@ -251,5 +255,13 @@ public class OrderOption {
 
 	public void setIntercoms(Map<String, String> intercoms) {
 		this.intercoms = intercoms;
+	}
+
+	public Map<String, String> getInstallationTerms() {
+		return installationTerms;
+	}
+
+	public void setInstallationTerms(Map<String, String> installationTerms) {
+		this.installationTerms = installationTerms;
 	}
 }

@@ -20,6 +20,7 @@ import com.qhc.frye.dao.DIndustryCodeRepository;
 import com.qhc.frye.dao.DReceiveTermsRepository;
 import com.qhc.frye.dao.DShippingTypeRepository;
 import com.qhc.frye.dao.IncotermRepository;
+import com.qhc.frye.dao.InstallationTermsRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
@@ -29,6 +30,7 @@ import com.qhc.frye.domain.CustomerClass;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DIncoterm;
 import com.qhc.frye.domain.DIndustryCode;
+import com.qhc.frye.domain.DInstallationTerms;
 import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DReceiveTerms;
 import com.qhc.frye.domain.DShippingType;
@@ -78,6 +80,9 @@ public class ConstantService {
 	
 	@Autowired
 	private IncotermRepository incotermRepository;
+	
+	@Autowired
+	private InstallationTermsRepository installationTermsRepository;
 
 	public static Map<String, String> customerClazz;
 
@@ -102,6 +107,8 @@ public class ConstantService {
 	public static Map<String, String> incoterms = null;
 	
 	public static Map<String, Currency> currencies = null;
+	
+	public static Map<String, String> installationTerms = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -277,6 +284,19 @@ public class ConstantService {
 		}
 
 		return currencies;
+	}
+	
+	public Map<String, String> findInstallationTerms() {
+		if (installationTerms == null || installationTerms.isEmpty()) {
+			List<DInstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
+			installationTerms = new HashMap<String, String>();
+
+			for (DInstallationTerms term : list) {
+				installationTerms.put(term.getCode(), term.getName());
+			}
+		}
+
+		return installationTerms;
 	}
 
 }
