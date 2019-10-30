@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.AttachedInfoRepository;
 import com.qhc.frye.dao.AttachementRepository;
 import com.qhc.frye.dao.BAreaRepository;
 import com.qhc.frye.dao.BCityRepository;
@@ -47,6 +48,7 @@ import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
+import com.qhc.frye.domain.KAttachedInfo;
 import com.qhc.frye.domain.KAttachment;
 import com.qhc.frye.domain.KBiddingPlan;
 import com.qhc.frye.domain.KCharacteristics;
@@ -164,6 +166,9 @@ public class OrderService {
 	
 	@Autowired
 	private KOrderFormRepository formRepo;
+	
+	@Autowired
+	private AttachedInfoRepository attachedInfoRepository;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -1043,14 +1048,19 @@ public class OrderService {
 			item.setShippDate(itemDetails.getDelieveryDate());
 			item.setUnitCode(itemDetails.getMeasureUnitCode());
 //			item.setUnitName(unitName);
-//			item.setProduceDate(produceDate);
-//			item.setOnStoreDate(onStoreDate);
 			item.setGroupCode(itemDetails.getMaterialGroupCode());
 			item.setGroupName(itemDetails.getMaterialGroupName());
 			item.setSpecialComments(itemDetails.getSpecialNeed());
 			item.setConfigComments(itemDetails.getComments());
 			item.setMosaicImage(itemDetails.getMosaicImage());
 			item.setRequestCircult(itemDetails.getRequestCircuit());
+			
+			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
+			if (attachedInfoList.size() > 0) {
+				KAttachedInfo attached = attachedInfoList.get(0);
+				item.setProduceDate(attached.getStartDateOfProduction());
+				item.setOnStoreDate(attached.getDateOfOnStore());
+			}
 			
 			items.add(item);
 			
