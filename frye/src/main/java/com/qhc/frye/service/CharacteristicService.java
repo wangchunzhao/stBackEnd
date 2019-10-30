@@ -80,6 +80,7 @@ public class CharacteristicService {
 			
 		}	
 		characterRepo.saveAll(dcs);
+		charaValueRepo.deleteAll();
 		charaValueRepo.saveAll(dcvs);
 		classAndCharaRepo.saveAll(cacs);
 	}
