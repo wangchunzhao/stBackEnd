@@ -73,8 +73,8 @@ public class CharacteristicService {
 					dcs.add((DCharacteristic)obj);
 					
 				}else if(obj.getClass().equals(DCharacteristicValue.class)) {
+//					System.out.println(((DCharacteristicValue)obj).getId());
 					dcvs.add((DCharacteristicValue)obj);
-					
 				}
 			}
 			

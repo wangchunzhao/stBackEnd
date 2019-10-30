@@ -5,6 +5,8 @@ package com.qhc.frye.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -17,10 +19,10 @@ import javax.validation.constraints.NotNull;
 @Table(name="sap_characteristic_value")
 public class DCharacteristicValue {
 	
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Id
-	@NotNull
-    @Column(name="id")
-	private int id;
+    @Column(name="id",length=11)
+	private Integer id;
 	
     @NotNull
     @Column(name="code",length=30)
@@ -53,12 +55,13 @@ public class DCharacteristicValue {
 	public void setCharacter(String character) {
 		this.character = character;
 	}
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 		
 
 }
