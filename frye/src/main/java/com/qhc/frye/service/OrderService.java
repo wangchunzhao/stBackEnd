@@ -263,14 +263,11 @@ public class OrderService {
 		//
 		for (AbsItem item : order.getItems()) {
 			//
-			ItemDetails temp = OrderHelper.item2Detail(item, formId);
+			ItemDetails temp = OrderHelper.itemConversion(item, formId);
 			temp = itemDetailRepository.save(temp);
 			for (AbsCharacteristic ac : item.getConfigs()) {
-				KCharacteristics tc = new KCharacteristics();
-				tc.setKeyCode(ac.getConfigCode());
-				tc.setValueCode(ac.getConfigValueCode());
-
-				tc = characteristicsRepository.save(tc);
+				KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+				characteristicsRepository.save(cha);
 			}
 
 		}

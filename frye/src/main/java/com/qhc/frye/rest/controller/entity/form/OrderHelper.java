@@ -274,7 +274,7 @@ public class OrderHelper {
 		
 		return temp;
 	}
-	public static ItemDetails item2Detail(AbsItem item,String formId) {
+	public static ItemDetails itemConversion(final AbsItem  item,final String formId) {
 		ItemDetails temp = new ItemDetails();
 		temp.setRowNumber(item.getRowNumber());
 		temp.setMaterialCode(item.getMaterialCode());
@@ -314,5 +314,12 @@ public class OrderHelper {
 		//
 		temp.setkFormsId(formId);
 		return temp;
+	}
+	public static KCharacteristics CharacteristicConversion(final AbsCharacteristic character) {
+		KCharacteristics temp = new KCharacteristics();
+		temp.setKeyCode(character.getConfigCode());
+		temp.setValueCode(character.getConfigValueCode());
+		return temp;
+		
 	}
 }
