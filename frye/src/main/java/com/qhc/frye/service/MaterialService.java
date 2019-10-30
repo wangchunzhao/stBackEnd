@@ -132,6 +132,7 @@ public class MaterialService {
 			m.setStandardPrice(mp.getStandPrice());
 			m.setGroupCode(mp.getGroupCode());
 			m.setClazzCode(mp.getClazzCode());
+			m.setGroupName(mp.getGroupName());
 			//
 			String priceTypeCode = mp.getPriceTypeCode();
 			switch(priceTypeCode) {
