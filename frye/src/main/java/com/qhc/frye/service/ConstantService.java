@@ -108,7 +108,7 @@ public class ConstantService {
 	
 	public static Map<String, Currency> currencies = null;
 	
-	public static Map<String, String> installationTerms = null;
+	public static Map<String, Map<String, String>> installationTerms = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -286,13 +286,19 @@ public class ConstantService {
 		return currencies;
 	}
 	
-	public Map<String, String> findInstallationTerms() {
+	public Map<String, Map<String, String>> findInstallationTerms() {
 		if (installationTerms == null || installationTerms.isEmpty()) {
 			List<DInstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
-			installationTerms = new HashMap<String, String>();
+			installationTerms = new HashMap<String, Map<String, String>>();
 
 			for (DInstallationTerms term : list) {
-				installationTerms.put(term.getCode(), term.getName());
+				String classCode = term.getCustomerClassCode();
+				Map<String, String> terms = installationTerms.get(classCode);
+				if (terms == null) {
+					terms = new HashMap<String, String>();
+					installationTerms.put(classCode, terms);
+				}
+				terms.put(term.getCode(), term.getName());
 			}
 		}
 
