@@ -17,14 +17,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "sap_material_info_view")
 public class MaterialPrice implements Serializable {
-	
-	@Id 
+		
 	@Column(name = "code",columnDefinition ="CHAR")
 	private String code;
 	
 	@Column(name = "description",columnDefinition ="TEXT")
 	private String description;
-	
+	@Id 
 	@Column(name = "price_type_code",columnDefinition ="CHAR")
 	private String priceTypeCode;
 	
