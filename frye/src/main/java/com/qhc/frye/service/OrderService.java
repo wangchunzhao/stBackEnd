@@ -88,7 +88,7 @@ import com.qhc.frye.rest.controller.entity.sap.SapOrderPrice;
 
 @Service
 public class OrderService {
-	private final static String ORDER_TYPE_DEALER = "ZH0D"; //'经销商订单'
+	private final static String ORDER_TYPE_DEALER = "ZH0D"; // '经销商订单'
 	private final static String ORDER_TYPE_BULK = "ZH0M"; // '备货订单'
 	private final static String ORDER_TYPE_KEYACCOUNT = "ZH0T"; // '大客户订单'
 
@@ -130,7 +130,7 @@ public class OrderService {
 
 	@Autowired
 	private KOrderVersionViewRepository orderVersionViewRepository;
-	
+
 	@Autowired
 	private KOrderVersionRepository orderVersionRepo;
 
@@ -163,10 +163,10 @@ public class OrderService {
 
 	@Autowired
 	private BayernService<SapOrder> bayernService;
-	
+
 	@Autowired
 	private KOrderFormRepository formRepo;
-	
+
 	@Autowired
 	private AttachedInfoRepository attachedInfoRepository;
 
@@ -200,114 +200,111 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(final AbsOrder order,boolean fromSupportor) {
+	public void save(final AbsOrder order, boolean fromSupportor) {
 
 		String seq = order.getSequenceNumber();
-		
+
 		OrderHelper ohelper = new OrderHelper(order);
 		DOrder dorder = ohelper.toDOrder();
 		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
-		if(forder!=null) {
+		if (forder != null) {
 			dorder.setId(forder.getId());
 		}
 		dorder = dOrderRepository.saveAndFlush(dorder);
-		
+
 		//
-		if(fromSupportor) {
+		if (fromSupportor) {
 			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
 			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
-			if(osi.getId()!=0) {
+			if (osi.getId() != 0) {
 				supportInfo.setId(osi.getId());
 			}
 			supportRepo.save(supportInfo);
 		}
 		//
-		
+
 		//
+		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
+		kOrderInfo = orderInfoRepo.save(kOrderInfo);
+
 		String orderId = null;
 		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
-		if(lversion!=null) {
-			if(lversion.getStatus().equals("05")||lversion.getStatus().equals("06")||lversion.getStatus().equals("10")) {
-				lversion = new KOrderVersion();
-			}
-			
-				
-		}else {
-			KOrderInfo kOrderInfo = ohelper.toOrderInfo();
-			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-			//版本
+		if (lversion != null) {
+			// 订单版本保存
+			KOrderVersion v = ohelper.toOrderVersion();
+			v.setId(lversion.getId());
+			orderVersionRepo.save(v);
+		} else {
+			// 版本
 			lversion = ohelper.toOrderVersion();
 			lversion.setOrderId(forder.getId());
 			lversion.setOrderInfoId(kOrderInfo.getId());
-			//订单版本保存
+			// 订单版本保存
 			orderVersionRepo.save(lversion);
-			//订单地址
-			List<KDelieveryAddress> adds=ohelper.toAddress(kOrderInfo.getId());
-			deliveryAddressRepository.saveAll(adds);
-			//bidding plan
-			List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
-			biddingPlanRepository.saveAll(bidding);
-			//attachment
-			
-			
-			//form
-			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-			form = formRepo.save(form);
-			
-			String formId = form.getId();
+		}
+		// 订单地址
+		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
+		deliveryAddressRepository.saveAll(adds);
+		// bidding plan
+		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
+		biddingPlanRepository.saveAll(bidding);
+		// attachment
+
+		// form
+		ItemsForm form = ohelper.toForm(kOrderInfo.getId());
+		form = formRepo.save(form);
+
+		String formId = form.getId();
+		//
+		for (AbsItem item : order.getItems()) {
+			ItemDetails temp = new ItemDetails();
+			temp.setRowNumber(item.getRowNumber());
+			temp.setMaterialCode(item.getMaterialCode());
+			temp.setMaterialName(item.getMaterialName());
+			if (item.getIsVirtual() == 0)
+				temp.setVirtual(false);
+			else
+				temp.setVirtual(true);
+			temp.setMaterialAttribute(item.isPurchased());
+			temp.setQuantity(item.getQuantity());
+			temp.setMeasureUnitCode(item.getUnitCode());
+			temp.setAmount(new BigDecimal(item.getRetailPrice() * item.getQuantity()));
+			temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
+			temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
+			temp.setB2cComments(item.getB2cComments());
+			temp.setB2cEstimationAmount(new BigDecimal(item.getB2CPriceEstimated()));
+			temp.setB2cEstimationCost(new BigDecimal(item.getB2CCostOfEstimated()));
+			temp.setMaterialCode(item.getMaterialCode());
+			temp.setMaterialGroupCode(item.getGroupCode());
+			temp.setMaterialGroupName(item.getGroupName());
+			temp.setDiscount(item.getDiscount());
+			temp.setItemCategory(item.getItemCategory());
+			temp.setItemRequirementPlan(item.getItemRequirementPlan());
+			temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
+			temp.setFreight(new BigDecimal(item.getFeight()));
+			temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
+			temp.setDelieveryDate(item.getDeliveryDate());
+			temp.setSpecialNeed(item.getSpecialComments());
+			temp.setMosaicImage(item.getMosaicImage());
+			temp.setAttachedImage(item.getAttachedImage());
+			temp.setRequestBrand(item.getRequestBrand());
+			temp.setRequestCircuit(item.getRequestCircult());
+			temp.setRequestPackage(item.getRequestPackage());
+			temp.setRequestNameplate(item.getRequestNameplate());
+			temp.setComments(item.getComments());
+			temp.setColorComments(item.getColorComments());
 			//
-			for(AbsItem item: order.getItems()) {
-				ItemDetails temp = new ItemDetails();
-				temp.setRowNumber(item.getRowNumber());
-				temp.setMaterialCode(item.getMaterialCode());
-				temp.setMaterialName(item.getMaterialName());
-				if(item.getIsVirtual()==0)
-					temp.setVirtual(false);
-				else
-					temp.setVirtual(true);
-				temp.setMaterialAttribute(item.isPurchased());
-				temp.setQuantity(item.getQuantity());
-				temp.setMeasureUnitCode(item.getUnitCode());
-				temp.setAmount(new BigDecimal(item.getRetailPrice()*item.getQuantity()));
-				temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
-				temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
-				temp.setB2cComments(item.getB2cComments());
-				temp.setB2cEstimationAmount(new BigDecimal(item.getB2CPriceEstimated()));
-				temp.setB2cEstimationCost(new BigDecimal(item.getB2CCostOfEstimated()));
-				temp.setMaterialCode(item.getMaterialCode());
-				temp.setMaterialGroupCode(item.getGroupCode());
-				temp.setMaterialGroupName(item.getGroupName());
-				temp.setDiscount(item.getDiscount());
-				temp.setItemCategory(item.getItemCategory());
-				temp.setItemRequirementPlan(item.getItemRequirementPlan());
-				temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
-				temp.setFreight(new BigDecimal(item.getFeight()));
-				temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
-				temp.setDelieveryDate(item.getDeliveryDate());
-				temp.setSpecialNeed(item.getSpecialComments());
-				temp.setMosaicImage(item.getMosaicImage());
-				temp.setAttachedImage(item.getAttachedImage());
-				temp.setRequestBrand(item.getRequestBrand());
-				temp.setRequestCircuit(item.getRequestCircult());
-				temp.setRequestPackage(item.getRequestPackage());
-				temp.setRequestNameplate(item.getRequestNameplate());
-				temp.setComments(item.getComments());
-				temp.setColorComments(item.getColorComments());
-				//
-				temp.setkFormsId(formId);
-				//
-				temp = itemDetailRepository.save(temp);
-				for(AbsCharacteristic ac :item.getConfigs()) {
-					KCharacteristics tc = new KCharacteristics();
-					tc.setKeyCode(ac.getConfigCode());
-					tc.setValueCode(ac.getConfigValueCode());
-					
-					tc = characteristicsRepository.save(tc);
-				}
-				
+			temp.setkFormsId(formId);
+			//
+			temp = itemDetailRepository.save(temp);
+			for (AbsCharacteristic ac : item.getConfigs()) {
+				KCharacteristics tc = new KCharacteristics();
+				tc.setKeyCode(ac.getConfigCode());
+				tc.setValueCode(ac.getConfigValueCode());
+
+				tc = characteristicsRepository.save(tc);
 			}
-			
-			
+
 		}
 
 	}
@@ -535,7 +532,7 @@ public class OrderService {
 
 		// 物料评估类 与 物料在订单上的分类映射
 		oo.setMaterialGroupMapGroupOrder(constService.findMaterialGroupMapGroupOrders());
-		
+
 		// 销售区域Sales Offices
 		oo.setOffices(constService.findSalesOffices());
 
@@ -547,13 +544,13 @@ public class OrderService {
 
 		// 收货方式ReceiveTerms
 		oo.setReceiveTerms(constService.findReceiveTerms());
-		
+
 		// 国际贸易条款
 		oo.setIntercoms(constService.findIncoterms());
-		
+
 		// 币种
 		oo.setExchangeRate(constService.findCurrencies());
-		
+
 		// 安装方式
 		oo.setInstallationTerms(constService.findInstallationTerms());
 
@@ -621,36 +618,36 @@ public class OrderService {
 		List<SapOrderPlan> plans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-		header.setAuart(toString(orderView.getOrderType()));	// Sales order type/订单类型
-		header.setVkorg("0841");	// Sales org./销售组织 -- Fixed value/固定为 0841
-		header.setVtweg(toString(orderView.getContractorClassCode()));	// DC/分销渠道 -- 客户
-		header.setName2(orderView.getCustomerName());	// Store name/店名
-		header.setSpart(orderView.getSalesType());	// Division/产品组
-		header.setVkbur(toString(orderView.getOfficeCode()));	// Sales office/销售办公室 -- 大区
-		header.setVkgrp(toString(orderView.getGroupCode()));	// Sales group/销售组 -- 中心
-		header.setVbeln(toString(orderView.getContractNumber()));	// SO number/销售订单编号 -- 合同号
-		header.setKvgr1(toString(orderView.getIsConvenientStore()));	// Customer grp.1/客户组1 -- 是否便利店
-		header.setKvgr2(toString(orderView.getIsNew()));	// Customer grp.2/客户组2 -- 是否新客户
-		header.setKvgr3(toString(orderView.getIsReformed()));	// Customer grp.3/客户组3 -- 是否改造店
-		header.setBstzd(toString(orderView.getWarranty()));	// Additional/附加的 -- 保修年限
-		header.setBstkdE(toString(orderView.getContractNumber()));	// Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
-		header.setVsart(toString(orderView.getTransferTypeCode()));	// Shipping type/装运类型 -- 运输类型
+		header.setAuart(toString(orderView.getOrderType())); // Sales order type/订单类型
+		header.setVkorg("0841"); // Sales org./销售组织 -- Fixed value/固定为 0841
+		header.setVtweg(toString(orderView.getContractorClassCode())); // DC/分销渠道 -- 客户
+		header.setName2(orderView.getCustomerName()); // Store name/店名
+		header.setSpart(orderView.getSalesType()); // Division/产品组
+		header.setVkbur(toString(orderView.getOfficeCode())); // Sales office/销售办公室 -- 大区
+		header.setVkgrp(toString(orderView.getGroupCode())); // Sales group/销售组 -- 中心
+		header.setVbeln(toString(orderView.getContractNumber())); // SO number/销售订单编号 -- 合同号
+		header.setKvgr1(toString(orderView.getIsConvenientStore())); // Customer grp.1/客户组1 -- 是否便利店
+		header.setKvgr2(toString(orderView.getIsNew())); // Customer grp.2/客户组2 -- 是否新客户
+		header.setKvgr3(toString(orderView.getIsReformed())); // Customer grp.3/客户组3 -- 是否改造店
+		header.setBstzd(toString(orderView.getWarranty())); // Additional/附加的 -- 保修年限
+		header.setBstkdE(toString(orderView.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
+		header.setVsart(toString(orderView.getTransferTypeCode())); // Shipping type/装运类型 -- 运输类型
 //		header.setZterm();	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
-		header.setKunnr(toString(orderView.getContractorCode()));	// Sold-to party/售达方 -- 签约单位
-		header.setWaerk(toString(orderView.getCurrencyCode()));	// Currency/币别 -- 币别
-		header.setInco1(toString(orderView.getIncotermCode()));	// Incoterms/国际贸易条款 -- 国际贸易条件 code
-		header.setInco1(toString(orderView.getIncotermName()));	// Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
+		header.setKunnr(toString(orderView.getContractorCode())); // Sold-to party/售达方 -- 签约单位
+		header.setWaerk(toString(orderView.getCurrencyCode())); // Currency/币别 -- 币别
+		header.setInco1(toString(orderView.getIncotermCode())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
+		header.setInco1(toString(orderView.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
-		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount()));	// Contract amount/合同金额 -- 合同金额
-		header.setVbbkz121(orderView.getContractorName());	// Sale rep./签约人 -- 客户经理
-		header.setVbbkz109(orderView.getOpteratorDomainId());	// Order clerk/合同管理员 -- 合同管理员
+		header.setVbbkz120(String.valueOf(orderView.getContractRmbAmount())); // Contract amount/合同金额 -- 合同金额
+		header.setVbbkz121(orderView.getContractorName()); // Sale rep./签约人 -- 客户经理
+		header.setVbbkz109(orderView.getOpteratorDomainId()); // Order clerk/合同管理员 -- 合同管理员
 		String contactorInfo = toString(orderView.getContactor1Id()) + "/" + toString(orderView.getContactor1Tel())
-		 + toString(orderView.getContactor2Id()) + "/" + toString(orderView.getContactor2Tel())
-		 + toString(orderView.getContactor3Id()) + "/" + toString(orderView.getContactor3Tel());
-		header.setVbbkz108(contactorInfo);	// Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
+				+ toString(orderView.getContactor2Id()) + "/" + toString(orderView.getContactor2Tel())
+				+ toString(orderView.getContactor3Id()) + "/" + toString(orderView.getContactor3Tel());
+		header.setVbbkz108(contactorInfo); // Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
 		String vbbkz122 = toString(orderView.getIsTerm1()) + "/" + toString(orderView.getIsTerm2())
-		 + toString(orderView.getIsTerm3());
-		header.setVbbkz122(vbbkz122);	// Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段 
+				+ toString(orderView.getIsTerm3());
+		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
 		header.setVbbkz106(orderView.getReceiveTermCode()); // Receiving method /收货方式 -- 收货方式
 
 		List<ItemDetails> itemDetails = itemDetailRepository.findByKFormsId(orderView.getFormId());
@@ -686,16 +683,16 @@ public class OrderService {
 			item.setVbbp0006(itemDetail.getB2cComments());
 			// Survey info. for item /调研表基本信息
 			StringBuilder sb = new StringBuilder(128);
-			if(!isEmpty(itemDetail.getRequestBrand()) ) {
+			if (!isEmpty(itemDetail.getRequestBrand())) {
 				sb.append(",").append(itemDetail.getRequestBrand());
 			}
-			if(!isEmpty(itemDetail.getRequestPackage()) ) {
+			if (!isEmpty(itemDetail.getRequestPackage())) {
 				sb.append(",").append(itemDetail.getRequestPackage());
 			}
-			if(!isEmpty(itemDetail.getRequestNameplate()) ) {
+			if (!isEmpty(itemDetail.getRequestNameplate())) {
 				sb.append(",").append(itemDetail.getRequestNameplate());
 			}
-			if(!isEmpty(itemDetail.getRequestCircuit()) ) {
+			if (!isEmpty(itemDetail.getRequestCircuit())) {
 				sb.append(",").append(itemDetail.getRequestCircuit());
 			}
 			item.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
@@ -761,7 +758,7 @@ public class OrderService {
 //				header.setZterm(kBiddingPlan.getCode());
 //				break;
 //			}
-			
+
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
 			plan.setFakwr(kBiddingPlan.getAmount());
@@ -791,7 +788,8 @@ public class OrderService {
 	 * @return
 	 */
 	public List<OrderVersion> findOrderVersions(String sequenceNumber) {
-		List<KOrderVersionView> versions = orderVersionViewRepository.findBySequenceNumberOrderByCreateTime(sequenceNumber);
+		List<KOrderVersionView> versions = orderVersionViewRepository
+				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
 		List<OrderVersion> list = new ArrayList<>(versions.size());
 		for (KOrderVersionView version : versions) {
 			String versionId = version.getVersionId();
@@ -822,7 +820,7 @@ public class OrderService {
 		if (order != null) {
 			orderTypeCode = order.getOrderTypeCode();
 		}
-		
+
 		return orderTypeCode;
 	}
 
@@ -838,13 +836,13 @@ public class OrderService {
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersion(version);
 		orderQuery.setIncludeDetail(true);
-		
+
 		List<AbsOrder> orders = findOrders(orderQuery).getRows();
-		
+
 		if (orders.size() > 0) {
 			order = orders.get(0);
 		}
-		
+
 		return order;
 	}
 
@@ -866,18 +864,18 @@ public class OrderService {
 			String formId = orderView.getFormId();
 
 			AbsOrder order = null;
-			switch(orderType) {
-				case ORDER_TYPE_DEALER:
-					order = new DealerOrder();
-					break;
-				case ORDER_TYPE_KEYACCOUNT:
-					order = new KeyAccountOrder();
-					break;
-				case ORDER_TYPE_BULK:
-		    		order = new BulkOrder();
-		    		break;
-				default:
-					throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+			switch (orderType) {
+			case ORDER_TYPE_DEALER:
+				order = new DealerOrder();
+				break;
+			case ORDER_TYPE_KEYACCOUNT:
+				order = new KeyAccountOrder();
+				break;
+			case ORDER_TYPE_BULK:
+				order = new BulkOrder();
+				break;
+			default:
+				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
 			}
 			orders.add(order);
 
@@ -902,14 +900,14 @@ public class OrderService {
 			order.setInstallCode(orderView.getInstallTermCode());
 			order.setInstallName(orderView.getInstallTermName());
 			order.setTerminalType(orderView.getTerminalIndustryCode());
-			
+
 			if (order instanceof DealerOrder) {
 				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 				if (billingPlanList.size() > 0) {
 					((DealerOrder) order).setPaymentType(billingPlanList.get(0).getCode());
 				}
 			}
-			
+
 			if (orderQuery.isIncludeDetail()) {
 				assembleOrderDetail(order, orderId, orderInfoId, formId);
 			}
@@ -921,12 +919,11 @@ public class OrderService {
 		return p;
 	}
 
-	private void assembleOrderDetail(AbsOrder order, String orderId,
-			String orderInfoId, String formId) {
+	private void assembleOrderDetail(AbsOrder order, String orderId, String orderInfoId, String formId) {
 		// Attached File
 		List<KAttachment> attachments = attachementRepository.findByOrderInfo(orderInfoId);
 		List<String> attachmentNames = new ArrayList<String>();
-		for(KAttachment attachment : attachments) {
+		for (KAttachment attachment : attachments) {
 			attachmentNames.add(attachment.getFileName());
 		}
 		order.setAttachedFileName(attachmentNames);
@@ -941,7 +938,7 @@ public class OrderService {
 		}
 		order.setOrderAddress(addresses);
 
-		//  billing plan
+		// billing plan
 		List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		List<BiddingPayment> payments = new ArrayList<BiddingPayment>();
 		for (KBiddingPlan kBiddingPlan : billingPlanList) {
@@ -992,7 +989,8 @@ public class OrderService {
 			params.put("status", orderQuery.getStatus());
 		}
 		if (orderQuery.isLast()) {
-			querySql.append(" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
+			querySql.append(
+					" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
 		}
 		if (!isEmpty(orderQuery.getOfficeCode())) {
 			querySql.append(" and office_code = :officeCode"); // .append(query.getStatus());
@@ -1015,7 +1013,7 @@ public class OrderService {
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
-		
+
 		// 设置分页信息
 		int pageNo = orderQuery.getPageNo() == null ? 0 : orderQuery.getPageNo().intValue();
 		int pageSize = orderQuery.getPageSize() == null ? 10000 : orderQuery.getPageSize();
@@ -1023,15 +1021,15 @@ public class OrderService {
 		query.setMaxResults(pageSize);
 
 		List<KOrderView> orderViews = query.getResultList();
-		
+
 		// 统计总记录数
 		String countSql = querySql.toString();
 		countSql = "select count(1) " + countSql.substring(countSql.indexOf("from"));
 		Query countQuery = entityManager.createNativeQuery(countSql);
-		for (Map.Entry<String,Object> entry : params.entrySet()) {
-			countQuery.setParameter(entry.getKey(),entry.getValue());
+		for (Map.Entry<String, Object> entry : params.entrySet()) {
+			countQuery.setParameter(entry.getKey(), entry.getValue());
 		}
-		BigInteger totalCount = (BigInteger)countQuery.getSingleResult();
+		BigInteger totalCount = (BigInteger) countQuery.getSingleResult();
 		PageHelper page = new PageHelper<AbsOrder>();
 		page.setRows(orderViews);
 		page.setTotal(totalCount.intValue());
@@ -1042,8 +1040,8 @@ public class OrderService {
 	private void assembleItems(AbsOrder order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
 		// 新的AbsOrder
-		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size()); 
-		for (ItemDetails itemDetails : detailsList) { 
+		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
+		for (ItemDetails itemDetails : detailsList) {
 			String itemId = itemDetails.getId();
 			BaseItem item = new BaseItem();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
@@ -1057,30 +1055,30 @@ public class OrderService {
 			item.setConfigComments(itemDetails.getComments());
 			item.setMosaicImage(itemDetails.getMosaicImage());
 			item.setRequestCircult(itemDetails.getRequestCircuit());
-			
+
 			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
 			if (attachedInfoList.size() > 0) {
 				KAttachedInfo attached = attachedInfoList.get(0);
 				item.setProduceDate(attached.getStartDateOfProduction());
 				item.setOnStoreDate(attached.getDateOfOnStore());
 			}
-			
+
 			items.add(item);
-			
+
 			// TODO item b2c
 			// characteristics
 			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
 			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
 			for (KCharacteristics charac : characs) {
-				if(toString(charac.getIsConfigurable()).equals("1")) {
+				if (toString(charac.getIsConfigurable()).equals("1")) {
 					item.setConfigurable(true);
 				}
-				
+
 				BaseChracteristic c = new BaseChracteristic();
 				c.setConfigCode(charac.getKeyCode());
 				c.setConfigValueCode(charac.getValueCode());
 				c.setOption(toString(charac.getIsConfigurable()));
-				
+
 				configs.add(c);
 			}
 			item.setConfigs(configs);
