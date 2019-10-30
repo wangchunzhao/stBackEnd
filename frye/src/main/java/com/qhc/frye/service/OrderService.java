@@ -35,6 +35,7 @@ import com.qhc.frye.dao.KOrderVersionRepository;
 import com.qhc.frye.dao.KOrderVersionViewRepository;
 import com.qhc.frye.dao.KOrderViewRepository;
 import com.qhc.frye.dao.OrderSupportInforRepository;
+import com.qhc.frye.dao.ParameterSettingsRepository;
 import com.qhc.frye.dao.PaymentTermRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
@@ -58,6 +59,7 @@ import com.qhc.frye.domain.KOrderVersion;
 import com.qhc.frye.domain.KOrderVersionView;
 import com.qhc.frye.domain.KOrderView;
 import com.qhc.frye.domain.OrderSupportInfo;
+import com.qhc.frye.domain.Parameter;
 import com.qhc.frye.domain.PaymentTerm;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.TermianlIndustryCode;
@@ -169,6 +171,9 @@ public class OrderService {
 
 	@Autowired
 	private AttachedInfoRepository attachedInfoRepository;
+
+	@Autowired
+	private ParameterSettingsRepository settingsRepository;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -553,6 +558,10 @@ public class OrderService {
 
 		// 安装方式
 		oo.setInstallationTerms(constService.findInstallationTerms());
+		
+		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
+		Parameter p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
+		oo.setStandardDiscount(p.getsValue());
 
 		return oo;
 	}

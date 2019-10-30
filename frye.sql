@@ -220,16 +220,14 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_settings` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` CHAR(32) NOT NULL,
   `s_value` TEXT NOT NULL,
   `enable_date` DATE NOT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `operater` TEXT NOT NULL,
   `opt_time` DATETIME NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1539,6 +1537,17 @@ CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`b_settings`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('0d5d7ea6b2605e38b4f3dbd394168b3b', '0.48', '2019-1-1', '标准折扣', 'wangch', '2019-10-30 10:30:00');
+INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('1c20b7ffba1a59faa081324eb34844a5', '0.13', '2019-1-1', '税率', 'wangch', '2019-10-30 10:30:00');
+
+COMMIT;
+
 
 -- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_clazz`
