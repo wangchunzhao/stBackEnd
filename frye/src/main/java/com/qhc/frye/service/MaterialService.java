@@ -121,10 +121,10 @@ public class MaterialService {
 	 * @return corresponded material information
 	 */
 	public Material getMaterialsById(String code){
-		Material m = null;
+		Material m = new Material();;
 		List<MaterialPrice> dmo = materialInfoRepo.findByMaterialId(code);
 		for(MaterialPrice mp:dmo) {
-			m = new Material();
+			
 			m.setCode(mp.getCode());
 			m.setDescription(mp.getDescription());
 			m.setConfigurable(mp.isConfigurable());
@@ -149,8 +149,11 @@ public class MaterialService {
 			}
 		}
 
-		
-		return m;
+		if((m.getStandardPrice()<=0)||(m.getRetailPrice()<=0)||(m.getTranscationPrice()<=0)) {
+			return null;
+		}else {
+			return m;
+		}
 	}
 	/**
 	 * 
