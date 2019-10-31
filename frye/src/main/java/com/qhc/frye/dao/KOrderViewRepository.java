@@ -12,11 +12,11 @@ import com.qhc.frye.domain.KOrderView;
 @Repository
 public interface KOrderViewRepository extends JpaRepository<KOrderView, String> {
 	
-	List<KOrderView> findByOrderIdOrderByVersionCreateTime(String orderId);
+	List<KOrderView> findBySequenceNumberOrderByVersionCreateTime(String sequenceNumber);
 
-	KOrderView findByOrderIdAndVersionId(String orderId, String versionId);
+	KOrderView findBySequenceNumberAndVersion(String sequenceNumber, String version);
 
-	KOrderView findByOrderIdAndVersionIdAndStatus(String orderId, String versionId, String status);
+	KOrderView findBySequenceNumberAndVersionAndStatus(String sequenceNumber, String version, String status);
 
 //	@Query(value="select * from sap_industry_code where is_forDealer = 1", nativeQuery=true)
 //	List<KOrderView> findAllFordealer();

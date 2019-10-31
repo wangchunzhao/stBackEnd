@@ -548,10 +548,10 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @return
 	 */
-	public String orderCreationForSAP(String sequenceNumber) {
+	public String orderCreationForSAP(String sequenceNumber, String version) {
 
 		// 1. 根据sequenceNumber组装数据
-		SapOrder sapOrder = assembleSapOrder(sequenceNumber);
+		SapOrder sapOrder = assembleSapOrder(sequenceNumber, version);
 
 		// 2. 调用bayernService同步SAP
 		bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
@@ -566,33 +566,32 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @return //
 	 */
-	private SapOrder assembleSapOrder(String sequenceNumber) {
-		List<KOrderVersionView> verions = orderVersionViewRepository
-				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
-
+	private SapOrder assembleSapOrder(String sequenceNumber, String version) {
 		String orderId = null;
 		String orderInfoId = null;
 		String orderVersionId = null;
 
-		for (KOrderVersionView kOrderVersionView : verions) {
-			orderId = kOrderVersionView.getOrderId();
-			Integer status = kOrderVersionView.getStatus();
-			// 最后一个审批通过的版本
-			if (status.equals(3)) {
-				orderInfoId = kOrderVersionView.getOrderInfoId();
-				orderVersionId = kOrderVersionView.getVersionId();
-			}
-		}
+//		List<KOrderVersionView> verions = orderVersionViewRepository
+//				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
+//		for (KOrderVersionView kOrderVersionView : verions) {
+//			orderId = kOrderVersionView.getOrderId();
+//			Integer status = kOrderVersionView.getStatus();
+//			// 最后一个审批通过的版本
+//			if (status.equals(3)) {
+//				orderInfoId = kOrderVersionView.getOrderInfoId();
+//				orderVersionId = kOrderVersionView.getVersionId();
+//			}
+//		}
 
-		if (orderInfoId == null) {
-			throw new NullPointerException(
-					MessageFormat.format("Not found approved order with sequence number [{0}]", sequenceNumber));
-		}
+//		if (orderInfoId == null) {
+//			throw new NullPointerException(
+//					MessageFormat.format("Not found approved order with sequence number [{0}]", sequenceNumber));
+//		}
 
 //		OrderQuery query = new OrderQuery();
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
-		KOrderView orderView = orderViewRepository.findByOrderIdAndVersionId(orderId, orderVersionId);
+		KOrderView orderView = orderViewRepository.findBySequenceNumberAndVersion(sequenceNumber, orderVersionId);
 		String orderType = orderView.getOrderType();
 
 		// assemble sap order header

@@ -34,7 +34,7 @@ class OrderServiceTest {
 	
 	@Test
 	void testOrderCreationForSAP() {
-		String result = orderService.orderCreationForSAP("123");
+		String result = orderService.orderCreationForSAP("123", "1-1");
 		System.out.println(result);
 	}
 	
