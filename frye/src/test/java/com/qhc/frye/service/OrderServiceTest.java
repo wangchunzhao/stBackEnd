@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.KOrderView;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -47,6 +48,18 @@ class OrderServiceTest {
 		query.setIncludeDetail(true);
 		PageHelper<AbsOrder> result = orderService.findOrders(query);
 		System.out.println(result);
+	}
+	
+	@Test
+	void testCalcGrossProfitObject() {
+		OrderQuery query = new OrderQuery();
+		query.setSequenceNumber("123");
+		query.setVersion("1-1");
+		query.setIncludeDetail(true);
+		PageHelper<AbsOrder> result = orderService.findOrders(query);
+		AbsOrder order = result.getRows().get(0);
+		List<DMaterialGroups> groups = orderService.calcGrossProfit(order);
+		System.out.println(groups);
 	}
 
 }

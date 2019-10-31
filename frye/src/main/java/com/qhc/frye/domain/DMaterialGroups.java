@@ -3,10 +3,13 @@
  */
 package com.qhc.frye.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,6 +31,21 @@ public class DMaterialGroups {
     
     @Column(name="b_material_group_order_code",columnDefinition="CHAR")
 	private String materialGroupOrderCode;
+	
+	@Transient
+	private BigDecimal amount;//金额
+	
+	@Transient
+	private BigDecimal excludingTaxAmount;//不含税金额
+	
+	@Transient
+	private BigDecimal cost;//成本
+	
+	@Transient
+	private BigDecimal grossProfit;//毛利
+	
+	@Transient
+	private Double grossProfitMargin;//毛利率	
 
 	public String getCode() {
 		return code;
@@ -51,5 +69,45 @@ public class DMaterialGroups {
 
 	public void setMaterialGroupOrderCode(String materialGroupOrderCode) {
 		this.materialGroupOrderCode = materialGroupOrderCode;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public BigDecimal getExcludingTaxAmount() {
+		return excludingTaxAmount;
+	}
+
+	public void setExcludingTaxAmount(BigDecimal excludingTaxAmount) {
+		this.excludingTaxAmount = excludingTaxAmount;
+	}
+
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
+
+	public BigDecimal getGrossProfit() {
+		return grossProfit;
+	}
+
+	public void setGrossProfit(BigDecimal grossProfit) {
+		this.grossProfit = grossProfit;
+	}
+
+	public Double getGrossProfitMargin() {
+		return grossProfitMargin;
+	}
+
+	public void setGrossProfitMargin(Double grossProfitMargin) {
+		this.grossProfitMargin = grossProfitMargin;
 	}
 }

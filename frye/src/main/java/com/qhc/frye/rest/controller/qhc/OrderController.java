@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.frye.dao.SalesGroupRepository;
+import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.GrossProfitDTO;
@@ -109,6 +110,13 @@ public class OrderController {
 
 		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(),
 				grossProfitDTO.getSapSalesGroupList());
+	}
+
+	@ApiOperation(value = "计算毛利", notes = "计算毛利")
+	@PostMapping(value = "order/grossprofit")
+	@ResponseStatus(HttpStatus.OK)
+	public List<DMaterialGroups> calcGrossProfit(@RequestBody BaseOrder order) throws Exception {
+		return orderService.calcGrossProfit(order);
 	}
 
 	@ApiOperation(value = "根据id查询订单", notes = "根据id查询订单")

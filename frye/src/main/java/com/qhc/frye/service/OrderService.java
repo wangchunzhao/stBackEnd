@@ -40,11 +40,13 @@ import com.qhc.frye.dao.PaymentTermRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
+import com.qhc.frye.dao.SapMaterialGroupsRepository;
 import com.qhc.frye.dao.TerminalIndustryCodeRepository;
 import com.qhc.frye.domain.BArea;
 import com.qhc.frye.domain.BCity;
 import com.qhc.frye.domain.BProvince;
 import com.qhc.frye.domain.DCurrency;
+import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.ItemDetails;
@@ -66,6 +68,7 @@ import com.qhc.frye.domain.TermianlIndustryCode;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 import com.qhc.frye.rest.controller.entity.form.BaseChracteristic;
 import com.qhc.frye.rest.controller.entity.form.BaseItem;
+import com.qhc.frye.rest.controller.entity.form.BaseOrder;
 import com.qhc.frye.rest.controller.entity.form.BiddingPayment;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
@@ -174,6 +177,9 @@ public class OrderService {
 
 	@Autowired
 	private ParameterSettingsRepository settingsRepository;
+
+	@Autowired
+	private SapMaterialGroupsRepository materialGroupsRepository;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -400,6 +406,93 @@ public class OrderService {
 //
 //		return salesGroups;
 		return null;
+	}
+	
+	// sap_material_group分组 
+	public List<DMaterialGroups> calcGrossProfit(AbsOrder order) {
+		// 查询所有物料类型sap_material_group
+		List<DMaterialGroups> groups = materialGroupsRepository.findAll();
+		List<BaseItem> items = new ArrayList<BaseItem>();
+
+		items = order.getItems();
+
+		// 提交类型 3.margin 4.wtw margin
+		int submitType = order.getSubmitType();
+
+		// 税率
+		Double taxRate = order.getTaxRate();
+
+		// 物料类型表
+//		 sapSalesGroups
+
+		// 毛利表
+		BigDecimal sumAmount = BigDecimal.ZERO;// 金额
+		BigDecimal sumExcludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+		BigDecimal sumCost = BigDecimal.ZERO;// 成本
+		BigDecimal sumGrossProfit = BigDecimal.ZERO;// 毛利
+		Double sumGrossProfitMargin = 0D;// 毛利率
+		if (items != null && items.size() > 0) {
+			for (DMaterialGroups entity : groups) {
+				BigDecimal amount = BigDecimal.ZERO;// 金额
+				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+				BigDecimal cost = BigDecimal.ZERO;// 成本
+				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
+				Double grossProfitMargin = 0D;// 毛利率
+
+				for (BaseItem item : items) {
+					if (item.getMaterialCode().equals(entity.getCode())) {
+						// 总金额
+						BigDecimal saleAmount = BigDecimal.valueOf((item.getActuralPrice() + item.getActuralPricaOfOptional()) * item.getQuantity());
+						amount = amount.add(saleAmount);
+						// 总金额减去税金 = 不含税金额
+						excludingTaxAmount = excludingTaxAmount
+								.subtract(sumAmount.multiply(BigDecimal.valueOf(taxRate)));
+						// 成本
+						if (submitType == 3) {
+							cost = cost.add(BigDecimal.valueOf(item.getStandardPrice()));
+						}
+						if (submitType == 4) {
+							cost = cost.add(BigDecimal.valueOf(item.getTranscationPrice()));
+						}
+						// 毛利
+						grossProfit = excludingTaxAmount.subtract(cost);
+						// 毛利率
+						grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
+
+					}
+				}
+
+				entity.setAmount(amount);
+				entity.setExcludingTaxAmount(excludingTaxAmount);
+				entity.setCost(cost);
+				entity.setGrossProfit(grossProfit);
+				entity.setGrossProfitMargin(grossProfitMargin);
+
+				sumAmount = sumAmount.add(amount);
+				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
+				sumCost = sumCost.add(cost);
+				sumGrossProfit = sumGrossProfit.add(grossProfit);
+				sumAmount = sumAmount.add(amount);
+			}
+
+		}
+
+		DMaterialGroups sumssg = new DMaterialGroups();
+		sumssg.setAmount(sumAmount);
+		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount);
+		sumssg.setCost(sumCost);
+		sumssg.setGrossProfit(sumGrossProfit);
+		if (groups.size() != 0) {
+			sumssg.setGrossProfitMargin(sumGrossProfitMargin / groups.size());
+		} else {
+			sumssg.setGrossProfitMargin(0D);
+		}
+		sumssg.setCode("sum");
+		sumssg.setName("合计");
+
+		groups.add(sumssg);
+
+		return groups;
 	}
 
 	public Double CalculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
