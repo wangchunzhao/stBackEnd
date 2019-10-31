@@ -25,7 +25,6 @@ public class ItemDetails implements Serializable{
 
 	@Id
     @NotNull
-
     @Column(name="id",columnDefinition="char",length=32)
     @GeneratedValue(generator = "jpa-uuid")
 	public String id;
@@ -37,7 +36,7 @@ public class ItemDetails implements Serializable{
 	
 	//产品规格型号
 	@NotNull
-	@Column(name = "material_code")
+	@Column(name = "material_code",columnDefinition="char")
 	public String materialCode;
 	
 	@NotNull
@@ -45,7 +44,7 @@ public class ItemDetails implements Serializable{
 	public String materialName;
 	
 	//体积
-	@NotNull
+	//@NotNull
 	@Column(name = "volume_cube")
 	public BigDecimal volumeCube;
 	
@@ -55,9 +54,9 @@ public class ItemDetails implements Serializable{
 	public boolean materialAttribute;
 	
 	//合同数量
-	@NotNull
-	@Column(name = "quantity")
-	public Double quantity;
+	//@NotNull
+	@Column(name = "quantity",columnDefinition="double")
+	public double quantity;
 	
 	//销售单价
 	
@@ -66,11 +65,11 @@ public class ItemDetails implements Serializable{
 	public BigDecimal amount;
 	
 	//单位 
-	@NotNull
-	@Column(name = "measure_unit_code")
+	//@NotNull
+	@Column(name = "measure_unit_code",columnDefinition="char",length=3)
 	public String measureUnitCode;
 	
-	@NotNull
+	//@NotNull
 	@Column(name = "special_need",columnDefinition = "TEXT")
 	public String specialNeed;
 
@@ -79,31 +78,35 @@ public class ItemDetails implements Serializable{
 	public String b2cComments;
 	
 //	@Column(name = "type")
-	@Transient
-	public String type;
+//	@Transient
+//	public String type;
 	
-	@Column(name = "row_number")
-	public Integer rowNumber;
+	@NotNull
+	@Column(name = "row_num",columnDefinition = "int")
+	public int rowNumber;
 	
 	@Column(name = "retail_price")
 	public BigDecimal retailPrice;
 	
+	@NotNull
 	@Column(name = "material_group_code")
 	public String materialGroupCode;
 	
+	@NotNull
 	@Column(name = "material_group_name",columnDefinition = "TEXT")
 	public String materialGroupName;
 	
 	@Column(name = "transfter_price")
 	public BigDecimal transfterPrice;
 	
-	@Column(name = "discount")
-	public Double discount;
+	@Column(name = "discount",columnDefinition = "double")
+	public double discount;
 	
+	@NotNull
 	@Column(name = "item_category")
 	public String itemCategory;
 	
-	
+	@NotNull
 	@Column(name = "item_requirement_plan")
 	public String itemRequirementPlan;
 	
@@ -115,7 +118,7 @@ public class ItemDetails implements Serializable{
 	@Column(name = "standard_price")
 	public BigDecimal standardPrice;
 	
-	@Column(name = "is_virtual")
+	@Column(name = "is_virtual",columnDefinition = "bit")
 	public boolean isVirtual;
 	
 	@Column(name = "b2c_estimation_amount")
@@ -362,13 +365,13 @@ public class ItemDetails implements Serializable{
 		this.b2cComments = b2cComments;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+//	public String getType() {
+//		return type;
+//	}
+//
+//	public void setType(String type) {
+//		this.type = type;
+//	}
 
 	public Integer getRowNumber() {
 		return rowNumber;
