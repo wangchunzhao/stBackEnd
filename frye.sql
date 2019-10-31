@@ -1564,6 +1564,17 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `bohemian`.`b_settings`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('0d5d7ea6b2605e38b4f3dbd394168b3b', '0.48', '2019-1-1', '标准折扣', 'wangch', '2019-10-30 10:30:00');
+INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('1c20b7ffba1a59faa081324eb34844a5', '0.13', '2019-1-1', '税率', 'wangch', '2019-10-30 10:30:00');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_clazz`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -1732,6 +1743,29 @@ START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_transfer_terms` (`code`, `name`) VALUES ('01', '非自提');
 INSERT INTO `bohemian`.`sap_transfer_terms` (`code`, `name`) VALUES ('05', '自提');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_installation_terms`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_installation_terms` (`code`, `name`, `sap_customer_class_code`) VALUES ('01', '招标', '01');
+INSERT INTO `bohemian`.`sap_installation_terms` (`code`, `name`, `sap_customer_class_code`) VALUES ('02', '自装自提', '02');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_receive_terms`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('01', '盖章接货');
+INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('02', '授权人签字');
+INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('03', '其它');
 
 COMMIT;
 
