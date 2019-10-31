@@ -546,17 +546,23 @@ public class OrderService {
 	 * 根据流水号组装数据并同步SAP
 	 * 
 	 * @param sequenceNumber
+	 * @param version
 	 * @return
 	 */
 	public String orderCreationForSAP(String sequenceNumber, String version) {
 
-		// 1. 根据sequenceNumber组装数据
-		SapOrder sapOrder = assembleSapOrder(sequenceNumber, version);
+		try {
+			// 1. 根据sequenceNumber组装数据
+			SapOrder sapOrder = assembleSapOrder(sequenceNumber, version);
 
-		// 2. 调用bayernService同步SAP
-		bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
+			// 2. 调用bayernService同步SAP
+			bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "推送订单到SAP失败，错误信息：" + e.getMessage();
+		}
 
-		return "SUCCESS";
+		return "success";
 
 	}
 
