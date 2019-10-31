@@ -993,6 +993,10 @@ public class OrderService {
 			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
 			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
 		}
+		if (!isEmpty(orderQuery.getSalesCode())) {
+			querySql.append(" and owner_domain_id like :ownerId"); 
+			params.put("ownerId", "%" + orderQuery.getSalesCode() + "%");
+		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
