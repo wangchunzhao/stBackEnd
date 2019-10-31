@@ -257,7 +257,7 @@ public class OrderService {
 			kOrderInfo = orderInfoRepo.save(kOrderInfo);
 			// 新订单版本版本
 			lversion = ohelper.toOrderVersion();
-			lversion.setOrderId(forder.getId());
+			lversion.setOrderId(dorder.getId());
 			lversion.setOrderInfoId(kOrderInfo.getId());
 			// 订单版本保存
 			orderVersionRepo.save(lversion);

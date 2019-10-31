@@ -220,12 +220,29 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_settings` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` CHAR(32) NOT NULL,
   `s_value` TEXT NOT NULL,
   `enable_date` DATE NOT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `operater` TEXT NOT NULL,
   `opt_time` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_account_group`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_account_group` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_account_group` (
+  `code` CHAR(4) NOT NULL,
+  `description` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
@@ -958,10 +975,10 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_details` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `id` CHAR(32) NOT NULL,
-  `row_number` INT NOT NULL COMMENT '行号',
+  `row_num` INT NOT NULL COMMENT '行号',
   `material_code` VARCHAR(45) NOT NULL COMMENT '物料代码',
   `material_name` TEXT NOT NULL COMMENT '物料名称',
-  `is_virtual` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0:由销售录入的行项目\n1: 非销售部门录入的行项目',
+  `is_virtual` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '0:由销售录入的行项目\n1: 非销售部门录入的行项目',
   `is_purchased` TINYINT(1) NOT NULL COMMENT '物料属性：1. 采购 0：生产',
   `quantity` DOUBLE(13,2) NULL COMMENT '数量',
   `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
@@ -1009,17 +1026,10 @@ COMMENT = '订单行项目表，每行记录代表一个行项目';
 DROP TABLE IF EXISTS `bohemian`.`sap_installation_terms` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_installation_terms` (
-  `code` VARCHAR(4) NOT NULL,
+  `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
-  `sap_customer_class_code` CHAR(2) NOT NULL,
   PRIMARY KEY (`code`),
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
-  INDEX `fk_sap_installation_terms_sap_customer_class1_idx` (`sap_customer_class_code` ASC) VISIBLE,
-  CONSTRAINT `fk_sap_installation_terms_sap_customer_class1`
-    FOREIGN KEY (`sap_customer_class_code`)
-    REFERENCES `bohemian`.`sap_customer_class` (`code`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1031,7 +1041,22 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`sap_receive_terms` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_receive_terms` (
-  `code` VARCHAR(4) NOT NULL,
+  `code` CHAR(4) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`sap_transfer_terms`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_transfer_terms` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_transfer_terms` (
+  `code` VARCHAR(2) NOT NULL,
   `name` TEXT NOT NULL,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
@@ -1539,17 +1564,6 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `bohemian`.`b_settings`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `bohemian`;
-INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('0d5d7ea6b2605e38b4f3dbd394168b3b', '0.48', '2019-1-1', '标准折扣', 'wangch', '2019-10-30 10:30:00');
-INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('1c20b7ffba1a59faa081324eb34844a5', '0.13', '2019-1-1', '税率', 'wangch', '2019-10-30 10:30:00');
-
-COMMIT;
-
-
--- -----------------------------------------------------
 -- Data for table `bohemian`.`sap_clazz`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -1712,35 +1726,12 @@ COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `bohemian`.`sap_shipping_type`
+-- Data for table `bohemian`.`sap_transfer_terms`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_shipping_type` (`code`, `name`) VALUES ('01', '非自提');
-INSERT INTO `bohemian`.`sap_shipping_type` (`code`, `name`) VALUES ('05', '自提');
-
-COMMIT;
-
-
--- -----------------------------------------------------
--- Data for table `bohemian`.`sap_installation_terms`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `bohemian`;
-INSERT INTO `bohemian`.`sap_installation_terms` (`code`, `name`, `sap_customer_class_code`) VALUES ('01', '招标', '01');
-INSERT INTO `bohemian`.`sap_installation_terms` (`code`, `name`, `sap_customer_class_code`) VALUES ('02', '自装自提', '02');
-
-COMMIT;
-
-
--- -----------------------------------------------------
--- Data for table `bohemian`.`sap_receive_terms`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `bohemian`;
-INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('01', '盖章接货');
-INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('02', '授权人签字');
-INSERT INTO `bohemian`.`sap_receive_terms` (`code`, `name`) VALUES ('03', '其它');
+INSERT INTO `bohemian`.`sap_transfer_terms` (`code`, `name`) VALUES ('01', '非自提');
+INSERT INTO `bohemian`.`sap_transfer_terms` (`code`, `name`) VALUES ('05', '自提');
 
 COMMIT;
 
