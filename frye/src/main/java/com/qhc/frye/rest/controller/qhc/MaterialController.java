@@ -28,6 +28,7 @@ import com.qhc.frye.rest.controller.entity.Characteristic;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
 import com.qhc.frye.rest.controller.entity.DateUtil;
+import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.BayernService;
@@ -127,6 +128,13 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValue> chaValues) throws Exception {
 		characteristicSer.saveCharacteristicValue(chaValues);
+	}
+	
+	@ApiOperation(value = "保存或者修改默认特征")
+	@PutMapping(value = "material/default")
+	@ResponseStatus(HttpStatus.OK)
+	public void putcharacteristicDefault(@RequestBody(required = true) @Valid List<DefaultCharacteristics> defaultChavalue) throws Exception {
+		characteristicSer.saveCharacteristicDefault(defaultChavalue);
 	}
 	
 	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表及default value")

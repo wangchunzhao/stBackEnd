@@ -10,16 +10,19 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.CharacteristicDefaultRepository;
 import com.qhc.frye.dao.CharacteristicRepository;
 import com.qhc.frye.dao.CharacteristicValueRepository;
 import com.qhc.frye.dao.ClassAndCharacterRepository;
 import com.qhc.frye.dao.ClazzOfMaterialRepository;
 import com.qhc.frye.domain.DCharacteristic;
+import com.qhc.frye.domain.DCharacteristicDefault;
 import com.qhc.frye.domain.DCharacteristicValue;
 import com.qhc.frye.domain.DClassAndCharacter;
 import com.qhc.frye.domain.DClazzOfMaterial;
 import com.qhc.frye.rest.controller.entity.CharacteristicValue;
 import com.qhc.frye.rest.controller.entity.Clazz;
+import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
 
 /**
  * @author wang@dxc.com
@@ -38,6 +41,9 @@ public class CharacteristicService {
 	
 	@Autowired
 	private ClassAndCharacterRepository classAndCharaRepo;
+	
+	@Autowired
+	private CharacteristicDefaultRepository CharacterDefaultRep;
 	/**
 	 * 
 	 * @param clazz
@@ -80,8 +86,32 @@ public class CharacteristicService {
 			
 		}	
 		characterRepo.saveAll(dcs);
+		//因为特征值的表有自增长的id，两表有关联，所以要先删除
+		CharacterDefaultRep.deleteAll();
 		charaValueRepo.deleteAll();
+		//
 		charaValueRepo.saveAll(dcvs);
 		classAndCharaRepo.saveAll(cacs);
 	}
+	
+	/**
+	 * 
+	 * @param defaultChavalue
+	 */
+	public void saveCharacteristicDefault(List<DefaultCharacteristics> defaultChavalue) {
+		Set<DCharacteristicDefault> dcs = new HashSet<DCharacteristicDefault>();
+		for(DefaultCharacteristics cd: defaultChavalue) {
+			//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
+			int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
+			//
+			DCharacteristicDefault defaultCh = new DCharacteristicDefault();
+			defaultCh.setMaterialsCode(cd.getMaterialCode());
+			defaultCh.setCharacteristicCode(cd.getCharacteristic());
+			defaultCh.setValueId(valueId);
+			dcs.add(defaultCh);
+		}
+		CharacterDefaultRep.saveAll(dcs);
+	}
+	
+	
 }
