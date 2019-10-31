@@ -271,10 +271,14 @@ public class OrderService {
 				//
 				ItemDetails temp = OrderHelper.itemConversion(item, formId);
 				temp = itemDetailRepository.save(temp);
-				for (AbsCharacteristic ac : item.getConfigs()) {
-					KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-					characteristicsRepository.save(cha);
+				if(item.getConfigs()!=null) {
+					for (AbsCharacteristic ac : item.getConfigs()) {
+						KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+						cha.setItemDetailsId(temp.getId());
+						characteristicsRepository.save(cha);
+					}
 				}
+				//attachment
 
 			}
 		}
