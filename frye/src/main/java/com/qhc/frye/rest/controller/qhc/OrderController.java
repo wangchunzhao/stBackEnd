@@ -63,7 +63,7 @@ public class OrderController {
 	@ApiOperation(value = "保存订单信息", notes = "保存订单信息")
 	@PostMapping(value = "order")
 	@ResponseStatus(HttpStatus.OK)
-	public void submitOrder(@RequestBody(required = true) DealerOrder order) throws Exception {
+	public int submitOrder(@RequestBody(required = true) DealerOrder order) throws Exception {
 		//
 		switch(order.getSubmitType()) {
 			case 1:
@@ -75,6 +75,7 @@ public class OrderController {
 				orderService.save(order,false);
 				break;
 		}
+		return 0;
 		
 	}
 
