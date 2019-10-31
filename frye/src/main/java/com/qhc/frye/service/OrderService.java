@@ -535,7 +535,9 @@ public class OrderService {
 		
 		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
 		Parameter p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
-		oo.setStandardDiscount(p.getsValue());
+		if (p != null) {
+			oo.setStandardDiscount(p.getsValue());
+		}
 
 		return oo;
 	}
