@@ -20,6 +20,7 @@ import com.qhc.frye.domain.DCharacteristicValue;
 @Repository
 public interface CharacteristicValueRepository extends JpaRepository<DCharacteristicValue, String> {
 	
-
+	@Query(value = "select * from sap_characteristic_value where code = ?1 AND sap_characteristic_code=?2", nativeQuery = true)
+    int selectId(String code,String characteristicCode);
 
 }
