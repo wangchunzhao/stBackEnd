@@ -101,17 +101,23 @@ public class CharacteristicService {
 	public void saveCharacteristicDefault(List<DefaultCharacteristics> defaultChavalue) {
 		Set<DCharacteristicDefault> dcs = new HashSet<DCharacteristicDefault>();
 		for(DefaultCharacteristics cd: defaultChavalue) {
-			//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
-			int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
-			//
-			DCharacteristicDefault defaultCh = new DCharacteristicDefault();
-			defaultCh.setMaterialsCode(cd.getMaterialCode());
-			defaultCh.setCharacteristicCode(cd.getCharacteristic());
-			defaultCh.setValueId(valueId);
-			dcs.add(defaultCh);
+			try {
+				//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
+				int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
+				//
+				DCharacteristicDefault defaultCh = new DCharacteristicDefault();
+				defaultCh.setMaterialsCode(cd.getMaterialCode());
+				defaultCh.setCharacteristicCode(cd.getCharacteristic());
+				defaultCh.setValueId(valueId);
+				dcs.add(defaultCh);
+			} catch (Exception e) {
+				System.out.println("查不到特征值的数据");
+				continue;
+			}
 		}
 		CharacterDefaultRep.saveAll(dcs);
 	}
+	
 	
 	
 }
