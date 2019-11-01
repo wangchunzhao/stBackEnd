@@ -92,25 +92,25 @@ public class OrderController {
 
 	}
 
-//	@ApiOperation(value = "计算毛利", notes = "计算毛利")
-//	@PostMapping(value = "order/salesOrder")
-//	@ResponseStatus(HttpStatus.OK)
-//	public List<SapSalesGroup> getGrossProfit(@RequestBody SalesOrder salesOrder) throws Exception {
-//		GrossProfitDTO grossProfitDTO = new GrossProfitDTO();
-//		grossProfitDTO.setSalesOrder(salesOrder);
-//		grossProfitDTO.setSapSalesGroupList(salesGroupRepository.findAll());
-//
-//		return this.getGrossProfitDetail(grossProfitDTO);
-//	}
-//
-//	@ApiOperation(value = "计算毛利", notes = "计算毛利")
-//	@PostMapping(value = "order/grossProfitDTO")
-//	@ResponseStatus(HttpStatus.OK)
-//	public List<SapSalesGroup> getGrossProfitDetail(@RequestBody GrossProfitDTO grossProfitDTO) throws Exception {
-//
-//		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(),
-//				grossProfitDTO.getSapSalesGroupList());
-//	}
+	@ApiOperation(value = "计算毛利", notes = "计算毛利")
+	@PostMapping(value = "order/salesOrder")
+	@ResponseStatus(HttpStatus.OK)
+	public List<SapSalesGroup> getGrossProfit(@RequestBody SalesOrder salesOrder) throws Exception {
+		GrossProfitDTO grossProfitDTO = new GrossProfitDTO();
+		grossProfitDTO.setSalesOrder(salesOrder);
+		grossProfitDTO.setSapSalesGroupList(salesGroupRepository.findAll());
+
+		return this.getGrossProfitDetail(grossProfitDTO);
+	}
+
+	@ApiOperation(value = "计算毛利", notes = "计算毛利")
+	@PostMapping(value = "order/grossProfitDTO")
+	@ResponseStatus(HttpStatus.OK)
+	public List<SapSalesGroup> getGrossProfitDetail(@RequestBody GrossProfitDTO grossProfitDTO) throws Exception {
+
+		return orderService.findGrossProfitBySalesOrder(grossProfitDTO.getSalesOrder(),
+				grossProfitDTO.getSapSalesGroupList());
+	}
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/grossprofit")
