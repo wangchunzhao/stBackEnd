@@ -411,6 +411,11 @@ public class OrderService {
 //		return salesGroups;
 		return null;
 	}
+
+	public List<DMaterialGroups> calcGrossProfit(String sequenceNumber, String version) {
+		AbsOrder order = this.findOrder(sequenceNumber, version);
+		return calcGrossProfit(order);
+	}
 	
 	// sap_material_group分组 
 	public List<DMaterialGroups> calcGrossProfit(AbsOrder order) {
