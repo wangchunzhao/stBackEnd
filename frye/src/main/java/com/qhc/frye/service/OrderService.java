@@ -676,6 +676,13 @@ public class OrderService {
 		if (p != null) {
 			oo.setStandardDiscount(p.getsValue());
 		}
+		
+		// 税率，Code：1c20b7ffba1a59faa081324eb34844a5
+		p = settingsRepository.findEnabledInfo("1c20b7ffba1a59faa081324eb34844a5");
+		if (p != null) {
+			taxRate.put("10", Double.valueOf(p.getsValue()));
+			taxRate.put("30", Double.valueOf(p.getsValue()));
+		}
 
 		return oo;
 	}

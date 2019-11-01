@@ -21,6 +21,7 @@ import com.qhc.frye.dao.DReceiveTermsRepository;
 import com.qhc.frye.dao.DShippingTypeRepository;
 import com.qhc.frye.dao.IncotermRepository;
 import com.qhc.frye.dao.InstallationTermsRepository;
+import com.qhc.frye.dao.MeasurementUnitRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
@@ -34,6 +35,7 @@ import com.qhc.frye.domain.DInstallationTerms;
 import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DReceiveTerms;
 import com.qhc.frye.domain.DShippingType;
+import com.qhc.frye.domain.DUnit;
 import com.qhc.frye.domain.OrderTypeCustomerClass;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
@@ -83,6 +85,9 @@ public class ConstantService {
 	
 	@Autowired
 	private InstallationTermsRepository installationTermsRepository;
+	
+	@Autowired
+	private MeasurementUnitRepository measurementUnitRepository;
 
 	public static Map<String, String> customerClazz;
 
@@ -109,6 +114,8 @@ public class ConstantService {
 	public static Map<String, Currency> currencies = null;
 	
 	public static Map<String, Map<String, String>> installationTerms = null;
+	
+	public static Map<String, String> measurementUnit = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -303,6 +310,19 @@ public class ConstantService {
 		}
 
 		return installationTerms;
+	}
+	
+	public Map<String, String> findMeasurementUnits() {
+		if (measurementUnit == null || measurementUnit.isEmpty()) {
+			List<DUnit> list = measurementUnitRepository.findAll(Sort.by(Order.asc("code")));
+			measurementUnit = new HashMap<String, String>();
+
+			for (DUnit unit : list) {
+				measurementUnit.put(unit.getCode(), unit.getName());
+			}
+		}
+
+		return measurementUnit;
 	}
 
 }

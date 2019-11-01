@@ -21,19 +21,19 @@ public class DUnit {
 
 	@Id
     @NotNull
-    @Column(name="code",columnDefinition="VARCHAR",length=3)
-    private int String;
+    @Column(name="code",columnDefinition="CHAR",length=3)
+    private String code;
 	
 	@NotNull
 	@Column(name="name",columnDefinition="TEXT")
     private String name;
 
-	public int getString() {
-		return String;
+	public String getCode() {
+		return code;
 	}
 
-	public void setString(int string) {
-		String = string;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {

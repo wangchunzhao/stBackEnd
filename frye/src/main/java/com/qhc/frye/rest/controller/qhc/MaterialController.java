@@ -33,6 +33,7 @@ import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.BayernService;
 import com.qhc.frye.service.CharacteristicService;
+import com.qhc.frye.service.ConstantService;
 import com.qhc.frye.service.CustomerService;
 import com.qhc.frye.service.MaterialService;
 
@@ -61,6 +62,9 @@ public class MaterialController {
 	@Autowired
 	private CharacteristicService characteristicSer;
 
+	@Autowired
+	private ConstantService constantService;
+
 	@ApiOperation(value = "查询物料lastUpdateDate")
 	@GetMapping(value = "material/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
@@ -83,6 +87,7 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public PageHelper<Material> findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
 			throws Exception {
+		Map<String, String> measurements = constantService.findMeasurementUnits();
 		if (pars.containsKey(MATERIAL_NAME) && pars.containsKey(MATERIAL_PAGENO)) {
 			PageHelper<Material> ms = new PageHelper<Material>();
 			PageHelper<DMaterial> dms = materialSer.findMaterialsByName(pars.get(MATERIAL_NAME),
@@ -96,6 +101,8 @@ public class MaterialController {
 				temp.setConfigurable(dm.isConfigurable());
 				temp.setPurchased(dm.isPurchased());
 				temp.setStandardPrice(dm.getPrice());
+				temp.setUnitCode(dm.getUnit());
+				temp.setUnitName(measurements.get(dm.getUnit()));
 				ml.add(temp);
 			}
 			ms.setRows(ml);
