@@ -250,12 +250,48 @@ public class OrderService {
 			//order form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
-			if(oldForm==null)
+			if(oldForm==null) {
 				form = formRepo.save(form);
-			else {
+				String formId = form.getId();
+				//detail
+				for (AbsItem item : order.getItems()) {
+					//
+					ItemDetails temp = OrderHelper.itemConversion(item, formId);
+					temp = itemDetailRepository.save(temp);
+					if(item.getConfigs()!=null) {
+						for (AbsCharacteristic ac : item.getConfigs()) {
+							KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+							cha.setItemDetailsId(temp.getId());
+							characteristicsRepository.save(cha);
+						}
+					}
+					//attachment
+
+				}
+			}else {
 				form.setId(oldForm.getId());
-				formRepo.save(form);
-				List<ItemDetails> items = itemDetailRepository.findByKFormsId(form.getId());
+				form = formRepo.save(form);
+				List<ItemDetails> oldItems = itemDetailRepository.findByKFormsId(form.getId());
+				List<BaseItem> newItems = order.getItems();
+				//
+				
+				for(AbsItem item:newItems) {
+					boolean isExit =false;
+					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
+					for(ItemDetails old:oldItems) {
+						if(old.getRowNumber()==temp.getRowNumber()) {
+							temp.setId(old.getId());
+							temp = itemDetailRepository.save(temp);
+							//
+							isExit = true;
+							break;
+						}
+					}
+					//
+					if(!isExit) {
+						
+					}
+				}
 				
 			}
 		} else {

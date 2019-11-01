@@ -454,6 +454,18 @@ public class ItemDetails implements Serializable{
 	public void setStandardPrice(BigDecimal standardPrice) {
 		this.standardPrice = standardPrice;
 	}
+
+	public void setQuantity(double quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setRowNumber(int rowNumber) {
+		this.rowNumber = rowNumber;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
 	
 	
 	

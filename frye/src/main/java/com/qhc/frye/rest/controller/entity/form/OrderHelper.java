@@ -125,6 +125,10 @@ public class OrderHelper {
 		
 		return temp;
 	}
+	public KOrderInfo keepOrderInfo() {
+		KOrderInfo temp = toOrderInfo();
+		return temp;
+	}
 	/**
 	 * 
 	 * @param orderInfoId
