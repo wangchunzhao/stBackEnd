@@ -19,11 +19,15 @@ import com.qhc.frye.rest.controller.entity.Configuration;
 import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
 import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
+import com.qhc.frye.service.exception.NotExistException;
+import com.qhc.frye.service.exception.NotMatchException;
 import com.qhc.frye.dao.CharacteristicConfigurationRepository;
+import com.qhc.frye.dao.CharacteristicDefaultRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
 import com.qhc.frye.domain.CharacteristicConfiguration;
+import com.qhc.frye.domain.DCharacteristicDefault;
 import com.qhc.frye.domain.DMaterial;
 import com.qhc.frye.domain.LastUpdated;
 import com.qhc.frye.domain.MaterialPrice;
@@ -64,6 +68,10 @@ public class MaterialService {
 	
 	@Autowired
 	private CharacteristicConfigurationRepository charaterRepo;
+	
+	
+	@Autowired
+	private CharacteristicDefaultRepository defaultCharacterRep;
 	
 	public void saveMaterials(List<Material> materials) {
 		Set<DMaterial> mset = new HashSet<DMaterial>();
@@ -164,56 +172,51 @@ public class MaterialService {
 	 * @param materialCode
 	 * @return
 	 */
-	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode){
+	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode) throws NotMatchException{
 		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
-		List<Characteristic> chas = new ArrayList<Characteristic>();
+		List<DCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
+		Set<Integer> ids = new HashSet<Integer>();
+		for(DCharacteristicDefault dc: defaultValues) {
+			ids.add(dc.getValueId());
+		}
+		//temp valiable
 		Map<String,Characteristic> cs = new HashMap<String,Characteristic>();
 		for(CharacteristicConfiguration cc:ccs) {
+			Configuration con = new Configuration();
 			if(!cs.containsKey(cc.getKeyCode())) {
 				Characteristic ch = new Characteristic();
 				ch.setCode(cc.getKeyCode());
 				ch.setName(cc.getKeyName());
-				//ch.setOptional(cc.isOptional());
+				ch.setOptional(false);
 				ch.setClassCode(clazzCode);
 				cs.put(cc.getKeyCode(), ch);
-				Configuration con = new Configuration();
+				
 				con.setCode(cc.getValCode());
 				con.setName(cc.getValName());
+				
 				ch.getConfigs().add(con);
 			}else {
-				Configuration con = new Configuration();
+				
 				con.setCode(cc.getValCode());
 				con.setName(cc.getValName());
 				cs.get(cc.getKeyCode()).getConfigs().add(con);
-			}		
-		}
+			}	
+			//
+			if(ids.contains(cc.getId())) {
+				con.setDefault(true);
+			}else {
+				con.setDefault(false);
+			}
+		}		
+		//character list
+		List<Characteristic> chas = new ArrayList<Characteristic>();
 		for(String key:cs.keySet()) {
 			chas.add(cs.get(key));
 		}
 		//
-		List<DefaultCharacteristics>  dcl= this.getDefaultCharacteristicValueByMaterialCode(materialCode);
-		for(Characteristic c: chas) {
-			for(DefaultCharacteristics dc:dcl) {
-				if(c.getCode().equals(dc.getCharacteristic())) {
-					for(Configuration f:c.getConfigs()) {
-						if(f.getCode().equals(dc.getCharacterValue())) {
-							f.setDefault(true);
-						}else {
-							f.setDefault(false);
-						}
-					}
-				}
-			}
-		}
 		return chas;
 	}
 	
-	private List<DefaultCharacteristics> getDefaultCharacteristicValueByMaterialCode(String materialCode){
-		
-		List<DefaultCharacteristics>  dcl= bayernSer.getListInfo(PATH_CHARACTERISTIC_DEFAULT_VALUE+materialCode, DefaultCharacteristics.class);
-		
-		return dcl;
-	}
 	/**
 	 * 
 	 * @param pars

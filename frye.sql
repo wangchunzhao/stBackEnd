@@ -178,7 +178,7 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_operations` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_operations` (
-  `id` CHAR(32) NOT NULL,
+  `id` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
   `description` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -537,7 +537,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_materials` (
   `is_purchased` TINYINT(1) NOT NULL,
   `stand_price` DECIMAL(13,2) NOT NULL COMMENT '标准价格moving_average_price',
   `opt_time` DATETIME NOT NULL,
-  `material_size` DOUBLE(13,3) NULL COMMENT '物料体积',
+  `material_size` DOUBLE(13,3) NOT NULL COMMENT '物料体积',
   `sap_unit_of_measurement_code` VARCHAR(3) NOT NULL,
   `sap_material_groups_code` CHAR(4) NOT NULL,
   `sap_clazz_code` VARCHAR(18) NOT NULL,
@@ -963,7 +963,12 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `material_name` TEXT NOT NULL COMMENT '物料名称',
   `is_virtual` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '0:由销售录入的行项目\n1: 非销售部门录入的行项目',
   `is_purchased` TINYINT(1) NOT NULL COMMENT '物料属性：1. 采购 0：生产',
-  `quantity` DOUBLE(13,2) NULL COMMENT '数量',
+  `material_group_code` VARCHAR(45) NOT NULL COMMENT '物料类型代码\nsap_material_group',
+  `material_group_name` TEXT NOT NULL COMMENT '物料类型代码\nsap_material_group',
+  `quantity` DOUBLE(13,2) NOT NULL COMMENT '数量',
+  `item_category` VARCHAR(45) NOT NULL COMMENT '行项目类别',
+  `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
+  `k_forms_id` CHAR(32) NOT NULL,
   `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
   `sale_amount` DECIMAL(13,2) NULL COMMENT '产品实卖金额',
   `transfter_price` DECIMAL(13,2) NULL COMMENT '产品转移价',
@@ -971,12 +976,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `b2c_estimation_amount` DECIMAL(13,2) NULL COMMENT 'bc2评估价成本',
   `b2c_estimation_cost` DECIMAL(13,2) NULL COMMENT 'bc2预估成本',
   `b2c_comments` TEXT NULL COMMENT 'B2C备注',
-  `material_group_code` VARCHAR(45) NOT NULL COMMENT '物料类型代码\nsap_material_group',
-  `material_group_name` TEXT NOT NULL COMMENT '物料类型代码\nsap_material_group',
   `discount` DOUBLE(3,3) NULL COMMENT '折扣',
-  `item_category` VARCHAR(45) NOT NULL COMMENT '行项目类别',
-  `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
-  `k_forms_id` CHAR(32) NOT NULL,
   `address` TEXT NULL COMMENT '运输目的地，格式为{省 code:名字,市code:名字，区code:名字,address:名字}',
   `volume_cube` DECIMAL(13,2) NULL COMMENT '体积',
   `freight` DECIMAL(13,2) NULL COMMENT '运费',
@@ -993,7 +993,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `color_comments` TEXT NULL COMMENT '颜色备注',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) VISIBLE,
+  INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) INVISIBLE,
+  UNIQUE INDEX `detail_row_unique` (`row_num` ASC, `k_forms_id` ASC) INVISIBLE,
   CONSTRAINT `fk_k_item_details_k_forms1`
     FOREIGN KEY (`k_forms_id`)
     REFERENCES `bohemian`.`k_forms` (`id`)

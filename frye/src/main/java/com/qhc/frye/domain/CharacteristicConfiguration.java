@@ -17,6 +17,9 @@ import javax.persistence.Table;
 public class CharacteristicConfiguration {
 	
 	@Id 
+	@Column(name = "id",columnDefinition ="int")
+	private int id;
+	
 	@Column(name = "value_code",columnDefinition ="CHAR")
 	private String valCode;
 	
@@ -71,6 +74,14 @@ public class CharacteristicConfiguration {
 
 	public void setKeyName(String keyName) {
 		this.keyName = keyName;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 
