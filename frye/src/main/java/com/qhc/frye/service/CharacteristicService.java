@@ -69,21 +69,12 @@ public class CharacteristicService {
 		Set<DCharacteristicValue> dcvs = new HashSet<DCharacteristicValue>();
 		Set<DClassAndCharacter> cacs = new HashSet<DClassAndCharacter>();
 		//
-		for(CharacteristicValue cv: chaValues) {
-			List<Object> objs =  cv.toDaos();
-			for(Object obj:objs) {
-				if(obj.getClass().equals(DClassAndCharacter.class)) {
-					cacs.add((DClassAndCharacter)obj);
-										
-				}else if(obj.getClass().equals(DCharacteristic.class)) {
-					dcs.add((DCharacteristic)obj);
-					
-				}else if(obj.getClass().equals(DCharacteristicValue.class)) {
-//					System.out.println(((DCharacteristicValue)obj).getId());
-					dcvs.add((DCharacteristicValue)obj);
-				}
+		for(CharacteristicValue cv: chaValues) {		
+			cacs.add(cv.toDClassAndCharacter());
+			dcs.add(cv.toDCharacteristic());
+			if(!dcvs.contains(cv.toDCharacteristicValue())) {
+				dcvs.add(cv.toDCharacteristicValue());
 			}
-			
 		}	
 		characterRepo.saveAll(dcs);
 		//因为特征值的表有自增长的id，两表有关联，所以要先删除

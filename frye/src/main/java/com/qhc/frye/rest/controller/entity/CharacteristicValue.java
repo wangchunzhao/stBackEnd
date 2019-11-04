@@ -113,5 +113,31 @@ public class CharacteristicValue implements InterEntityToDao{
 		objs.add(dcac);
 		return objs;
 	}
+	
+	public DCharacteristicValue toDCharacteristicValue() {
+		DCharacteristicValue dcv = new DCharacteristicValue();
+		dcv.setCode(this.getCode());
+		dcv.setName(this.getName());
+		dcv.setCharacter(this.getCharacteristicCode());
+		return dcv;
+	}
+	
+	public DCharacteristic toDCharacteristic() {
+		DCharacteristic dc = new DCharacteristic();
+		dc.setCode(this.getCharacteristicCode());
+		dc.setName(this.getCharacteristicName());
+		//从SAP取数默认值为   0 
+		dc.setOptional(false);
+		return dc;
+	}
+	
+	public DClassAndCharacter toDClassAndCharacter() {
+		DClassAndCharacter dcac = new DClassAndCharacter();
+		ClassCharacterIdentity cci = new ClassCharacterIdentity();
+		cci.setClazzCode(this.getClazzCode());
+		cci.setCharacterCode(this.getCharacteristicCode());
+		dcac.setCci(cci);
+		return dcac;
+	}
 
 }
