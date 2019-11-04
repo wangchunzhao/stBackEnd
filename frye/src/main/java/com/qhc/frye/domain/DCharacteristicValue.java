@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="sap_characteristic_value")
 public class DCharacteristicValue {
-	
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Id
     @Column(name="id",length=11)
@@ -61,7 +60,43 @@ public class DCharacteristicValue {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((character == null) ? 0 : character.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DCharacteristicValue other = (DCharacteristicValue) obj;
+		if (character == null) {
+			if (other.character != null)
+				return false;
+		} else if (!character.equals(other.character))
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 		
 
 }
