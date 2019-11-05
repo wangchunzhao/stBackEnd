@@ -1430,6 +1430,11 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`id` INT, `sap_clazz_code` INT, `key_code` INT, `key_name` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`sap_default_character_value_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_default_character_value_view` (`id` INT, `code` INT, `name` INT, `sap_materials_code` INT, `key_code` INT);
+
+-- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
@@ -1531,6 +1536,24 @@ CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
         (`sap_characteristic_value` `v`
         LEFT JOIN (`sap_clazz_and_character` `l`
         LEFT JOIN `sap_characteristic` `c` ON ((`l`.`sap_characteristic_code` = `c`.`code`))) ON ((`c`.`code` = `v`.`sap_characteristic_code`)));
+
+-- -----------------------------------------------------
+-- View `bohemian`.`sap_default_character_value_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`sap_default_character_value_view`;
+DROP VIEW IF EXISTS `bohemian`.`sap_default_character_value_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW `sap_default_character_value_view` AS
+    SELECT 
+        v.id,
+        v.code,
+        v.name,
+        m.sap_materials_code,
+        m.sap_characteristic_code AS key_code
+    FROM
+        sap_material_default_characteristic m
+            LEFT JOIN
+        sap_characteristic_value v ON m.sap_characteristic_value_id = v.id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
