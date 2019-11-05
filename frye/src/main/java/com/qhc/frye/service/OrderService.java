@@ -640,16 +640,6 @@ public class OrderService {
 		taxRate.put("30", 0.13);
 
 		//
-		Map<String, Currency> currencys = oo.getExchangeRate();
-		List<DCurrency> dcs = currencyRepo.findAll();
-		for (DCurrency dc : dcs) {
-			Currency val = new Currency();
-			val.setCode(dc.getCode());
-			val.setName(dc.getName());
-			val.setRate(dc.getRate());
-//			currencys.put(dc.getSalesTypeCode(), val);
-		}
-		//
 		Map<String, String> payments = oo.getPaymentType();
 		Map<String, String> bidding = oo.getBiddingPlan();
 		List<PaymentTerm> pts = paymentRepo.findAll();

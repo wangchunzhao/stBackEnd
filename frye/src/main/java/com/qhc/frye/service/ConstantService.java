@@ -25,6 +25,7 @@ import com.qhc.frye.dao.MeasurementUnitRepository;
 import com.qhc.frye.dao.OrderTypeRepository;
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
+import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
 import com.qhc.frye.dao.SapMaterialGroupsRepository;
 import com.qhc.frye.domain.BMaterialGroupOrder;
 import com.qhc.frye.domain.CustomerClass;
@@ -37,6 +38,7 @@ import com.qhc.frye.domain.DReceiveTerms;
 import com.qhc.frye.domain.DShippingType;
 import com.qhc.frye.domain.DUnit;
 import com.qhc.frye.domain.OrderTypeCustomerClass;
+import com.qhc.frye.domain.SapCurrencySaleType;
 import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.domain.SapSalesOffice;
 import com.qhc.frye.rest.controller.entity.Currency;
@@ -85,6 +87,9 @@ public class ConstantService {
 	
 	@Autowired
 	private InstallationTermsRepository installationTermsRepository;
+	
+	@Autowired
+	private SapCurrencySaleTypeRepository sapCurrencySaleTypeRepo;
 	
 	@Autowired
 	private MeasurementUnitRepository measurementUnitRepository;
@@ -281,12 +286,18 @@ public class ConstantService {
 	public Map<String, Currency> findCurrencies() {
 		if (currencies == null || currencies.isEmpty()) {
 			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
+			List<SapCurrencySaleType> saleTypes = sapCurrencySaleTypeRepo.findAll();
+			Map<String, String> map = new HashMap<String, String>();
+			saleTypes.forEach(cs -> map.put(cs.getCii().getCurrencyCode(), cs.getCii().getSaleTypeCode()));
 			currencies = new HashMap<String, Currency>();
 
 			for (DCurrency dCurrency : list) {
 				Currency currency = new Currency();
-				BeanUtils.copyProperties(dCurrency, currency);
-				currencies.put(dCurrency.getCode(), currency);
+				currency.setCode(dCurrency.getCode());
+				currency.setName(dCurrency.getName());
+				currency.setRate(dCurrency.getRate());
+				
+				currencies.put(map.get(currency.getCode()), currency);
 			}
 		}
 
