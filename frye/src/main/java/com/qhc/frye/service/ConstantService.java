@@ -3,6 +3,7 @@
  */
 package com.qhc.frye.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,7 @@ public class ConstantService {
 	
 	public static Map<String, String> incoterms = null;
 	
-	public static Map<String, Currency> currencies = null;
+	public static Map<String, List<Currency>> currencies = null;
 	
 	public static Map<String, Map<String, String>> installationTerms = null;
 	
@@ -283,13 +284,13 @@ public class ConstantService {
 		return incoterms;
 	}
 	
-	public Map<String, Currency> findCurrencies() {
+	public Map<String, List<Currency>> findCurrencies() {
 		if (currencies == null || currencies.isEmpty()) {
 			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
 			List<SapCurrencySaleType> saleTypes = sapCurrencySaleTypeRepo.findAll();
 			Map<String, String> map = new HashMap<String, String>();
 			saleTypes.forEach(cs -> map.put(cs.getCii().getCurrencyCode(), cs.getCii().getSaleTypeCode()));
-			currencies = new HashMap<String, Currency>();
+			currencies = new HashMap<String, List<Currency>>();
 
 			for (DCurrency dCurrency : list) {
 				Currency currency = new Currency();
@@ -297,7 +298,15 @@ public class ConstantService {
 				currency.setName(dCurrency.getName());
 				currency.setRate(dCurrency.getRate());
 				
-				currencies.put(map.get(currency.getCode()), currency);
+				String salesType = map.get(currency.getCode());
+				if (salesType != null) {
+					List<Currency> currencyList = currencies.get(salesType);
+					if (currencyList == null) {
+						currencyList = new ArrayList<Currency>();
+						currencies.put(salesType, currencyList);
+					}
+					currencyList.add(currency);
+				}
 			}
 		}
 
