@@ -286,28 +286,27 @@ public class ConstantService {
 	
 	public Map<String, List<Currency>> findCurrencies() {
 		if (currencies == null || currencies.isEmpty()) {
-			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
-			List<SapCurrencySaleType> saleTypes = sapCurrencySaleTypeRepo.findAll();
-			Map<String, String> map = new HashMap<String, String>();
-			saleTypes.forEach(cs -> map.put(cs.getCii().getCurrencyCode(), cs.getCii().getSaleTypeCode()));
 			currencies = new HashMap<String, List<Currency>>();
-
-			for (DCurrency dCurrency : list) {
+			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
+			Map<String, Currency> cmap = new HashMap<String, Currency>();
+			list.forEach(dCurrency -> {
 				Currency currency = new Currency();
 				currency.setCode(dCurrency.getCode());
 				currency.setName(dCurrency.getName());
 				currency.setRate(dCurrency.getRate());
-				
-				String salesType = map.get(currency.getCode());
-				if (salesType != null) {
-					List<Currency> currencyList = currencies.get(salesType);
-					if (currencyList == null) {
-						currencyList = new ArrayList<Currency>();
-						currencies.put(salesType, currencyList);
-					}
-					currencyList.add(currency);
+				cmap.put(currency.getCode(), currency);
+			});
+			List<SapCurrencySaleType> saleTypes = sapCurrencySaleTypeRepo.findAll();
+			saleTypes.forEach(cs -> {
+				String salesType = cs.getCii().getSaleTypeCode();
+				String currencyCode = cs.getCii().getCurrencyCode();
+				List<Currency> currencyList = currencies.get(saleTypes);
+				if (currencyList == null) {
+					currencyList = new ArrayList<Currency>();
+					currencies.put(salesType, currencyList);
 				}
-			}
+				currencyList.add(cmap.get(currencyCode));
+			});
 		}
 
 		return currencies;
