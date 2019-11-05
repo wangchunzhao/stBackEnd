@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +46,10 @@ class OrderServiceTest {
 		query.setLast(true);
 		query.setPageNo(1);
 		query.setPageSize(10);
+		query.setIncludeDetail(true);
+		query.setB2c(null);
+		query.setStatus("1");
+		query.setStatusList(Arrays.asList(new String[] {"1", "2"}));
 		query.setIncludeDetail(true);
 		PageHelper<AbsOrder> result = orderService.findOrders(query);
 		System.out.println(result);

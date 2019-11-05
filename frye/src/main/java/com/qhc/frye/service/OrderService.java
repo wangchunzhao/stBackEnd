@@ -1147,6 +1147,13 @@ public class OrderService {
 			querySql.append(" and owner_domain_id like :ownerId"); 
 			params.put("ownerId", "%" + orderQuery.getSalesCode() + "%");
 		}
+		if (orderQuery.getB2c() != null && orderQuery.getB2c()) {
+			querySql.append(" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id)"); 
+		}
+		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
+			querySql.append(" and status in (:statuslist)"); 
+			params.put("statuslist", orderQuery.getStatusList());
+		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
