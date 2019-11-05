@@ -3,12 +3,15 @@
  */
 package com.qhc.frye.rest.controller.entity.form;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * @author wwang67
+ * @author wang@dxc.com
  *
  */
 public abstract class AbsCharacteristic {
 	private String option;//可选、必选
+	@JsonProperty(value = "code")
 	private String configCode;//配置项
 	private String configValueCode;//配置值
 	public String getOption() {
@@ -32,3 +35,4 @@ public abstract class AbsCharacteristic {
 	
 	
 }
+
