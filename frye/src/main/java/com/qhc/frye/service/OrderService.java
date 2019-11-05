@@ -25,6 +25,7 @@ import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
+import com.qhc.frye.dao.DefaultCharacterViewRepository;
 import com.qhc.frye.dao.ItemDetailRepository;
 import com.qhc.frye.dao.KBiddingPlanRepository;
 import com.qhc.frye.dao.KCharacteristicsRepository;
@@ -49,6 +50,7 @@ import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
+import com.qhc.frye.domain.DefaultCharacterView;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KAttachedInfo;
@@ -180,6 +182,9 @@ public class OrderService {
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
+	
+	@Autowired
+	private DefaultCharacterViewRepository defaultValueRepo;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -205,6 +210,23 @@ public class OrderService {
 			incos.add(temp);
 		}
 		paymentRepo.saveAll(incos);
+	}
+	/**
+	 * 
+	 * @param materialCode
+	 * @param itemId
+	 */
+	private void saveCharacter(String materialCode,String itemId) {
+		List<DefaultCharacterView> dvs = defaultValueRepo.findByMaterial(materialCode);
+		Set<KCharacteristics> kcs = new HashSet<KCharacteristics>();
+		for(DefaultCharacterView dcv:dvs) {
+			KCharacteristics kc = new KCharacteristics();
+			kc.setIsConfigurable(0);
+			kc.setKeyCode(dcv.getKeyCode());
+			kc.setValueCode(dcv.getValueCode());
+			kc.setItemDetailsId(itemId);
+		}
+		characteristicsRepository.saveAll(kcs);
 	}
 
 	/**
@@ -250,6 +272,7 @@ public class OrderService {
 			//order form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
+			//new form
 			if(oldForm==null) {
 				form = formRepo.save(form);
 				String formId = form.getId();
@@ -264,6 +287,9 @@ public class OrderService {
 							cha.setItemDetailsId(temp.getId());
 							characteristicsRepository.save(cha);
 						}
+					}else {
+						saveCharacter(item.getMaterialCode(),temp.getId());
+						
 					}
 					//attachment
 
@@ -274,23 +300,20 @@ public class OrderService {
 				List<ItemDetails> oldItems = itemDetailRepository.findByKFormsId(form.getId());
 				List<BaseItem> newItems = order.getItems();
 				//
-				
+				Set<KCharacteristics> characters = new HashSet<KCharacteristics>();
 				for(AbsItem item:newItems) {
-					boolean isExit =false;
+					
 					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
 					for(ItemDetails old:oldItems) {
 						if(old.getRowNumber()==temp.getRowNumber()) {
 							temp.setId(old.getId());
-							temp = itemDetailRepository.save(temp);
-							//
-							isExit = true;
 							break;
 						}
 					}
-					//
-					if(!isExit) {
-						
-					}
+					
+					temp = itemDetailRepository.save(temp);
+					
+					
 				}
 				
 			}
@@ -319,6 +342,8 @@ public class OrderService {
 						cha.setItemDetailsId(temp.getId());
 						characteristicsRepository.save(cha);
 					}
+				}else {
+					saveCharacter(item.getMaterialCode(),temp.getId());
 				}
 				//attachment
 

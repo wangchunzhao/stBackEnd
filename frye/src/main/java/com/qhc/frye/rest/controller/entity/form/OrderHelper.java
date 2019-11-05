@@ -330,6 +330,7 @@ public class OrderHelper {
 		KCharacteristics temp = new KCharacteristics();
 		temp.setKeyCode(character.getConfigCode());
 		temp.setValueCode(character.getConfigValueCode());
+		temp.setIsConfigurable(0);
 		return temp;
 		
 	}
