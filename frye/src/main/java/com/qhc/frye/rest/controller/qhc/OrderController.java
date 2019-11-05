@@ -122,7 +122,7 @@ public class OrderController {
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DMaterialGroups> calcGrossProfit(String sequenceNumber, String version) throws Exception {
+	public List<DMaterialGroups> calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
 		return orderService.calcGrossProfit(sequenceNumber, version);
 	}
 
@@ -153,7 +153,7 @@ public class OrderController {
     @ApiOperation(value="根据sequenceNumber组装订单并同步SAP", notes="根据sequenceNumber组装订单并同步SAP")
     @PostMapping(value = "order/sap")
     @ResponseStatus(HttpStatus.OK)
-    public String orderCreationForSAP(String sequenceNumber, String version) throws Exception {	
+    public String orderCreationForSAP(@RequestParam String sequenceNumber, @RequestParam String version) throws Exception {	
     	return orderService.orderCreationForSAP(sequenceNumber, version);
     }
     
