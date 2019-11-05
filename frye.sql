@@ -1427,7 +1427,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_info_view` (`price_type_code
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`sap_class_characteristic_value_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`sap_clazz_code` INT, `key_code` INT, `key_name` INT, `value_code` INT, `value_name` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`id` INT, `sap_clazz_code` INT, `key_code` INT, `key_name` INT, `value_code` INT, `value_name` INT);
 
 -- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
@@ -1520,24 +1520,43 @@ DROP TABLE IF EXISTS `bohemian`.`sap_class_characteristic_value_view`;
 DROP VIEW IF EXISTS `bohemian`.`sap_class_characteristic_value_view` ;
 USE `bohemian`;
 CREATE  OR REPLACE VIEW `sap_class_characteristic_value_view` AS
-	SELECT 
-        l.sap_clazz_code,
-        c.code AS key_code,
-        c.name AS key_name,
-        v.code AS value_code,
-        v.name AS value_name
+    SELECT 
+        v.id AS id,
+        `l`.`sap_clazz_code` AS `sap_clazz_code`,
+        `c`.`code` AS `key_code`,
+        `c`.`name` AS `key_name`,
+        `v`.`code` AS `value_code`,
+        `v`.`name` AS `value_name`
     FROM
-        sap_clazz_and_character l
-            LEFT JOIN
-        sap_characteristic c ON l.sap_characteristic_code = c.code
-            RIGHT JOIN
-        sap_characteristic_value v ON c.code = v.sap_characteristic_code
-    WHERE
-        l.sap_clazz_code = '1';
+        (`sap_characteristic_value` `v`
+        LEFT JOIN (`sap_clazz_and_character` `l`
+        LEFT JOIN `sap_characteristic` `c` ON ((`l`.`sap_characteristic_code` = `c`.`code`))) ON ((`c`.`code` = `v`.`sap_characteristic_code`)));
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`b_operations`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1001', '代办任务', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1002', 'newOrder', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1003', '订单管理', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1004', '合同管理', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1005', '特批发货', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1006', '购销明细报表', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1007', '投标跟踪表', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1008', '用户管理', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1009', '角色管理', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1010', '参数管理', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1011', '全部订单', '查看所有订单');
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1012', '区域订单', '查看本人所在区域订单');
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1013', '用户新增', '');
+
+COMMIT;
+
 
 -- -----------------------------------------------------
 -- Data for table `bohemian`.`b_settings`
