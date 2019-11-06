@@ -1,26 +1,29 @@
 package com.qhc.frye.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="sap_material_default_characteristic")
-public class DCharacteristicDefault {
+@IdClass(DCharacteristicDefaultKey.class)
+public class DCharacteristicDefault implements Serializable{
 	
 	@Id
-    @NotNull
-    @Column(name="sap_materials_code",length=18)
+	@Column(name="sap_materials_code",length=18)
 	private String materialsCode;
 	
-	
-	@NotNull
+	@Id
     @Column(name="sap_characteristic_code",length=30)
 	private String characteristicCode;
 	
-	@NotNull
+	@Id
     @Column(name="sap_characteristic_value_id",length=11)
 	private int valueId;
 
@@ -47,6 +50,8 @@ public class DCharacteristicDefault {
 	public void setValueId(int valueId) {
 		this.valueId = valueId;
 	}
+
+	
 	
 	
 
