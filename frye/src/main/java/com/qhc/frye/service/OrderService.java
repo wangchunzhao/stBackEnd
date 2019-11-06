@@ -1216,6 +1216,17 @@ public class OrderService {
 			item.setConfigComments(itemDetails.getComments());
 			item.setMosaicImage(itemDetails.getMosaicImage());
 			item.setRequestCircult(itemDetails.getRequestCircuit());
+			
+			// 产品实卖价 = 实卖金额 / 数量
+			BigDecimal saleAmount = itemDetails.getAmount();
+			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
+			item.setActuralPrice(saleAmount.divide(quantity).doubleValue());
+//			item.setActuralPricaOfOptional(itemDetails.geto);
+			item.setTranscationPrice(itemDetails.getTransfterPrice() == null ? 0 : itemDetails.getTransfterPrice().doubleValue());
+//			item.setTranscationPriceOfOptional(transcationPriceOfOptional);
+			item.setRetailPrice(itemDetails.getRetailPrice().doubleValue());
+			item.setStandardPrice(itemDetails.getStandardPrice().doubleValue());
+//			item.setPeriod(itemDetails.getp);
 
 			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
 			if (attachedInfoList.size() > 0) {
