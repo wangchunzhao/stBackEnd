@@ -72,7 +72,6 @@ public class DOrder implements Serializable{
 	@Column(name="contractor_class_name",columnDefinition="TEXT")
 	private String	contractorClassName;
 	
-	@NotNull
 	@Column(name="office_code",columnDefinition="char")
 	private String	officeCode;
 	

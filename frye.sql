@@ -716,7 +716,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `contractor_name` TEXT NOT NULL,
   `contractor_class_code` VARCHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
   `contractor_class_name` TEXT NOT NULL COMMENT '经销商/直签',
-  `office_code` VARCHAR(4) NOT NULL COMMENT '销售员所属区域',
+  `office_code` VARCHAR(4) NULL COMMENT '销售员所属区域',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `sequence_number_UNIQUE` (`sequence_number` ASC) VISIBLE)
@@ -1438,6 +1438,26 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_class_characteristic_value_view` (`id
 CREATE TABLE IF NOT EXISTS `bohemian`.`sap_default_character_value_view` (`id` INT, `code` INT, `name` INT, `sap_materials_code` INT, `key_code` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_report_bymaterial_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_report_bymaterial_view` (`id` INT, `STATUS` INT, `sequence_number` INT, `owner_name` INT, `owner_domain_id` INT, `office_code` INT, `create_time` INT, `contract_seq` INT, `contractor_code` INT, `contractor_class_code` INT, `contractor_class_name` INT, `order_type_code` INT, `k_order_info_id` INT, `office_name` INT, `is_reformed` INT, `contract_rmb_amount` INT, `warranty` INT, `currency_code` INT, `currency_name` INT, `contract_amount` INT, `exchange` INT, `sales_type` INT, `group_code` INT, `group_name` INT, `install_term_code` INT, `install_term_name` INT, `contactor_1_id` INT, `contactor_1_tel` INT, `contactor_2_id` INT, `contactor_2_tel` INT, `contactor_3_id` INT, `contactor_3_tel` INT, `is_new` INT, `terminal_industry_code` INT, `terminal_industry_code_name` INT, `body_discount` INT, `main_discount` INT, `order_id` INT, `material_code` INT, `material_name` INT, `is_purchased` INT, `quantity` INT, `sale_amount` INT, `price` INT, `discount` INT, `measure_unit_code` INT, `earliest_delivery_date` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_speical_order_vo_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_vo_view` (`id` INT, `sequence_number` INT, `order_type_code` INT, `create_time` INT, `owner_domain_id` INT, `owner_name` INT, `sales_tel` INT, `contractor_code` INT, `contractor_name` INT, `contractor_class_code` INT, `contractor_class_name` INT, `office_code` INT, `k_order_version_id` INT, `k_orders_id` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_order_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_view` (`sequence_number` INT, `order_type_code` INT, `create_time` INT, `owner_domain_id` INT, `owner_name` INT, `sales_tel` INT, `contractor_code` INT, `contractor_name` INT, `contractor_class_code` INT, `contractor_class_name` INT, `sales_office_code` INT, `order_id` INT, `version_id` INT, `version` INT, `status` INT, `version_create_time` INT, `submit_date` INT, `bpm_submit_time` INT, `opt_time` INT, `order_info_id` INT, `id` INT, `last_operator` INT, `last_opt_time` INT, `customer_name` INT, `is_reformed` INT, `is_convenient_store` INT, `is_new` INT, `terminal_industry_code` INT, `terminal_industry_code_name` INT, `body_discount` INT, `main_discount` INT, `install_term_code` INT, `install_term_name` INT, `receive_term_code` INT, `receive_term_name` INT, `contactor_1_id` INT, `contactor_1_tel` INT, `contactor_2_id` INT, `contactor_2_tel` INT, `contactor_3_id` INT, `contactor_3_tel` INT, `freight` INT, `warranty` INT, `currency_code` INT, `currency_name` INT, `exchange` INT, `contract_amount` INT, `contract_rmb_amount` INT, `sales_type` INT, `tax_rate` INT, `incoterm_code` INT, `incoterm_name` INT, `incoterm_contect` INT, `office_code` INT, `office_name` INT, `group_code` INT, `group_name` INT, `transfer_type_code` INT, `transfer_type_name` INT, `is_term1` INT, `is_term2` INT, `is_term3` INT, `comments` INT, `form_id` INT, `earliest_delivery_date` INT, `earliest_product_date` INT, `form_comments` INT, `form_operator` INT, `form_type` INT, `form_opt_time` INT, `support_info_id` INT, `contract_number` INT, `opterator_domain_id` INT, `support_info_opt_time` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `bohemian`.`k_order_version_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version_view` (`sequence_number` INT, `order_id` INT, `version_id` INT, `version` INT, `status` INT, `create_time` INT, `submit_date` INT, `bpm_submit_time` INT, `opt_time` INT, `order_info_id` INT);
+
+-- -----------------------------------------------------
 -- View `bohemian`.`user_operation_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`user_operation_view`;
@@ -1557,6 +1577,217 @@ CREATE  OR REPLACE VIEW `sap_default_character_value_view` AS
         sap_material_default_characteristic m
             LEFT JOIN
         sap_characteristic_value v ON m.sap_characteristic_value_id = v.id;
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_report_bymaterial_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_report_bymaterial_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_report_bymaterial_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW k_report_bymaterial_view AS
+    SELECT 
+        CONCAT((SELECT CURTIME()), '_', (SELECT RAND())) AS id,
+        c.`status` AS STATUS,
+        e.sequence_number,
+        e.owner_name,
+        e.owner_domain_id,
+        e.office_code,
+        e.create_time,
+        c.contract_seq,
+        e.contractor_code,
+        e.contractor_class_code,
+        e.contractor_class_name,
+        e.order_type_code,
+        i.*
+    FROM
+        (SELECT 
+            j.k_order_version_id AS k_order_version_id,
+                k_orders_id,
+                STATUS,
+                k_order_info_id,
+                k.sequence_number AS contract_seq
+        FROM
+            (SELECT 
+            a.k_order_version_id,
+                a.k_orders_id,
+                a.STATUS,
+                b.k_order_info_id
+        FROM
+            (SELECT 
+            MAX(id) AS k_order_version_id, k_orders_id, STATUS
+        FROM
+            k_order_version
+        WHERE
+            STATUS = '1'
+        GROUP BY k_orders_id) a, k_order_version b
+        WHERE
+            a.k_order_version_id = b.id) j
+        LEFT JOIN k_contract k ON j.k_order_version_id = k.k_order_version_id) c,
+        (SELECT 
+            id AS k_order_info_id,
+                office_name,
+                is_reformed,
+                contract_rmb_amount,
+                warranty,
+                currency_code,
+                currency_name,
+                contract_amount,
+                exchange,
+                sales_type,
+                group_code,
+                group_name,
+                install_term_code,
+                install_term_name,
+                contactor_1_id,
+                contactor_1_tel,
+                contactor_2_id,
+                contactor_2_tel,
+                contactor_3_id,
+                contactor_3_tel,
+                is_new,
+                terminal_industry_code,
+                terminal_industry_code_name,
+                body_discount,
+                main_discount,
+                h.*
+        FROM
+            k_order_info d
+        LEFT JOIN (SELECT 
+            f.k_order_info_id AS order_id,
+                material_code,
+                material_name,
+                is_purchased,
+                quantity,
+                sale_amount,
+                sale_amount / quantity AS price,
+                discount,
+                measure_unit_code,
+                earliest_delivery_date
+        FROM
+            k_forms f
+        LEFT JOIN k_item_details g ON f.id = g.k_forms_id) h ON d.id = h.order_id) i,
+        k_orders e
+    WHERE
+        c.k_order_info_id = i.order_id
+            AND c.k_orders_id = e.id;
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_speical_order_vo_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_speical_order_vo_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_speical_order_vo_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW k_speical_order_vo_view AS
+    SELECT 
+        CONCAT(a.k_orders_id,
+                '_',
+                a.k_order_version_id,
+                '_',
+                c.id,
+                '_',
+                d.id) AS id,
+        d.sequence_number AS sequence_number,
+        d.order_type_code AS order_type_code,
+        d.create_time AS create_time,
+        d.owner_domain_id AS owner_domain_id,
+        d.owner_name AS owner_name,
+        d.sales_tel AS sales_tel,
+        d.contractor_code AS contractor_code,
+        d.contractor_name AS contractor_name,
+        d.contractor_class_code AS contractor_class_code,
+        d.contractor_class_name AS contractor_class_name,
+        d.office_code AS office_code,
+        a.k_order_version_id AS k_order_version_id,
+        a.k_orders_id AS k_orders_id
+    FROM
+        (SELECT 
+            k_orders_id, MAX(id) AS k_order_version_id
+        FROM
+            k_order_version
+        GROUP BY k_orders_id
+        ORDER BY create_time DESC) a,
+        k_order_version b,
+        k_order_info c,
+        k_orders d
+    WHERE
+        a.k_order_version_id = b.id
+            AND b.k_order_info_id = c.id
+            AND a.k_orders_id = d.id
+            AND d.order_type_code IN ('05' , '06');
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_order_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_order_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW k_order_view AS
+    SELECT 
+        o.sequence_number,
+        o.order_type_code,
+        o.create_time,
+        o.owner_domain_id,
+        o.owner_name,
+        o.sales_tel,
+        o.contractor_code,
+        o.contractor_name,
+        o.contractor_class_code,
+        o.contractor_class_name,
+        o.office_code AS sales_office_code,
+        v.k_orders_id AS order_id,
+        v.id AS version_id,
+        v.version,
+        v.status,
+        v.create_time AS version_create_time,
+        v.submit_date,
+        v.bpm_submit_time,
+        v.opt_time,
+        v.k_order_info_id AS order_info_id,
+        d.*,
+        f.id AS form_id,
+        f.earliest_delivery_date,
+        f.earliest_product_date,
+        f.comments AS form_comments,
+        f.operator AS form_operator,
+        f.type AS form_type,
+        f.opt_time AS form_opt_time,
+        s.id AS support_info_id,
+        s.contract_number,
+        s.opterator_domain_id,
+        s.opt_time AS support_info_opt_time
+    FROM
+        k_orders o
+            LEFT JOIN
+        k_order_support_info s ON s.k_orders_id = o.id
+            LEFT JOIN
+        k_order_version v ON v.k_orders_id = o.id
+            LEFT JOIN
+        k_order_info d ON d.id = v.k_order_info_id
+            LEFT JOIN
+        k_forms f ON f.k_order_info_id = d.id;
+
+-- -----------------------------------------------------
+-- View `bohemian`.`k_order_version_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_order_version_view`;
+DROP VIEW IF EXISTS `bohemian`.`k_order_version_view` ;
+USE `bohemian`;
+CREATE  OR REPLACE VIEW `k_order_version_view` AS
+    SELECT 
+        o.sequence_number,
+        v.k_orders_id AS order_id,
+        v.id AS version_id,
+        v.version,
+        v.status,
+        v.create_time,
+        v.submit_date,
+        v.bpm_submit_time,
+        v.opt_time,
+        v.k_order_info_id AS order_info_id
+    FROM
+        k_orders o
+            LEFT JOIN
+        k_order_version v ON v.k_orders_id = o.id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
