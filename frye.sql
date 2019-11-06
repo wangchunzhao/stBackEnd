@@ -716,7 +716,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_orders` (
   `contractor_name` TEXT NOT NULL,
   `contractor_class_code` VARCHAR(2) NOT NULL COMMENT 'sap customer class code: 01/02',
   `contractor_class_name` TEXT NOT NULL COMMENT '经销商/直签',
-  `office_code` VARCHAR(4) NOT NULL COMMENT '销售员所属区域',
+  `office_code` VARCHAR(4) NULL COMMENT '销售员所属区域',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `sequence_number_UNIQUE` (`sequence_number` ASC) VISIBLE)
