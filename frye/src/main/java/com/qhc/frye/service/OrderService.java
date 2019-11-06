@@ -473,6 +473,12 @@ public class OrderService {
 		return null;
 	}
 
+	public List<DMaterialGroups> calcWtwGrossProfit(String sequenceNumber, String version) {
+		AbsOrder order = this.findOrder(sequenceNumber, version);
+		order.setSubmitType(4);
+		return calcGrossProfit(order);
+	}
+
 	public List<DMaterialGroups> calcGrossProfit(String sequenceNumber, String version) {
 		AbsOrder order = this.findOrder(sequenceNumber, version);
 		return calcGrossProfit(order);
@@ -492,21 +498,24 @@ public class OrderService {
 		// 税率
 		Double taxRate = order.getTaxRate();
 
-		// 物料类型表
-//		 sapSalesGroups
-
 		// 毛利表
 		BigDecimal sumAmount = BigDecimal.ZERO;// 金额
 		BigDecimal sumExcludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+		BigDecimal sumWtwCost = BigDecimal.ZERO;// wtw成本
 		BigDecimal sumCost = BigDecimal.ZERO;// 成本
+		BigDecimal sumWtwGrossProfit = BigDecimal.ZERO;// 毛利
 		BigDecimal sumGrossProfit = BigDecimal.ZERO;// 毛利
+		Double sumWtwGrossProfitMargin = 0D;// 毛利率
 		Double sumGrossProfitMargin = 0D;// 毛利率
 		if (items != null && items.size() > 0) {
 			for (DMaterialGroups entity : groups) {
 				BigDecimal amount = BigDecimal.ZERO;// 金额
 				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
+				BigDecimal wtwcost = BigDecimal.ZERO;// wtw成本
 				BigDecimal cost = BigDecimal.ZERO;// 成本
+				BigDecimal wtwgrossProfit = BigDecimal.ZERO;// wtw毛利
 				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
+				Double wtwgrossProfitMargin = 0D;// wtw毛利率
 				Double grossProfitMargin = 0D;// 毛利率
 
 				for (BaseItem item : items) {
@@ -515,46 +524,56 @@ public class OrderService {
 						BigDecimal saleAmount = BigDecimal.valueOf((item.getActuralPrice() + item.getActuralPricaOfOptional()) * item.getQuantity());
 						amount = amount.add(saleAmount);
 						// 总金额减去税金 = 不含税金额
-						excludingTaxAmount = excludingTaxAmount
-								.subtract(sumAmount.multiply(BigDecimal.valueOf(taxRate)));
-						// 成本
-						if (submitType == 3) {
-							cost = cost.add(BigDecimal.valueOf(item.getStandardPrice()));
-						}
+						BigDecimal taxAmount = saleAmount.multiply(BigDecimal.valueOf(taxRate));
+						excludingTaxAmount = excludingTaxAmount.add(saleAmount.subtract(taxAmount));
+						// wtw成本
 						if (submitType == 4) {
-							cost = cost.add(BigDecimal.valueOf(item.getTranscationPrice()));
+							wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice()));
+							// 毛利
+							wtwgrossProfit = excludingTaxAmount.subtract(wtwcost);
 						}
+						cost = cost.add(BigDecimal.valueOf(item.getTranscationPrice()));
 						// 毛利
 						grossProfit = excludingTaxAmount.subtract(cost);
-						// 毛利率
-						grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
 
 					}
 				}
-
-				entity.setAmount(amount);
-				entity.setExcludingTaxAmount(excludingTaxAmount);
-				entity.setCost(cost);
-				entity.setGrossProfit(grossProfit);
-				entity.setGrossProfitMargin(grossProfitMargin);
+				// 毛利率
+				wtwgrossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, wtwcost);
+				// 毛利率
+				grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
 
 				sumAmount = sumAmount.add(amount);
 				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
+				sumWtwCost = sumWtwCost.add(wtwcost);
 				sumCost = sumCost.add(cost);
+				sumWtwGrossProfit = sumWtwGrossProfit.add(wtwgrossProfit);
 				sumGrossProfit = sumGrossProfit.add(grossProfit);
-				sumAmount = sumAmount.add(amount);
+
+				entity.setAmount(amount.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setExcludingTaxAmount(excludingTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setWtwCost(wtwcost.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setCost(cost.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setWtwGrossProfit(wtwgrossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setGrossProfit(grossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
+				entity.setWtwGrossProfitMargin(BigDecimal.valueOf(wtwgrossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				entity.setGrossProfitMargin(BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 
 		}
 
 		DMaterialGroups sumssg = new DMaterialGroups();
-		sumssg.setAmount(sumAmount);
-		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount);
-		sumssg.setCost(sumCost);
-		sumssg.setGrossProfit(sumGrossProfit);
+		sumssg.setAmount(sumAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
+		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
+		sumssg.setWtwCost(sumWtwCost.setScale(2, BigDecimal.ROUND_HALF_UP));
+		sumssg.setCost(sumCost.setScale(2, BigDecimal.ROUND_HALF_UP));
+		sumssg.setWtwGrossProfit(sumWtwGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
+		sumssg.setGrossProfit(sumGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
 		if (groups.size() != 0) {
+			sumssg.setWtwGrossProfitMargin(sumWtwGrossProfitMargin / groups.size());
 			sumssg.setGrossProfitMargin(sumGrossProfitMargin / groups.size());
 		} else {
+			sumssg.setWtwGrossProfitMargin(0D);
 			sumssg.setGrossProfitMargin(0D);
 		}
 		sumssg.setCode("sum");
@@ -566,9 +585,15 @@ public class OrderService {
 	}
 
 	public Double CalculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
-
-		return (afterTaxAmount.subtract(cost)).divide(afterTaxAmount).setScale(4, BigDecimal.ROUND_HALF_UP)
-				.doubleValue();
+		Double v = 0D;
+		try {
+			v = (afterTaxAmount.subtract(cost)).divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP).setScale(4, BigDecimal.ROUND_HALF_UP)
+					.doubleValue();
+		} catch (ArithmeticException e) {
+			e.printStackTrace();
+		}
+		
+		return v;
 	}
 
 	/**
@@ -1220,12 +1245,12 @@ public class OrderService {
 			// 产品实卖价 = 实卖金额 / 数量
 			BigDecimal saleAmount = itemDetails.getAmount();
 			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
-			item.setActuralPrice(saleAmount.divide(quantity).doubleValue());
-//			item.setActuralPricaOfOptional(itemDetails.geto);
-			item.setTranscationPrice(itemDetails.getTransfterPrice() == null ? 0 : itemDetails.getTransfterPrice().doubleValue());
-//			item.setTranscationPriceOfOptional(transcationPriceOfOptional);
-			item.setRetailPrice(itemDetails.getRetailPrice().doubleValue());
-			item.setStandardPrice(itemDetails.getStandardPrice().doubleValue());
+			item.setActuralPrice(saleAmount.divide(quantity, 4, BigDecimal.ROUND_HALF_UP).doubleValue());
+//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
+			item.setTranscationPrice(toDouble(itemDetails.getTransfterPrice()));
+//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
+			item.setRetailPrice(toDouble(itemDetails.getRetailPrice()));
+			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
 //			item.setPeriod(itemDetails.getp);
 
 			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
@@ -1273,6 +1298,10 @@ public class OrderService {
 			return defaultValue;
 		}
 		return v.toString();
+	}
+
+	private double toDouble(Number n) {
+		return n == null ? 0 : n.doubleValue();
 	}
 
 }

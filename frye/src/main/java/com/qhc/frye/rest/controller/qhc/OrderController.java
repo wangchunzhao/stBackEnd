@@ -120,6 +120,13 @@ public class OrderController {
 	}
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
+	@PostMapping(value = "order/{sequenceNumber}/{version}/wtwgrossprofit")
+	@ResponseStatus(HttpStatus.OK)
+	public List<DMaterialGroups> calcWtwGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
+		return orderService.calcWtwGrossProfit(sequenceNumber, version);
+	}
+
+	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
 	@ResponseStatus(HttpStatus.OK)
 	public List<DMaterialGroups> calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
@@ -139,9 +146,14 @@ public class OrderController {
 	@GetMapping(value = "order/option")
 	@ResponseStatus(HttpStatus.OK)
 	public OrderOption getOption() throws Exception {
-
-		return orderService.getOrderOption();
+		OrderOption option = new OrderOption();
+		try {
+			option = orderService.getOrderOption();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return option;
 	}
 		    
     /**
