@@ -1079,7 +1079,7 @@ public class OrderService {
 		order.setAttachedFileName(attachmentNames);
 
 		// 收货地址
-		List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderId);
+		List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderInfoId);
 		List<OrderAddress> addresses = new ArrayList<OrderAddress>(addressList.size());
 		for (KDelieveryAddress delieveryAddress : addressList) {
 			OrderAddress address = new OrderAddress();
@@ -1122,22 +1122,6 @@ public class OrderService {
 			querySql.append(" and order_id = :orderId");
 			params.put("orderId", orderQuery.getOrderId());
 		}
-		if (!isEmpty(orderQuery.getSequenceNumber())) {
-			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
-			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
-		}
-		if (!isEmpty(orderQuery.getVersionId())) {
-			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
-			params.put("versionId", orderQuery.getVersionId());
-		}
-		if (!isEmpty(orderQuery.getVersion())) {
-			querySql.append(" and version = :version"); // .append(query.getVersion());
-			params.put("version", orderQuery.getVersion());
-		}
-		if (!isEmpty(orderQuery.getStatus())) {
-			querySql.append(" and status = :status"); // .append(query.getStatus());
-			params.put("status", orderQuery.getStatus());
-		}
 		if (orderQuery.isLast()) {
 			querySql.append(
 					" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
@@ -1158,16 +1142,32 @@ public class OrderService {
 			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
 			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
 		}
-		if (!isEmpty(orderQuery.getSalesCode())) {
-			querySql.append(" and owner_domain_id like :ownerId"); 
-			params.put("ownerId", "%" + orderQuery.getSalesCode() + "%");
-		}
 		if (orderQuery.getB2c() != null && orderQuery.getB2c()) {
 			querySql.append(" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id)"); 
 		}
 		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
 			querySql.append(" and status in (:statuslist)"); 
 			params.put("statuslist", orderQuery.getStatusList());
+		}
+		if (!isEmpty(orderQuery.getSalesCode())) {
+			querySql.append(" and owner_domain_id = :ownerId"); 
+			params.put("ownerId", orderQuery.getSalesCode());
+		}
+		if (!isEmpty(orderQuery.getSequenceNumber())) {
+			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
+			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
+		}
+		if (!isEmpty(orderQuery.getVersionId())) {
+			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
+			params.put("versionId", orderQuery.getVersionId());
+		}
+		if (!isEmpty(orderQuery.getVersion())) {
+			querySql.append(" and version = :version"); // .append(query.getVersion());
+			params.put("version", orderQuery.getVersion());
+		}
+		if (!isEmpty(orderQuery.getStatus())) {
+			querySql.append(" and status = :status"); // .append(query.getStatus());
+			params.put("status", orderQuery.getStatus());
 		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
