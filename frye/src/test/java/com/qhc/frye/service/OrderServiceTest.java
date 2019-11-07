@@ -46,7 +46,7 @@ class OrderServiceTest {
 		query.setLast(true);
 		query.setPageNo(1);
 		query.setPageSize(10);
-		query.setB2c(true);
+		query.setB2c("1");
 		query.setStatus("1");
 		query.setStatusList(Arrays.asList(new String[] {"1", "2"}));
 		query.setIncludeDetail(true);
