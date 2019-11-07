@@ -1147,9 +1147,39 @@ public class OrderService {
 			querySql.append(" and order_id = :orderId");
 			params.put("orderId", orderQuery.getOrderId());
 		}
-		if (orderQuery.isLast()) {
-			querySql.append(
-					" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
+		if (!isEmpty(orderQuery.getSequenceNumber())) {
+			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
+			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
+		}
+		if (!isEmpty(orderQuery.getVersionId())) {
+			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
+			params.put("versionId", orderQuery.getVersionId());
+		}
+		if (!isEmpty(orderQuery.getVersion())) {
+			querySql.append(" and version = :version"); // .append(query.getVersion());
+			params.put("version", orderQuery.getVersion());
+		}
+		if (!isEmpty(orderQuery.getStatus())) {
+			querySql.append(" and status = :status"); // .append(query.getStatus());
+			params.put("status", orderQuery.getStatus());
+		}
+		if (!isEmpty(orderQuery.getSalesCode())) {
+			querySql.append(" and owner_domain_id = :ownerId"); 
+			params.put("ownerId", orderQuery.getSalesCode());
+		}
+		if (!isEmpty(orderQuery.getSalesName())) {
+			querySql.append(" and owner_name like :ownerName"); 
+			params.put("ownerName", "%" + orderQuery.getSalesName() + "%");
+		}
+		if (!isEmpty(orderQuery.getCreateTime())) {
+			//2019-04-07 ~ 2019-11-07
+			String strtime = orderQuery.getCreateTime();
+			String[] strtimes = strtime.split("~");
+			String start = strtimes[0].trim();
+			String end = strtimes[1].trim();
+			querySql.append(" and DATE_FORMAT(create_time, '%Y-%m-%d') >= :start and DATE_FORMAT(create_time, '%Y-%m-%d') <= :end"); 
+			params.put("start", start);
+			params.put("end", end);
 		}
 		if (!isEmpty(orderQuery.getOfficeCode())) {
 			querySql.append(" and office_code = :officeCode"); // .append(query.getStatus());
@@ -1167,32 +1197,31 @@ public class OrderService {
 			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
 			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
 		}
-		if (orderQuery.getB2c() != null && orderQuery.getB2c()) {
-			querySql.append(" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id)"); 
-		}
 		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
 			querySql.append(" and status in (:statuslist)"); 
 			params.put("statuslist", orderQuery.getStatusList());
 		}
-		if (!isEmpty(orderQuery.getSalesCode())) {
-			querySql.append(" and owner_domain_id = :ownerId"); 
-			params.put("ownerId", orderQuery.getSalesCode());
+		if (!isEmpty(orderQuery.getSpecialDiscount())) {
+			boolean special = orderQuery.getSpecialDiscount().equals("1");
+			if (special) {
+				querySql.append(" and (body_discount + main_discount) != 96"); 
+			} else {
+				querySql.append(" and (body_discount + main_discount) = 96"); 
+			}
 		}
-		if (!isEmpty(orderQuery.getSequenceNumber())) {
-			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
-			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
+		if (orderQuery.isLast()) {
+			querySql.append(
+					" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
 		}
-		if (!isEmpty(orderQuery.getVersionId())) {
-			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
-			params.put("versionId", orderQuery.getVersionId());
-		}
-		if (!isEmpty(orderQuery.getVersion())) {
-			querySql.append(" and version = :version"); // .append(query.getVersion());
-			params.put("version", orderQuery.getVersion());
-		}
-		if (!isEmpty(orderQuery.getStatus())) {
-			querySql.append(" and status = :status"); // .append(query.getStatus());
-			params.put("status", orderQuery.getStatus());
+		if (!isEmpty(orderQuery.getB2c()) ) {
+			boolean has = orderQuery.getB2c().equals("1");
+			querySql.append(" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id");
+			if (has) {
+				querySql.append(" and b2c_comments is not null and LENGTH(TRIM(b2c_comments)) > 0");
+			} else {
+				querySql.append(" and (b2c_comments is null or LENGTH(TRIM(b2c_comments)) = 0)");
+			}
+			querySql.append(")");
 		}
 
 		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
