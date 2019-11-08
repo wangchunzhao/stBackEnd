@@ -119,7 +119,7 @@ public class MaterialService {
 		if( pageNo >0){
 			pageNo = pageNo-1;
 		}
-		Page<DMaterial> dms = materialRepo.findAllByName(name,PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
+		Page<DMaterial> dms = materialRepo.findAllByName(name.toUpperCase(),PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
 		PageHelper<DMaterial> ph = new PageHelper<DMaterial>(dms);
 		return ph;
 	}

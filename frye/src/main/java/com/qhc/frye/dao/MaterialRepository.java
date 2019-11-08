@@ -18,7 +18,7 @@ import com.qhc.frye.domain.DMaterial;
  */
 @Repository
 public interface MaterialRepository extends JpaRepository<DMaterial, String>{
-	@Query(value ="SELECT * FROM sap_materials where description like %:name%",
-			countQuery="SELECT count(*) FROM sap_materials where description like %:name%",nativeQuery = true)
+	@Query(value ="SELECT * FROM sap_materials where (UPPER(description) like %:name% or UPPER(code) like %:name%)",
+			countQuery="SELECT count(1) FROM sap_materials where (UPPER(description) like %:name% or UPPER(code) like %:name%)",nativeQuery = true)
 	public Page<DMaterial> findAllByName(@Param("name")String name,Pageable pageable); 
 }
