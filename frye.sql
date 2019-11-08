@@ -1812,10 +1812,16 @@ INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('101
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1012', '区域订单', '查看本人所在区域订单');
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1013', '用户新增', '');
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1014', 'B2C审核订单', '');
+<<<<<<< HEAD
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1015', '工程人员审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1016', '支持经理审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');
 
+=======
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1015', '工程人员审批订单', '');
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1016', '支持经理审批订单', '');
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');					 
+>>>>>>> branch 'Sprint4' of https://github.com/dxc-x/frye.git
 COMMIT;
 
 

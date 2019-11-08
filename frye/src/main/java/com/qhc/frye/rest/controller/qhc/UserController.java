@@ -108,6 +108,9 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User findByUserIdentity(@PathVariable String userIdentity) throws Exception{	
 		User user = userService.findByUserIdentity(userIdentity);
+		if(user == null) {
+			return null;
+		}
 		List<ApplicationOfRolechange> appList = appService.findByBUsersId(user.getId());
 		Set<Operations> operationSet = new HashSet<Operations>();
 		List<Role> roleList = new ArrayList<Role>();
