@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_operation2role` (
   `opt_time` DATETIME NOT NULL,
   `isActive` TINYINT(1) NOT NULL,
   `b_operations_id` CHAR(4) NOT NULL,
-  `b_roles_id` INT(10) UNSIGNED ZEROFILL NOT NULL,
+  `b_roles_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_b_operation2role_b_operations1_idx` (`b_operations_id` ASC) VISIBLE,
@@ -1812,16 +1812,10 @@ INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('101
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1012', '区域订单', '查看本人所在区域订单');
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1013', '用户新增', '');
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1014', 'B2C审核订单', '');
-<<<<<<< HEAD
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1015', '工程人员审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1016', '支持经理审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');
 
-=======
-INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1015', '工程人员审批订单', '');
-INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1016', '支持经理审批订单', '');
-INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');					 
->>>>>>> branch 'Sprint4' of https://github.com/dxc-x/frye.git
 COMMIT;
 
 
