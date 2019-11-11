@@ -5,6 +5,7 @@ package com.qhc.frye.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -175,7 +176,7 @@ public class ConstantService {
 	public Map<String, String> findMaterialGroupOrders() {
 		if (materialGroupOrders == null || materialGroupOrders.isEmpty()) {
 			List<BMaterialGroupOrder> list = materialGroupOrderRepository.findAll(Sort.by(Order.asc("code")));
-			materialGroupOrders = new HashMap<String, String>();
+			materialGroupOrders = new LinkedHashMap<String, String>();
 
 			for (BMaterialGroupOrder bMaterialGroupOrder : list) {
 				materialGroupOrders.put(bMaterialGroupOrder.getCode(), bMaterialGroupOrder.getName());
@@ -188,8 +189,8 @@ public class ConstantService {
 	public Map<String, String> findMaterialGroups() {
 		if (materialGroups == null || materialGroups.isEmpty()) {
 			List<DMaterialGroups> list = materialGroupsRepository.findAll(Sort.by(Order.asc("code")));
-			materialGroups = new HashMap<String, String>();
-			materialGroupMapGroupOrders = new HashMap<String, String>();
+			materialGroups = new LinkedHashMap<String, String>();
+			materialGroupMapGroupOrders = new LinkedHashMap<String, String>();
 
 			for (DMaterialGroups dMaterialGroups : list) {
 				String groupCode = dMaterialGroups.getCode();
@@ -210,13 +211,13 @@ public class ConstantService {
 	public Map<String, Map<String, String>> findSalesOffices() {
 		if (salesOffices == null || salesOffices.isEmpty()) {
 			List<SapSalesOffice> list = saleOfficeRepository.findAll(Sort.by(Order.asc("code")));
-			salesOffices = new HashMap<String, Map<String, String>>();
+			salesOffices = new LinkedHashMap<String, Map<String, String>>();
 
 			for (SapSalesOffice sapSalesOffice : list) {
 				String typeCode = sapSalesOffice.getTypeCode();
 				Map<String, String> office = salesOffices.get(typeCode);
 				if (office == null) {
-					office = new HashMap<>();
+					office = new LinkedHashMap<String, String>();
 					salesOffices.put(typeCode, office);
 				}
 				office.put(sapSalesOffice.getCode(), sapSalesOffice.getName());
@@ -229,13 +230,13 @@ public class ConstantService {
 	public Map<String, Map<String, String>> findSalesGroups() {
 		if (salesGroups == null || salesGroups.isEmpty()) {
 			List<SapSalesGroup> list = salesGroupRepository.findAll(Sort.by(Order.asc("code")));
-			salesGroups = new HashMap<String, Map<String, String>>();
+			salesGroups = new LinkedHashMap<String, Map<String, String>>();
 
 			for (SapSalesGroup sapSalesGroup : list) {
 				String officeCode = sapSalesGroup.getOfficeCode();
 				Map<String, String> group = salesGroups.get(officeCode);
 				if (group == null) {
-					group = new HashMap<>();
+					group = new LinkedHashMap<String, String>();
 					salesGroups.put(officeCode, group);
 				}
 				group.put(sapSalesGroup.getCode(), sapSalesGroup.getName());
@@ -248,7 +249,7 @@ public class ConstantService {
 	public Map<String, String> findShippingTypes() {
 		if (shippingTypes == null || shippingTypes.isEmpty()) {
 			List<DShippingType> list = shippingTypeRepository.findAll(Sort.by(Order.asc("code")));
-			shippingTypes = new HashMap<String, String>();
+			shippingTypes = new LinkedHashMap<String, String>();
 
 			for (DShippingType dShippingType : list) {
 				shippingTypes.put(dShippingType.getCode(), dShippingType.getName());
@@ -261,7 +262,7 @@ public class ConstantService {
 	public Map<String, String> findReceiveTerms() {
 		if (receiveTerms == null || receiveTerms.isEmpty()) {
 			List<DReceiveTerms> list = receiveTermsRepository.findAll(Sort.by(Order.asc("code")));
-			receiveTerms = new HashMap<String, String>();
+			receiveTerms = new LinkedHashMap<String, String>();
 
 			for (DReceiveTerms dReceiveTerms : list) {
 				receiveTerms.put(dReceiveTerms.getCode(), dReceiveTerms.getName());
@@ -274,7 +275,7 @@ public class ConstantService {
 	public Map<String, String> findIncoterms() {
 		if (incoterms == null || incoterms.isEmpty()) {
 			List<DIncoterm> list = incotermRepository.findAll(Sort.by(Order.asc("code")));
-			incoterms = new HashMap<String, String>();
+			incoterms = new LinkedHashMap<String, String>();
 
 			for (DIncoterm dIncoterm : list) {
 				incoterms.put(dIncoterm.getCode(), dIncoterm.getName());

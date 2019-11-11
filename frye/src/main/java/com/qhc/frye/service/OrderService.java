@@ -1181,6 +1181,16 @@ public class OrderService {
 			params.put("start", start);
 			params.put("end", end);
 		}
+		if (!isEmpty(orderQuery.getSubmitTime())) {
+			//2019-04-07 ~ 2019-11-07
+			String strtime = orderQuery.getSubmitTime();
+			String[] strtimes = strtime.split("~");
+			String start = strtimes[0].trim();
+			String end = strtimes[1].trim();
+			querySql.append(" and DATE_FORMAT(submit_date, '%Y-%m-%d') >= :start and DATE_FORMAT(submit_date, '%Y-%m-%d') <= :end"); 
+			params.put("start", start);
+			params.put("end", end);
+		}
 		if (!isEmpty(orderQuery.getOfficeCode())) {
 			querySql.append(" and office_code = :officeCode"); // .append(query.getStatus());
 			params.put("officeCode", orderQuery.getOfficeCode());
