@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`b_application_of_rolechange` (
   `approval_time` DATETIME NULL DEFAULT NULL,
   `b_users_id` INT(10) UNSIGNED NOT NULL,
   `isActive` TINYINT(1) NOT NULL DEFAULT '1',
-  `attached_code` CHAR(32) NULL DEFAULT NULL,
+  `attached_code` VARCHAR(45) NOT NULL DEFAULT '0841',
   `b_roles_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
