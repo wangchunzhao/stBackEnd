@@ -29,6 +29,7 @@ public class OrderQuery {
 	private List statusList;  //订单状态集合
 	private String salesName;//客户经理姓名   模糊查询
 	private String createTime;//2019-04-07 ~ 2019-11-07
+	private String submitTime;//2019-11-08 - 2019-11-08
 	
 	private boolean includeDetail = false;
 	
@@ -139,6 +140,12 @@ public class OrderQuery {
 	}
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+	public String getSubmitTime() {
+		return submitTime;
+	}
+	public void setSubmitTime(String submitTime) {
+		this.submitTime = submitTime;
 	}
 	public boolean isIncludeDetail() {
 		return includeDetail;
