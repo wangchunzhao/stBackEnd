@@ -220,14 +220,14 @@ COLLATE = utf8mb4_bin;
 DROP TABLE IF EXISTS `bohemian`.`b_settings` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`b_settings` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` CHAR(32) NOT NULL,
   `s_value` TEXT NOT NULL,
   `enable_date` DATE NOT NULL,
   `comment` TEXT NULL DEFAULT NULL,
   `operater` TEXT NOT NULL,
   `opt_time` DATETIME NOT NULL,
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
-  PRIMARY KEY (`code`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1824,8 +1824,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('0d5d7ea6b2605e38b4f3dbd394168b3b', '0.48', '2019-01-01', '标准折扣', 'wangch', '2019-01-01');
-INSERT INTO `bohemian`.`b_settings` (`code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES ('1c20b7ffba1a59faa081324eb34844a5', '0.13', '2019-01-01', '税率', 'wangch', '2019-01-01');
+INSERT INTO `bohemian`.`b_settings` (`id`, `code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES (1, '0d5d7ea6b2605e38b4f3dbd394168b3b', '0.48', '2019-01-01', '标准折扣', 'wangch', '2019-01-01');
+INSERT INTO `bohemian`.`b_settings` (`id`, `code`, `s_value`, `enable_date`, `comment`, `operater`, `opt_time`) VALUES (2, '1c20b7ffba1a59faa081324eb34844a5', '0.13', '2019-01-01', '税率', 'wangch', '2019-01-01');
 
 COMMIT;
 
