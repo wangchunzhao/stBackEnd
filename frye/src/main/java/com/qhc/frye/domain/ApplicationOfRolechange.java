@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Table(name = "b_application_of_rolechange")
@@ -26,9 +28,11 @@ public class ApplicationOfRolechange implements Serializable{
 	
 	@NotNull
 	@Column(name="create_time",columnDefinition="datetime")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
 	@Column(name="approval_time",columnDefinition="datetime")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Date approvalTime;
 
 	@NotNull

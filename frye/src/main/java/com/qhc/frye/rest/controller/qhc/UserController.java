@@ -153,7 +153,7 @@ public class UserController {
 	@ApiOperation(value="新增用户角色关系", notes="新增用户角色关系")
 	@PostMapping(value="applicationOfRolechange")
     @ResponseStatus(HttpStatus.OK)
-	@ResponseBody
+	@Transactional
     public ApplicationOfRolechange add(@RequestBody(required=true) ApplicationOfRolechange applicationOfRolechange) throws Exception
     {	
 		return applicationOfRolechangeService.add(applicationOfRolechange);
