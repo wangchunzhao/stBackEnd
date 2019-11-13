@@ -1,6 +1,7 @@
 package com.qhc.frye.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,9 @@ public interface ParameterSettingsRepository extends JpaRepository<Parameter, In
 	//失效信息
 	@Query(value="select * from b_settings where code=?1 and enable_date< ?2 order by enable_date desc limit 1" ,nativeQuery=true)
 	Parameter findPreInfo(String code,Date date);
+	
+	//所有setting数据，按code enable_date正向排序
+	@Query(value="select * from b_settings order by code asc, enable_date asc" ,nativeQuery=true)
+	List<Parameter> findSettings();
 
 }
