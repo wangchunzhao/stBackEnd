@@ -233,7 +233,10 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(final AbsOrder order, boolean fromSupportor) {
+	public void save(final AbsOrder order) {
+		this.dealOrder(order, false);
+	}
+	private void dealOrder(final AbsOrder order, boolean fromSupportor) {
 
 		String seq = order.getSequenceNumber();
 

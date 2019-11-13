@@ -272,7 +272,12 @@ public class OrderHelper {
 	 */
 	public KOrderVersion toOrderVersion() {
 		KOrderVersion temp = new KOrderVersion();
-		temp.setStatus(0);
+		switch(order.getSubmitType()) {
+			case 1:
+				temp.setStatus(1);
+			case 0:
+				temp.setStatus(0);
+		}
 		temp.setVersion(order.getCurrentVersion());
 		temp.setCreateTime(order.getCreateTime());
 		temp.setOptTime(order.getOptTime());
@@ -283,6 +288,12 @@ public class OrderHelper {
 		temp.setId(old.getId());
 		temp.setOrderId(old.getOrderId());
 		temp.setOrderInfoId(old.getOrderInfoId());
+		switch(order.getSubmitType()) {
+		case 1:
+			temp.setStatus(1);
+		case 0:
+			temp.setStatus(old.getStatus());
+	}
 		return temp;
 	}
 	public static ItemDetails itemConversion(final AbsItem  item,final String formId) {
