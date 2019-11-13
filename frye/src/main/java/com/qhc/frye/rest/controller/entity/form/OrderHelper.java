@@ -272,7 +272,12 @@ public class OrderHelper {
 	 */
 	public KOrderVersion toOrderVersion() {
 		KOrderVersion temp = new KOrderVersion();
-		
+		switch(order.getSubmitType()) {
+			case 1:
+				temp.setStatus(1);
+			case 0:
+				temp.setStatus(0);
+		}
 		temp.setVersion(order.getCurrentVersion());
 		temp.setCreateTime(order.getCreateTime());
 		temp.setOptTime(order.getOptTime());

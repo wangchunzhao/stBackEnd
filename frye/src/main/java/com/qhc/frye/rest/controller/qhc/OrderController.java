@@ -69,7 +69,7 @@ public class OrderController {
 		switch(order.getSubmitType()) {
 			case 1:
 				//set the status on order version
-				orderService.submit(order);
+				orderService.save(order);
 				break;
 			case 2:
 				//set the status on order version

@@ -233,13 +233,6 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void submit(final AbsOrder order) {
-		this.dealOrder(order, false);
-	}
-	/**
-	 * 
-	 * @param absOrder
-	 */
 	public void save(final AbsOrder order) {
 		this.dealOrder(order, false);
 	}
