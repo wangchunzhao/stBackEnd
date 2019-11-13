@@ -23,11 +23,10 @@ public class Parameter implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-//	@Id
-//    @NotNull
-//    @GeneratedValue(strategy= GenerationType.IDENTITY)
-//	public Integer id;
 	@Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+	public Integer id;
+
 	@NotNull
 	@Column(name="code",columnDefinition="CHAR")
 	public String code;
@@ -132,14 +131,10 @@ public class Parameter implements Serializable{
 	public void setAfterEnableDate(Date afterEnableDate) {
 		this.afterEnableDate = afterEnableDate;
 	}
-//	public Integer getId() {
-//		return id;
-//	}
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
-//	
-//	
-//	
-
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 }
