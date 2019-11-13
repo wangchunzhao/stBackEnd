@@ -670,36 +670,6 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
--- Table `bohemian`.`k_acceptance_approch`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_acceptance_approch` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_acceptance_approch` (
-  `id` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`k_receive_confirm`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_receive_confirm` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_receive_confirm` (
-  `id` CHAR(4) NOT NULL,
-  `name` TEXT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
 -- Table `bohemian`.`k_orders`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_orders` ;
@@ -792,7 +762,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` CHAR(32) NOT NULL,
   `version` VARCHAR(45) NOT NULL COMMENT '版本名称',
-  `status` TINYINT(2) NOT NULL COMMENT '00 订单新建保存\n01 客户经理提交成功\n02 B2C审核提交成功\n03 工程人员提交成功\n04  支持经理提交成功\n05   订单审批通过\n06   订单更改审批通过\n07    订单更改保存\n08   订单更改提交成功\n09  已下推SAP\n10   BPM驳回\n11   Selling Tool驳回',
+  `status` TINYINT(2) NOT NULL COMMENT '0 订单新建保存\n1 客户经理提交成功\n02 B2C审核提交成功\n03 工程人员提交成功\n04  支持经理提交成功\n05   订单审批通过\n06   订单更改审批通过\n07    订单更改保存\n08   订单更改提交成功\n09  已下推SAP\n10   BPM驳回\n11   Selling Tool驳回',
   `create_time` DATETIME NOT NULL COMMENT '版本最早被创建时间，时间用来排序顺序',
   `submit_date` DATETIME NULL COMMENT '最后一次提交时间，会有被驳回然后提交的时间',
   `bpm_submit_time` DATETIME NULL COMMENT '提交bpm审批的时间，会有被驳回然后提交的时间',
@@ -820,6 +790,21 @@ COLLATE = utf8mb4_bin;
 
 
 -- -----------------------------------------------------
+-- Table `bohemian`.`k_acceptance_criteria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_acceptance_criteria` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_acceptance_criteria` (
+  `code` CHAR(4) NOT NULL COMMENT '验收标准code',
+  `name` TEXT NOT NULL COMMENT '验收标准名称',
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `id_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_bin;
+
+
+-- -----------------------------------------------------
 -- Table `bohemian`.`k_contract`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bohemian`.`k_contract` ;
@@ -835,8 +820,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `client_name` TEXT NOT NULL,
   `install_location` TEXT NOT NULL,
   `quality_stand` VARCHAR(45) NULL DEFAULT NULL,
-  `k_receive_confirm_id` CHAR(4) NULL DEFAULT NULL,
-  `k_acceptance_approch_id` CHAR(4) NULL DEFAULT NULL,
   `settlement` TEXT NULL DEFAULT NULL,
   `paryA_address` TEXT NULL DEFAULT NULL,
   `invoice_address` TEXT NULL DEFAULT NULL,
@@ -848,44 +831,30 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `bank_name` TEXT NULL DEFAULT NULL,
   `account_number` TEXT NULL DEFAULT NULL,
   `k_order_version_id` CHAR(32) NOT NULL,
+  `receive_terms_code` VARCHAR(45) NOT NULL,
+  `receive_terms_name` VARCHAR(45) NOT NULL,
+  `k_acceptance_criteria_code` CHAR(4) NOT NULL,
+  `mail` TEXT NOT NULL,
+  `contractor_1_id` VARCHAR(45) NULL,
+  `contractor_1_tel` VARCHAR(45) NULL,
+  `contractor_2_id` VARCHAR(45) NULL,
+  `contractor_2_tel` VARCHAR(45) NULL,
+  `contractor_3_id` VARCHAR(45) NULL,
+  `contractor_3_tel` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_acceptance_approch1_idx` (`k_acceptance_approch_id` ASC) VISIBLE,
-  INDEX `fk_k_contract_k_receive_confirm1_idx` (`k_receive_confirm_id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_contract_k_acceptance_approch1`
-    FOREIGN KEY (`k_acceptance_approch_id`)
-    REFERENCES `bohemian`.`k_acceptance_approch` (`id`),
-  CONSTRAINT `fk_k_contract_k_receive_confirm1`
-    FOREIGN KEY (`k_receive_confirm_id`)
-    REFERENCES `bohemian`.`k_receive_confirm` (`id`),
+  INDEX `fk_k_contract_k_acceptance_criteria1_idx` (`k_acceptance_criteria_code` ASC) VISIBLE,
   CONSTRAINT `fk_k_contract_k_order_version1`
     FOREIGN KEY (`k_order_version_id`)
     REFERENCES `bohemian`.`k_order_version` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_k_contract_k_acceptance_criteria1`
+    FOREIGN KEY (`k_acceptance_criteria_code`)
+    REFERENCES `bohemian`.`k_acceptance_criteria` (`code`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_bin;
-
-
--- -----------------------------------------------------
--- Table `bohemian`.`k_contacter`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bohemian`.`k_contacter` ;
-
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_contacter` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `linkman` TEXT NOT NULL,
-  `tel_number` TEXT NOT NULL,
-  `id_number` VARCHAR(18) NULL DEFAULT NULL,
-  `k_contract_id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_contact_k_contract1_idx` (`k_contract_id` ASC) VISIBLE,
-  CONSTRAINT `fk_k_contact_k_contract1`
-    FOREIGN KEY (`k_contract_id`)
-    REFERENCES `bohemian`.`k_contract` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_bin;
@@ -1992,6 +1961,17 @@ START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_shipping_type` (`code`, `name`) VALUES ('01', '自提');
 INSERT INTO `bohemian`.`sap_shipping_type` (`code`, `name`) VALUES ('05', '非自提');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`k_acceptance_criteria`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`k_acceptance_criteria` (`code`, `name`) VALUES ('1001', '需方负责安装调试');
+INSERT INTO `bohemian`.`k_acceptance_criteria` (`code`, `name`) VALUES ('1002', '供方负责安装调试');
 
 COMMIT;
 
