@@ -1151,8 +1151,8 @@ public class OrderService {
 			params.put("orderId", orderQuery.getOrderId());
 		}
 		if (!isEmpty(orderQuery.getSequenceNumber())) {
-			querySql.append(" and sequence_number like :sequenceNumber");// .append(query.getSequenceNumber());
-			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber() + "%");
+			querySql.append(" and UPPER(sequence_number) like :sequenceNumber");// .append(query.getSequenceNumber());
+			params.put("sequenceNumber", "%" + orderQuery.getSequenceNumber().toUpperCase() + "%");
 		}
 		if (!isEmpty(orderQuery.getVersionId())) {
 			querySql.append(" and version_id = :versionId");// .append(query.getVersionId());
@@ -1171,8 +1171,8 @@ public class OrderService {
 			params.put("ownerId", orderQuery.getSalesCode());
 		}
 		if (!isEmpty(orderQuery.getSalesName())) {
-			querySql.append(" and owner_name like :ownerName"); 
-			params.put("ownerName", "%" + orderQuery.getSalesName() + "%");
+			querySql.append(" and UPPER(owner_name) like :ownerName"); 
+			params.put("ownerName", "%" + orderQuery.getSalesName().toUpperCase() + "%");
 		}
 		if (!isEmpty(orderQuery.getCreateTime())) {
 			//2019-04-07 ~ 2019-11-07
@@ -1203,12 +1203,12 @@ public class OrderService {
 			params.put("orderType", orderQuery.getOrderType());
 		}
 		if (!isEmpty(orderQuery.getContractNumber())) {
-			querySql.append(" and contract_number like :contractNumber"); // .append(query.getStatus());
-			params.put("contractNumber", "%" + orderQuery.getContractNumber() + "%");
+			querySql.append(" and UPPER(contract_number) like :contractNumber"); // .append(query.getStatus());
+			params.put("contractNumber", "%" + orderQuery.getContractNumber().toUpperCase() + "%");
 		}
 		if (!isEmpty(orderQuery.getContracterName())) {
-			querySql.append(" and contractor_name like :contractorName"); // .append(query.getStatus());
-			params.put("contractorName", "%" + orderQuery.getContracterName() + "%");
+			querySql.append(" and UPPER(contractor_name) like :contractorName"); // .append(query.getStatus());
+			params.put("contractorName", "%" + orderQuery.getContracterName().toUpperCase() + "%");
 		}
 		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
 			querySql.append(" and status in (:statuslist)"); 

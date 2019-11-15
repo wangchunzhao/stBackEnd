@@ -21,8 +21,6 @@ import javax.validation.constraints.NotNull;
 public class Contract
 		implements Serializable {
 	private static final long serialVersionUID = -1218924565991811880L;
-		
-	public static String tableName = "k_contract";
 	
 	// Primary key
 	// Column(id) - Id	
@@ -163,6 +161,18 @@ public class Contract
 	/* Column(contractor_3_tel) - Contractor3Tel */
 	@Column(name="contractor_3_tel", columnDefinition="VARCHAR", length=45)
 	private String contractor3Tel = null;
+
+	/* 合同制作时间 */
+	@Column(name="production_Time", columnDefinition="DATETIME")
+	private Date productionTime = null;
+
+	/* 合同发送时间 */
+	@Column(name="send_time", columnDefinition="DATETIME")
+	private Date sendTime = null;
+
+	/* 合同状态：1 未发送 2 已发送 */
+	@Column(name="contract_status", columnDefinition="INTEGER")
+	private Integer status = null;
 
 
 	public Contract(){
@@ -415,6 +425,30 @@ public class Contract
 		this.contractor3Tel = contractor3Tel;
 	}
 	 
+	public Date getProductionTime() {
+		return productionTime;
+	}
+
+	public void setProductionTime(Date productionTime) {
+		this.productionTime = productionTime;
+	}
+
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

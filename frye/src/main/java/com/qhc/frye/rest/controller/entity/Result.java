@@ -1,0 +1,46 @@
+package com.qhc.frye.rest.controller.entity;
+
+import java.io.Serializable;
+
+public class Result<T> implements Serializable {
+	
+	private static final long serialVersionUID = -8130395036916467013L;
+	
+	String status = "ok";
+	String msg = "";
+	T content = null;
+	
+	public static final Result<String> error(String msg) {
+		Result<String> error = new Result<String>();
+		error.setStatus("error");
+		error.setMsg(msg);
+		return error;
+	}
+	
+	public static final <T> Result<T> ok(T content) {
+		Result<T> ok = new Result<T>();
+		ok.setStatus("ok");
+		ok.setContent(content);
+		return ok;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public T getContent() {
+		return content;
+	}
+	public void setContent(T content) {
+		this.content = content;
+	}
+	
+}

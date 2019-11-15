@@ -111,7 +111,7 @@ public class ContractView
 	private Date productionTime = null;
 
 	/* 合同发送时间 */
-	private String sendTime = null;
+	private Date sendTime = null;
 
 	/* 合同状态：1 未发送 2 已发送 */
 	private Integer status = null;
@@ -400,11 +400,11 @@ public class ContractView
 		this.productionTime = productionTime;
 	}
 	 
-	public String getSendTime() {
+	public Date getSendTime() {
 		return this.sendTime;
 	}
 
-	public void setSendTime(String sendTime) {
+	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
 	}
 	 
