@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
+import com.qhc.frye.dao.AcceptanceCriteriaRepository;
 import com.qhc.frye.dao.BMaterialGroupOrderRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.CustomerClassRepository;
@@ -29,6 +30,7 @@ import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
 import com.qhc.frye.dao.SapMaterialGroupsRepository;
+import com.qhc.frye.domain.AcceptanceCriteria;
 import com.qhc.frye.domain.BMaterialGroupOrder;
 import com.qhc.frye.domain.CustomerClass;
 import com.qhc.frye.domain.DCurrency;
@@ -95,6 +97,9 @@ public class ConstantService {
 	
 	@Autowired
 	private MeasurementUnitRepository measurementUnitRepository;
+	
+	@Autowired
+	private AcceptanceCriteriaRepository acceptanceCriteriaRepository;
 
 	public static Map<String, String> customerClazz;
 
@@ -123,6 +128,9 @@ public class ConstantService {
 	public static Map<String, Map<String, String>> installationTerms = null;
 	
 	public static Map<String, String> measurementUnit = null;
+	
+	//k_acceptance_Criteria
+	public static Map<String, String> acceptanceCriteria = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -289,7 +297,7 @@ public class ConstantService {
 		if (currencies == null || currencies.isEmpty()) {
 			currencies = new HashMap<String, List<Currency>>();
 			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
-			Map<String, Currency> cmap = new HashMap<String, Currency>();
+			Map<String, Currency> cmap = new LinkedHashMap<String, Currency>();
 			list.forEach(dCurrency -> {
 				Currency currency = new Currency();
 				currency.setCode(dCurrency.getCode());
@@ -316,7 +324,7 @@ public class ConstantService {
 	public Map<String, Map<String, String>> findInstallationTerms() {
 		if (installationTerms == null || installationTerms.isEmpty()) {
 			List<DInstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
-			installationTerms = new HashMap<String, Map<String, String>>();
+			installationTerms = new LinkedHashMap<String, Map<String, String>>();
 
 			for (DInstallationTerms term : list) {
 				String classCode = term.getCustomerClassCode();
@@ -335,7 +343,7 @@ public class ConstantService {
 	public Map<String, String> findMeasurementUnits() {
 		if (measurementUnit == null || measurementUnit.isEmpty()) {
 			List<DUnit> list = measurementUnitRepository.findAll(Sort.by(Order.asc("code")));
-			measurementUnit = new HashMap<String, String>();
+			measurementUnit = new LinkedHashMap<String, String>();
 
 			for (DUnit unit : list) {
 				measurementUnit.put(unit.getCode(), unit.getName());
@@ -343,6 +351,19 @@ public class ConstantService {
 		}
 
 		return measurementUnit;
+	}
+	
+	public Map<String, String> findAcceptanceCriteriaes() {
+		if (acceptanceCriteria == null || acceptanceCriteria.isEmpty()) {
+			List<AcceptanceCriteria> list = acceptanceCriteriaRepository.findAll(Sort.by(Order.asc("code")));
+			acceptanceCriteria = new LinkedHashMap<String, String>();
+
+			for (AcceptanceCriteria unit : list) {
+				acceptanceCriteria.put(unit.getCode(), unit.getName());
+			}
+		}
+
+		return acceptanceCriteria;
 	}
 
 }
