@@ -489,8 +489,8 @@ public class OrderService {
 	
 	// sap_material_group分组 
 	public List<DMaterialGroups> calcGrossProfit(AbsOrder order) {
-		// 查询所有物料类型sap_material_group
-		List<DMaterialGroups> groups = materialGroupsRepository.findAll();
+		// 查询所有物料类型sap_material_group isenable != 0
+		List<DMaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<BaseItem> items = new ArrayList<BaseItem>();
 
 		items = order.getItems();

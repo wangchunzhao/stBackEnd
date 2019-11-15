@@ -8,7 +8,7 @@ public class Result<T> implements Serializable {
 	
 	String status = "ok";
 	String msg = "";
-	T content = null;
+	T data = null;
 	
 	public static final Result<String> error(String msg) {
 		Result<String> error = new Result<String>();
@@ -20,7 +20,7 @@ public class Result<T> implements Serializable {
 	public static final <T> Result<T> ok(T content) {
 		Result<T> ok = new Result<T>();
 		ok.setStatus("ok");
-		ok.setContent(content);
+		ok.setData(content);
 		return ok;
 	}
 	
@@ -36,11 +36,11 @@ public class Result<T> implements Serializable {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public T getContent() {
-		return content;
+	public T getData() {
+		return data;
 	}
-	public void setContent(T content) {
-		this.content = content;
+	public void setData(T data) {
+		this.data = data;
 	}
 	
 }
