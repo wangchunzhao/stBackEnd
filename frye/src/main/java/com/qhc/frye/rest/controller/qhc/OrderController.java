@@ -68,14 +68,38 @@ public class OrderController {
 		//
 		switch(order.getSubmitType()) {
 			case 1:
-				//set the status on order version
+				//submit order
 				orderService.save(order);
 				break;
 			case 2:
-				//set the status on order version
+				//save order
 				orderService.save(order);
 				break;
+			default:
+				throw new Exception();
 		}
+		
+	}
+	
+	@ApiOperation(value = "B2c审核订单", notes = "B2c审核订单")
+	@PostMapping(value = "order/b2c")
+	@ResponseStatus(HttpStatus.OK)
+	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam double cost,@RequestParam String comments) throws Exception{
+		
+	}
+	
+	
+	@ApiOperation(value = "工程经理审核", notes = "工程经理审核订单")
+	@PostMapping(value = "order/engineering")
+	@ResponseStatus(HttpStatus.OK)
+	public void approvedByEngineering(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam double cost,@RequestParam double cost2,@RequestParam double cost3,@RequestParam double cost4) throws Exception{
+		
+	}
+	
+	@ApiOperation(value = "BPM送审", notes = "BPM送审")
+	@PostMapping(value = "order/bpm")
+	@ResponseStatus(HttpStatus.OK)
+	public void toBPM() throws Exception{
 		
 	}
 

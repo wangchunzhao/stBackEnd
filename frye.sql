@@ -514,6 +514,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_material_groups` (
   `code` CHAR(4) NOT NULL,
   `name` TEXT NOT NULL,
   `b_material_group_order_code` CHAR(4) NOT NULL,
+  `isEnable` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`code`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_sap_material_groups_b_material_group_order1_idx` (`b_material_group_order_code` ASC) VISIBLE,
@@ -841,6 +842,9 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `contractor_2_tel` VARCHAR(45) NULL,
   `contractor_3_id` VARCHAR(45) NULL,
   `contractor_3_tel` VARCHAR(45) NULL,
+  `production_time` DATETIME NOT NULL COMMENT '\'合同制作时间\',',
+  `send_time` DATETIME NULL COMMENT '\'合同发送时间\',',
+  `contract_status` INT NULL COMMENT '\'合同状态：1 未发送 2 已发送\',',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
@@ -1914,23 +1918,24 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `bohemian`;
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3212', '安装费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3233', '材料费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3235', '电气费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3236', '维保费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3105', '冷库', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3231', '其他项目收费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3237', '不可预估费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3234', '销售运费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3101', '整机柜', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3102', '分体柜', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3109', '机组', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3103', '换热器和冷凝器', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('3104', '侧板', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('9101', 'B2C', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('9102', '可选项', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('9103', '追加运费', 'T101');
-INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`) VALUES ('1000', '散件', 'T101');
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3212', '安装费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3233', '材料费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3235', '电气费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3236', '维保费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3105', '冷库', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3231', '其他项目收费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3237', '不可预估费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3234', '销售运费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3101', '整机柜', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3102', '分体柜', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3109', '机组', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3103', '换热器和冷凝器', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('3104', '侧板', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('9101', 'B2C', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('9102', '可选项', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('9103', '追加运费', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('1000', '散件', 'T101', 1);
+INSERT INTO `bohemian`.`sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isEnable`) VALUES ('9999', '不可用物料类别', 'T106', 0);
 
 COMMIT;
 
