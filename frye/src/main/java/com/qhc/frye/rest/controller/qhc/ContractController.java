@@ -11,11 +11,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Walker
  *
  */
-@RestController
+@Controller
 @Api(value = "Contract management in Frye", description = "合同管理")
 @RequestMapping(path = "contract")
 public class ContractController {
@@ -44,9 +46,8 @@ public class ContractController {
 	
 	@ApiOperation(value = "查询合同列表")
 	@GetMapping(value = "/")
-	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Result<? extends Object> find(@RequestBody Map<String, Object> params) throws Exception {
+	public Result<? extends Object> find(@RequestParam(required = false) Map<String, Object> params) throws Exception {
 		Result<? extends Object> result = null;
 		try {
 			PageHelper<ContractView> page = contractService.find(params);

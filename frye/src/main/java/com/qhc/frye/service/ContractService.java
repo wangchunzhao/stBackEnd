@@ -67,6 +67,7 @@ public class ContractService {
 		// 支持经理，签约人
 		sql.append("support.opterator_domain_id                as opteratorDomainId,");
 		sql.append("orders.id                      as orderId,");
+		sql.append("orders.sequence_number               as sequenceNumber,");
 		// 签约单位 Contract Unit
 		sql.append("orders.contractor_code                as contractorCode,");
 		sql.append("orders.contractor_name                as contractorName,");
@@ -78,7 +79,7 @@ public class ContractService {
 		sql.append("version.id                as versionId,");
 		sql.append("version.create_time                as createTime,");
 		sql.append("contract.id                            as id,");
-		sql.append("contract.sequence_number               as sequenceNumber,");
+//		sql.append("contract.sequence_number               as sequenceNumber,");
 		sql.append("contract.PartyA_code                   as partyaCode,");
 		sql.append("contract.PartyA_name                   as partyaName,");
 		sql.append("contract.partyA_mail                   as partyaMail,");
@@ -131,7 +132,7 @@ public class ContractService {
 			sql.append(" and contract.contract_status = " + status + "");
 		}
 		if (!isEmpty(sequenceNumber)) {
-			sql.append(" and UPPER(contract.sequence_number) like '%" + sequenceNumber.toUpperCase() + "%'");
+			sql.append(" and UPPER(orders.sequence_number) like '%" + sequenceNumber.toUpperCase() + "%'");
 		}
 		if (!isEmpty(contractNumber)) {
 			sql.append(" and UPPER(support.contract_number) like '%" + contractNumber.toUpperCase() + "%'");

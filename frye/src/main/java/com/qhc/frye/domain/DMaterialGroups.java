@@ -31,6 +31,9 @@ public class DMaterialGroups {
     
     @Column(name="b_material_group_order_code",columnDefinition="CHAR")
 	private String materialGroupOrderCode;
+    
+    @Column(name="isenable",columnDefinition="BIT")
+	private Integer isenable;
 	
 	@Transient
 	private BigDecimal amount;//金额
@@ -78,6 +81,14 @@ public class DMaterialGroups {
 
 	public void setMaterialGroupOrderCode(String materialGroupOrderCode) {
 		this.materialGroupOrderCode = materialGroupOrderCode;
+	}
+
+	public Integer getIsenable() {
+		return isenable;
+	}
+
+	public void setIsenable(Integer isenable) {
+		this.isenable = isenable;
 	}
 
 	public BigDecimal getAmount() {
