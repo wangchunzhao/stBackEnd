@@ -90,7 +90,7 @@ public class ContractService {
 		sql.append("contract.install_location              as installLocation,");
 		sql.append("contract.quality_stand                 as qualityStand,");
 		sql.append("contract.settlement                    as settlement,");
-		sql.append("contract.paryA_address                 as paryaAddress,");
+		sql.append("contract.partyA_address                 as partyaAddress,");
 		sql.append("contract.invoice_address               as invoiceAddress,");
 		sql.append("contract.broker                        as broker,");
 		sql.append("contract.invoice_receiver              as invoiceReceiver,");

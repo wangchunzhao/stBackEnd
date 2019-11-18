@@ -86,9 +86,6 @@ public class ContractController {
 			Contract c = contractService.findById(contractId);
 			ContractView v = new ContractView();
 			BeanUtils.copyProperties(c, v);
-//			if (c.getDeliveryDaysAfterPrepay() != null) {
-//				v.setDeliveryDaysAfterPrepay(c.getDeliveryDaysAfterPrepay().shortValue());
-//			}
 			result = Result.ok(v);
 		} catch (Exception e) {
 			String msg = "查询合同详情，合同ID=" + contractId;

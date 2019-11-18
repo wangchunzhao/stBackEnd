@@ -49,8 +49,8 @@ public class ContractView
 	/* Settlement */
 	private String settlement = null;
 
-	/* ParyaAddress */
-	private String paryaAddress = null;
+	/* partyaAddress */
+	private String partyaAddress = null;
 
 	/* InvoiceAddress */
 	private String invoiceAddress = null;
@@ -244,14 +244,14 @@ public class ContractView
 		this.settlement = settlement;
 	}
 	 
-	public String getParyaAddress() {
-		return this.paryaAddress;
+	public String getPartyaAddress() {
+		return partyaAddress;
 	}
 
-	public void setParyaAddress(String paryaAddress) {
-		this.paryaAddress = paryaAddress;
+	public void setPartyaAddress(String partyaAddress) {
+		this.partyaAddress = partyaAddress;
 	}
-	 
+
 	public String getInvoiceAddress() {
 		return this.invoiceAddress;
 	}
@@ -546,7 +546,7 @@ public class ContractView
 	        + "installLocation = " + this.installLocation + tab
 	        + "qualityStand = " + this.qualityStand + tab
 	        + "settlement = " + this.settlement + tab
-	        + "paryaAddress = " + this.paryaAddress + tab
+	        + "partyaAddress = " + this.partyaAddress + tab
 	        + "invoiceAddress = " + this.invoiceAddress + tab
 	        + "broker = " + this.broker + tab
 	        + "invoiceReceiver = " + this.invoiceReceiver + tab
