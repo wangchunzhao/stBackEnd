@@ -1175,9 +1175,9 @@ public class OrderService {
 			params.put("ownerName", "%" + orderQuery.getSalesName().toUpperCase() + "%");
 		}
 		if (!isEmpty(orderQuery.getCreateTime())) {
-			//2019-04-07 ~ 2019-11-07
+			//2019-04-07 - 2019-11-07
 			String strtime = orderQuery.getCreateTime();
-			String[] strtimes = strtime.split("~");
+			String[] strtimes = strtime.split(" - ");
 			String start = strtimes[0].trim();
 			String end = strtimes[1].trim();
 			querySql.append(" and DATE_FORMAT(create_time, '%Y-%m-%d') >= :start and DATE_FORMAT(create_time, '%Y-%m-%d') <= :end"); 
@@ -1185,9 +1185,9 @@ public class OrderService {
 			params.put("end", end);
 		}
 		if (!isEmpty(orderQuery.getSubmitTime())) {
-			//2019-04-07 ~ 2019-11-07
+			//2019-04-07 - 2019-11-07
 			String strtime = orderQuery.getSubmitTime();
-			String[] strtimes = strtime.split("~");
+			String[] strtimes = strtime.split(" - ");
 			String start = strtimes[0].trim();
 			String end = strtimes[1].trim();
 			querySql.append(" and DATE_FORMAT(submit_date, '%Y-%m-%d') >= :start and DATE_FORMAT(submit_date, '%Y-%m-%d') <= :end"); 

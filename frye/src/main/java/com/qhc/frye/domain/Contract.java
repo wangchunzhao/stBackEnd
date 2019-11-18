@@ -79,8 +79,8 @@ public class Contract
 	private String settlement = null;
 
 	/* Column(paryA_address) - ParyaAddress */
-	@Column(name="paryA_address", columnDefinition="TEXT")
-	private String paryaAddress = null;
+	@Column(name="partyA_address", columnDefinition="TEXT")
+	private String partyaAddress = null;
 
 	/* Column(invoice_address) - InvoiceAddress */
 	@Column(name="invoice_address", columnDefinition="TEXT")
@@ -271,11 +271,11 @@ public class Contract
 	}
 	 
 	public String getParyaAddress() {
-		return this.paryaAddress;
+		return this.partyaAddress;
 	}
 
-	public void setParyaAddress(String paryaAddress) {
-		this.paryaAddress = paryaAddress;
+	public void setParyaAddress(String partyaAddress) {
+		this.partyaAddress = partyaAddress;
 	}
 	 
 	public String getInvoiceAddress() {
@@ -491,7 +491,7 @@ public class Contract
 	        + "installLocation = " + this.installLocation + tab
 	        + "qualityStand = " + this.qualityStand + tab
 	        + "settlement = " + this.settlement + tab
-	        + "paryaAddress = " + this.paryaAddress + tab
+	        + "paryaAddress = " + this.partyaAddress + tab
 	        + "invoiceAddress = " + this.invoiceAddress + tab
 	        + "broker = " + this.broker + tab
 	        + "invoiceReceiver = " + this.invoiceReceiver + tab
