@@ -763,7 +763,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_version` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `id` CHAR(32) NOT NULL,
   `version` VARCHAR(45) NOT NULL COMMENT '版本名称',
-  `status` TINYINT(2) NOT NULL COMMENT '0 订单新建保存\n1 客户经理提交成功\n02 B2C审核提交成功\n03 工程人员提交成功\n04  支持经理提交成功\n05   订单审批通过\n06   订单更改审批通过\n07    订单更改保存\n08   订单更改提交成功\n09  已下推SAP\n10   BPM驳回\n11   Selling Tool驳回',
+  `status` CHAR(4) NOT NULL COMMENT '0 订单新建保存\n1 客户经理提交成功\n02 B2C审核提交成功\n03 工程人员提交成功\n04  支持经理提交成功\n05   订单审批通过\n06   订单更改审批通过\n07    订单更改保存\n08   订单更改提交成功\n09  已下推SAP\n10   BPM驳回\n11   Selling Tool驳回',
   `create_time` DATETIME NOT NULL COMMENT '版本最早被创建时间，时间用来排序顺序',
   `submit_date` DATETIME NULL COMMENT '最后一次提交时间，会有被驳回然后提交的时间',
   `bpm_submit_time` DATETIME NULL COMMENT '提交bpm审批的时间，会有被驳回然后提交的时间',
