@@ -83,8 +83,8 @@ public class ReportFormsInfo implements Serializable {
 	@Column(name="contract_rmb_amount")
 	private BigDecimal contractRmbAmount	;//	合同金额
 	
-	@Column(name="status",columnDefinition = "TINYINT")
-	private Integer	status	;//	合同状态
+	@Column(name="status",columnDefinition = "char")
+	private String	status	;//	合同状态
 	
 //	@Column(name="gross_profit")
 	@Transient
@@ -336,11 +336,11 @@ public class ReportFormsInfo implements Serializable {
 		this.contractRmbAmount = contractRmbAmount;
 	}
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
