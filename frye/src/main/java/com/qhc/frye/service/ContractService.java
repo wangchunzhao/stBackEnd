@@ -83,7 +83,8 @@ public class ContractService {
 		sql.append("contract.PartyA_code                   as partyaCode,");
 		sql.append("contract.PartyA_name                   as partyaName,");
 		sql.append("contract.partyA_mail                   as partyaMail,");
-		sql.append("contract.amount_on_contract            as amountOnContract,");
+//		sql.append("contract.amount_on_contract            as amountOnContract,");
+		sql.append("info.contract_rmb_amount            as amountOnContract,");
 		sql.append("contract.delivery_days_after_prepay    as deliveryDaysAfterPrepay,");
 		sql.append("contract.client_name                   as clientName,");
 		sql.append("contract.install_location              as installLocation,");
@@ -114,6 +115,7 @@ public class ContractService {
 		sql.append("contract.send_time              as sendTime" + " from k_orders as orders");
 		sql.append(" left join k_order_support_info as support on support.k_orders_id = orders.id");
 		sql.append(" left join k_order_version as version on version.k_orders_id = orders.id");
+		sql.append(" left join k_order_info as info on info.id = version.k_order_info_id");
 		sql.append(" left join k_contract as contract on contract.k_order_version_id = version.id");
 		sql.append(" where (version.status = 5 or version.status = 6)");
 		

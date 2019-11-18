@@ -1,10 +1,13 @@
 package com.qhc.frye.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -25,8 +28,8 @@ public class Contract
 	// Primary key
 	// Column(id) - Id	
 	@Id
-	@NotNull
 	@Column(name="id", columnDefinition="INTEGER", length=10)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Integer id = null;
 
 	/* Column(sequence_number) - SequenceNumber */
@@ -51,11 +54,11 @@ public class Contract
 	/* Column(amount_on_contract) - AmountOnContract */
 	@NotNull
 	@Column(name="amount_on_contract", columnDefinition="DECIMAL", length=10)
-	private Double amountOnContract = null;
+	private BigDecimal amountOnContract = null;
 
 	/* Column(delivery_days_after_prepay) - DeliveryDaysAfterPrepay */
 	@Column(name="delivery_days_after_prepay", columnDefinition="SMALLINT", length=5)
-	private Integer deliveryDaysAfterPrepay = null;
+	private Short deliveryDaysAfterPrepay = null;
 
 	/* Column(client_name) - ClientName */
 	@NotNull
@@ -163,6 +166,7 @@ public class Contract
 	private String contractor3Tel = null;
 
 	/* 合同制作时间 */
+	@NotNull
 	@Column(name="production_Time", columnDefinition="DATETIME")
 	private Date productionTime = null;
 
@@ -218,19 +222,19 @@ public class Contract
 		this.partyaMail = partyaMail;
 	}
 	 
-	public Double getAmountOnContract() {
+	public BigDecimal getAmountOnContract() {
 		return this.amountOnContract;
 	}
 
-	public void setAmountOnContract(Double amountOnContract) {
+	public void setAmountOnContract(BigDecimal amountOnContract) {
 		this.amountOnContract = amountOnContract;
 	}
 	 
-	public Integer getDeliveryDaysAfterPrepay() {
+	public Short getDeliveryDaysAfterPrepay() {
 		return this.deliveryDaysAfterPrepay;
 	}
 
-	public void setDeliveryDaysAfterPrepay(Integer deliveryDaysAfterPrepay) {
+	public void setDeliveryDaysAfterPrepay(Short deliveryDaysAfterPrepay) {
 		this.deliveryDaysAfterPrepay = deliveryDaysAfterPrepay;
 	}
 	 

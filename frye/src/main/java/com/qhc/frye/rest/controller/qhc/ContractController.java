@@ -45,7 +45,7 @@ public class ContractController {
 	private ContractService contractService;
 	
 	@ApiOperation(value = "查询合同列表")
-	@GetMapping(value = "/")
+	@GetMapping(value = "")
 	@ResponseBody
 	public Result<? extends Object> find(@RequestParam(required = false) Map<String, Object> params) throws Exception {
 		Result<? extends Object> result = null;
@@ -60,7 +60,7 @@ public class ContractController {
 	}
 	
 	@ApiOperation(value = "保存或修改合同",notes="保存或修改合同")
-	@PostMapping(value = "/")
+	@PostMapping(value = "")
 	@ResponseBody
 	public Result<? extends Object> save(@RequestBody(required = true) ContractView view ) {
 		Result<? extends Object> result = null;
@@ -70,7 +70,7 @@ public class ContractController {
 			contract = contractService.save(contract);
 			view.setId(contract.getId());
 			result = Result.ok(view);
-		} catch (BeansException e) {
+		} catch (Exception e) {
 			logger.error("保存或修改合同", e);
 			result = Result.error(e.getMessage());
 		}
@@ -79,14 +79,18 @@ public class ContractController {
 	
 	@ApiOperation(value = "获取合同详情",notes="获取合同详情")
 	@GetMapping(value = "{id}")
-	public Result<? extends Object> getContract(@PathVariable Integer contractId) {
+	@ResponseBody
+	public Result<? extends Object> getContract(@PathVariable("id") Integer contractId) {
 		Result<? extends Object> result = null;
 		try {
 			Contract c = contractService.findById(contractId);
 			ContractView v = new ContractView();
 			BeanUtils.copyProperties(c, v);
+//			if (c.getDeliveryDaysAfterPrepay() != null) {
+//				v.setDeliveryDaysAfterPrepay(c.getDeliveryDaysAfterPrepay().shortValue());
+//			}
 			result = Result.ok(v);
-		} catch (BeansException e) {
+		} catch (Exception e) {
 			String msg = "查询合同详情，合同ID=" + contractId;
 			logger.error(msg, e);
 			result = Result.error(e.getMessage());

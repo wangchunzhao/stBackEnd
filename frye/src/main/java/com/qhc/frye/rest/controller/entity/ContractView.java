@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 
  * Function: Data transfer object. <br> 
@@ -108,9 +110,11 @@ public class ContractView
 	private String contractor3Tel = null;
 
 	/* 合同制作时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private Date productionTime = null;
 
 	/* 合同发送时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private Date sendTime = null;
 
 	/* 合同状态：1 未发送 2 已发送 */
@@ -126,18 +130,26 @@ public class ContractView
 	/* order version */
 	private String version = null;
 	
+	/* 支持经理，订单管理 */
 	private String contractNumber = null;
 	
+	/* 支持经理，订单管理 */
 	private String opteratorDomainId = null;
 	
+	/* 签约单位 Contract unit */
 	private String contractorCode = null;
 	
+	/* 签约单位 Contract Name */
 	private String contractorName = null;
 	
+	/* 性质分类 Classification */
 	private String contractorClassCode = null;
 	
+	/* 性质分类 Classification */
 	private String contractorClassName = null;
 	
+	/* 订单创建时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createTime = null;
 
 
