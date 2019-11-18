@@ -30,8 +30,8 @@ public class KOrderVersion {
 	public String version;
 
 	@NotNull
-	@Column(name = "status", columnDefinition = "char",length=4)
-	private String status;
+	@Column(name = "status", columnDefinition = "tinyint",length=2)
+	private Integer status;
 
 	@NotNull
 	@Column(name = "create_time", columnDefinition = "datetime")
@@ -74,11 +74,11 @@ public class KOrderVersion {
 		this.version = version;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

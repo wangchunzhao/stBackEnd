@@ -76,8 +76,8 @@ public class KOrderView
 1:draft:submit to headquater
 2.approving:BPM
 3.approved */
-	@Column(name="status",columnDefinition="CHAR",length=2)
-	private String status = null;
+	@Column(name="status",columnDefinition="TINYINT",length=2)
+	private Integer status = null;
 
 	/* Column(version_create_time) - 版本创建时间 */
 	@Column(name="version_create_time")
@@ -434,11 +434,11 @@ public class KOrderView
 		this.version = version;
 	}
 	 
-	public String getStatus() {
+	public Integer getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	 
