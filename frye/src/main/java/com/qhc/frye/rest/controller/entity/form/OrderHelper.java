@@ -274,11 +274,11 @@ public class OrderHelper {
 		KOrderVersion temp = new KOrderVersion();
 		switch(order.getSubmitType()) {
 			case 2:
-				temp.setStatus(1);
+				temp.setStatus("0100");
 				temp.setSubmitDate(order.getOptTime());
 				break;
 			case 1:
-				temp.setStatus(0);
+				temp.setStatus("0000");
 				break;
 		}
 		temp.setVersion(order.getCurrentVersion());
@@ -293,7 +293,7 @@ public class OrderHelper {
 		temp.setOrderInfoId(old.getOrderInfoId());
 		switch(order.getSubmitType()) {
 		case 1:
-			temp.setStatus(1);
+			temp.setStatus("0100");
 		case 0:
 			temp.setStatus(old.getStatus());
 	}
