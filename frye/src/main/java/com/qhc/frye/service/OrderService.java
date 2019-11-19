@@ -564,6 +564,8 @@ public class OrderService {
 				entity.setGrossProfitMargin(BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 
+		} else {
+			throw new RuntimeException("订单行项目为空，无法计算毛利率！");
 		}
 
 		DMaterialGroups sumssg = new DMaterialGroups();
