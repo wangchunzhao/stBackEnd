@@ -74,11 +74,12 @@ public class ParameterSettingsService {
 		}
 		
 		for (Map.Entry<String, Parameter> e : map.entrySet()) {
-			String code = e.getKey();
+			String key = e.getKey();
+			String code = key.substring(0, key.length() - 4);
 			Parameter parameter = e.getValue();
 			ps.add(parameter);
-			if (code.endsWith("_pre")) {
-				Parameter after = map.get(code + "aft");
+			if (key.endsWith("_pre")) {
+				Parameter after = map.get(code + "_aft");
 				if (after != null ) {
 					parameter.setAfterValue(after.getsValue());
 					parameter.setAfterEnableDate(after.getEnableDate());
