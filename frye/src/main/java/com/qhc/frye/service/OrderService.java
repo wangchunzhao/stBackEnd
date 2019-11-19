@@ -523,7 +523,7 @@ public class OrderService {
 				Double grossProfitMargin = 0D;// 毛利率
 
 				for (BaseItem item : items) {
-					if (item.getMaterialCode().equals(entity.getCode())) {
+					if (item.getGroupCode().equals(entity.getCode())) {
 						// 总金额
 						BigDecimal saleAmount = BigDecimal.valueOf((item.getActuralPrice() + item.getActuralPricaOfOptional()) * item.getQuantity());
 						amount = amount.add(saleAmount);
