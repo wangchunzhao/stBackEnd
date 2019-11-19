@@ -835,7 +835,6 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `receive_terms_code` VARCHAR(45) NOT NULL COMMENT '接货方式代码',
   `receive_terms_name` VARCHAR(45) NOT NULL COMMENT '接货方式名称',
   `k_acceptance_criteria_code` CHAR(4) NOT NULL,
-  `mail` TEXT NOT NULL,
   `contractor_1_id` VARCHAR(45) NULL,
   `contractor_1_tel` VARCHAR(45) NULL,
   `contractor_2_id` VARCHAR(45) NULL,
