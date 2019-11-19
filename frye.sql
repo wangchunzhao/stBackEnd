@@ -816,7 +816,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `PartyA_code` CHAR(10) NOT NULL COMMENT '甲方客户代码',
   `PartyA_name` TEXT NOT NULL COMMENT '甲方客户名称',
   `partyA_mail` TEXT NULL DEFAULT NULL COMMENT '甲方客户mail',
-  `paryA_address` TEXT NULL DEFAULT NULL COMMENT '单位地址',
+  `partyA_address` TEXT NULL DEFAULT NULL COMMENT '单位地址',
   `amount_on_contract` DECIMAL(10,2) NOT NULL COMMENT '合同金额',
   `delivery_days_after_prepay` SMALLINT(6) NULL DEFAULT NULL COMMENT '收到预付款后发货时间',
   `client_name` TEXT NOT NULL COMMENT '终端用户店名',
