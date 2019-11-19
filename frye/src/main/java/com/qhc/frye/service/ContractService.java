@@ -4,6 +4,7 @@
 package com.qhc.frye.service;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +53,12 @@ public class ContractService {
 	@Autowired
 	private EntityManager entityManager;
 
-	public Contract findById(Integer id) {
-		return contractRepository.findById(id).get();
+	public ContractView findById(Integer id) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		PageHelper<ContractView> pageHelper = find(params);
+		List<ContractView> contracts = pageHelper.getRows();
+		return contracts.size() > 0 ? contracts.get(0) : null;
 	}
 
 	public Contract save(Contract contract) {

@@ -83,10 +83,8 @@ public class ContractController {
 	public Result<? extends Object> getContract(@PathVariable("id") Integer contractId) {
 		Result<? extends Object> result = null;
 		try {
-			Contract c = contractService.findById(contractId);
-			ContractView v = new ContractView();
-			BeanUtils.copyProperties(c, v);
-			result = Result.ok(v);
+			ContractView c = contractService.findById(contractId);
+			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "查询合同详情，合同ID=" + contractId;
 			logger.error(msg, e);
