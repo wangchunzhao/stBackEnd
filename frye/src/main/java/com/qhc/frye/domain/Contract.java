@@ -137,9 +137,9 @@ public class Contract
 	private String acceptanceCriteriaCode = null;
 
 	/* Column(mail) - Mail */
-	@NotNull
-	@Column(name="mail", columnDefinition="TEXT")
-	private String mail = null;
+//	@NotNull
+//	@Column(name="mail", columnDefinition="TEXT")
+//	private String mail = null;
 
 	/* Column(contractor_1_id) - Contractor1Id */
 	@Column(name="contractor_1_id", columnDefinition="VARCHAR", length=45)
@@ -373,13 +373,13 @@ public class Contract
 		this.acceptanceCriteriaCode = acceptanceCriteriaCode;
 	}
 
-	public String getMail() {
-		return this.mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
+//	public String getMail() {
+//		return this.mail;
+//	}
+//
+//	public void setMail(String mail) {
+//		this.mail = mail;
+//	}
 	 
 	public String getContractor1Id() {
 		return this.contractor1Id;
@@ -504,7 +504,7 @@ public class Contract
 	        + "receiveTermsCode = " + this.receiveTermsCode + tab
 	        + "receiveTermsName = " + this.receiveTermsName + tab
 	        + "kAcceptanceCriteriaCode = " + this.acceptanceCriteriaCode + tab
-	        + "mail = " + this.mail + tab
+//	        + "mail = " + this.mail + tab
 	        + "contractor1Id = " + this.contractor1Id + tab
 	        + "contractor1Tel = " + this.contractor1Tel + tab
 	        + "contractor2Id = " + this.contractor2Id + tab
