@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.dao.AttachedInfoRepository;
 import com.qhc.frye.dao.AttachementRepository;
 import com.qhc.frye.dao.BAreaRepository;
@@ -563,6 +564,8 @@ public class OrderService {
 				entity.setGrossProfitMargin(BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 
+		} else {
+			throw new RuntimeException("订单行项目为空，无法计算毛利率！");
 		}
 
 		DMaterialGroups sumssg = new DMaterialGroups();
@@ -847,15 +850,26 @@ public class OrderService {
 
 			// Ship-to address/送达方地址
 			// json格式，{省code:省名称，市code:市名称,区code:区名称,address:街道}
-//			String address = itemDetail.getAddress(); 
-			// 街道名称
-//			item.setStreet(街道); 
-//			// Province/省 -- 省code
-//			item.setRegion();
-//			// City/市 -- 市名称
-//			item.setCity1();
-//			// District/区 -- 区名称
-//			item.setCity2();
+			String address = "{省code:省名称，市code:市名称,区code:区名称,address:街道}";
+			// TODO
+//			address = itemDetail.getAddress(); 
+			if (!this.isEmpty(address)) {
+				address = address.trim().substring(1);
+				address = address.substring(0, address.length() - 1);
+				String[] data = address.split(",");
+				String[] provinces = data[0].split(":");
+				String[] cities = data[1].split(":");
+				String[] districts = data[2].split(":");
+				String[] streets = data[3].split(":");
+				// 街道名称
+				item.setStreet(streets[1]); 
+//				// Province/省 -- 省code
+				item.setRegion(provinces[0]);
+//				// City/市 -- 市名称
+				item.setCity1(cities[0]);
+//				// District/区 -- 区名称
+				item.setCity2(districts[0]);
+			}
 
 			// B2C note/B2C备注
 			item.setVbbp0006(itemDetail.getB2cComments());
@@ -1328,7 +1342,7 @@ public class OrderService {
 	}
 
 	private boolean isEmpty(String v) {
-		return v == null || v.length() == 0;
+		return v == null || v.trim().length() == 0;
 	}
 
 	private String toString(Object v) {
