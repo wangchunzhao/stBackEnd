@@ -309,7 +309,7 @@ public class ConstantService {
 			saleTypes.forEach(cs -> {
 				String salesType = cs.getCii().getSaleTypeCode();
 				String currencyCode = cs.getCii().getCurrencyCode();
-				List<Currency> currencyList = currencies.get(saleTypes);
+				List<Currency> currencyList = currencies.get(salesType);
 				if (currencyList == null) {
 					currencyList = new ArrayList<Currency>();
 					currencies.put(salesType, currencyList);
