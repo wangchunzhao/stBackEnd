@@ -2027,3 +2027,14 @@ INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code
 
 COMMIT;
 
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_currency_sale_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('10', 'RMB');
+INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('30', 'RMB');
+
+COMMIT;
+
