@@ -1055,20 +1055,20 @@ public class OrderService {
 			String orderType = orderView.getOrderType();
 			String formId = orderView.getFormId();
 
-			AbsOrder order = null;
-			switch (orderType) {
-			case ORDER_TYPE_DEALER:
-				order = new DealerOrder();
-				break;
-			case ORDER_TYPE_KEYACCOUNT:
-				order = new KeyAccountOrder();
-				break;
-			case ORDER_TYPE_BULK:
-				order = new BulkOrder();
-				break;
-			default:
-				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
-			}
+			AbsOrder order = new BaseOrder();
+//			switch (orderType) {
+//			case ORDER_TYPE_DEALER:
+//				order = new DealerOrder();
+//				break;
+//			case ORDER_TYPE_KEYACCOUNT:
+//				order = new KeyAccountOrder();
+//				break;
+//			case ORDER_TYPE_BULK:
+//				order = new BulkOrder();
+//				break;
+//			default:
+//				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+//			}
 			orders.add(order);
 
 			BeanUtils.copyProperties(orderView, order);

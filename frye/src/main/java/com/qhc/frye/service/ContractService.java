@@ -108,7 +108,7 @@ public class ContractService {
 		sql.append("contract.receive_terms_code            as receiveTermsCode,");
 		sql.append("contract.receive_terms_name            as receiveTermsName,");
 		sql.append("contract.k_acceptance_criteria_code    as acceptanceCriteriaCode,");
-		sql.append("contract.mail                          as mail,");
+//		sql.append("contract.mail                          as mail,");
 		sql.append("contract.contractor_1_id               as contractor1Id,");
 		sql.append("contract.contractor_1_tel              as contractor1Tel,");
 		sql.append("contract.contractor_2_id               as contractor2Id,");
