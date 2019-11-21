@@ -1120,12 +1120,12 @@ DROP TABLE IF EXISTS `bohemian`.`k_delievery_address` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
   `id` CHAR(32) NOT NULL,
-  `province_code` VARCHAR(6) NOT NULL,
-  `province_name` TEXT NOT NULL,
-  `city_code` VARCHAR(6) NOT NULL,
-  `city_name` TEXT NOT NULL,
-  `distinct_code` VARCHAR(6) NOT NULL,
-  `distinct_name` TEXT NOT NULL,
+  `province_code` VARCHAR(6) NULL,
+  `province_name` TEXT NULL,
+  `city_code` VARCHAR(6) NULL,
+  `city_name` TEXT NULL,
+  `distinct_code` VARCHAR(6) NULL,
+  `distinct_name` TEXT NULL,
   `address` TEXT NOT NULL,
   `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
@@ -2024,6 +2024,17 @@ INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code
 INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0T', '02');
 INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '01');
 INSERT INTO `bohemian`.`sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '02');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`sap_currency_sale_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('10', 'RMB');
+INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('30', 'RMB');
 
 COMMIT;
 

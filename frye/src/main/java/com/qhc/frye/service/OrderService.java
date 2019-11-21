@@ -666,9 +666,9 @@ public class OrderService {
 //		}
 		//
 		Map<String, Double> taxRate = oo.getTaxRate();
-		taxRate.put("10", 0.13);
-		taxRate.put("20", 0.0);
-		taxRate.put("30", 0.13);
+//		taxRate.put("10", 0.13);
+//		taxRate.put("20", 0.0);
+//		taxRate.put("30", 0.13);
 
 		//
 		Map<String, String> payments = oo.getPaymentType();
