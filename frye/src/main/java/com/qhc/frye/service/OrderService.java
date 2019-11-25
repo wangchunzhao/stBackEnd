@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,10 +18,12 @@ import javax.persistence.Query;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.dao.AttachedInfoRepository;
 import com.qhc.frye.dao.AttachementRepository;
+import com.qhc.frye.dao.B2CCostRepository;
 import com.qhc.frye.dao.BAreaRepository;
 import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
@@ -44,6 +47,7 @@ import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SalesTypeRepository;
 import com.qhc.frye.dao.SapMaterialGroupsRepository;
 import com.qhc.frye.dao.TerminalIndustryCodeRepository;
+import com.qhc.frye.domain.B2CCost;
 import com.qhc.frye.domain.BArea;
 import com.qhc.frye.domain.BCity;
 import com.qhc.frye.domain.BProvince;
@@ -73,6 +77,7 @@ import com.qhc.frye.rest.controller.entity.form.BaseChracteristic;
 import com.qhc.frye.rest.controller.entity.form.BaseItem;
 import com.qhc.frye.rest.controller.entity.form.BaseOrder;
 import com.qhc.frye.rest.controller.entity.form.BiddingPayment;
+import com.qhc.frye.rest.controller.entity.B2CComments;
 import com.qhc.frye.rest.controller.entity.Currency;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
@@ -186,6 +191,9 @@ public class OrderService {
 	
 	@Autowired
 	private DefaultCharacterViewRepository defaultValueRepo;
+	
+	@Autowired
+	private B2CCostRepository b2cRepo;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
@@ -1339,6 +1347,38 @@ public class OrderService {
 			// TODO attached info
 		}
 		order.setItems(items);
+	}
+	
+	public void b2cCost(boolean isApproved,String seqnum,String version,List<B2CComments> b2cs) {
+		
+		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
+		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
+		String status = ov.getStatus();
+		
+		if(isApproved) {
+			ov.setStatus(status.substring(0, 2)+"02"+status.substring(3,-1));
+		}else {
+			ov.setStatus(status.substring(0, 2)+"00"+status.substring(3,-1));
+		}
+		//
+		for(ItemDetails item:items) {
+			for(B2CComments b2:b2cs) {
+				if(item.getRowNumber()==b2.getRowNumber()) {
+					B2CCost cost = b2cRepo.findAllB2CByItem(item.getId());
+					if(cost==null) {
+						cost = new B2CCost();
+					}
+					cost.setItemId(item.getId());
+					cost.setOptTime(new Date());
+					cost.setCost(b2.getCost());
+					
+					b2cRepo.save(cost);
+					item.b2cComments = b2.getB2cComments();
+					itemDetailRepository.save(item);
+				}
+			}
+		}
+		
 	}
 
 	private boolean isEmpty(String v) {

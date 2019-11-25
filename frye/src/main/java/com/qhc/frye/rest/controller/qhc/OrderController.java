@@ -29,6 +29,7 @@ import com.qhc.frye.domain.SapSalesGroup;
 import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 import com.qhc.frye.rest.controller.entity.form.BaseOrder;
 import com.qhc.frye.rest.controller.entity.form.DealerOrder;
+import com.qhc.frye.rest.controller.entity.B2CComments;
 import com.qhc.frye.rest.controller.entity.OrderOption;
 import com.qhc.frye.rest.controller.entity.OrderQuery;
 import com.qhc.frye.rest.controller.entity.OrderVersion;
@@ -84,8 +85,11 @@ public class OrderController {
 	@ApiOperation(value = "B2c审核订单", notes = "B2c审核订单")
 	@PostMapping(value = "order/b2c")
 	@ResponseStatus(HttpStatus.OK)
-	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam double cost,@RequestParam String comments) throws Exception{
-		
+	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestBody List<B2CComments> b2cs) throws Exception{
+		boolean isPro = false;
+		if(isApproved!=0)
+			isPro = true;
+		orderService.b2cCost(isPro, seqnum, version, b2cs);
 	}
 	
 	
