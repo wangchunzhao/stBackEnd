@@ -11,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import io.swagger.annotations.ApiModelProperty;
 
 
 /**
@@ -177,6 +180,15 @@ public class Contract
 	/* 合同状态：1 未发送 2 已发送 */
 	@Column(name="contract_status", columnDefinition="INTEGER")
 	private Integer status = null;
+	
+	@Size(max = 256)
+	@ApiModelProperty("文档Hash值")
+	@Column(name = "file_hashcode", length = 256)
+	private String fileHashCode;
+	@Size(max = 64)
+	@ApiModelProperty("电子签约中合同Id")
+	@Column(name = "sign_contractid", length = 64)
+	private String signContractId;
 
 
 	public Contract(){
@@ -451,6 +463,30 @@ public class Contract
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getPartyaAddress() {
+		return partyaAddress;
+	}
+
+	public void setPartyaAddress(String partyaAddress) {
+		this.partyaAddress = partyaAddress;
+	}
+
+	public String getFileHashCode() {
+		return fileHashCode;
+	}
+
+	public void setFileHashCode(String fileHashCode) {
+		this.fileHashCode = fileHashCode;
+	}
+
+	public String getSignContractId() {
+		return signContractId;
+	}
+
+	public void setSignContractId(String signContractId) {
+		this.signContractId = signContractId;
 	}
 
 	@Override

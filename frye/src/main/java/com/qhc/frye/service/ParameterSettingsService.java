@@ -77,8 +77,8 @@ public class ParameterSettingsService {
 			String key = e.getKey();
 			String code = key.substring(0, key.length() - 4);
 			Parameter parameter = e.getValue();
-			ps.add(parameter);
 			if (key.endsWith("_pre")) {
+				ps.add(parameter);
 				Parameter after = map.get(code + "_aft");
 				if (after != null ) {
 					parameter.setAfterValue(after.getsValue());

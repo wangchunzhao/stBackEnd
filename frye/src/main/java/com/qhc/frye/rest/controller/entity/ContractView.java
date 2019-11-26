@@ -4,18 +4,22 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 
- * Function: Data transfer object. <br> 
+ * Function: Data transfer object. <br>
  *
  * @author walker
  */
-public class ContractView
-		implements Serializable {
+public class ContractView implements Serializable {
 	private static final long serialVersionUID = -7870996928236577566L;
-	
+
 	/* Id */
 	private Integer id = null;
 
@@ -110,11 +114,11 @@ public class ContractView
 	private String contractor3Tel = null;
 
 	/* 合同制作时间 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date productionTime = null;
 
 	/* 合同发送时间 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date sendTime = null;
 
 	/* 合同状态：1 未发送 2 已发送 */
@@ -129,31 +133,36 @@ public class ContractView
 
 	/* order version */
 	private String version = null;
-	
+
 	/* 支持经理，订单管理 */
 	private String contractNumber = null;
-	
+
 	/* 支持经理，订单管理 */
 	private String opteratorDomainId = null;
-	
+
 	/* 签约单位 Contract unit */
 	private String contractorCode = null;
-	
+
 	/* 签约单位 Contract Name */
 	private String contractorName = null;
-	
+
 	/* 性质分类 Classification */
 	private String contractorClassCode = null;
-	
+
 	/* 性质分类 Classification */
 	private String contractorClassName = null;
-	
+
 	/* 订单创建时间 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime = null;
 
+	@ApiModelProperty("文档Hash值")
+	private String fileHashCode;
 
-	public ContractView(){
+	@ApiModelProperty("电子签约中合同Id")
+	private String signContractId;
+
+	public ContractView() {
 	}
 
 	public Integer getId() {
@@ -163,7 +172,7 @@ public class ContractView
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	 
+
 	public String getSequenceNumber() {
 		return this.sequenceNumber;
 	}
@@ -171,7 +180,7 @@ public class ContractView
 	public void setSequenceNumber(String sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
-	 
+
 	public String getPartyaCode() {
 		return this.partyaCode;
 	}
@@ -179,7 +188,7 @@ public class ContractView
 	public void setPartyaCode(String partyaCode) {
 		this.partyaCode = partyaCode;
 	}
-	 
+
 	public String getPartyaName() {
 		return this.partyaName;
 	}
@@ -187,7 +196,7 @@ public class ContractView
 	public void setPartyaName(String partyaName) {
 		this.partyaName = partyaName;
 	}
-	 
+
 	public String getPartyaMail() {
 		return this.partyaMail;
 	}
@@ -195,7 +204,7 @@ public class ContractView
 	public void setPartyaMail(String partyaMail) {
 		this.partyaMail = partyaMail;
 	}
-	 
+
 	public BigDecimal getAmountOnContract() {
 		return this.amountOnContract;
 	}
@@ -203,7 +212,7 @@ public class ContractView
 	public void setAmountOnContract(BigDecimal amountOnContract) {
 		this.amountOnContract = amountOnContract;
 	}
-	 
+
 	public Short getDeliveryDaysAfterPrepay() {
 		return this.deliveryDaysAfterPrepay;
 	}
@@ -211,7 +220,7 @@ public class ContractView
 	public void setDeliveryDaysAfterPrepay(Short deliveryDaysAfterPrepay) {
 		this.deliveryDaysAfterPrepay = deliveryDaysAfterPrepay;
 	}
-	 
+
 	public String getClientName() {
 		return this.clientName;
 	}
@@ -219,7 +228,7 @@ public class ContractView
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
-	 
+
 	public String getInstallLocation() {
 		return this.installLocation;
 	}
@@ -227,7 +236,7 @@ public class ContractView
 	public void setInstallLocation(String installLocation) {
 		this.installLocation = installLocation;
 	}
-	 
+
 	public String getQualityStand() {
 		return this.qualityStand;
 	}
@@ -235,7 +244,7 @@ public class ContractView
 	public void setQualityStand(String qualityStand) {
 		this.qualityStand = qualityStand;
 	}
-	 
+
 	public String getSettlement() {
 		return this.settlement;
 	}
@@ -243,7 +252,7 @@ public class ContractView
 	public void setSettlement(String settlement) {
 		this.settlement = settlement;
 	}
-	 
+
 	public String getPartyaAddress() {
 		return partyaAddress;
 	}
@@ -259,7 +268,7 @@ public class ContractView
 	public void setInvoiceAddress(String invoiceAddress) {
 		this.invoiceAddress = invoiceAddress;
 	}
-	 
+
 	public String getBroker() {
 		return this.broker;
 	}
@@ -267,7 +276,7 @@ public class ContractView
 	public void setBroker(String broker) {
 		this.broker = broker;
 	}
-	 
+
 	public String getInvoiceReceiver() {
 		return this.invoiceReceiver;
 	}
@@ -275,7 +284,7 @@ public class ContractView
 	public void setInvoiceReceiver(String invoiceReceiver) {
 		this.invoiceReceiver = invoiceReceiver;
 	}
-	 
+
 	public String getInvoiceTel() {
 		return this.invoiceTel;
 	}
@@ -283,7 +292,7 @@ public class ContractView
 	public void setInvoiceTel(String invoiceTel) {
 		this.invoiceTel = invoiceTel;
 	}
-	 
+
 	public String getInvoicePostCode() {
 		return this.invoicePostCode;
 	}
@@ -291,7 +300,7 @@ public class ContractView
 	public void setInvoicePostCode(String invoicePostCode) {
 		this.invoicePostCode = invoicePostCode;
 	}
-	 
+
 	public String getCompanyTel() {
 		return this.companyTel;
 	}
@@ -299,7 +308,7 @@ public class ContractView
 	public void setCompanyTel(String companyTel) {
 		this.companyTel = companyTel;
 	}
-	 
+
 	public String getBankName() {
 		return this.bankName;
 	}
@@ -307,7 +316,7 @@ public class ContractView
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
-	 
+
 	public String getAccountNumber() {
 		return this.accountNumber;
 	}
@@ -315,7 +324,7 @@ public class ContractView
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	 
+
 	public String getReceiveTermsCode() {
 		return this.receiveTermsCode;
 	}
@@ -323,7 +332,7 @@ public class ContractView
 	public void setReceiveTermsCode(String receiveTermsCode) {
 		this.receiveTermsCode = receiveTermsCode;
 	}
-	 
+
 	public String getReceiveTermsName() {
 		return this.receiveTermsName;
 	}
@@ -331,7 +340,7 @@ public class ContractView
 	public void setReceiveTermsName(String receiveTermsName) {
 		this.receiveTermsName = receiveTermsName;
 	}
-	 
+
 	public String getOrderVersionId() {
 		return orderVersionId;
 	}
@@ -355,7 +364,7 @@ public class ContractView
 //	public void setMail(String mail) {
 //		this.mail = mail;
 //	}
-	 
+
 	public String getContractor1Id() {
 		return this.contractor1Id;
 	}
@@ -363,7 +372,7 @@ public class ContractView
 	public void setContractor1Id(String contractor1Id) {
 		this.contractor1Id = contractor1Id;
 	}
-	 
+
 	public String getContractor1Tel() {
 		return this.contractor1Tel;
 	}
@@ -371,7 +380,7 @@ public class ContractView
 	public void setContractor1Tel(String contractor1Tel) {
 		this.contractor1Tel = contractor1Tel;
 	}
-	 
+
 	public String getContractor2Id() {
 		return this.contractor2Id;
 	}
@@ -379,7 +388,7 @@ public class ContractView
 	public void setContractor2Id(String contractor2Id) {
 		this.contractor2Id = contractor2Id;
 	}
-	 
+
 	public String getContractor2Tel() {
 		return this.contractor2Tel;
 	}
@@ -387,7 +396,7 @@ public class ContractView
 	public void setContractor2Tel(String contractor2Tel) {
 		this.contractor2Tel = contractor2Tel;
 	}
-	 
+
 	public String getContractor3Id() {
 		return this.contractor3Id;
 	}
@@ -395,7 +404,7 @@ public class ContractView
 	public void setContractor3Id(String contractor3Id) {
 		this.contractor3Id = contractor3Id;
 	}
-	 
+
 	public String getContractor3Tel() {
 		return this.contractor3Tel;
 	}
@@ -403,7 +412,7 @@ public class ContractView
 	public void setContractor3Tel(String contractor3Tel) {
 		this.contractor3Tel = contractor3Tel;
 	}
-	 
+
 	public Date getProductionTime() {
 		return this.productionTime;
 	}
@@ -411,7 +420,7 @@ public class ContractView
 	public void setProductionTime(Date productionTime) {
 		this.productionTime = productionTime;
 	}
-	 
+
 	public Date getSendTime() {
 		return this.sendTime;
 	}
@@ -419,7 +428,7 @@ public class ContractView
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
 	}
-	 
+
 	public Integer getStatus() {
 		return this.status;
 	}
@@ -427,7 +436,7 @@ public class ContractView
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	 
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -530,48 +539,31 @@ public class ContractView
 		final ContractView other = (ContractView) obj;
 		return (this.id == null ? other.id == null : this.id.equals(other.id));
 	}
-	
+
 	public String toString() {
-	    final String tab = "  ";
-	    String str = "";
-	    str = "ContractView ( "
-	        + "id = " + this.id + tab
-	        + "sequenceNumber = " + this.sequenceNumber + tab
-	        + "partyaCode = " + this.partyaCode + tab
-	        + "partyaName = " + this.partyaName + tab
-	        + "partyaMail = " + this.partyaMail + tab
-	        + "amountOnContract = " + this.amountOnContract + tab
-	        + "deliveryDaysAfterPrepay = " + this.deliveryDaysAfterPrepay + tab
-	        + "clientName = " + this.clientName + tab
-	        + "installLocation = " + this.installLocation + tab
-	        + "qualityStand = " + this.qualityStand + tab
-	        + "settlement = " + this.settlement + tab
-	        + "partyaAddress = " + this.partyaAddress + tab
-	        + "invoiceAddress = " + this.invoiceAddress + tab
-	        + "broker = " + this.broker + tab
-	        + "invoiceReceiver = " + this.invoiceReceiver + tab
-	        + "invoiceTel = " + this.invoiceTel + tab
-	        + "invoicePostCode = " + this.invoicePostCode + tab
-	        + "companyTel = " + this.companyTel + tab
-	        + "bankName = " + this.bankName + tab
-	        + "accountNumber = " + this.accountNumber + tab
-	        + "kOrderVersionId = " + this.orderVersionId + tab
-	        + "receiveTermsCode = " + this.receiveTermsCode + tab
-	        + "receiveTermsName = " + this.receiveTermsName + tab
-	        + "kAcceptanceCriteriaCode = " + this.acceptanceCriteriaCode + tab
+		final String tab = "  ";
+		String str = "";
+		str = "ContractView ( " + "id = " + this.id + tab + "sequenceNumber = " + this.sequenceNumber + tab
+				+ "partyaCode = " + this.partyaCode + tab + "partyaName = " + this.partyaName + tab + "partyaMail = "
+				+ this.partyaMail + tab + "amountOnContract = " + this.amountOnContract + tab
+				+ "deliveryDaysAfterPrepay = " + this.deliveryDaysAfterPrepay + tab + "clientName = " + this.clientName
+				+ tab + "installLocation = " + this.installLocation + tab + "qualityStand = " + this.qualityStand + tab
+				+ "settlement = " + this.settlement + tab + "partyaAddress = " + this.partyaAddress + tab
+				+ "invoiceAddress = " + this.invoiceAddress + tab + "broker = " + this.broker + tab
+				+ "invoiceReceiver = " + this.invoiceReceiver + tab + "invoiceTel = " + this.invoiceTel + tab
+				+ "invoicePostCode = " + this.invoicePostCode + tab + "companyTel = " + this.companyTel + tab
+				+ "bankName = " + this.bankName + tab + "accountNumber = " + this.accountNumber + tab
+				+ "kOrderVersionId = " + this.orderVersionId + tab + "receiveTermsCode = " + this.receiveTermsCode + tab
+				+ "receiveTermsName = " + this.receiveTermsName + tab + "kAcceptanceCriteriaCode = "
+				+ this.acceptanceCriteriaCode + tab
 //	        + "mail = " + this.mail + tab
-	        + "contractor1Id = " + this.contractor1Id + tab
-	        + "contractor1Tel = " + this.contractor1Tel + tab
-	        + "contractor2Id = " + this.contractor2Id + tab
-	        + "contractor2Tel = " + this.contractor2Tel + tab
-	        + "contractor3Id = " + this.contractor3Id + tab
-	        + "contractor3Tel = " + this.contractor3Tel + tab
-	        + "productionTime = " + this.productionTime + tab
-	        + "sendTime = " + this.sendTime + tab
-	        + "status = " + this.status + tab
-	        + " )";
-	
-	    return str;
+				+ "contractor1Id = " + this.contractor1Id + tab + "contractor1Tel = " + this.contractor1Tel + tab
+				+ "contractor2Id = " + this.contractor2Id + tab + "contractor2Tel = " + this.contractor2Tel + tab
+				+ "contractor3Id = " + this.contractor3Id + tab + "contractor3Tel = " + this.contractor3Tel + tab
+				+ "productionTime = " + this.productionTime + tab + "sendTime = " + this.sendTime + tab + "status = "
+				+ this.status + tab + " )";
+
+		return str;
 	}
 
 }
