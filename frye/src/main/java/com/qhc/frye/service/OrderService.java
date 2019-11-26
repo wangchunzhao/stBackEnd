@@ -196,6 +196,12 @@ public class OrderService {
 	private B2CCostRepository b2cRepo;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
+	
+	private final static String COST_INSTALLATION = "BG1GDA00000-X";
+	private final static String COST_MATERIALS = "BG1GDB00000-X";
+	private final static String COST_ELETRICAL = "BG1R8J00000-X";
+	private final static String COST_COOLROOM = "BG1R8R00000-X";
+	private final static String COST_MAINTANANCE  = "BG1R8K00000-X";
 
 	/**
 	 * 
@@ -1348,7 +1354,22 @@ public class OrderService {
 		}
 		order.setItems(items);
 	}
-	
+	/**
+	 */
+	public void enginingCost(boolean isApproved,String seqnum,String version,double installation,double materials,double electrical ,double coolrome,double maintanance) {
+		
+		KOrderInfo orderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(seqnum, version);
+		
+		
+		
+	}
+	/**
+	 * 
+	 * @param isApproved
+	 * @param seqnum
+	 * @param version
+	 * @param b2cs
+	 */
 	public void b2cCost(boolean isApproved,String seqnum,String version,List<B2CComments> b2cs) {
 		
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);

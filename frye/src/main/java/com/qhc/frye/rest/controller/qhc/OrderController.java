@@ -96,8 +96,11 @@ public class OrderController {
 	@ApiOperation(value = "工程经理审核", notes = "工程经理审核订单")
 	@PostMapping(value = "order/engineering")
 	@ResponseStatus(HttpStatus.OK)
-	public void approvedByEngineering(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam double cost,@RequestParam double cost2,@RequestParam double cost3,@RequestParam double cost4) throws Exception{
-		
+	public void approvedByEngineering(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam double installation,@RequestParam double materials,@RequestParam double electrical ,@RequestParam double coolroom,@RequestParam double maintanance) throws Exception{
+		boolean isPro = false;
+		if(isApproved!=0)
+			isPro = true;
+		orderService.enginingCost(isPro, seqnum, version, installation,materials,electrical,coolroom,maintanance);
 	}
 	
 	@ApiOperation(value = "BPM送审", notes = "BPM送审")
