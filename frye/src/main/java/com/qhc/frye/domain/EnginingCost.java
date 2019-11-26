@@ -82,5 +82,25 @@ public class EnginingCost {
 		this.orderId = orderId;
 	}
 
+
+	public Date getOptTime() {
+		return optTime;
+	}
+
+
+	public void setOptTime(Date optTime) {
+		this.optTime = optTime;
+	}
+
+
+	public String getOperator() {
+		return operator;
+	}
+
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
 	
 }

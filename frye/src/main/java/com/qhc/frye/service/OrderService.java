@@ -30,6 +30,7 @@ import com.qhc.frye.dao.BProvinceRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.DefaultCharacterViewRepository;
+import com.qhc.frye.dao.EnginingCostRepository;
 import com.qhc.frye.dao.ItemDetailRepository;
 import com.qhc.frye.dao.KBiddingPlanRepository;
 import com.qhc.frye.dao.KCharacteristicsRepository;
@@ -56,6 +57,7 @@ import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DOrder;
 import com.qhc.frye.domain.DSalesType;
 import com.qhc.frye.domain.DefaultCharacterView;
+import com.qhc.frye.domain.EnginingCost;
 import com.qhc.frye.domain.ItemDetails;
 import com.qhc.frye.domain.ItemsForm;
 import com.qhc.frye.domain.KAttachedInfo;
@@ -194,6 +196,9 @@ public class OrderService {
 	
 	@Autowired
 	private B2CCostRepository b2cRepo;
+	
+	@Autowired
+	private EnginingCostRepository enginRepo;
 
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 	
@@ -1356,10 +1361,84 @@ public class OrderService {
 	}
 	/**
 	 */
-	public void enginingCost(boolean isApproved,String seqnum,String version,double installation,double materials,double electrical ,double coolrome,double maintanance) {
+	public void enginingCost(String operator,boolean isApproved,String seqnum,String version,double installation,double materials,double electrical ,double coolrome,double maintanance) {
 		
 		KOrderInfo orderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(seqnum, version);
-		
+		List<EnginingCost> engins = enginRepo.findAllEnginingByItem(orderInfo.getId());
+		if(engins==null || engins.isEmpty()) {
+			engins = new ArrayList<EnginingCost>();
+			EnginingCost ins = new EnginingCost();
+			ins.setMaterialCode(this.COST_INSTALLATION);
+			ins.setOrderId(orderInfo.getId());
+			ins.setOperator(operator);
+			ins.setOptTime(new Date());
+			ins.setCost(installation);
+			engins.add(ins);
+			//
+			EnginingCost mat = new EnginingCost();
+			mat.setMaterialCode(this.COST_MATERIALS);
+			mat.setOrderId(orderInfo.getId());
+			mat.setOperator(operator);
+			mat.setOptTime(new Date());
+			mat.setCost(materials);
+			engins.add(mat);
+			//
+			EnginingCost ele = new EnginingCost();
+			ele.setMaterialCode(this.COST_ELETRICAL);
+			ele.setOrderId(orderInfo.getId());
+			ele.setOperator(operator);
+			ele.setOptTime(new Date());
+			ele.setCost(electrical);
+			engins.add(ele);
+			//
+			EnginingCost cool = new EnginingCost();
+			cool.setMaterialCode(this.COST_COOLROOM);
+			cool.setOrderId(orderInfo.getId());
+			cool.setOperator(operator);
+			cool.setOptTime(new Date());
+			cool.setCost(coolrome);
+			engins.add(cool);
+			//
+			EnginingCost man = new EnginingCost();
+			man.setMaterialCode(this.COST_MAINTANANCE);
+			man.setOrderId(orderInfo.getId());
+			man.setOperator(operator);
+			man.setOptTime(new Date());
+			man.setCost(maintanance);
+			engins.add(man);
+		}else {
+			for(EnginingCost enc:engins) {
+				switch(enc.getMaterialCode()) {
+					case COST_INSTALLATION:
+						enc.setOperator(operator);
+						enc.setOptTime(new Date());
+						enc.setCost(maintanance);
+						break;
+					case COST_MATERIALS:
+						enc.setOperator(operator);
+						enc.setOptTime(new Date());
+						enc.setCost(maintanance);
+						break;
+					case COST_ELETRICAL:
+						enc.setOperator(operator);
+						enc.setOptTime(new Date());
+						enc.setCost(maintanance);
+						break;
+					case COST_COOLROOM:
+						enc.setOperator(operator);
+						enc.setOptTime(new Date());
+						enc.setCost(maintanance);
+						break;
+					case COST_MAINTANANCE:
+						enc.setOperator(operator);
+						enc.setOptTime(new Date());
+						enc.setCost(maintanance);
+						break;
+				}
+			}
+		}
+		//
+		enginRepo.saveAll(engins);
 		
 		
 	}
