@@ -1072,9 +1072,9 @@ DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `b2c_code` VARCHAR(45) NOT NULL,
   `cost` DECIMAL(13,2) NOT NULL COMMENT 'B2C成本',
   `opt_time` DATETIME NOT NULL COMMENT '最后修改时间',
+  `operator` VARCHAR(64) NOT NULL,
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1383,6 +1383,48 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`sap_color_characteristic_value` (
   CONSTRAINT `fk_sap_characteristic_value_sap_color_characteristic1`
     FOREIGN KEY (`sap_color_characteristic_code`)
     REFERENCES `bohemian`.`sap_color_characteristic` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_engining_term`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_engining_term` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_engining_term` (
+  `code` VARCHAR(18) NOT NULL,
+  `name` TEXT NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bohemian`.`k_engining_cost`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bohemian`.`k_engining_cost` ;
+
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_engining_cost` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cost` DECIMAL(13,2) NOT NULL,
+  `opt_time` DATETIME NOT NULL,
+  `operator` VARCHAR(64) NOT NULL,
+  `k_engining_term_code` VARCHAR(18) NOT NULL,
+  `k_order_info_id` CHAR(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_k_engining_cost_k_engining_term1_idx` (`k_engining_term_code` ASC) VISIBLE,
+  INDEX `fk_k_engining_cost_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
+  CONSTRAINT `fk_k_engining_cost_k_engining_term1`
+    FOREIGN KEY (`k_engining_term_code`)
+    REFERENCES `bohemian`.`k_engining_term` (`code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_k_engining_cost_k_order_info1`
+    FOREIGN KEY (`k_order_info_id`)
+    REFERENCES `bohemian`.`k_order_info` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -2035,6 +2077,20 @@ START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('10', 'RMB');
 INSERT INTO `bohemian`.`sap_currency_sale_type` (`sap_sales_type_code`, `sap_currency_code`) VALUES ('30', 'RMB');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `bohemian`.`k_engining_term`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `bohemian`;
+INSERT INTO `bohemian`.`k_engining_term` (`code`, `name`) VALUES ('BG1GDA00000-X', '安装费');
+INSERT INTO `bohemian`.`k_engining_term` (`code`, `name`) VALUES ('BG1GDB00000-X', '材料费');
+INSERT INTO `bohemian`.`k_engining_term` (`code`, `name`) VALUES ('BG1R8J00000-X', '电器费');
+INSERT INTO `bohemian`.`k_engining_term` (`code`, `name`) VALUES ('BG1R8R00000-X', '冷库费');
+INSERT INTO `bohemian`.`k_engining_term` (`code`, `name`) VALUES ('BG1R8K00000-X', '维保费');
 
 COMMIT;
 
