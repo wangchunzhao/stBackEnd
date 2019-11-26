@@ -45,10 +45,14 @@ public class ParameterSettingsService {
 				} else {
 					p.setId(after.getId());
 				}
-			} else {
+			} else if (sdate.compareTo(tdate) < 0) {
 				throw new IllegalArgumentException("修改的生效时间必须大于当前时间");
+			} else {
+				//p.setEnableDate(new Date());
 			}
 		}
+		
+		p.getEnableDate().setHours(12);
 		
 		return parameterSettingsRepository.save(p);
 	}
