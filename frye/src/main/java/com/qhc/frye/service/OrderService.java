@@ -279,19 +279,14 @@ public class OrderService {
 			supportRepo.save(supportInfo);
 		}
 		//
-
+		boolean b2cFlag = false;
 		//
 		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
 
 		String orderId = null;
 		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
 		if (lversion != null) {
-			// 订单原版本保存
-			KOrderVersion v = ohelper.keepOrderVersion(lversion);
-			v = orderVersionRepo.save(v);
-			//订单主键为原订单
-			kOrderInfo.setId(v.getOrderInfoId());
-			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+
 			//order form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
@@ -303,6 +298,10 @@ public class OrderService {
 				for (AbsItem item : order.getItems()) {
 					//
 					ItemDetails temp = OrderHelper.itemConversion(item, formId);
+					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+						b2cFlag = true;
+					}
+					
 					temp = itemDetailRepository.save(temp);
 					if(item.getConfigs()!=null) {
 						for (AbsCharacteristic ac : item.getConfigs()) {
@@ -314,9 +313,8 @@ public class OrderService {
 						saveCharacter(item.getMaterialCode(),temp.getId());
 						
 					}
-					//attachment
-
 				}
+					
 			}else {
 				form.setId(oldForm.getId());
 				form = formRepo.save(form);
@@ -327,30 +325,26 @@ public class OrderService {
 				for(AbsItem item:newItems) {
 					
 					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
+					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+						b2cFlag = true;
+					}
 					for(ItemDetails old:oldItems) {
 						if(old.getRowNumber()==temp.getRowNumber()) {
 							temp.setId(old.getId());
 							break;
 						}
 					}
-					
-					temp = itemDetailRepository.save(temp);
-					
-					
-				}
-				
+
+					temp = itemDetailRepository.save(temp);					
+				}				
 			}
+			// 订单原版本保存
+			KOrderVersion v = ohelper.keepOrderVersion(lversion,b2cFlag,false);
+			v = orderVersionRepo.save(v);
 		} else {
 			
 			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-			// 新订单版本版本
-			lversion = ohelper.toOrderVersion();
-			lversion.setOrderId(dorder.getId());
-			lversion.setOrderInfoId(kOrderInfo.getId());
-			if(lversion.getCreateTime()==null)
-				lversion.setCreateTime(new Date());
-			// 订单版本保存
-			orderVersionRepo.save(lversion);
+			
 			// form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			form = formRepo.save(form);
@@ -360,6 +354,9 @@ public class OrderService {
 			for (AbsItem item : order.getItems()) {
 				//
 				ItemDetails temp = OrderHelper.itemConversion(item, formId);
+				if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+					b2cFlag = true;
+				}
 				temp = itemDetailRepository.save(temp);
 				if(item.getConfigs()!=null) {
 					for (AbsCharacteristic ac : item.getConfigs()) {
@@ -374,6 +371,15 @@ public class OrderService {
 
 			}
 		}
+		// 新订单版本版本
+		lversion = ohelper.toOrderVersion(b2cFlag,false);
+		lversion.setOrderId(dorder.getId());
+		lversion.setOrderInfoId(kOrderInfo.getId());
+		if(lversion.getCreateTime()==null)
+			lversion.setCreateTime(new Date());
+		// 订单版本保存
+		orderVersionRepo.save(lversion);
+		
 		// 订单地址
 		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
 		deliveryAddressRepository.saveAll(adds);
