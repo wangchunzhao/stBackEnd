@@ -253,10 +253,10 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(final AbsOrder order) {
+	public void save(final AbsOrder order) throws Exception{
 		this.dealOrder(order, false);
 	}
-	private void dealOrder(final AbsOrder order, boolean fromSupportor) {
+	private void dealOrder(final AbsOrder order, boolean fromSupportor) throws Exception{
 
 		String seq = order.getSequenceNumber();
 
@@ -347,6 +347,8 @@ public class OrderService {
 			lversion = ohelper.toOrderVersion();
 			lversion.setOrderId(dorder.getId());
 			lversion.setOrderInfoId(kOrderInfo.getId());
+			if(lversion.getCreateTime()==null)
+				lversion.setCreateTime(new Date());
 			// 订单版本保存
 			orderVersionRepo.save(lversion);
 			// form
