@@ -61,6 +61,10 @@ public class ContractService {
 		return contracts.size() > 0 ? contracts.get(0) : null;
 	}
 
+	public Contract findOne(Integer id) {
+		return contractRepository.findById(id).get();
+	}
+
 	public Contract save(Contract contract) {
 		return contractRepository.saveAndFlush(contract);
 	}
@@ -132,11 +136,15 @@ public class ContractService {
 		String createTime = toString(params.get("createTime"));
 		String productionTime = toString(params.get("productionTime"));
 		String status = toString(params.get("status"));
+		String statusList = toString(params.get("statusList"));
 		if (!isEmpty(id)) {
 			sql.append(" and contract.id = " + id);
 		}
 		if (!isEmpty(status)) {
 			sql.append(" and contract.contract_status = " + status + "");
+		}
+		if (!isEmpty(statusList)) {
+			sql.append(" and contract.contract_status in (" + statusList + ")");
 		}
 		if (!isEmpty(sequenceNumber)) {
 			sql.append(" and UPPER(orders.sequence_number) like '%" + sequenceNumber.toUpperCase() + "%'");
@@ -196,7 +204,7 @@ public class ContractService {
 	}
 
 	private boolean isEmpty(String v) {
-		return v == null || v.length() == 0;
+		return v == null || v.trim().length() == 0;
 	}
 
 	private String toString(Object v) {

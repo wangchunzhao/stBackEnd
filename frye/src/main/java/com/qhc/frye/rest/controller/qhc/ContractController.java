@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,6 +88,42 @@ public class ContractController {
 			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "查询合同详情，合同ID=" + contractId;
+			logger.error(msg, e);
+			result = Result.error(e.getMessage());
+		}
+		return result;
+	}
+	
+	@ApiOperation(value = "更新合同PDF文档hashcode信息",notes="更新合同PDF文档hashcode信息")
+	@PutMapping(value = "{id}/hashcode/{hashcode}")
+	@ResponseBody
+	public Result<?> updateContractFileHashcode(@PathVariable("id") Integer contractId, @PathVariable("hashcode") String hashcode) {
+		Result<?> result = null;
+		try {
+			Contract c = contractService.findOne(contractId);
+			c.setFileHashCode(hashcode);
+			contractService.save(c);
+			result = Result.ok(c);
+		} catch (Exception e) {
+			String msg = "更新合同PDF文档hashcode信息，合同ID=" + contractId + "， FileHashCode=" + hashcode;
+			logger.error(msg, e);
+			result = Result.error(e.getMessage());
+		}
+		return result;
+	}
+	
+	@ApiOperation(value = "更新合同电子签约合同ID信息",notes="更新合同电子签约合同ID信息")
+	@PutMapping(value = "{id}/signid/{signContractId}")
+	@ResponseBody
+	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId) {
+		Result<? extends Object> result = null;
+		try {
+			Contract c = contractService.findOne(contractId);
+			c.setSignContractId(signContractId);
+			contractService.save(c);
+			result = Result.ok(c);
+		} catch (Exception e) {
+			String msg = "更新合同电子签约合同ID信息，合同ID=" + contractId + "， SignContractId=" + signContractId;
 			logger.error(msg, e);
 			result = Result.error(e.getMessage());
 		}
