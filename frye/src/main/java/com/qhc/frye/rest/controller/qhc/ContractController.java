@@ -94,6 +94,24 @@ public class ContractController {
 		return result;
 	}
 	
+	@ApiOperation(value = "更新合同状态",notes="更新合同状态")
+	@PutMapping(value = "{id}/status/{status}")
+	@ResponseBody
+	public Result<?> updateContractStatus(@PathVariable("id") Integer contractId, @PathVariable("status") Integer status) {
+		Result<?> result = null;
+		try {
+			Contract c = contractService.findOne(contractId);
+			c.setStatus(status);
+			contractService.save(c);
+			result = Result.ok(c);
+		} catch (Exception e) {
+			String msg = "更新合同状态，合同ID=" + contractId + "， status=" + status;
+			logger.error(msg, e);
+			result = Result.error(e.getMessage());
+		}
+		return result;
+	}
+	
 	@ApiOperation(value = "更新合同PDF文档hashcode信息",notes="更新合同PDF文档hashcode信息")
 	@PutMapping(value = "{id}/hashcode/{hashcode}")
 	@ResponseBody
@@ -113,13 +131,14 @@ public class ContractController {
 	}
 	
 	@ApiOperation(value = "更新合同电子签约合同ID信息",notes="更新合同电子签约合同ID信息")
-	@PutMapping(value = "{id}/signid/{signContractId}")
+	@PutMapping(value = "{id}/signid/{signContractId}/{status}")
 	@ResponseBody
-	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId) {
+	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId, @PathVariable("status") Integer status) {
 		Result<? extends Object> result = null;
 		try {
 			Contract c = contractService.findOne(contractId);
 			c.setSignContractId(signContractId);
+			c.setStatus(status);
 			contractService.save(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
