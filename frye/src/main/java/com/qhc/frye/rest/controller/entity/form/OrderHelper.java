@@ -270,33 +270,37 @@ public class OrderHelper {
 	 * 
 	 * @return
 	 */
-	public KOrderVersion toOrderVersion() {
+	public KOrderVersion toOrderVersion(boolean b2c,boolean dealer) {
 		KOrderVersion temp = new KOrderVersion();
+		String orderStatus = "00";
+		String b2cStatus = String.valueOf(0);
+		String dealerStatus = String.valueOf(0);
+		
+		if(b2c)
+			b2cStatus=String.valueOf(1);
+		if(dealer)
+			dealerStatus = String.valueOf(1);
+				
 		switch(order.getSubmitType()) {
 			case 2:
-				temp.setStatus("0100");
+				orderStatus = "01";
 				temp.setSubmitDate(order.getOptTime());
 				break;
-			case 1:
-				temp.setStatus("0000");
+			default:
+				temp.setStatus("00");
 				break;
 		}
+		temp.setStatus(orderStatus+b2cStatus+dealerStatus);
 		temp.setVersion(order.getCurrentVersion());
 		temp.setCreateTime(order.getCreateTime());
 		temp.setOptTime(order.getOptTime());
 		return temp;
 	}
-	public KOrderVersion keepOrderVersion(KOrderVersion old) {
-		KOrderVersion temp = toOrderVersion();
+	public KOrderVersion keepOrderVersion(KOrderVersion old,boolean b2c,boolean dealer) {
+		KOrderVersion temp = toOrderVersion(b2c,dealer);
 		temp.setId(old.getId());
 		temp.setOrderId(old.getOrderId());
 		temp.setOrderInfoId(old.getOrderInfoId());
-		switch(order.getSubmitType()) {
-		case 1:
-			temp.setStatus("0100");
-		case 0:
-			temp.setStatus(old.getStatus());
-	}
 		return temp;
 	}
 	public static ItemDetails itemConversion(final AbsItem  item,final String formId) {

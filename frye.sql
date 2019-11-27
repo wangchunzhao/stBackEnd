@@ -844,6 +844,8 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_contract` (
   `production_time` DATETIME NOT NULL COMMENT '\'合同制作时间\',',
   `send_time` DATETIME NULL COMMENT '\'合同发送时间\',',
   `contract_status` INT NULL COMMENT '\'合同状态：1 未发送 2 已发送\',',
+  `file_hashcode` VARCHAR(256) NULL COMMENT '文档Hash值',
+  `sign_contractid` VARCHAR(64) NULL COMMENT '电子签约中合同Id',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_contract_k_order_version1_idx` (`k_order_version_id` ASC) VISIBLE,
