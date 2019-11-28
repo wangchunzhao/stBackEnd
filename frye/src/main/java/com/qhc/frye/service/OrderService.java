@@ -356,6 +356,10 @@ public class OrderService {
 		lversion.setOrderInfoId(orderInforId);
 		if(lversion.getCreateTime()==null)
 			lversion.setCreateTime(new Date());
+		//
+		KOrderVersion extVersion = orderVersionRepo.findByOrder(orderId, orderInforId);
+		if(extVersion!=null)
+			lversion.setId(extVersion.getId());
 		// 订单版本保存
 		orderVersionRepo.save(lversion);
 	}
