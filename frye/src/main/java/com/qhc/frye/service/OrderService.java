@@ -327,9 +327,6 @@ public class OrderService {
 		return b2cFlag;
 	}
 	
-	private void saveVersion(final AbsOrder order,final String orderId,final OrderHelper ohelper) {
-		
-	}
 	private void submitOrder(final AbsOrder order) throws Exception{
 
 		OrderHelper ohelper = new OrderHelper(order);
