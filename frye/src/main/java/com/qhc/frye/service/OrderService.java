@@ -109,7 +109,7 @@ public class OrderService {
 
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
-
+	
 	@Autowired
 	private DOrderRepository dOrderRepository;
 
@@ -569,7 +569,7 @@ public class OrderService {
 
 					}
 				}
-				// 毛利率
+				// WTW毛利率
 				wtwgrossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, wtwcost);
 				// 毛利率
 				grossProfitMargin = this.CalculateGrossProfit(excludingTaxAmount, cost);
@@ -602,13 +602,12 @@ public class OrderService {
 		sumssg.setCost(sumCost.setScale(2, BigDecimal.ROUND_HALF_UP));
 		sumssg.setWtwGrossProfit(sumWtwGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
 		sumssg.setGrossProfit(sumGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
-		if (groups.size() != 0) {
-			sumssg.setWtwGrossProfitMargin(sumWtwGrossProfitMargin / groups.size());
-			sumssg.setGrossProfitMargin(sumGrossProfitMargin / groups.size());
-		} else {
-			sumssg.setWtwGrossProfitMargin(0D);
-			sumssg.setGrossProfitMargin(0D);
-		}
+		// WTW毛利率
+		sumWtwGrossProfitMargin = this.CalculateGrossProfit(sumExcludingTaxAmount, sumWtwCost);
+		// 毛利率
+		sumGrossProfitMargin = this.CalculateGrossProfit(sumExcludingTaxAmount, sumCost);
+		sumssg.setWtwGrossProfitMargin(sumWtwGrossProfitMargin);
+		sumssg.setGrossProfitMargin(sumGrossProfitMargin);
 		sumssg.setCode("sum");
 		sumssg.setName("合计");
 
