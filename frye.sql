@@ -772,9 +772,10 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_version` (
   `k_order_info_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  UNIQUE INDEX `version_UNIQUE` (`version` ASC) VISIBLE,
+  UNIQUE INDEX `version_UNIQUE` (`version` ASC, `k_orders_id` ASC) INVISIBLE,
   INDEX `fk_k_order_version_k_orders1_idx` (`k_orders_id` ASC) VISIBLE,
   INDEX `fk_k_order_version_k_order_info1_idx` (`k_order_info_id` ASC) VISIBLE,
+  UNIQUE INDEX `order_unique` (`k_orders_id` ASC, `k_order_info_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_order_version_k_orders1`
     FOREIGN KEY (`k_orders_id`)
     REFERENCES `bohemian`.`k_orders` (`id`)
