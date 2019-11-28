@@ -256,6 +256,12 @@ public class OrderService {
 	public void save(final AbsOrder order) throws Exception{
 		this.submitOrder(order);
 	}
+	/**
+	 * 
+	 * @param order
+	 * @param ohelper
+	 * @return
+	 */
 	private String saveOrder(final AbsOrder order,final OrderHelper ohelper) {
 		
 		String seq = order.getSequenceNumber();
@@ -280,10 +286,22 @@ public class OrderService {
 		
 		return orderDao.getId();
 	}
-	private String saveOrderInfo(final AbsOrder order,final OrderHelper ohelper,final String orderId,String version) {
+	/**
+	 * 
+	 * @param order
+	 * @param ohelper
+	 * @param orderId
+	 * @return
+	 */
+	private String saveOrderInfo(final AbsOrder order,final OrderHelper ohelper,String orderId) {
 		
+		KOrderVersion lastVersion = orderVersionRepo.findLastOneByOrderId(orderId);
+		String version = null;
+		if(lastVersion!=null) {
+			version = lastVersion.getVersion();
+		}
 		KOrderInfo kOrderInfoDao = ohelper.toOrderInfo();
-		if(version!=null) {
+		if(version!=null&&version.equals(order.getCurrentVersion())) {
 			KOrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(),version);
 			kOrderInfoDao.setId(existOrderInfo.getId());
 		}
@@ -291,7 +309,13 @@ public class OrderService {
 		return kOrderInfoDao.getId();
 	}
 	
-	
+	/**
+	 * 
+	 * @param order
+	 * @param ohelper
+	 * @param orderInforId
+	 * @return
+	 */
 	private boolean saveForm(final AbsOrder order,final OrderHelper ohelper,String orderInforId) {
 		
 		ItemsForm existForm = formRepo.findOneByHeaderId(orderInforId);
@@ -326,26 +350,7 @@ public class OrderService {
 		}		
 		return b2cFlag;
 	}
-	
-	private void submitOrder(final AbsOrder order) throws Exception{
-
-		OrderHelper ohelper = new OrderHelper(order);
-
-		String orderId = this.saveOrder(order,ohelper);
-		//
-		
-		KOrderVersion existVersion = orderVersionRepo.findLastOneByOrderId(orderId);
-		String version = null;
-		if(existVersion!=null) {
-			version = existVersion.getVersion();
-		}
-		
-		String orderInforId = saveOrderInfo(order,ohelper,orderId,version);
-		
-		boolean b2cFlag = saveForm(order,ohelper,orderInforId);
-		
-	
-		// 新订单版本版本
+	private void saveVersion(final AbsOrder order,final OrderHelper ohelper,boolean b2cFlag,String orderId,String orderInforId)  throws Exception{
 		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag,false);
 		lversion.setOrderId(orderId);
 		lversion.setOrderInfoId(orderInforId);
@@ -353,6 +358,19 @@ public class OrderService {
 			lversion.setCreateTime(new Date());
 		// 订单版本保存
 		orderVersionRepo.save(lversion);
+	}
+	private void submitOrder(final AbsOrder order) throws Exception{
+
+		OrderHelper ohelper = new OrderHelper(order);
+
+		String orderId = this.saveOrder(order,ohelper);
+		//
+		String orderInforId = saveOrderInfo(order,ohelper,orderId);
+		
+		boolean b2cFlag = saveForm(order,ohelper,orderInforId);
+	
+		// 订单版本
+		saveVersion(order,ohelper,b2cFlag,orderId,orderInforId);
 		
 		// 订单地址
 		List<KDelieveryAddress> adds = ohelper.toAddress(orderInforId);
