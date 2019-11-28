@@ -254,39 +254,150 @@ public class OrderService {
 	 * @param absOrder
 	 */
 	public void save(final AbsOrder order) throws Exception{
-		this.dealOrder(order, false);
+		this.submitOrder(order);
 	}
-	private void dealOrder(final AbsOrder order, boolean fromSupportor) throws Exception{
-
+	private String saveOrder(final AbsOrder order,final OrderHelper ohelper) {
+		
 		String seq = order.getSequenceNumber();
-
-		OrderHelper ohelper = new OrderHelper(order);
-		DOrder dorder = ohelper.toDOrder();
-		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
-		if (forder != null) {
-			dorder.setId(forder.getId());
+		
+		DOrder orderDao = ohelper.toDOrder();
+		DOrder extOrder = dOrderRepository.findBySequence(order.getSequenceNumber());
+		if (extOrder != null) {
+			orderDao.setId(extOrder.getId());
 		}
 		//save order header
-		dorder = dOrderRepository.saveAndFlush(dorder);
-
-		//for support manager
-		if (fromSupportor) {
+		orderDao = dOrderRepository.saveAndFlush(orderDao);
+		
+		//if it is from supportmanager and able to be sent to bpm
+		if (order.getContractNumber()!=null && !order.getContractNumber().trim().isEmpty()) {
 			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
-			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
-			if (osi.getId() != 0) {
-				supportInfo.setId(osi.getId());
+			OrderSupportInfo existSupport = supportRepo.findByOrderId(orderDao.getId());
+			if (existSupport!=null && !order.getContractNumber().equals(existSupport.getContractNumber())) {
+				supportInfo.setId(existSupport.getId());
+				supportRepo.save(supportInfo);
 			}
-			supportRepo.save(supportInfo);
 		}
+		
+		return orderDao.getId();
+	}
+	private String saveOrderInfo(final AbsOrder order,final OrderHelper ohelper,final String orderId,String version) {
+		
+		KOrderInfo kOrderInfoDao = ohelper.toOrderInfo();
+		if(version!=null) {
+			KOrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(),version);
+			kOrderInfoDao.setId(existOrderInfo.getId());
+		}
+		kOrderInfoDao = orderInfoRepo.save(kOrderInfoDao);
+		return kOrderInfoDao.getId();
+	}
+	
+	
+	private boolean saveForm(final AbsOrder order,final OrderHelper ohelper,String orderInforId) {
+		
+		ItemsForm existForm = formRepo.findOneByHeaderId(orderInforId);
+		ItemsForm formDao = ohelper.toForm(orderInforId);
+		
+		if(existForm!=null) {
+			formDao.setId(existForm.getId());
+		}
+		formDao = formRepo.save(formDao);
+		//
+		
+		
+		boolean b2cFlag = false;
+		List<ItemDetails> existItems = itemDetailRepository.findByKFormsId(formDao.getId());
+		List<BaseItem> newItems = order.getItems();
+		for(AbsItem item:newItems) {
+			
+			ItemDetails temp = OrderHelper.itemConversion(item, formDao.getId());
+			if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+				b2cFlag = true;
+			}
+			for(ItemDetails old:existItems) {
+				if(old.getRowNumber()==temp.getRowNumber()) {
+					temp.setId(old.getId());
+					break;
+				}
+			}
+			temp = itemDetailRepository.save(temp);		
+			//
+		
+			
+		}		
+		return b2cFlag;
+	}
+	
+	private void saveVersion(final AbsOrder order,final String orderId,final OrderHelper ohelper) {
+		
+	}
+	private void submitOrder(final AbsOrder order) throws Exception{
+
+		OrderHelper ohelper = new OrderHelper(order);
+
+		String orderId = this.saveOrder(order,ohelper);
+		//
+		
+		KOrderVersion existVersion = orderVersionRepo.findLastOneByOrderId(orderId);
+		String version = null;
+		if(existVersion!=null) {
+			version = existVersion.getVersion();
+		}
+		
+		String orderInforId = saveOrderInfo(order,ohelper,orderId,version);
+		
+		boolean b2cFlag = saveForm(order,ohelper,orderInforId);
+		
+	
+		// 新订单版本版本
+		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag,false);
+		lversion.setOrderId(orderId);
+		lversion.setOrderInfoId(orderInforId);
+		if(lversion.getCreateTime()==null)
+			lversion.setCreateTime(new Date());
+		// 订单版本保存
+		orderVersionRepo.save(lversion);
+		
+		// 订单地址
+		List<KDelieveryAddress> adds = ohelper.toAddress(orderInforId);
+		deliveryAddressRepository.saveAll(adds);
+		// bidding plan
+		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(orderInforId);
+		biddingPlanRepository.saveAll(bidding);
+		// attachment
+
+	}
+	private void submitOrder2(final AbsOrder order) throws Exception{
+
+//		String seq = order.getSequenceNumber();
+//
+		OrderHelper ohelper = new OrderHelper(order);
+//		DOrder dorder = ohelper.toDOrder();
+//		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
+//		if (forder != null) {
+//			dorder.setId(forder.getId());
+//		}
+//		//save order header
+//		dorder = dOrderRepository.saveAndFlush(dorder);
+//
+//		//for support manager
+////		if (fromSupportor) {
+////			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
+////			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
+////			if (osi.getId() != 0) {
+////				supportInfo.setId(osi.getId());
+////			}
+////			supportRepo.save(supportInfo);
+////		}
+		String orderId = this.saveOrder(order,ohelper);
 		//
 		boolean b2cFlag = false;
 		//
 		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
 
-		String orderId = null;
-		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(dorder.getId());
+		//String orderId = null;
+		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(orderId);
 		if (lversion != null) {
-
+			kOrderInfo = orderInfoRepo.save(kOrderInfo);
 			//order form
 			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
 			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
@@ -373,7 +484,7 @@ public class OrderService {
 		}
 		// 新订单版本版本
 		lversion = ohelper.toOrderVersion(b2cFlag,false);
-		lversion.setOrderId(dorder.getId());
+		lversion.setOrderId(orderId);
 		lversion.setOrderInfoId(kOrderInfo.getId());
 		if(lversion.getCreateTime()==null)
 			lversion.setCreateTime(new Date());
