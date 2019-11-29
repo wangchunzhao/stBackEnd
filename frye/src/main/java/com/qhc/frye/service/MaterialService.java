@@ -159,12 +159,12 @@ public class MaterialService {
 
 			}
 		}
-
-		if((m.getStandardPrice()<=0)||(m.getRetailPrice()<=0)||(m.getTranscationPrice()<=0)) {
-			return null;
-		}else {
-			return m;
-		}
+		return m;
+//		if((m.getStandardPrice()<=0)||(m.getRetailPrice()<=0)||(m.getTranscationPrice()<=0)) {
+//			return null;
+//		}else {
+//			return m;
+//		}
 	}
 	/**
 	 * 
