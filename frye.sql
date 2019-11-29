@@ -1051,6 +1051,7 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_support_info` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `contract_number` VARCHAR(45) NOT NULL COMMENT '合同号',
+  `record_number` VARCHAR(45) NULL COMMENT '备案号',
   `opterator_domain_id` VARCHAR(128) NOT NULL COMMENT '支持经理id',
   `opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `k_orders_id` CHAR(32) NOT NULL,
