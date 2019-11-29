@@ -71,9 +71,14 @@ public class ParameterSettingsService {
 			String code = parameter.getCode();
 			String date = sdf.format(parameter.getEnableDate());
 			if (date.compareTo(today) <= 0) {
+				// pre record only get last value
 				map.put(code + "_pre", parameter);
 			} else {
-				map.put(code + "_aft", parameter);
+				// after record only get firt value
+				String afterkey = code + "_aft";
+				if (!map.containsKey(afterkey)) {
+					map.put(code + "_aft", parameter);
+				}
 			}
 		}
 		
