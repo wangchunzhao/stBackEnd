@@ -98,10 +98,10 @@ public abstract class AbsOrder {
 	private int isTerm2;//分体柜是否远程监控
 	private int isTerm3;//立柜柜体是否在地下室
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date earliestDeliveryDate;//要求发货时间,最早交付时间
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date earliestProductDate;//工厂最早交货时间,最早生产时间
 	/**
 	 * 购销明细 Purchase and sale subsidiar
