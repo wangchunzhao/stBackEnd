@@ -1671,7 +1671,7 @@ public class OrderService {
 					cost.setCost(b2.getCost());
 
 					b2cRepo.save(cost);
-					item.b2cComments = b2.getB2cComments();
+					item.getB2cComments().equals(b2.getB2cComments());
 					itemDetailRepository.save(item);
 				}
 			}

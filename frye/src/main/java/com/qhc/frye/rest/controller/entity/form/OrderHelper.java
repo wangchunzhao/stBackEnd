@@ -340,6 +340,7 @@ public class OrderHelper {
 		temp.setRequestNameplate(item.getRequestNameplate());
 		temp.setComments(item.getComments());
 		temp.setColorComments(item.getColorComments());
+		temp.setConfigurable(item.isConfigurable());
 		//
 		temp.setkFormsId(formId);
 		return temp;
