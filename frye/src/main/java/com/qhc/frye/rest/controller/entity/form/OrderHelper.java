@@ -122,7 +122,10 @@ public class OrderHelper {
 		else
 			temp.setTerm2(false);
 		temp.setComments(order.getComments());
-		
+		if(order instanceof AbsOrderDealer) {
+			AbsOrderDealer dorder = (AbsOrderDealer)order;
+			temp.setRecordNumber(dorder.getRecordCode());
+		}
 		return temp;
 	}
 	public KOrderInfo keepOrderInfo() {
