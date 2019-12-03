@@ -1448,8 +1448,15 @@ public class OrderService {
 			params.put("contractorName", "%" + orderQuery.getContracterName().toUpperCase() + "%");
 		}
 		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
-			querySql.append(" and status in (:statuslist)");
-			params.put("statuslist", orderQuery.getStatusList());
+			if (orderQuery.getDominStatusList() != null && orderQuery.getDominStatusList().size() > 0) {
+				querySql.append(" and (status in (:statuslist)").append(" or (owner_domain_id = :ownerId and status in (:domainStatuslist)))");
+				params.put("statuslist", orderQuery.getStatusList());
+				params.put("ownerId", orderQuery.getSalesCode());
+				params.put("domainStatuslist", orderQuery.getDominStatusList());
+			} else {
+				querySql.append(" and status in (:statuslist)");
+				params.put("statuslist", orderQuery.getStatusList());
+			}
 		}
 		if (!isEmpty(orderQuery.getSpecialDiscount())) {
 			boolean special = orderQuery.getSpecialDiscount().equals("1");
