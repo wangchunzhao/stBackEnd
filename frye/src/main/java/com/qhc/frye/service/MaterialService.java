@@ -224,14 +224,13 @@ public class MaterialService {
 	 * @return
 	 */
 	public BomExplosion findBOMWithPrice(Map<String,String> pars){
-		Map<String,List<Bom>> boms = (Map<String, List<Bom>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
-		ObjectMapper mapper = new ObjectMapper(); 
-//		List<Bom> boms = mapper.convertValue(JsonBoms.get("userBean"), List<Bom>().class); 
-		
+		Map<String,List<Bom>> boms = (Map<String, List<Bom>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);	
 		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
 			
 			BomExplosion be = new BomExplosion();
 			List<Bom> defaultBoms = boms.get(BOM_CONFIGURATION_DEFAULT);
+			ObjectMapper mapper = new ObjectMapper(); 
+			//List<Bom> boms = mapper.convertValue(defaultBoms, Bom[].class); 
 			List<Bom> configedBoms = boms.get(BOM_CONFIGURATION_CONFIGURATED);
 					
 			boolean result = be.fillIn(defaultBoms,configedBoms);
