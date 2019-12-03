@@ -746,6 +746,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_info` (
   `is_term2` TINYINT(1) NULL COMMENT '分体柜是否远程监控',
   `is_term3` TINYINT(1) NULL COMMENT '立体柜是否在地下室',
   `comments` TEXT NULL,
+  `record_number` VARCHAR(45) NULL,
   PRIMARY KEY USING BTREE (`id`),
   UNIQUE INDEX `id_UNIQUE` USING BTREE (`id`) VISIBLE)
 ENGINE = InnoDB
@@ -969,6 +970,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `delievery_period` INT UNSIGNED NULL COMMENT '生产/采购周期',
   `config_transfer_price` DECIMAL(13,2) NULL,
   `config_retail_price` DECIMAL(13,2) NULL,
+  `is_configurable` TINYINT(1) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) INVISIBLE,
@@ -1051,7 +1053,6 @@ DROP TABLE IF EXISTS `bohemian`.`k_order_support_info` ;
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_support_info` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `contract_number` VARCHAR(45) NOT NULL COMMENT '合同号',
-  `record_number` VARCHAR(45) NULL COMMENT '备案号',
   `opterator_domain_id` VARCHAR(128) NOT NULL COMMENT '支持经理id',
   `opt_time` DATETIME NOT NULL COMMENT '最后操作时间',
   `k_orders_id` CHAR(32) NOT NULL,
@@ -1155,11 +1156,12 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key_code` VARCHAR(45) NOT NULL COMMENT '选定的特征代码',
   `value_code` VARCHAR(45) NOT NULL COMMENT '选定的特征值的代码',
-  `is_configurable` TINYINT(1) NOT NULL,
   `k_item_details_id` CHAR(32) NOT NULL,
+  `is_configurable` TINYINT(1) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_k_characteristics_k_item_details1_idx` (`k_item_details_id` ASC) VISIBLE,
+  INDEX `fk_k_characteristics_k_item_details1_idx` (`k_item_details_id` ASC) INVISIBLE,
+  UNIQUE INDEX `character_unique` (`key_code` ASC, `k_item_details_id` ASC) VISIBLE,
   CONSTRAINT `fk_k_characteristics_k_item_details1`
     FOREIGN KEY (`k_item_details_id`)
     REFERENCES `bohemian`.`k_item_details` (`id`)
@@ -1468,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_speical_order_vo_view` (`id` INT, `sequ
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`k_order_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_view` (`sequence_number` INT, `order_type_code` INT, `create_time` INT, `owner_domain_id` INT, `owner_name` INT, `sales_tel` INT, `contractor_code` INT, `contractor_name` INT, `contractor_class_code` INT, `contractor_class_name` INT, `sales_office_code` INT, `order_id` INT, `version_id` INT, `version` INT, `status` INT, `version_create_time` INT, `submit_date` INT, `bpm_submit_time` INT, `opt_time` INT, `order_info_id` INT, `id` INT, `last_operator` INT, `last_opt_time` INT, `customer_name` INT, `is_reformed` INT, `is_convenient_store` INT, `is_new` INT, `terminal_industry_code` INT, `terminal_industry_code_name` INT, `body_discount` INT, `main_discount` INT, `install_term_code` INT, `install_term_name` INT, `receive_term_code` INT, `receive_term_name` INT, `contactor_1_id` INT, `contactor_1_tel` INT, `contactor_2_id` INT, `contactor_2_tel` INT, `contactor_3_id` INT, `contactor_3_tel` INT, `freight` INT, `warranty` INT, `currency_code` INT, `currency_name` INT, `exchange` INT, `contract_amount` INT, `contract_rmb_amount` INT, `sales_type` INT, `tax_rate` INT, `incoterm_code` INT, `incoterm_name` INT, `incoterm_contect` INT, `office_code` INT, `office_name` INT, `group_code` INT, `group_name` INT, `transfer_type_code` INT, `transfer_type_name` INT, `is_term1` INT, `is_term2` INT, `is_term3` INT, `comments` INT, `form_id` INT, `earliest_delivery_date` INT, `earliest_product_date` INT, `form_comments` INT, `form_operator` INT, `form_type` INT, `form_opt_time` INT, `support_info_id` INT, `contract_number` INT, `opterator_domain_id` INT, `support_info_opt_time` INT);
+CREATE TABLE IF NOT EXISTS `bohemian`.`k_order_view` (`sequence_number` INT, `order_type_code` INT, `create_time` INT, `owner_domain_id` INT, `owner_name` INT, `sales_tel` INT, `contractor_code` INT, `contractor_name` INT, `contractor_class_code` INT, `contractor_class_name` INT, `sales_office_code` INT, `order_id` INT, `version_id` INT, `version` INT, `status` INT, `version_create_time` INT, `submit_date` INT, `bpm_submit_time` INT, `opt_time` INT, `order_info_id` INT, `id` INT, `last_operator` INT, `last_opt_time` INT, `customer_name` INT, `is_reformed` INT, `is_convenient_store` INT, `is_new` INT, `terminal_industry_code` INT, `terminal_industry_code_name` INT, `body_discount` INT, `main_discount` INT, `install_term_code` INT, `install_term_name` INT, `receive_term_code` INT, `receive_term_name` INT, `contactor_1_id` INT, `contactor_1_tel` INT, `contactor_2_id` INT, `contactor_2_tel` INT, `contactor_3_id` INT, `contactor_3_tel` INT, `freight` INT, `warranty` INT, `currency_code` INT, `currency_name` INT, `exchange` INT, `contract_amount` INT, `contract_rmb_amount` INT, `sales_type` INT, `tax_rate` INT, `incoterm_code` INT, `incoterm_name` INT, `incoterm_contect` INT, `office_code` INT, `office_name` INT, `group_code` INT, `group_name` INT, `transfer_type_code` INT, `transfer_type_name` INT, `is_term1` INT, `is_term2` INT, `is_term3` INT, `comments` INT, `record_number` INT, `form_id` INT, `earliest_delivery_date` INT, `earliest_product_date` INT, `form_comments` INT, `form_operator` INT, `form_type` INT, `form_opt_time` INT, `support_info_id` INT, `contract_number` INT, `opterator_domain_id` INT, `support_info_opt_time` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `bohemian`.`k_order_version_view`
