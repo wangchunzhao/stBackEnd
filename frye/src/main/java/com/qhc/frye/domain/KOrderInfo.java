@@ -160,6 +160,8 @@ public class KOrderInfo {
 	@Column(name="comments",columnDefinition="TEXT")
 	private String	comments;
 	
+	@Column(name="record_number",columnDefinition="char",length=45)
+	private String	recordNumber;
 	
 	@Transient
 	public String startTime;
@@ -174,9 +176,14 @@ public class KOrderInfo {
 	@Transient
 	public ItemsForm form;
 	
-	
-	
 
+	public String getRecordNumber() {
+		return recordNumber;
+	}
+
+	public void setRecordNumber(String recordNumber) {
+		this.recordNumber = recordNumber;
+	}
 
 	public boolean isTerm1() {
 		return isTerm1;

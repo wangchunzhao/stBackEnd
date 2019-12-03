@@ -154,6 +154,19 @@ public class ItemDetails implements Serializable{
 	@Column(name = "color_comments",columnDefinition = "TEXT")
 	public String colorComments;
 	
+	@Column(name = "is_configurable",columnDefinition = "BIT",length=1)
+	public boolean isConfigurable;
+	
+	
+	
+	public boolean isConfigurable() {
+		return isConfigurable;
+	}
+
+	public void setConfigurable(boolean isConfigurable) {
+		this.isConfigurable = isConfigurable;
+	}
+
 	public String getMosaicImage() {
 		return mosaicImage;
 	}
