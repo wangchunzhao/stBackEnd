@@ -14,9 +14,10 @@ import com.qhc.frye.domain.KCharacteristics;
 
 @Repository
 @Transactional
-public interface KCharacteristicsRepository extends JpaRepository<KCharacteristics, String> {
+public interface KCharacteristicsRepository extends JpaRepository<KCharacteristics, Integer> {
 	
 	List<KCharacteristics> findByItemDetailsId(String itemId);
+	
 	@Query(value = "delete from k_characteristics where k_item_detail_id=:itemDetailId", nativeQuery = true)
 	@Modifying
 	@Transactional

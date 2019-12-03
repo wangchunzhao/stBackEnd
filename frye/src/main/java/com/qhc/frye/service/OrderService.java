@@ -323,6 +323,7 @@ public class OrderService {
 			kc.setKeyCode(dcv.getKeyCode());
 			kc.setValueCode(dcv.getValueCode());
 			kc.setItemDetailsId(itemid);
+			kc.setIsConfigurable(0);
 			temp.add(kc);
 		}
 		return temp;
@@ -332,7 +333,7 @@ public class OrderService {
 	 * @param detail
 	 * @param item
 	 */
-	private void saveCharater(AbsItem item,String detailId) {
+	private void saveCharater(AbsItem item,String detailId) throws Exception {
 
 		if (item.getConfigs() == null) {
 			// 数据库中的设置
@@ -363,7 +364,7 @@ public class OrderService {
 	 * @param orderInforId
 	 * @return
 	 */
-	private boolean saveForm(final AbsOrder order, final OrderHelper ohelper, String orderInforId) {
+	private boolean saveForm(final AbsOrder order, final OrderHelper ohelper, String orderInforId) throws Exception{
 
 		ItemsForm existForm = formRepo.findOneByHeaderId(orderInforId);
 		ItemsForm formDao = ohelper.toForm(orderInforId);

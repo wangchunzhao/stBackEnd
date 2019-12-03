@@ -21,6 +21,7 @@ import com.qhc.frye.rest.controller.entity.Material;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.exception.NotExistException;
 import com.qhc.frye.service.exception.NotMatchException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.frye.dao.CharacteristicConfigurationRepository;
 import com.qhc.frye.dao.CharacteristicDefaultRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
@@ -224,11 +225,16 @@ public class MaterialService {
 	 */
 	public BomExplosion findBOMWithPrice(Map<String,String> pars){
 		Map<String,List<Bom>> boms = (Map<String, List<Bom>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);
+		ObjectMapper mapper = new ObjectMapper(); 
+//		List<Bom> boms = mapper.convertValue(JsonBoms.get("userBean"), List<Bom>().class); 
 		
 		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
 			
 			BomExplosion be = new BomExplosion();
-			boolean result = be.fillIn(boms.get(BOM_CONFIGURATION_DEFAULT), boms.get(BOM_CONFIGURATION_CONFIGURATED));
+			List<Bom> defaultBoms = boms.get(BOM_CONFIGURATION_DEFAULT);
+			List<Bom> configedBoms = boms.get(BOM_CONFIGURATION_CONFIGURATED);
+					
+			boolean result = be.fillIn(defaultBoms,configedBoms);
 			if(result)
 				return be;
 
