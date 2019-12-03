@@ -1248,6 +1248,14 @@ public class OrderService {
 			order.setInstallCode(orderView.getInstallTermCode());
 			order.setInstallName(orderView.getInstallTermName());
 			order.setTerminalType(orderView.getTerminalIndustryCode());
+			order.setWarrenty(orderView.getWarranty());
+			order.setContractValue(toDouble(orderView.getContractAmount()));
+			order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
+			order.setCurrencyExchange(orderView.getExchange());
+			// 购销明细金额合计 Aggregate amount
+//			order.setItemsAmount(orderView.geti);
+			// 运费
+			order.setFreight(toDouble(orderView.getFreight()));
 
 			if (order instanceof DealerOrder) {
 				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
