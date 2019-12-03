@@ -27,6 +27,7 @@ import com.qhc.frye.dao.B2CCostRepository;
 import com.qhc.frye.dao.BAreaRepository;
 import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
+import com.qhc.frye.dao.CharacteristicDefaultRepository;
 import com.qhc.frye.dao.CurrencyRepository;
 import com.qhc.frye.dao.DOrderRepository;
 import com.qhc.frye.dao.DefaultCharacterViewRepository;
@@ -52,6 +53,7 @@ import com.qhc.frye.domain.B2CCost;
 import com.qhc.frye.domain.BArea;
 import com.qhc.frye.domain.BCity;
 import com.qhc.frye.domain.BProvince;
+import com.qhc.frye.domain.DCharacteristicDefault;
 import com.qhc.frye.domain.DCurrency;
 import com.qhc.frye.domain.DMaterialGroups;
 import com.qhc.frye.domain.DOrder;
@@ -109,7 +111,7 @@ public class OrderService {
 
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
-	
+
 	@Autowired
 	private DOrderRepository dOrderRepository;
 
@@ -190,23 +192,26 @@ public class OrderService {
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
-	
+
 	@Autowired
 	private DefaultCharacterViewRepository defaultValueRepo;
-	
+
 	@Autowired
 	private B2CCostRepository b2cRepo;
-	
+
 	@Autowired
 	private EnginingCostRepository enginRepo;
 
+	@Autowired
+	private KCharacteristicsRepository kCharaRepo;
+
 	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
-	
+
 	private final static String COST_INSTALLATION = "BG1GDA00000-X";
 	private final static String COST_MATERIALS = "BG1GDB00000-X";
 	private final static String COST_ELETRICAL = "BG1R8J00000-X";
 	private final static String COST_COOLROOM = "BG1R8R00000-X";
-	private final static String COST_MAINTANANCE  = "BG1R8K00000-X";
+	private final static String COST_MAINTANANCE = "BG1R8K00000-X";
 
 	/**
 	 * 
@@ -231,61 +236,63 @@ public class OrderService {
 		}
 		paymentRepo.saveAll(incos);
 	}
-	/**
-	 * 
-	 * @param materialCode
-	 * @param itemId
-	 */
-	private void saveCharacter(String materialCode,String itemId) {
-		List<DefaultCharacterView> dvs = defaultValueRepo.findByMaterial(materialCode);
-		Set<KCharacteristics> kcs = new HashSet<KCharacteristics>();
-		for(DefaultCharacterView dcv:dvs) {
-			KCharacteristics kc = new KCharacteristics();
-			kc.setIsConfigurable(0);
-			kc.setKeyCode(dcv.getKeyCode());
-			kc.setValueCode(dcv.getValueCode());
-			kc.setItemDetailsId(itemId);
-		}
-		characteristicsRepository.saveAll(kcs);
-	}
+//	/**
+//	 * 
+//	 * @param materialCode
+//	 * @param itemId
+//	 */
+//	private void saveCharacter(String materialCode,String itemId) {
+//		List<DefaultCharacterView> dvs = defaultValueRepo.findByMaterial(materialCode);
+//		Set<KCharacteristics> kcs = new HashSet<KCharacteristics>();
+//		for(DefaultCharacterView dcv:dvs) {
+//			KCharacteristics kc = new KCharacteristics();
+//			//kc.setIsConfigurable(0);
+//			kc.setKeyCode(dcv.getKeyCode());
+//			kc.setValueCode(dcv.getValueCode());
+//			kc.setItemDetailsId(itemId);
+//		}
+//		characteristicsRepository.saveAll(kcs);
+//	}
 
 	/**
 	 * 
 	 * @param absOrder
 	 */
-	public void save(final AbsOrder order) throws Exception{
+	public void save(final AbsOrder order) throws Exception {
 		this.submitOrder(order);
 	}
+
 	/**
 	 * 
 	 * @param order
 	 * @param ohelper
 	 * @return
 	 */
-	private String saveOrder(final AbsOrder order,final OrderHelper ohelper) {
-		
+	private String saveOrder(final AbsOrder order, final OrderHelper ohelper) {
+
 		String seq = order.getSequenceNumber();
-		
+
 		DOrder orderDao = ohelper.toDOrder();
 		DOrder extOrder = dOrderRepository.findBySequence(order.getSequenceNumber());
 		if (extOrder != null) {
 			orderDao.setId(extOrder.getId());
 		}
-		//save order header
+		// save order header
 		orderDao = dOrderRepository.saveAndFlush(orderDao);
-		
-		//if it is from supportmanager and able to be sent to bpm
-		if (order.getContractNumber()!=null && !order.getContractNumber().trim().isEmpty()) {
+
+		// if it is from supportmanager and able to be sent to bpm
+		if (order.getContractNumber() != null && !order.getContractNumber().trim().isEmpty()) {
 			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
 			OrderSupportInfo existSupport = supportRepo.findByOrderId(orderDao.getId());
-			if (existSupport!=null && !order.getContractNumber().equals(existSupport.getContractNumber())) {
+			if (existSupport != null && !order.getContractNumber().equals(existSupport.getContractNumber())) {
 				supportInfo.setId(existSupport.getId());
 				supportRepo.save(supportInfo);
 			}
 		}
-		
+
 		return orderDao.getId();
 	}
+
 	/**
 	 * 
 	 * @param order
@@ -293,22 +300,62 @@ public class OrderService {
 	 * @param orderId
 	 * @return
 	 */
-	private String saveOrderInfo(final AbsOrder order,final OrderHelper ohelper,String orderId) {
-		
+	private String saveOrderInfo(final AbsOrder order, final OrderHelper ohelper, String orderId) {
+
 		KOrderVersion lastVersion = orderVersionRepo.findLastOneByOrderId(orderId);
 		String version = null;
-		if(lastVersion!=null) {
+		if (lastVersion != null) {
 			version = lastVersion.getVersion();
 		}
 		KOrderInfo kOrderInfoDao = ohelper.toOrderInfo();
-		if(version!=null&&version.equals(order.getCurrentVersion())) {
-			KOrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(),version);
+		if (version != null && version.equals(order.getCurrentVersion())) {
+			KOrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(), version);
 			kOrderInfoDao.setId(existOrderInfo.getId());
 		}
 		kOrderInfoDao = orderInfoRepo.save(kOrderInfoDao);
 		return kOrderInfoDao.getId();
 	}
-	
+
+	private List<KCharacteristics> convertCharacters(List<DefaultCharacterView> dCharacters, String itemid) {
+		List<KCharacteristics> temp = new ArrayList();
+		for (DefaultCharacterView dcv : dCharacters) {
+			KCharacteristics kc = new KCharacteristics();
+			kc.setKeyCode(dcv.getKeyCode());
+			kc.setValueCode(dcv.getValueCode());
+			kc.setItemDetailsId(itemid);
+			temp.add(kc);
+		}
+		return temp;
+	}
+	/**
+	 * 
+	 * @param detail
+	 * @param item
+	 */
+	private void saveCharater(AbsItem item,String detailId) {
+
+		if (item.getConfigs() == null) {
+			// 数据库中的设置
+			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
+			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
+			kCharaRepo.saveAll(kcs);
+		} else {
+			//定制配置
+			List<BaseChracteristic> bas = item.getConfigs();
+			List<KCharacteristics> kcs = new ArrayList();
+			for (BaseChracteristic bc : bas) {
+				KCharacteristics kc = new KCharacteristics();
+				kc.setKeyCode(bc.getConfigCode());
+				kc.setValueCode(bc.getConfigValueCode());
+				kc.setItemDetailsId(detailId);
+				kcs.add(kc);
+			}
+			//
+			kCharaRepo.deleteInBatchByItemDetail(detailId);
+			kCharaRepo.saveAll(kcs);
+		}
+	}
+
 	/**
 	 * 
 	 * @param order
@@ -316,66 +363,71 @@ public class OrderService {
 	 * @param orderInforId
 	 * @return
 	 */
-	private boolean saveForm(final AbsOrder order,final OrderHelper ohelper,String orderInforId) {
-		
+	private boolean saveForm(final AbsOrder order, final OrderHelper ohelper, String orderInforId) {
+
 		ItemsForm existForm = formRepo.findOneByHeaderId(orderInforId);
 		ItemsForm formDao = ohelper.toForm(orderInforId);
-		
-		if(existForm!=null) {
+
+		if (existForm != null) {
 			formDao.setId(existForm.getId());
 		}
 		formDao = formRepo.save(formDao);
 		//
-		
-		
+		List<ItemDetails> details = new ArrayList();
 		boolean b2cFlag = false;
 		List<ItemDetails> existItems = itemDetailRepository.findByKFormsId(formDao.getId());
 		List<BaseItem> newItems = order.getItems();
-		for(AbsItem item:newItems) {
-			
+		for (AbsItem item : newItems) {
+
 			ItemDetails temp = OrderHelper.itemConversion(item, formDao.getId());
-			if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+			if (temp.getB2cComments() != null && temp.getB2cComments().trim().length() > 0) {
 				b2cFlag = true;
 			}
-			for(ItemDetails old:existItems) {
-				if(old.getRowNumber()==temp.getRowNumber()) {
+			for (ItemDetails old : existItems) {
+				if (old.getRowNumber() == temp.getRowNumber()) {
 					temp.setId(old.getId());
 					break;
 				}
 			}
-			temp = itemDetailRepository.save(temp);		
-			//
-		
-			
-		}		
+
+			temp = itemDetailRepository.save(temp);
+			// 特征
+			if(item.isConfigurable())
+				this.saveCharater(item,temp.getId());
+		}
+		//
+
 		return b2cFlag;
 	}
-	private void saveVersion(final AbsOrder order,final OrderHelper ohelper,boolean b2cFlag,String orderId,String orderInforId)  throws Exception{
-		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag,false);
+
+	private void saveVersion(final AbsOrder order, final OrderHelper ohelper, boolean b2cFlag, String orderId,
+			String orderInforId) throws Exception {
+		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag, false);
 		lversion.setOrderId(orderId);
 		lversion.setOrderInfoId(orderInforId);
-		if(lversion.getCreateTime()==null)
+		if (lversion.getCreateTime() == null)
 			lversion.setCreateTime(new Date());
 		//
 		KOrderVersion extVersion = orderVersionRepo.findByOrder(orderId, orderInforId);
-		if(extVersion!=null)
+		if (extVersion != null)
 			lversion.setId(extVersion.getId());
 		// 订单版本保存
 		orderVersionRepo.save(lversion);
 	}
-	private void submitOrder(final AbsOrder order) throws Exception{
+
+	private void submitOrder(final AbsOrder order) throws Exception {
 
 		OrderHelper ohelper = new OrderHelper(order);
 
-		String orderId = this.saveOrder(order,ohelper);
+		String orderId = this.saveOrder(order, ohelper);
 		//
-		String orderInforId = saveOrderInfo(order,ohelper,orderId);
-		
-		boolean b2cFlag = saveForm(order,ohelper,orderInforId);
-	
+		String orderInforId = saveOrderInfo(order, ohelper, orderId);
+
+		boolean b2cFlag = saveForm(order, ohelper, orderInforId);
+
 		// 订单版本
-		saveVersion(order,ohelper,b2cFlag,orderId,orderInforId);
-		
+		saveVersion(order, ohelper, b2cFlag, orderId, orderInforId);
+
 		// 订单地址
 		List<KDelieveryAddress> adds = ohelper.toAddress(orderInforId);
 		deliveryAddressRepository.saveAll(adds);
@@ -385,11 +437,12 @@ public class OrderService {
 		// attachment
 
 	}
-	private void submitOrder2(final AbsOrder order) throws Exception{
+
+	private void submitOrder2(final AbsOrder order) throws Exception {
 
 //		String seq = order.getSequenceNumber();
 //
-		OrderHelper ohelper = new OrderHelper(order);
+//		OrderHelper ohelper = new OrderHelper(order);
 //		DOrder dorder = ohelper.toDOrder();
 //		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
 //		if (forder != null) {
@@ -407,116 +460,116 @@ public class OrderService {
 ////			}
 ////			supportRepo.save(supportInfo);
 ////		}
-		String orderId = this.saveOrder(order,ohelper);
-		//
-		boolean b2cFlag = false;
-		//
-		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
-
-		//String orderId = null;
-		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(orderId);
-		if (lversion != null) {
-			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-			//order form
-			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
-			//new form
-			if(oldForm==null) {
-				form = formRepo.save(form);
-				String formId = form.getId();
-				//detail
-				for (AbsItem item : order.getItems()) {
-					//
-					ItemDetails temp = OrderHelper.itemConversion(item, formId);
-					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-						b2cFlag = true;
-					}
-					
-					temp = itemDetailRepository.save(temp);
-					if(item.getConfigs()!=null) {
-						for (AbsCharacteristic ac : item.getConfigs()) {
-							KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-							cha.setItemDetailsId(temp.getId());
-							characteristicsRepository.save(cha);
-						}
-					}else {
-						saveCharacter(item.getMaterialCode(),temp.getId());
-						
-					}
-				}
-					
-			}else {
-				form.setId(oldForm.getId());
-				form = formRepo.save(form);
-				List<ItemDetails> oldItems = itemDetailRepository.findByKFormsId(form.getId());
-				List<BaseItem> newItems = order.getItems();
-				//
-				Set<KCharacteristics> characters = new HashSet<KCharacteristics>();
-				for(AbsItem item:newItems) {
-					
-					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
-					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-						b2cFlag = true;
-					}
-					for(ItemDetails old:oldItems) {
-						if(old.getRowNumber()==temp.getRowNumber()) {
-							temp.setId(old.getId());
-							break;
-						}
-					}
-
-					temp = itemDetailRepository.save(temp);					
-				}				
-			}
-			// 订单原版本保存
-			KOrderVersion v = ohelper.keepOrderVersion(lversion,b2cFlag,false);
-			v = orderVersionRepo.save(v);
-		} else {
-			
-			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-			
-			// form
-			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-			form = formRepo.save(form);
-			
-			String formId = form.getId();
-			//detail
-			for (AbsItem item : order.getItems()) {
-				//
-				ItemDetails temp = OrderHelper.itemConversion(item, formId);
-				if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-					b2cFlag = true;
-				}
-				temp = itemDetailRepository.save(temp);
-				if(item.getConfigs()!=null) {
-					for (AbsCharacteristic ac : item.getConfigs()) {
-						KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-						cha.setItemDetailsId(temp.getId());
-						characteristicsRepository.save(cha);
-					}
-				}else {
-					saveCharacter(item.getMaterialCode(),temp.getId());
-				}
-				//attachment
-
-			}
-		}
-		// 新订单版本版本
-		lversion = ohelper.toOrderVersion(b2cFlag,false);
-		lversion.setOrderId(orderId);
-		lversion.setOrderInfoId(kOrderInfo.getId());
-		if(lversion.getCreateTime()==null)
-			lversion.setCreateTime(new Date());
-		// 订单版本保存
-		orderVersionRepo.save(lversion);
-		
-		// 订单地址
-		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
-		deliveryAddressRepository.saveAll(adds);
-		// bidding plan
-		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
-		biddingPlanRepository.saveAll(bidding);
-		// attachment
+//		String orderId = this.saveOrder(order,ohelper);
+//		//
+//		boolean b2cFlag = false;
+//		//
+//		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
+//
+//		//String orderId = null;
+//		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(orderId);
+//		if (lversion != null) {
+//			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+//			//order form
+//			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
+//			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
+//			//new form
+//			if(oldForm==null) {
+//				form = formRepo.save(form);
+//				String formId = form.getId();
+//				//detail
+//				for (AbsItem item : order.getItems()) {
+//					//
+//					ItemDetails temp = OrderHelper.itemConversion(item, formId);
+//					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+//						b2cFlag = true;
+//					}
+//					
+//					temp = itemDetailRepository.save(temp);
+//					if(item.getConfigs()!=null) {
+//						for (AbsCharacteristic ac : item.getConfigs()) {
+//							KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+//							cha.setItemDetailsId(temp.getId());
+//							characteristicsRepository.save(cha);
+//						}
+//					}else {
+//						saveCharacter(item.getMaterialCode(),temp.getId());
+//						
+//					}
+//				}
+//					
+//			}else {
+//				form.setId(oldForm.getId());
+//				form = formRepo.save(form);
+//				List<ItemDetails> oldItems = itemDetailRepository.findByKFormsId(form.getId());
+//				List<BaseItem> newItems = order.getItems();
+//				//
+//				Set<KCharacteristics> characters = new HashSet<KCharacteristics>();
+//				for(AbsItem item:newItems) {
+//					
+//					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
+//					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+//						b2cFlag = true;
+//					}
+//					for(ItemDetails old:oldItems) {
+//						if(old.getRowNumber()==temp.getRowNumber()) {
+//							temp.setId(old.getId());
+//							break;
+//						}
+//					}
+//
+//					temp = itemDetailRepository.save(temp);					
+//				}				
+//			}
+//			// 订单原版本保存
+//			KOrderVersion v = ohelper.keepOrderVersion(lversion,b2cFlag,false);
+//			v = orderVersionRepo.save(v);
+//		} else {
+//			
+//			kOrderInfo = orderInfoRepo.save(kOrderInfo);
+//			
+//			// form
+//			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
+//			form = formRepo.save(form);
+//			
+//			String formId = form.getId();
+//			//detail
+//			for (AbsItem item : order.getItems()) {
+//				//
+//				ItemDetails temp = OrderHelper.itemConversion(item, formId);
+//				if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
+//					b2cFlag = true;
+//				}
+//				temp = itemDetailRepository.save(temp);
+//				if(item.getConfigs()!=null) {
+//					for (AbsCharacteristic ac : item.getConfigs()) {
+//						KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
+//						cha.setItemDetailsId(temp.getId());
+//						characteristicsRepository.save(cha);
+//					}
+//				}else {
+//					saveCharacter(item.getMaterialCode(),temp.getId());
+//				}
+//				//attachment
+//
+//			}
+//		}
+//		// 新订单版本版本
+//		lversion = ohelper.toOrderVersion(b2cFlag,false);
+//		lversion.setOrderId(orderId);
+//		lversion.setOrderInfoId(kOrderInfo.getId());
+//		if(lversion.getCreateTime()==null)
+//			lversion.setCreateTime(new Date());
+//		// 订单版本保存
+//		orderVersionRepo.save(lversion);
+//		
+//		// 订单地址
+//		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
+//		deliveryAddressRepository.saveAll(adds);
+//		// bidding plan
+//		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
+//		biddingPlanRepository.saveAll(bidding);
+//		// attachment
 
 	}
 	/**
@@ -644,8 +697,8 @@ public class OrderService {
 		AbsOrder order = this.findOrder(sequenceNumber, version);
 		return calcGrossProfit(order);
 	}
-	
-	// sap_material_group分组 
+
+	// sap_material_group分组
 	public List<DMaterialGroups> calcGrossProfit(AbsOrder order) {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<DMaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
@@ -682,7 +735,8 @@ public class OrderService {
 				for (BaseItem item : items) {
 					if (item.getGroupCode().equals(entity.getCode())) {
 						// 总金额
-						BigDecimal saleAmount = BigDecimal.valueOf((item.getActuralPrice() + item.getActuralPricaOfOptional()) * item.getQuantity());
+						BigDecimal saleAmount = BigDecimal.valueOf(
+								(item.getActuralPrice() + item.getActuralPricaOfOptional()) * item.getQuantity());
 						amount = amount.add(saleAmount);
 						// 总金额减去税金 = 不含税金额
 						BigDecimal taxAmount = saleAmount.multiply(BigDecimal.valueOf(taxRate));
@@ -717,8 +771,10 @@ public class OrderService {
 				entity.setCost(cost.setScale(2, BigDecimal.ROUND_HALF_UP));
 				entity.setWtwGrossProfit(wtwgrossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
 				entity.setGrossProfit(grossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setWtwGrossProfitMargin(BigDecimal.valueOf(wtwgrossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-				entity.setGrossProfitMargin(BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				entity.setWtwGrossProfitMargin(
+						BigDecimal.valueOf(wtwgrossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				entity.setGrossProfitMargin(
+						BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 
 		} else {
@@ -749,12 +805,12 @@ public class OrderService {
 	public Double CalculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
 		Double v = 0D;
 		try {
-			v = (afterTaxAmount.subtract(cost)).divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP).setScale(4, BigDecimal.ROUND_HALF_UP)
-					.doubleValue();
+			v = (afterTaxAmount.subtract(cost)).divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP)
+					.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		} catch (ArithmeticException e) {
 			e.printStackTrace();
 		}
-		
+
 		return v;
 	}
 
@@ -872,13 +928,13 @@ public class OrderService {
 
 		// 安装方式
 		oo.setInstallationTerms(constService.findInstallationTerms());
-		
+
 		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
 		Parameter p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
 		if (p != null) {
 			oo.setStandardDiscount(p.getsValue());
 		}
-		
+
 		// 税率，Code：1c20b7ffba1a59faa081324eb34844a5
 		p = settingsRepository.findEnabledInfo("1c20b7ffba1a59faa081324eb34844a5");
 		if (p != null) {
@@ -1018,7 +1074,7 @@ public class OrderService {
 				String[] districts = data[2].split(":");
 				String[] streets = data[3].split(":");
 				// 街道名称
-				item.setStreet(streets[1]); 
+				item.setStreet(streets[1]);
 //				// Province/省 -- 省code
 				item.setRegion(provinces[0]);
 //				// City/市 -- 市名称
@@ -1345,30 +1401,32 @@ public class OrderService {
 			params.put("status", orderQuery.getStatus());
 		}
 		if (!isEmpty(orderQuery.getSalesCode())) {
-			querySql.append(" and owner_domain_id = :ownerId"); 
+			querySql.append(" and owner_domain_id = :ownerId");
 			params.put("ownerId", orderQuery.getSalesCode());
 		}
 		if (!isEmpty(orderQuery.getSalesName())) {
-			querySql.append(" and UPPER(owner_name) like :ownerName"); 
+			querySql.append(" and UPPER(owner_name) like :ownerName");
 			params.put("ownerName", "%" + orderQuery.getSalesName().toUpperCase() + "%");
 		}
 		if (!isEmpty(orderQuery.getCreateTime())) {
-			//2019-04-07 - 2019-11-07
+			// 2019-04-07 - 2019-11-07
 			String strtime = orderQuery.getCreateTime();
 			String[] strtimes = strtime.split(" - ");
 			String start = strtimes[0].trim();
 			String end = strtimes[1].trim();
-			querySql.append(" and DATE_FORMAT(create_time, '%Y-%m-%d') >= :start and DATE_FORMAT(create_time, '%Y-%m-%d') <= :end"); 
+			querySql.append(
+					" and DATE_FORMAT(create_time, '%Y-%m-%d') >= :start and DATE_FORMAT(create_time, '%Y-%m-%d') <= :end");
 			params.put("start", start);
 			params.put("end", end);
 		}
 		if (!isEmpty(orderQuery.getSubmitTime())) {
-			//2019-04-07 - 2019-11-07
+			// 2019-04-07 - 2019-11-07
 			String strtime = orderQuery.getSubmitTime();
 			String[] strtimes = strtime.split(" - ");
 			String start = strtimes[0].trim();
 			String end = strtimes[1].trim();
-			querySql.append(" and DATE_FORMAT(submit_date, '%Y-%m-%d') >= :start and DATE_FORMAT(submit_date, '%Y-%m-%d') <= :end"); 
+			querySql.append(
+					" and DATE_FORMAT(submit_date, '%Y-%m-%d') >= :start and DATE_FORMAT(submit_date, '%Y-%m-%d') <= :end");
 			params.put("start", start);
 			params.put("end", end);
 		}
@@ -1389,24 +1447,25 @@ public class OrderService {
 			params.put("contractorName", "%" + orderQuery.getContracterName().toUpperCase() + "%");
 		}
 		if (orderQuery.getStatusList() != null && orderQuery.getStatusList().size() > 0) {
-			querySql.append(" and status in (:statuslist)"); 
+			querySql.append(" and status in (:statuslist)");
 			params.put("statuslist", orderQuery.getStatusList());
 		}
 		if (!isEmpty(orderQuery.getSpecialDiscount())) {
 			boolean special = orderQuery.getSpecialDiscount().equals("1");
 			if (special) {
-				querySql.append(" and (body_discount + main_discount) != 96"); 
+				querySql.append(" and (body_discount + main_discount) != 96");
 			} else {
-				querySql.append(" and (body_discount + main_discount) = 96"); 
+				querySql.append(" and (body_discount + main_discount) = 96");
 			}
 		}
 		if (orderQuery.isLast()) {
 			querySql.append(
 					" and version_create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = k_order_view.order_id)"); // .append(query.getStatus());
 		}
-		if (!isEmpty(orderQuery.getB2c()) ) {
+		if (!isEmpty(orderQuery.getB2c())) {
 			boolean has = orderQuery.getB2c().equals("1");
-			querySql.append(" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id");
+			querySql.append(
+					" and exists (select 1 from k_item_details where k_item_details.k_forms_id = k_order_view.form_id");
 			if (has) {
 				querySql.append(" and b2c_comments is not null and LENGTH(TRIM(b2c_comments)) > 0");
 			} else {
@@ -1461,7 +1520,7 @@ public class OrderService {
 			item.setConfigComments(itemDetails.getComments());
 			item.setMosaicImage(itemDetails.getMosaicImage());
 			item.setRequestCircult(itemDetails.getRequestCircuit());
-			
+
 			// 产品实卖价 = 实卖金额 / 数量
 			BigDecimal saleAmount = itemDetails.getAmount();
 			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
@@ -1504,13 +1563,15 @@ public class OrderService {
 		}
 		order.setItems(items);
 	}
+
 	/**
 	 */
-	public void enginingCost(String operator,boolean isApproved,String seqnum,String version,double installation,double materials,double electrical ,double coolrome,double maintanance) {
-		
+	public void enginingCost(String operator, boolean isApproved, String seqnum, String version, double installation,
+			double materials, double electrical, double coolrome, double maintanance) {
+
 		KOrderInfo orderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(seqnum, version);
 		List<EnginingCost> engins = enginRepo.findAllEnginingByItem(orderInfo.getId());
-		if(engins==null || engins.isEmpty()) {
+		if (engins == null || engins.isEmpty()) {
 			engins = new ArrayList<EnginingCost>();
 			EnginingCost ins = new EnginingCost();
 			ins.setMaterialCode(this.COST_INSTALLATION);
@@ -1551,42 +1612,42 @@ public class OrderService {
 			man.setOptTime(new Date());
 			man.setCost(maintanance);
 			engins.add(man);
-		}else {
-			for(EnginingCost enc:engins) {
-				switch(enc.getMaterialCode()) {
-					case COST_INSTALLATION:
-						enc.setOperator(operator);
-						enc.setOptTime(new Date());
-						enc.setCost(maintanance);
-						break;
-					case COST_MATERIALS:
-						enc.setOperator(operator);
-						enc.setOptTime(new Date());
-						enc.setCost(maintanance);
-						break;
-					case COST_ELETRICAL:
-						enc.setOperator(operator);
-						enc.setOptTime(new Date());
-						enc.setCost(maintanance);
-						break;
-					case COST_COOLROOM:
-						enc.setOperator(operator);
-						enc.setOptTime(new Date());
-						enc.setCost(maintanance);
-						break;
-					case COST_MAINTANANCE:
-						enc.setOperator(operator);
-						enc.setOptTime(new Date());
-						enc.setCost(maintanance);
-						break;
+		} else {
+			for (EnginingCost enc : engins) {
+				switch (enc.getMaterialCode()) {
+				case COST_INSTALLATION:
+					enc.setOperator(operator);
+					enc.setOptTime(new Date());
+					enc.setCost(maintanance);
+					break;
+				case COST_MATERIALS:
+					enc.setOperator(operator);
+					enc.setOptTime(new Date());
+					enc.setCost(maintanance);
+					break;
+				case COST_ELETRICAL:
+					enc.setOperator(operator);
+					enc.setOptTime(new Date());
+					enc.setCost(maintanance);
+					break;
+				case COST_COOLROOM:
+					enc.setOperator(operator);
+					enc.setOptTime(new Date());
+					enc.setCost(maintanance);
+					break;
+				case COST_MAINTANANCE:
+					enc.setOperator(operator);
+					enc.setOptTime(new Date());
+					enc.setCost(maintanance);
+					break;
 				}
 			}
 		}
 		//
 		enginRepo.saveAll(engins);
-		
-		
+
 	}
+
 	/**
 	 * 
 	 * @param isApproved
@@ -1594,36 +1655,36 @@ public class OrderService {
 	 * @param version
 	 * @param b2cs
 	 */
-	public void b2cCost(boolean isApproved,String seqnum,String version,List<B2CComments> b2cs) {
-		
+	public void b2cCost(boolean isApproved, String seqnum, String version, List<B2CComments> b2cs) {
+
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
 		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
 		String status = ov.getStatus();
-		
-		if(isApproved) {
-			ov.setStatus(status.substring(0, 2)+"02"+status.substring(3,-1));
-		}else {
-			ov.setStatus(status.substring(0, 2)+"00"+status.substring(3,-1));
+
+		if (isApproved) {
+			ov.setStatus(status.substring(0, 2) + "02" + status.substring(3, -1));
+		} else {
+			ov.setStatus(status.substring(0, 2) + "00" + status.substring(3, -1));
 		}
 		//
-		for(ItemDetails item:items) {
-			for(B2CComments b2:b2cs) {
-				if(item.getRowNumber()==b2.getRowNumber()) {
+		for (ItemDetails item : items) {
+			for (B2CComments b2 : b2cs) {
+				if (item.getRowNumber() == b2.getRowNumber()) {
 					B2CCost cost = b2cRepo.findAllB2CByItem(item.getId());
-					if(cost==null) {
+					if (cost == null) {
 						cost = new B2CCost();
 					}
 					cost.setItemId(item.getId());
 					cost.setOptTime(new Date());
 					cost.setCost(b2.getCost());
-					
+
 					b2cRepo.save(cost);
-					item.b2cComments = b2.getB2cComments();
+					item.getB2cComments().equals(b2.getB2cComments());
 					itemDetailRepository.save(item);
 				}
 			}
 		}
-		
+
 	}
 
 	private boolean isEmpty(String v) {

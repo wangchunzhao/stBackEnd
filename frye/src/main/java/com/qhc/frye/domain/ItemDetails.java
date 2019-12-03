@@ -27,55 +27,55 @@ public class ItemDetails implements Serializable{
     @NotNull
     @Column(name="id",columnDefinition="char",length=32)
     @GeneratedValue(generator = "jpa-uuid")
-	public String id;
+	private String id;
 	
 	@NotNull
 	@Column(name = "k_forms_id",columnDefinition="char",length=32)
-	public String kFormsId;
+	private String kFormsId;
 
 	
 	//产品规格型号
 	@NotNull
 	@Column(name = "material_code",columnDefinition="char")
-	public String materialCode;
+	private String materialCode;
 	
 	@NotNull
 	@Column(name = "material_name",columnDefinition = "TEXT")
-	public String materialName;
+	private String materialName;
 	
 	//体积
 	//@NotNull
 	@Column(name = "volume_cube")
-	public BigDecimal volumeCube;
+	private BigDecimal volumeCube;
 	
 	//物料属性
 	@NotNull
 	@Column(name = "is_purchased",columnDefinition="BIT",length=1)
-	public boolean materialAttribute;
+	private boolean materialAttribute;
 	
 	//合同数量
 	//@NotNull
 	@Column(name = "quantity",columnDefinition="double")
-	public double quantity;
+	private double quantity;
 	
 	//销售单价
 	
 	//销售金额
 	@Column(name = "sale_amount")
-	public BigDecimal amount;
+	private BigDecimal amount;
 	
 	//单位 
 	//@NotNull
 	@Column(name = "measure_unit_code",columnDefinition="char",length=3)
-	public String measureUnitCode;
+	private String measureUnitCode;
 	
 	//@NotNull
 	@Column(name = "special_need",columnDefinition = "TEXT")
-	public String specialNeed;
+	private String specialNeed;
 
 	
 	@Column(name = "b2c_comments",columnDefinition = "TEXT")
-	public String b2cComments;
+	private String b2cComments;
 	
 //	@Column(name = "type")
 //	@Transient
@@ -83,77 +83,90 @@ public class ItemDetails implements Serializable{
 	
 	@NotNull
 	@Column(name = "row_num",columnDefinition = "int")
-	public int rowNumber;
+	private int rowNumber;
 	
 	@Column(name = "retail_price")
-	public BigDecimal retailPrice;
+	private BigDecimal retailPrice;
 	
 	@NotNull
 	@Column(name = "material_group_code")
-	public String materialGroupCode;
+	private String materialGroupCode;
 	
 	@NotNull
 	@Column(name = "material_group_name",columnDefinition = "TEXT")
-	public String materialGroupName;
+	private String materialGroupName;
 	
 	@Column(name = "transfter_price")
-	public BigDecimal transfterPrice;
+	private BigDecimal transfterPrice;
 	
 	@Column(name = "discount",columnDefinition = "double")
-	public double discount;
+	private double discount;
 	
 	@NotNull
 	@Column(name = "item_category")
-	public String itemCategory;
+	private String itemCategory;
 	
 	@NotNull
 	@Column(name = "item_requirement_plan")
-	public String itemRequirementPlan;
+	private String itemRequirementPlan;
 	
 	//
 	@Column(name = "freight")
-	public BigDecimal freight;
+	private BigDecimal freight;
 	
 	
 	@Column(name = "standard_price")
-	public BigDecimal standardPrice;
+	private BigDecimal standardPrice;
 	
 	@Column(name = "is_virtual",columnDefinition = "bit")
-	public boolean isVirtual;
+	private boolean isVirtual;
 	
 	@Column(name = "b2c_estimation_amount")
-	public BigDecimal b2cEstimationAmount;
+	private BigDecimal b2cEstimationAmount;
 	
 	@Column(name = "b2c_estimation_cost")
-	public BigDecimal b2cEstimationCost;
+	private BigDecimal b2cEstimationCost;
 	
 	@Column(name = "delievery_date")
-	public Date delieveryDate;
+	private Date delieveryDate;
 	
 	@Column(name = "mosaic_image",columnDefinition = "TEXT")
-	public String mosaicImage;
+	private String mosaicImage;
 	
 	@Column(name = "attached_image",columnDefinition = "TEXT")
-	public String attachedImage;
+	private String attachedImage;
 	
 	@Column(name = "request_brand",columnDefinition = "TEXT")
-	public String requestBrand;
+	private String requestBrand;
 	
 	@Column(name = "request_package",columnDefinition = "TEXT")
-	public String requestPackage;
+	private String requestPackage;
 	
 	@Column(name = "request_nameplate",columnDefinition = "TEXT")
-	public String requestNameplate;
+	private String requestNameplate;
 	
 	@Column(name = "request_circuit",columnDefinition = "TEXT")
-	public String requestCircuit;
+	private String requestCircuit;
 	
 	@Column(name = "comments",columnDefinition = "TEXT")
-	public String comments;
+	private String comments;
 	
 	@Column(name = "color_comments",columnDefinition = "TEXT")
-	public String colorComments;
+	private String colorComments;
 	
+	@Column(name = "is_configurable",columnDefinition = "BIT",length=1)
+	private boolean isConfigurable;
+	
+	
+	
+	public boolean isConfigurable() {
+		return isConfigurable;
+	}
+
+	public void setConfigurable(boolean isConfigurable) {
+		this.isConfigurable = isConfigurable;
+	}
+
 	public String getMosaicImage() {
 		return mosaicImage;
 	}
