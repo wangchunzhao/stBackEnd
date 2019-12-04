@@ -1451,7 +1451,7 @@ public class OrderService {
 			if (orderQuery.getDominStatusList() != null && orderQuery.getDominStatusList().size() > 0) {
 				querySql.append(" and (status in (:statuslist)").append(" or (owner_domain_id = :ownerId and status in (:domainStatuslist)))");
 				params.put("statuslist", orderQuery.getStatusList());
-				params.put("ownerId", orderQuery.getSalesCode());
+				params.put("ownerId", orderQuery.getDominSalesCode());
 				params.put("domainStatuslist", orderQuery.getDominStatusList());
 			} else {
 				querySql.append(" and status in (:statuslist)");

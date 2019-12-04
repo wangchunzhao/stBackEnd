@@ -24,6 +24,7 @@ public class OrderQuery {
 	private String officeCode;//区域   精确查询
 	private String orderType;//订单类型    精确查询
 	private String salesCode;//客户经理code   精确查询 
+	private String dominSalesCode;//客户经理code   精确查询
 	private String b2c;//是否有B2C B2C备注里面有值则是true,前台传值1-true，0-false
 	private String specialDiscount;//是否特批折扣，审批折扣字段是48的就是否，反之就是是，前台传值1-true，0-false
 	private List statusList;  //订单状态集合
@@ -111,6 +112,12 @@ public class OrderQuery {
 	}
 	public void setSalesCode(String salesCode) {
 		this.salesCode = salesCode;
+	}
+	public String getDominSalesCode() {
+		return dominSalesCode;
+	}
+	public void setDominSalesCode(String dominSalesCode) {
+		this.dominSalesCode = dominSalesCode;
 	}
 	public String getB2c() {
 		return b2c;
