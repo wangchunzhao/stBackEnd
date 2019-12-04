@@ -1076,7 +1076,7 @@ COMMENT = '支持经理给付项';
 DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `cost` DECIMAL(13,2) NOT NULL COMMENT 'B2C成本',
   `opt_time` DATETIME NOT NULL COMMENT '最后修改时间',
   `operator` VARCHAR(64) NOT NULL,
@@ -1835,6 +1835,8 @@ INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('101
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1015', '工程人员审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1016', '支持经理审批订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1018', '下备货订单', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1019', '运费导入', NULL);
 
 COMMIT;
 
