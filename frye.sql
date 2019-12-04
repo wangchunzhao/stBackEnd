@@ -1076,7 +1076,7 @@ COMMENT = '支持经理给付项';
 DROP TABLE IF EXISTS `bohemian`.`k_item_b2c` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_b2c` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `cost` DECIMAL(13,2) NOT NULL COMMENT 'B2C成本',
   `opt_time` DATETIME NOT NULL COMMENT '最后修改时间',
   `operator` VARCHAR(64) NOT NULL,
