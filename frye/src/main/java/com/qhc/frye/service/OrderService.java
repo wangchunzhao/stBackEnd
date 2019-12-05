@@ -89,6 +89,10 @@ import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
+import com.qhc.frye.rest.controller.entity.bpm.BpmOrder;
+import com.qhc.frye.rest.controller.entity.bpm.Order;
+import com.qhc.frye.rest.controller.entity.bpm.OrderItem;
+import com.qhc.frye.rest.controller.entity.bpm.OrderMargin;
 import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
 import com.qhc.frye.rest.controller.entity.form.BulkOrder;
@@ -1693,6 +1697,79 @@ public class OrderService {
 			}
 		}
 
+	}
+	
+	/**
+	 * 
+	 * 发送订单到BPM审批
+	 * 
+	 * @param order
+	 */
+	public void sendToBpm(AbsOrder order) {
+		List<BaseItem> items = order.getItems();
+		if (items == null) {
+			items = new ArrayList<BaseItem>();
+		}
+		List<DMaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
+		
+		BpmOrder bpmOrder = new BpmOrder();
+		Order bpmHeader = new Order();
+		List<OrderItem> bpmItems = new ArrayList<OrderItem>(items.size());
+		List<OrderMargin> bpmMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
+		List<OrderMargin> bpmWtwMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
+		
+		bpmOrder.setOrder(bpmHeader);
+		bpmOrder.setItems(bpmItems);
+		bpmOrder.setMargin(bpmMargins);
+		bpmOrder.setWtwMargin(bpmWtwMargins);
+		
+		// set bpm order
+		
+		// set bpm order item
+		for (BaseItem baseItem : items) {
+			OrderItem bpmItem = new OrderItem();
+			bpmItems.add(bpmItem);
+			
+//			bpmItem.setActuralAmount(acturalAmount);
+//			bpmItem.setActuralAmountOfOptional(acturalAmountOfOptional);
+		}
+		
+		// set bpm order margins and wtw margins
+		for (DMaterialGroups grossProfitMargin : grossProfitMargins) {
+			OrderMargin margin = new OrderMargin();
+			OrderMargin wtwMargin = new OrderMargin();
+			
+			bpmMargins.add(margin);
+			bpmWtwMargins.add(wtwMargin);
+			
+			margin.setAmount(grossProfitMargin.getAmount());
+			margin.setCode(grossProfitMargin.getCode());
+			margin.setName(grossProfitMargin.getName());
+			margin.setCost(grossProfitMargin.getCost());
+			margin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
+			margin.setGrossProfit(grossProfitMargin.getGrossProfit());
+			margin.setMargin(grossProfitMargin.getGrossProfitMargin());
+			margin.setStatus("1");
+			// 最后修改人和修改时间
+//			margin.setUpdateBy(order.get);
+//			margin.setUpdateTime(updateTime);
+			
+
+			
+			wtwMargin.setAmount(grossProfitMargin.getAmount());
+			wtwMargin.setCode(grossProfitMargin.getCode());
+			wtwMargin.setName(grossProfitMargin.getName());
+			wtwMargin.setCost(grossProfitMargin.getWtwCost());
+			wtwMargin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
+			wtwMargin.setGrossProfit(grossProfitMargin.getWtwGrossProfit());
+			wtwMargin.setMargin(grossProfitMargin.getWtwGrossProfitMargin());
+			wtwMargin.setStatus("1");
+			// 最后修改人和修改时间
+//			wtwMargin.setUpdateBy(order.get);
+//			wtwMargin.setUpdateTime(updateTime);
+		}
+		
+		// TODO Call the bpm interface to start the order approval process 
 	}
 
 	private boolean isEmpty(String v) {
