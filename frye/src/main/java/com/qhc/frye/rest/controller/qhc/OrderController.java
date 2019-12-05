@@ -76,6 +76,11 @@ public class OrderController {
 				//save order
 				orderService.save(order);
 				break;
+			case 5:
+				//save order
+				orderService.save(order);
+				// TODO	 submit to bpm
+				break;
 			default:
 				throw new Exception();
 		}
