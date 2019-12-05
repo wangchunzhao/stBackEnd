@@ -318,6 +318,10 @@ public class KOrderView
 	@Column(name="support_info_opt_time", columnDefinition="TIMESTAMP")
 	private Date supportInfoOptTime = null;
 
+	/* Column(record_number) - 项目报备编号 */
+	@Column(name="record_number", columnDefinition="CHAR", length=45)
+	private String recordCode = null;
+
 
 	public KOrderView(){
 	}
@@ -794,27 +798,27 @@ public class KOrderView
 		this.transferTypeName = transferTypeName;
 	}
 	 
-	public Integer getIsTerm1() {
+	public int getIsTerm1() {
 		return this.isTerm1;
 	}
 
-	public void setIsTerm1(Integer isTerm1) {
+	public void setIsTerm1(int isTerm1) {
 		this.isTerm1 = isTerm1;
 	}
 	 
-	public Integer getIsTerm2() {
+	public int getIsTerm2() {
 		return this.isTerm2;
 	}
 
-	public void setIsTerm2(Integer isTerm2) {
+	public void setIsTerm2(int isTerm2) {
 		this.isTerm2 = isTerm2;
 	}
 	 
-	public Integer getIsTerm3() {
+	public int getIsTerm3() {
 		return this.isTerm3;
 	}
 
-	public void setIsTerm3(Integer isTerm3) {
+	public void setIsTerm3(int isTerm3) {
 		this.isTerm3 = isTerm3;
 	}
 	 
@@ -914,6 +918,14 @@ public class KOrderView
 		this.supportInfoOptTime = supportInfoOptTime;
 	}
 	 
+	public String getRecordCode() {
+		return recordCode;
+	}
+
+	public void setRecordCode(String recordCode) {
+		this.recordCode = recordCode;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

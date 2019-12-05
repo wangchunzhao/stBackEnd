@@ -1234,7 +1234,7 @@ public class OrderService {
 	}
 
 	/**
-	 * 查询订单
+	 * 查询订单详情
 	 * 
 	 * @param query
 	 * @return
@@ -1245,11 +1245,27 @@ public class OrderService {
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersion(version);
 		orderQuery.setIncludeDetail(true);
-
-		List<AbsOrder> orders = findOrders(orderQuery).getRows();
-
-		if (orders.size() > 0) {
-			order = orders.get(0);
+		
+		PageHelper<KOrderView> page = queryOrderView(orderQuery);
+		List<KOrderView> orderViews = page.getRows();
+		
+		if (orderViews.size() > 0) {
+			KOrderView orderView = orderViews.get(0);
+			String orderType = orderView.getOrderType();
+			switch (orderType) {
+			case ORDER_TYPE_DEALER:
+				order = new DealerOrder();
+				break;
+			case ORDER_TYPE_KEYACCOUNT:
+				order = new KeyAccountOrder();
+				break;
+			case ORDER_TYPE_BULK:
+				order = new BulkOrder();
+				break;
+			default:
+				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+			}
+			assembleOrder(orderView, order, true);
 		}
 
 		return order;
@@ -1262,78 +1278,86 @@ public class OrderService {
 	 * @return
 	 */
 	public PageHelper<AbsOrder> findOrders(OrderQuery orderQuery) {
+		boolean includeDetail = orderQuery.isIncludeDetail();
 		List<AbsOrder> orders = new ArrayList<>();
 
 		PageHelper<KOrderView> page = queryOrderView(orderQuery);
 		List<KOrderView> orderViews = page.getRows();
 		for (KOrderView orderView : orderViews) {
-			String orderId = orderView.getOrderId();
-			String orderInfoId = orderView.getOrderInfoId();
-			String orderType = orderView.getOrderType();
-			String formId = orderView.getFormId();
-
 			AbsOrder order = new BaseOrder();
-//			switch (orderType) {
-//			case ORDER_TYPE_DEALER:
-//				order = new DealerOrder();
-//				break;
-//			case ORDER_TYPE_KEYACCOUNT:
-//				order = new KeyAccountOrder();
-//				break;
-//			case ORDER_TYPE_BULK:
-//				order = new BulkOrder();
-//				break;
-//			default:
-//				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
-//			}
+//				switch (orderType) {
+//				case ORDER_TYPE_DEALER:
+//					order = new DealerOrder();
+//					break;
+//				case ORDER_TYPE_KEYACCOUNT:
+//					order = new KeyAccountOrder();
+//					break;
+//				case ORDER_TYPE_BULK:
+//					order = new BulkOrder();
+//					break;
+//				default:
+//					throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+//				}
+			assembleOrder(orderView, order, includeDetail);
 			orders.add(order);
-
-			BeanUtils.copyProperties(orderView, order);
-			order.setSequenceNumber(orderView.getSequenceNumber());
-			order.setConfirmTypeCode(orderView.getReceiveTermCode());
-			order.setConfirmTypeName(orderView.getReceiveTermName());
-			order.setCurrentVersion(orderView.getVersion());
-			order.setCurrentVersionStatus(toString(orderView.getStatus()));
-			order.setSaleType(orderView.getSalesType());
-			order.setSalesTelnumber(orderView.getSalesTel());
-			order.setSalesCode(orderView.getOwnerDomainId());
-			order.setSalesName(orderView.getOwnerName());
-			order.setContracterCode(orderView.getContractorCode());
-			order.setContracterName(orderView.getContractorName());
-			order.setCustomerClazzCode(orderView.getContractorClassCode());
-			order.setCustomerClazzName(orderView.getContractorClassName());
-			order.setIncoterm(orderView.getIncotermCode());
-			order.setUserOfficeCode(orderView.getSalesOfficeCode());
-			order.setContractManager(orderView.getOpteratorDomainId());
-			order.setCurrency(orderView.getCurrencyCode());
-			order.setInstallCode(orderView.getInstallTermCode());
-			order.setInstallName(orderView.getInstallTermName());
-			order.setTerminalType(orderView.getTerminalIndustryCode());
-			order.setWarrenty(orderView.getWarranty());
-			order.setContractValue(toDouble(orderView.getContractAmount()));
-			order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
-			order.setCurrencyExchange(orderView.getExchange());
-			// 购销明细金额合计 Aggregate amount
-//			order.setItemsAmount(orderView.geti);
-			// 运费
-			order.setFreight(toDouble(orderView.getFreight()));
-
-			if (order instanceof DealerOrder) {
-				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-				if (billingPlanList.size() > 0) {
-					((DealerOrder) order).setPaymentType(billingPlanList.get(0).getCode());
-				}
-			}
-
-			if (orderQuery.isIncludeDetail()) {
-				assembleOrderDetail(order, orderId, orderInfoId, formId);
-			}
 		}
 
 		PageHelper p = new PageHelper();
 		p.setRows(orders);
 		p.setTotal(page.getTotal());
 		return p;
+	}
+
+	private void assembleOrder(KOrderView orderView, AbsOrder order, boolean includeDetail) {
+		String orderId = orderView.getOrderId();
+		String orderInfoId = orderView.getOrderInfoId();
+		String orderType = orderView.getOrderType();
+		String formId = orderView.getFormId();
+
+		BeanUtils.copyProperties(orderView, order);
+		order.setSequenceNumber(orderView.getSequenceNumber());
+		order.setConfirmTypeCode(orderView.getReceiveTermCode());
+		order.setConfirmTypeName(orderView.getReceiveTermName());
+		order.setCurrentVersion(orderView.getVersion());
+		order.setCurrentVersionStatus(toString(orderView.getStatus()));
+		order.setSaleType(orderView.getSalesType());
+		order.setSalesTelnumber(orderView.getSalesTel());
+		order.setSalesCode(orderView.getOwnerDomainId());
+		order.setSalesName(orderView.getOwnerName());
+		order.setContracterCode(orderView.getContractorCode());
+		order.setContracterName(orderView.getContractorName());
+		order.setCustomerClazzCode(orderView.getContractorClassCode());
+		order.setCustomerClazzName(orderView.getContractorClassName());
+		order.setIncoterm(orderView.getIncotermCode());
+		order.setUserOfficeCode(orderView.getSalesOfficeCode());
+		order.setContractManager(orderView.getOpteratorDomainId());
+		order.setCurrency(orderView.getCurrencyCode());
+		order.setInstallCode(orderView.getInstallTermCode());
+		order.setInstallName(orderView.getInstallTermName());
+		order.setTerminalType(orderView.getTerminalIndustryCode());
+		order.setWarrenty(orderView.getWarranty());
+		order.setContractValue(toDouble(orderView.getContractAmount()));
+		order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
+		order.setCurrencyExchange(orderView.getExchange());
+		// 购销明细金额合计 Aggregate amount
+//			order.setItemsAmount(orderView.geti);
+		// 运费
+		order.setFreight(toDouble(orderView.getFreight()));
+
+		if (order instanceof DealerOrder) {
+			DealerOrder dealerOrder = (DealerOrder)order;
+			
+			dealerOrder.setRecordCode(orderView.getRecordCode());
+			
+			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+			if (billingPlanList.size() > 0) {
+				dealerOrder.setPaymentType(billingPlanList.get(0).getCode());
+			}
+		}
+
+		if (includeDetail) {
+			assembleOrderDetail(order, orderId, orderInfoId, formId);
+		}
 	}
 
 	private void assembleOrderDetail(AbsOrder order, String orderId, String orderInfoId, String formId) {
