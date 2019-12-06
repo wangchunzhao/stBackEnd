@@ -5,38 +5,27 @@ package com.qhc.frye.service;
 
 import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.frye.dao.CharacteristicDefaultRepository;
-import com.qhc.frye.dao.CharacteristicRepository;
-import com.qhc.frye.dao.CharacteristicValueRepository;
-import com.qhc.frye.dao.ClassAndCharacterRepository;
-import com.qhc.frye.dao.ClazzOfMaterialRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.frye.dao.ContractRepository;
 import com.qhc.frye.domain.Contract;
-import com.qhc.frye.domain.DCharacteristic;
-import com.qhc.frye.domain.DCharacteristicDefault;
-import com.qhc.frye.domain.DCharacteristicValue;
-import com.qhc.frye.domain.DClassAndCharacter;
-import com.qhc.frye.domain.DClazzOfMaterial;
-import com.qhc.frye.domain.KOrderView;
-import com.qhc.frye.rest.controller.entity.CharacteristicValue;
-import com.qhc.frye.rest.controller.entity.Clazz;
+import com.qhc.frye.domain.ContractSignSys;
 import com.qhc.frye.rest.controller.entity.ContractView;
-import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
 import com.qhc.frye.rest.controller.entity.PageHelper;
-import com.qhc.frye.rest.controller.entity.form.AbsOrder;
 
 /**
  * @author walker
@@ -44,8 +33,11 @@ import com.qhc.frye.rest.controller.entity.form.AbsOrder;
  */
 @Service
 public class ContractService {
+	private static final Logger logger = LoggerFactory.getLogger(ContractService.class);
 	@Autowired
 	private ConstantService constantService;
+	@Autowired
+	private BestsignService bestsignService;
 
 	@Autowired
 	private ContractRepository contractRepository;
@@ -216,5 +208,85 @@ public class ContractService {
 			return defaultValue;
 		}
 		return v.toString();
+	}
+
+		/**
+	 * 查询电子签约合同状态并更新本地合同状态及电子签约合同id
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 */
+	public boolean doRefreshContractState() throws JsonMappingException, JsonProcessingException {
+		String states = "03,04,05,06";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("statusList", "3,4,5,6");
+		List<ContractView> contractList = this.find(params).getRows();
+		List<ContractSignSys> signList = bestsignService.syncContractSignSysData();
+		if (signList == null || signList.size() <= 0) {
+			logger.info(System.currentTimeMillis() + ":--update contracts' state--Failed");
+			return false;
+		}
+
+		for (ContractView contract : contractList) {
+			String fileHashCode = contract.getFileHashCode();
+			if (fileHashCode == null || fileHashCode.isEmpty())
+				continue;
+
+			Optional<ContractSignSys> signed = signList.stream().filter(s -> fileHashCode.equals(s.getFileHashCode()))
+					.findFirst();
+			String signContractId = signed.isPresent() ? signed.get().getSignContractId() : null;
+			String state = "03";
+			if (signContractId != null) {
+				state = bestsignService.getContractStatus(signContractId, contract.getContractorName());
+			}
+			if (!contract.getStatus().equals(Integer.parseInt(state))) {
+				contract.setSignContractId(signContractId);
+				contract.setStatus(Integer.parseInt(state));
+
+				// 更新合同状态及电子签约合同ID
+				Contract c = findOne(contract.getId());
+				c.setSignContractId(signContractId);
+				c.setStatus(Integer.parseInt(state));
+				save(c);
+//				this.updateSignId(contract.getId(), signContractId, Integer.parseInt(state));
+////				this.updateStatus(contract.getId(), Integer.parseInt(state));
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * 签署合同
+	 * 
+	 * @param contractId 合同ID
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 */
+	public boolean doSignContract(int contractId) throws JsonMappingException, JsonProcessingException {
+		ContractView contract = this.findById(contractId);
+
+		if (contract == null)
+			return false;
+
+		// 电子签约中合同Id
+		String signContractId = contract.getSignContractId();
+		boolean result = bestsignService.doSignContract(signContractId);
+		String state = bestsignService.getContractStatus(signContractId, contract.getContractorName());
+		System.out.println("state:" + state);
+		if (result || state.equals("06")) {
+//			contract.setState("06");
+			contract.setStatus(6);
+
+			// 使用上上签电子合同状态更新数据库更新合同状态
+//			this.updateStatus(contractId, 6);
+			Contract c = findOne(contract.getId());
+			c.setStatus(6);
+			save(c);
+		}
+
+		return false;
 	}
 }
