@@ -1735,6 +1735,7 @@ public class OrderService {
 			items = new ArrayList<BaseItem>();
 		}
 		List<DMaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
+		DMaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 		
 		BpmOrder bpmOrder = new BpmOrder();
 		Order bpmHeader = new Order();
@@ -1748,14 +1749,92 @@ public class OrderService {
 		bpmOrder.setWtwMargin(bpmWtwMargins);
 		
 		// set bpm order
+//		bpmHeader.setAddress();
+		bpmHeader.setApprovalDiscount(order.getApprovedDiscount());
+		bpmHeader.setB2c("0");
+		List<BaseItem> l = order.getItems();
+		for (BaseItem baseItem : l) {
+			String c = baseItem.getB2cComments();
+			if (c != null && c.trim().length() > 0) {
+				bpmHeader.setB2c("1");
+				break;
+			}
+		}
+		bpmHeader.setBodyDiscount(order.getBodyDiscount());
+		bpmHeader.setComments(order.getComments());
+		bpmHeader.setContractAmount(order.getContractValue());
+		bpmHeader.setContractNumber(order.getContractNumber());
+		bpmHeader.setContractRmbAmount(order.getContractRMBValue());
+		bpmHeader.setCreateTime(order.getCreateTime());
+		bpmHeader.setCurrencyName(order.getCurrencyName());
+		bpmHeader.setCustomerName(order.getCustomerName());
+		bpmHeader.setDealer(order.getOrderType().equals(AbsOrder.ORDER_TYPE_CODE_DEALER) ? "1" : "0");
+		if (order instanceof DealerOrder) {
+			bpmHeader.setDiscount(((DealerOrder)order).getDiscount());
+		}
+		bpmHeader.setEarliestDeliveryDate(order.getEarliestDeliveryDate());
+		// TODO 
+//		bpmHeader.setElectricalFee(0);
+		bpmHeader.setExchange(order.getCurrencyExchange());
+//		bpmHeader.setInstallFee();
+//		bpmHeader.setMaintenanceFee();
+		bpmHeader.setMargin(sumMargin.getGrossProfitMargin());
+//		bpmHeader.setMaterialFee();
+//		bpmHeader.setMaterialGroupNames();
+		bpmHeader.setMergeDiscount(bpmHeader.getDiscount());
+		bpmHeader.setOrderType(order.getOrderType());
+		if (order.getPayments() != null && order.getPayments().size() > 0) {
+			bpmHeader.setPaymentTypeName(order.getPayments().get(0).getTermName());
+		}
+		bpmHeader.setReceiveTypeName(order.getConfirmTypeName());
+//		bpmHeader.setRefrigeratoryFee();
+		bpmHeader.setSalesCode(order.getSalesCode());
+		bpmHeader.setSalesTel(order.getSalesTelnumber());
+		bpmHeader.setSaleType(order.getSaleType());
+		bpmHeader.setSapOffice(order.getOfficeName());
+		bpmHeader.setSequenceNumber(order.getSequenceNumber());
+		bpmHeader.setShopName(order.getCustomerName());
+		bpmHeader.setSpecialDiscount(bpmHeader.getDiscount() == 0.48 ? "1" : "0");
+		bpmHeader.setStatus(order.getCurrentVersionStatus());
+		bpmHeader.setTaxRate(order.getTaxRate());
+		bpmHeader.setUnitDiscount(order.getMainDiscount());
+		bpmHeader.setWtwMargin(sumMargin.getWtwGrossProfitMargin());
 		
 		// set bpm order item
 		for (BaseItem baseItem : items) {
 			OrderItem bpmItem = new OrderItem();
 			bpmItems.add(bpmItem);
 			
-//			bpmItem.setActuralAmount(acturalAmount);
-//			bpmItem.setActuralAmountOfOptional(acturalAmountOfOptional);
+			bpmItem.setActuralAmount(baseItem.getActuralPrice() * baseItem.getQuantity());
+			bpmItem.setActuralAmountOfOptional(baseItem.getActuralPricaOfOptional() * baseItem.getQuantity());
+			bpmItem.setActuralPrice(baseItem.getActuralPrice());
+			bpmItem.setActuralPriceOfOptional(baseItem.getActuralPricaOfOptional());
+//			bpmItem.setAddress(baseItem.geta);
+			bpmItem.setB2cAmountEstimated(baseItem.getB2CPriceEstimated() * baseItem.getQuantity());
+			bpmItem.setB2cComments(baseItem.getB2cComments());
+			bpmItem.setB2cCostOfEstimated(baseItem.getB2CCostOfEstimated());
+			bpmItem.setB2cPriceEstimated(baseItem.getB2CPriceEstimated());
+			bpmItem.setColorComments(baseItem.getColorComments());
+			bpmItem.setDeliveryDate(baseItem.getDeliveryDate());
+			bpmItem.setDiscount(baseItem.getDiscount());
+			bpmItem.setItemCategoryName(baseItem.getItemCategory());
+			bpmItem.setItemRequirementPlanName(baseItem.getItemRequirementPlan());
+			bpmItem.setMaterialCode(baseItem.getMaterialCode());
+//			bpmItem.setMaterialAttribute();
+			bpmItem.setMaterialGroupName(baseItem.getGroupName());
+			bpmItem.setMaterialName(baseItem.getMaterialName());
+			bpmItem.setMeasureUnitName(baseItem.getMaterialName());
+			bpmItem.setOnStoreDate(baseItem.getOnStoreDate());
+			bpmItem.setPeriod(baseItem.getPeriod());
+			bpmItem.setProduceDate(baseItem.getProduceDate());
+			bpmItem.setQuantity(baseItem.getQuantity());
+			bpmItem.setRetailAmount(baseItem.getRetailPrice() * baseItem.getQuantity());
+			bpmItem.setRetailPrice(baseItem.getRetailPrice());
+			bpmItem.setRowNumber(baseItem.getRowNumber());
+			bpmItem.setShippDate(baseItem.getShippDate());
+			bpmItem.setSpecialComments(baseItem.getSpecialComments());
+			bpmItem.setTranscationPriceOfOptional(baseItem.getTranscationPriceOfOptional());
+			bpmItem.setTransfterPrice(baseItem.getTranscationPrice());
 		}
 		
 		// set bpm order margins and wtw margins
