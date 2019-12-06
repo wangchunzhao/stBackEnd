@@ -1308,6 +1308,13 @@ public class OrderService {
 		return p;
 	}
 
+	/**
+	 * 组装订单对象
+	 * 
+	 * @param orderView
+	 * @param order
+	 * @param includeDetail
+	 */
 	private void assembleOrder(KOrderView orderView, AbsOrder order, boolean includeDetail) {
 		String orderId = orderView.getOrderId();
 		String orderInfoId = orderView.getOrderInfoId();
@@ -1397,6 +1404,68 @@ public class OrderService {
 
 		// TODO items
 		assembleItems(order, formId);
+	}
+
+	private void assembleItems(AbsOrder order, String formId) {
+		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
+		// 新的AbsOrder
+		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
+		for (ItemDetails itemDetails : detailsList) {
+			String itemId = itemDetails.getId();
+			BaseItem item = new BaseItem();
+			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
+			item.setDeliveryDate(itemDetails.getDelieveryDate());
+			item.setShippDate(itemDetails.getDelieveryDate());
+			item.setUnitCode(itemDetails.getMeasureUnitCode());
+//			item.setUnitName(unitName);
+			item.setGroupCode(itemDetails.getMaterialGroupCode());
+			item.setGroupName(itemDetails.getMaterialGroupName());
+			item.setSpecialComments(itemDetails.getSpecialNeed());
+			item.setConfigComments(itemDetails.getComments());
+			item.setMosaicImage(itemDetails.getMosaicImage());
+			item.setRequestCircult(itemDetails.getRequestCircuit());
+
+			// 产品实卖价 = 实卖金额 / 数量
+			BigDecimal saleAmount = itemDetails.getAmount();
+			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
+			item.setActuralPrice(saleAmount.divide(quantity, 4, BigDecimal.ROUND_HALF_UP).doubleValue());
+//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
+			item.setTranscationPrice(toDouble(itemDetails.getTransfterPrice()));
+//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
+			item.setRetailPrice(toDouble(itemDetails.getRetailPrice()));
+			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
+//			item.setPeriod(itemDetails.getp);
+
+			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
+			if (attachedInfoList.size() > 0) {
+				KAttachedInfo attached = attachedInfoList.get(0);
+				item.setProduceDate(attached.getStartDateOfProduction());
+				item.setOnStoreDate(attached.getDateOfOnStore());
+			}
+
+			items.add(item);
+
+			// TODO item b2c
+			// characteristics
+			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
+			for (KCharacteristics charac : characs) {
+				if (toString(charac.getIsConfigurable()).equals("1")) {
+					item.setConfigurable(true);
+				}
+
+				BaseChracteristic c = new BaseChracteristic();
+				c.setConfigCode(charac.getKeyCode());
+				c.setConfigValueCode(charac.getValueCode());
+				c.setOptional(toString(charac.getIsConfigurable()).equals("1"));
+
+				configs.add(c);
+			}
+			item.setConfigs(configs);
+			// TODO configure material
+			// TODO attached info
+		}
+		order.setItems(items);
 	}
 
 	/**
@@ -1536,68 +1605,6 @@ public class OrderService {
 		page.setTotal(totalCount.intValue());
 
 		return page;
-	}
-
-	private void assembleItems(AbsOrder order, String formId) {
-		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
-		// 新的AbsOrder
-		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
-		for (ItemDetails itemDetails : detailsList) {
-			String itemId = itemDetails.getId();
-			BaseItem item = new BaseItem();
-			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
-			item.setDeliveryDate(itemDetails.getDelieveryDate());
-			item.setShippDate(itemDetails.getDelieveryDate());
-			item.setUnitCode(itemDetails.getMeasureUnitCode());
-//			item.setUnitName(unitName);
-			item.setGroupCode(itemDetails.getMaterialGroupCode());
-			item.setGroupName(itemDetails.getMaterialGroupName());
-			item.setSpecialComments(itemDetails.getSpecialNeed());
-			item.setConfigComments(itemDetails.getComments());
-			item.setMosaicImage(itemDetails.getMosaicImage());
-			item.setRequestCircult(itemDetails.getRequestCircuit());
-
-			// 产品实卖价 = 实卖金额 / 数量
-			BigDecimal saleAmount = itemDetails.getAmount();
-			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
-			item.setActuralPrice(saleAmount.divide(quantity, 4, BigDecimal.ROUND_HALF_UP).doubleValue());
-//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
-			item.setTranscationPrice(toDouble(itemDetails.getTransfterPrice()));
-//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
-			item.setRetailPrice(toDouble(itemDetails.getRetailPrice()));
-			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
-//			item.setPeriod(itemDetails.getp);
-
-			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
-			if (attachedInfoList.size() > 0) {
-				KAttachedInfo attached = attachedInfoList.get(0);
-				item.setProduceDate(attached.getStartDateOfProduction());
-				item.setOnStoreDate(attached.getDateOfOnStore());
-			}
-
-			items.add(item);
-
-			// TODO item b2c
-			// characteristics
-			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
-			for (KCharacteristics charac : characs) {
-				if (toString(charac.getIsConfigurable()).equals("1")) {
-					item.setConfigurable(true);
-				}
-
-				BaseChracteristic c = new BaseChracteristic();
-				c.setConfigCode(charac.getKeyCode());
-				c.setConfigValueCode(charac.getValueCode());
-				c.setOption(toString(charac.getIsConfigurable()));
-
-				configs.add(c);
-			}
-			item.setConfigs(configs);
-			// TODO configure material
-			// TODO attached info
-		}
-		order.setItems(items);
 	}
 
 	/**
