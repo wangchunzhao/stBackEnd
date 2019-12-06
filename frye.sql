@@ -1943,6 +1943,11 @@ INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('SZ', 
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ROL', '卷');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q6', '扇');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('BOT', '瓶');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MON', 'MON');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q16', 'Q16');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q4', 'Q4');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q6', 'Q6');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ST', 'ST');
 
 COMMIT;
 
