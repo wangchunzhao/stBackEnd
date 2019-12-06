@@ -5,8 +5,8 @@ import java.util.List;
 public class BpmOrder {
 	private Order order;
 	private List<OrderItem> items;
-	private OrderMargin margin;
-	private OrderMargin wtwMargin;
+	private List<OrderMargin> margin;
+	private List<OrderMargin> wtwMargin;
 
 	@Override
 	public String toString() {
@@ -30,19 +30,19 @@ public class BpmOrder {
 		this.items = items;
 	}
 
-	public OrderMargin getMargin() {
+	public List<OrderMargin> getMargin() {
 		return margin;
 	}
 
-	public void setMargin(OrderMargin margin) {
+	public void setMargin(List<OrderMargin> margin) {
 		this.margin = margin;
 	}
 
-	public OrderMargin getWtwMargin() {
+	public List<OrderMargin> getWtwMargin() {
 		return wtwMargin;
 	}
 
-	public void setWtwMargin(OrderMargin wtwMargin) {
+	public void setWtwMargin(List<OrderMargin> wtwMargin) {
 		this.wtwMargin = wtwMargin;
 	}
 }

@@ -517,6 +517,22 @@ public class ContractView implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public String getFileHashCode() {
+		return fileHashCode;
+	}
+
+	public void setFileHashCode(String fileHashCode) {
+		this.fileHashCode = fileHashCode;
+	}
+
+	public String getSignContractId() {
+		return signContractId;
+	}
+
+	public void setSignContractId(String signContractId) {
+		this.signContractId = signContractId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

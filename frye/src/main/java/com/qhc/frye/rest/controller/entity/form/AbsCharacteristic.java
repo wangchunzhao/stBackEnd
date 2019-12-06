@@ -10,15 +10,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 public abstract class AbsCharacteristic {
-	private String option;//可选、必选
+	private Boolean optional;//可选、必选
 	@JsonProperty(value = "code")
 	private String configCode;//配置项
 	private String configValueCode;//配置值
-	public String getOption() {
-		return option;
+	public Boolean getOptional() {
+		return optional;
 	}
-	public void setOption(String option) {
-		this.option = option;
+	public void setOptional(Boolean optional) {
+		this.optional = optional;
 	}
 	public String getConfigCode() {
 		return configCode;

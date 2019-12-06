@@ -1,38 +1,40 @@
 package com.qhc.frye.rest.controller.entity.bpm;
 
+import java.util.Date;
+
 public class OrderItem {
 	/* 行号 */
-	private String rowNumber;
+	private int rowNumber;
 	/* 规格型号 */
 	private String materialName;
 	/* 专用号 */
-	private String material_code;
+	private String materialCode;
 	/* 物料属性 */
 	private String materialAttribute;
 	/* 类型 */
 	private String materialGroupName;
 	/* 数量 */
-	private String quantity;
+	private double quantity;
 	/* 计量单位 */
 	private String measureUnitName;
 	/* 产品实卖价 */
-	private String acturalPrice;
+	private double acturalPrice;
 	/* 产品实卖金额 */
-	private String acturalAmount;
+	private double acturalAmount;
 	/* 产品转移价 */
-	private String transfterPrice;
+	private double transfterPrice;
 	/* 可选项实卖价 */
-	private String acturalPriceOfOptional;
+	private double acturalPriceOfOptional;
 	/* 可选项实卖金额 */
-	private String acturalAmountOfOptional;
+	private double acturalAmountOfOptional;
 	/* 可选项转移价 */
-	private String transcationPriceOfOptional;
+	private double transcationPriceOfOptional;
 	/* B2C预估价 */
-	private String b2cPriceEstimated;
+	private double b2cPriceEstimated;
 	/* B2C预估金额 */
-	private String b2cAmountEstimated;
+	private double b2cAmountEstimated;
 	/* B2C预估成本 */
-	private String b2cCostOfEstimated;
+	private double b2cCostOfEstimated;
 	/* 实卖价合计 */
 //	 private String 		;
 	/* 实卖金额合计 */
@@ -40,27 +42,27 @@ public class OrderItem {
 	/* 转移价合计 */
 //	 private String 		;
 	/* 市场零售价 */
-	private String retailPrice;
+	private double retailPrice;
 	/* 市场零售金额 */
-	private String retailAmount;
+	private double retailAmount;
 	/* 折扣率 */
-	private String discount;
+	private double discount;
 	/* 行项目类别 */
 	private String itemCategoryName;
 	/* 需求计划 */
 	private String itemRequirementPlanName;
 	/* 生产周期 */
-	private String period;
+	private int period;
 	/* 工厂最早交货时间 */
-	private String deliveryDate;
+	private Date deliveryDate;
 	/* 生产开始时间 */
-	private String produceDate;
+	private Date produceDate;
 	/* 要求发货时间 */
-	private String shippDate;
+	private Date shippDate;
 	/* 地址 */
 	private String address;
 	/* 入库时间 */
-	private String onStoreDate;
+	private Date onStoreDate;
 	/* 采购周期 */
 //	 private String 	period	;
 	/* B2C备注 */
@@ -70,11 +72,11 @@ public class OrderItem {
 	/* 颜色备注 */
 	private String colorComments;
 
-	public String getRowNumber() {
+	public int getRowNumber() {
 		return rowNumber;
 	}
 
-	public void setRowNumber(String rowNumber) {
+	public void setRowNumber(int rowNumber) {
 		this.rowNumber = rowNumber;
 	}
 
@@ -86,12 +88,12 @@ public class OrderItem {
 		this.materialName = materialName;
 	}
 
-	public String getMaterial_code() {
-		return material_code;
+	public String getMaterialCode() {
+		return materialCode;
 	}
 
-	public void setMaterial_code(String material_code) {
-		this.material_code = material_code;
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
 	}
 
 	public String getMaterialAttribute() {
@@ -110,11 +112,11 @@ public class OrderItem {
 		this.materialGroupName = materialGroupName;
 	}
 
-	public String getQuantity() {
+	public double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
+	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
 
@@ -126,99 +128,99 @@ public class OrderItem {
 		this.measureUnitName = measureUnitName;
 	}
 
-	public String getActuralPrice() {
+	public double getActuralPrice() {
 		return acturalPrice;
 	}
 
-	public void setActuralPrice(String acturalPrice) {
+	public void setActuralPrice(double acturalPrice) {
 		this.acturalPrice = acturalPrice;
 	}
 
-	public String getActuralAmount() {
+	public double getActuralAmount() {
 		return acturalAmount;
 	}
 
-	public void setActuralAmount(String acturalAmount) {
+	public void setActuralAmount(double acturalAmount) {
 		this.acturalAmount = acturalAmount;
 	}
 
-	public String getTransfterPrice() {
+	public double getTransfterPrice() {
 		return transfterPrice;
 	}
 
-	public void setTransfterPrice(String transfterPrice) {
+	public void setTransfterPrice(double transfterPrice) {
 		this.transfterPrice = transfterPrice;
 	}
 
-	public String getActuralPriceOfOptional() {
+	public double getActuralPriceOfOptional() {
 		return acturalPriceOfOptional;
 	}
 
-	public void setActuralPriceOfOptional(String acturalPriceOfOptional) {
+	public void setActuralPriceOfOptional(double acturalPriceOfOptional) {
 		this.acturalPriceOfOptional = acturalPriceOfOptional;
 	}
 
-	public String getActuralAmountOfOptional() {
+	public double getActuralAmountOfOptional() {
 		return acturalAmountOfOptional;
 	}
 
-	public void setActuralAmountOfOptional(String acturalAmountOfOptional) {
+	public void setActuralAmountOfOptional(double acturalAmountOfOptional) {
 		this.acturalAmountOfOptional = acturalAmountOfOptional;
 	}
 
-	public String getTranscationPriceOfOptional() {
+	public double getTranscationPriceOfOptional() {
 		return transcationPriceOfOptional;
 	}
 
-	public void setTranscationPriceOfOptional(String transcationPriceOfOptional) {
+	public void setTranscationPriceOfOptional(double transcationPriceOfOptional) {
 		this.transcationPriceOfOptional = transcationPriceOfOptional;
 	}
 
-	public String getB2cPriceEstimated() {
+	public double getB2cPriceEstimated() {
 		return b2cPriceEstimated;
 	}
 
-	public void setB2cPriceEstimated(String b2cPriceEstimated) {
+	public void setB2cPriceEstimated(double b2cPriceEstimated) {
 		this.b2cPriceEstimated = b2cPriceEstimated;
 	}
 
-	public String getB2cAmountEstimated() {
+	public double getB2cAmountEstimated() {
 		return b2cAmountEstimated;
 	}
 
-	public void setB2cAmountEstimated(String b2cAmountEstimated) {
+	public void setB2cAmountEstimated(double b2cAmountEstimated) {
 		this.b2cAmountEstimated = b2cAmountEstimated;
 	}
 
-	public String getB2cCostOfEstimated() {
+	public double getB2cCostOfEstimated() {
 		return b2cCostOfEstimated;
 	}
 
-	public void setB2cCostOfEstimated(String b2cCostOfEstimated) {
+	public void setB2cCostOfEstimated(double b2cCostOfEstimated) {
 		this.b2cCostOfEstimated = b2cCostOfEstimated;
 	}
 
-	public String getRetailPrice() {
+	public double getRetailPrice() {
 		return retailPrice;
 	}
 
-	public void setRetailPrice(String retailPrice) {
+	public void setRetailPrice(double retailPrice) {
 		this.retailPrice = retailPrice;
 	}
 
-	public String getRetailAmount() {
+	public double getRetailAmount() {
 		return retailAmount;
 	}
 
-	public void setRetailAmount(String retailAmount) {
+	public void setRetailAmount(double retailAmount) {
 		this.retailAmount = retailAmount;
 	}
 
-	public String getDiscount() {
+	public double getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(String discount) {
+	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
 
@@ -238,35 +240,35 @@ public class OrderItem {
 		this.itemRequirementPlanName = itemRequirementPlanName;
 	}
 
-	public String getPeriod() {
+	public int getPeriod() {
 		return period;
 	}
 
-	public void setPeriod(String period) {
+	public void setPeriod(int period) {
 		this.period = period;
 	}
 
-	public String getDeliveryDate() {
+	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(String deliveryDate) {
+	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public String getProduceDate() {
+	public Date getProduceDate() {
 		return produceDate;
 	}
 
-	public void setProduceDate(String produceDate) {
+	public void setProduceDate(Date produceDate) {
 		this.produceDate = produceDate;
 	}
 
-	public String getShippDate() {
+	public Date getShippDate() {
 		return shippDate;
 	}
 
-	public void setShippDate(String shippDate) {
+	public void setShippDate(Date shippDate) {
 		this.shippDate = shippDate;
 	}
 
@@ -278,11 +280,11 @@ public class OrderItem {
 		this.address = address;
 	}
 
-	public String getOnStoreDate() {
+	public Date getOnStoreDate() {
 		return onStoreDate;
 	}
 
-	public void setOnStoreDate(String onStoreDate) {
+	public void setOnStoreDate(Date onStoreDate) {
 		this.onStoreDate = onStoreDate;
 	}
 
@@ -312,8 +314,8 @@ public class OrderItem {
 
 	@Override
 	public String toString() {
-		return "OrderItem [rowNumber=" + rowNumber + ", materialName=" + materialName + ", material_code="
-				+ material_code + ", materialAttribute=" + materialAttribute + ", materialGroupName="
+		return "OrderItem [rowNumber=" + rowNumber + ", materialName=" + materialName + ", materialCode="
+				+ materialCode + ", materialAttribute=" + materialAttribute + ", materialGroupName="
 				+ materialGroupName + ", quantity=" + quantity + ", measureUnitName=" + measureUnitName
 				+ ", acturalPrice=" + acturalPrice + ", acturalAmount=" + acturalAmount + ", transfterPrice="
 				+ transfterPrice + ", acturalPriceOfOptional=" + acturalPriceOfOptional + ", acturalAmountOfOptional="

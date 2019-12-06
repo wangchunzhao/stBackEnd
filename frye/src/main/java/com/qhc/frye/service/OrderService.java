@@ -89,6 +89,10 @@ import com.qhc.frye.rest.controller.entity.OrderVersion;
 import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.rest.controller.entity.PaymentPlan;
 import com.qhc.frye.rest.controller.entity.SalesOrder;
+import com.qhc.frye.rest.controller.entity.bpm.BpmOrder;
+import com.qhc.frye.rest.controller.entity.bpm.Order;
+import com.qhc.frye.rest.controller.entity.bpm.OrderItem;
+import com.qhc.frye.rest.controller.entity.bpm.OrderMargin;
 import com.qhc.frye.rest.controller.entity.form.AbsCharacteristic;
 import com.qhc.frye.rest.controller.entity.form.AbsItem;
 import com.qhc.frye.rest.controller.entity.form.BulkOrder;
@@ -1230,7 +1234,7 @@ public class OrderService {
 	}
 
 	/**
-	 * 查询订单
+	 * 查询订单详情
 	 * 
 	 * @param query
 	 * @return
@@ -1241,11 +1245,27 @@ public class OrderService {
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersion(version);
 		orderQuery.setIncludeDetail(true);
-
-		List<AbsOrder> orders = findOrders(orderQuery).getRows();
-
-		if (orders.size() > 0) {
-			order = orders.get(0);
+		
+		PageHelper<KOrderView> page = queryOrderView(orderQuery);
+		List<KOrderView> orderViews = page.getRows();
+		
+		if (orderViews.size() > 0) {
+			KOrderView orderView = orderViews.get(0);
+			String orderType = orderView.getOrderType();
+			switch (orderType) {
+			case ORDER_TYPE_DEALER:
+				order = new DealerOrder();
+				break;
+			case ORDER_TYPE_KEYACCOUNT:
+				order = new KeyAccountOrder();
+				break;
+			case ORDER_TYPE_BULK:
+				order = new BulkOrder();
+				break;
+			default:
+				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+			}
+			assembleOrder(orderView, order, true);
 		}
 
 		return order;
@@ -1258,78 +1278,93 @@ public class OrderService {
 	 * @return
 	 */
 	public PageHelper<AbsOrder> findOrders(OrderQuery orderQuery) {
+		boolean includeDetail = orderQuery.isIncludeDetail();
 		List<AbsOrder> orders = new ArrayList<>();
 
 		PageHelper<KOrderView> page = queryOrderView(orderQuery);
 		List<KOrderView> orderViews = page.getRows();
 		for (KOrderView orderView : orderViews) {
-			String orderId = orderView.getOrderId();
-			String orderInfoId = orderView.getOrderInfoId();
-			String orderType = orderView.getOrderType();
-			String formId = orderView.getFormId();
-
 			AbsOrder order = new BaseOrder();
-//			switch (orderType) {
-//			case ORDER_TYPE_DEALER:
-//				order = new DealerOrder();
-//				break;
-//			case ORDER_TYPE_KEYACCOUNT:
-//				order = new KeyAccountOrder();
-//				break;
-//			case ORDER_TYPE_BULK:
-//				order = new BulkOrder();
-//				break;
-//			default:
-//				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
-//			}
+//				switch (orderType) {
+//				case ORDER_TYPE_DEALER:
+//					order = new DealerOrder();
+//					break;
+//				case ORDER_TYPE_KEYACCOUNT:
+//					order = new KeyAccountOrder();
+//					break;
+//				case ORDER_TYPE_BULK:
+//					order = new BulkOrder();
+//					break;
+//				default:
+//					throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
+//				}
+			assembleOrder(orderView, order, includeDetail);
 			orders.add(order);
-
-			BeanUtils.copyProperties(orderView, order);
-			order.setSequenceNumber(orderView.getSequenceNumber());
-			order.setConfirmTypeCode(orderView.getReceiveTermCode());
-			order.setConfirmTypeName(orderView.getReceiveTermName());
-			order.setCurrentVersion(orderView.getVersion());
-			order.setCurrentVersionStatus(toString(orderView.getStatus()));
-			order.setSaleType(orderView.getSalesType());
-			order.setSalesTelnumber(orderView.getSalesTel());
-			order.setSalesCode(orderView.getOwnerDomainId());
-			order.setSalesName(orderView.getOwnerName());
-			order.setContracterCode(orderView.getContractorCode());
-			order.setContracterName(orderView.getContractorName());
-			order.setCustomerClazzCode(orderView.getContractorClassCode());
-			order.setCustomerClazzName(orderView.getContractorClassName());
-			order.setIncoterm(orderView.getIncotermCode());
-			order.setUserOfficeCode(orderView.getSalesOfficeCode());
-			order.setContractManager(orderView.getOpteratorDomainId());
-			order.setCurrency(orderView.getCurrencyCode());
-			order.setInstallCode(orderView.getInstallTermCode());
-			order.setInstallName(orderView.getInstallTermName());
-			order.setTerminalType(orderView.getTerminalIndustryCode());
-			order.setWarrenty(orderView.getWarranty());
-			order.setContractValue(toDouble(orderView.getContractAmount()));
-			order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
-			order.setCurrencyExchange(orderView.getExchange());
-			// 购销明细金额合计 Aggregate amount
-//			order.setItemsAmount(orderView.geti);
-			// 运费
-			order.setFreight(toDouble(orderView.getFreight()));
-
-			if (order instanceof DealerOrder) {
-				List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-				if (billingPlanList.size() > 0) {
-					((DealerOrder) order).setPaymentType(billingPlanList.get(0).getCode());
-				}
-			}
-
-			if (orderQuery.isIncludeDetail()) {
-				assembleOrderDetail(order, orderId, orderInfoId, formId);
-			}
 		}
 
 		PageHelper p = new PageHelper();
 		p.setRows(orders);
 		p.setTotal(page.getTotal());
 		return p;
+	}
+
+	/**
+	 * 组装订单对象
+	 * 
+	 * @param orderView
+	 * @param order
+	 * @param includeDetail
+	 */
+	private void assembleOrder(KOrderView orderView, AbsOrder order, boolean includeDetail) {
+		String orderId = orderView.getOrderId();
+		String orderInfoId = orderView.getOrderInfoId();
+		String orderType = orderView.getOrderType();
+		String formId = orderView.getFormId();
+
+		BeanUtils.copyProperties(orderView, order);
+		order.setSequenceNumber(orderView.getSequenceNumber());
+		order.setConfirmTypeCode(orderView.getReceiveTermCode());
+		order.setConfirmTypeName(orderView.getReceiveTermName());
+		order.setCurrentVersion(orderView.getVersion());
+		order.setCurrentVersionStatus(toString(orderView.getStatus()));
+		order.setSaleType(orderView.getSalesType());
+		order.setSalesTelnumber(orderView.getSalesTel());
+		order.setSalesCode(orderView.getOwnerDomainId());
+		order.setSalesName(orderView.getOwnerName());
+		order.setContracterCode(orderView.getContractorCode());
+		order.setContracterName(orderView.getContractorName());
+		order.setCustomerClazzCode(orderView.getContractorClassCode());
+		order.setCustomerClazzName(orderView.getContractorClassName());
+		order.setIncoterm(orderView.getIncotermCode());
+		order.setUserOfficeCode(orderView.getSalesOfficeCode());
+		order.setContractManager(orderView.getOpteratorDomainId());
+		order.setCurrency(orderView.getCurrencyCode());
+		order.setInstallCode(orderView.getInstallTermCode());
+		order.setInstallName(orderView.getInstallTermName());
+		order.setTerminalType(orderView.getTerminalIndustryCode());
+		order.setWarrenty(orderView.getWarranty());
+		order.setContractValue(toDouble(orderView.getContractAmount()));
+		order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
+		order.setCurrencyExchange(orderView.getExchange());
+		// 购销明细金额合计 Aggregate amount
+//			order.setItemsAmount(orderView.geti);
+		// 运费
+		order.setFreight(toDouble(orderView.getFreight()));
+
+		if (order instanceof DealerOrder) {
+			DealerOrder dealerOrder = (DealerOrder)order;
+			
+			dealerOrder.setRecordCode(orderView.getRecordCode());
+			
+			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+			if (billingPlanList.size() > 0) {
+				dealerOrder.setPaymentType(billingPlanList.get(0).getCode());
+			}
+		}
+
+		if (includeDetail) {
+			assembleOrderDetail(order, orderId, orderInfoId, formId);
+		}
 	}
 
 	private void assembleOrderDetail(AbsOrder order, String orderId, String orderInfoId, String formId) {
@@ -1369,6 +1404,68 @@ public class OrderService {
 
 		// TODO items
 		assembleItems(order, formId);
+	}
+
+	private void assembleItems(AbsOrder order, String formId) {
+		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
+		// 新的AbsOrder
+		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
+		for (ItemDetails itemDetails : detailsList) {
+			String itemId = itemDetails.getId();
+			BaseItem item = new BaseItem();
+			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
+			item.setDeliveryDate(itemDetails.getDelieveryDate());
+			item.setShippDate(itemDetails.getDelieveryDate());
+			item.setUnitCode(itemDetails.getMeasureUnitCode());
+//			item.setUnitName(unitName);
+			item.setGroupCode(itemDetails.getMaterialGroupCode());
+			item.setGroupName(itemDetails.getMaterialGroupName());
+			item.setSpecialComments(itemDetails.getSpecialNeed());
+			item.setConfigComments(itemDetails.getComments());
+			item.setMosaicImage(itemDetails.getMosaicImage());
+			item.setRequestCircult(itemDetails.getRequestCircuit());
+
+			// 产品实卖价 = 实卖金额 / 数量
+			BigDecimal saleAmount = itemDetails.getAmount();
+			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
+			item.setActuralPrice(saleAmount.divide(quantity, 4, BigDecimal.ROUND_HALF_UP).doubleValue());
+//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
+			item.setTranscationPrice(toDouble(itemDetails.getTransfterPrice()));
+//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
+			item.setRetailPrice(toDouble(itemDetails.getRetailPrice()));
+			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
+//			item.setPeriod(itemDetails.getp);
+
+			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
+			if (attachedInfoList.size() > 0) {
+				KAttachedInfo attached = attachedInfoList.get(0);
+				item.setProduceDate(attached.getStartDateOfProduction());
+				item.setOnStoreDate(attached.getDateOfOnStore());
+			}
+
+			items.add(item);
+
+			// TODO item b2c
+			// characteristics
+			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
+			for (KCharacteristics charac : characs) {
+				if (toString(charac.getIsConfigurable()).equals("1")) {
+					item.setConfigurable(true);
+				}
+
+				BaseChracteristic c = new BaseChracteristic();
+				c.setConfigCode(charac.getKeyCode());
+				c.setConfigValueCode(charac.getValueCode());
+				c.setOptional(toString(charac.getIsConfigurable()).equals("1"));
+
+				configs.add(c);
+			}
+			item.setConfigs(configs);
+			// TODO configure material
+			// TODO attached info
+		}
+		order.setItems(items);
 	}
 
 	/**
@@ -1510,68 +1607,6 @@ public class OrderService {
 		return page;
 	}
 
-	private void assembleItems(AbsOrder order, String formId) {
-		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
-		// 新的AbsOrder
-		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
-		for (ItemDetails itemDetails : detailsList) {
-			String itemId = itemDetails.getId();
-			BaseItem item = new BaseItem();
-			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
-			item.setDeliveryDate(itemDetails.getDelieveryDate());
-			item.setShippDate(itemDetails.getDelieveryDate());
-			item.setUnitCode(itemDetails.getMeasureUnitCode());
-//			item.setUnitName(unitName);
-			item.setGroupCode(itemDetails.getMaterialGroupCode());
-			item.setGroupName(itemDetails.getMaterialGroupName());
-			item.setSpecialComments(itemDetails.getSpecialNeed());
-			item.setConfigComments(itemDetails.getComments());
-			item.setMosaicImage(itemDetails.getMosaicImage());
-			item.setRequestCircult(itemDetails.getRequestCircuit());
-
-			// 产品实卖价 = 实卖金额 / 数量
-			BigDecimal saleAmount = itemDetails.getAmount();
-			BigDecimal quantity = BigDecimal.valueOf(itemDetails.getQuantity());
-			item.setActuralPrice(saleAmount.divide(quantity, 4, BigDecimal.ROUND_HALF_UP).doubleValue());
-//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
-			item.setTranscationPrice(toDouble(itemDetails.getTransfterPrice()));
-//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
-			item.setRetailPrice(toDouble(itemDetails.getRetailPrice()));
-			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
-//			item.setPeriod(itemDetails.getp);
-
-			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
-			if (attachedInfoList.size() > 0) {
-				KAttachedInfo attached = attachedInfoList.get(0);
-				item.setProduceDate(attached.getStartDateOfProduction());
-				item.setOnStoreDate(attached.getDateOfOnStore());
-			}
-
-			items.add(item);
-
-			// TODO item b2c
-			// characteristics
-			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
-			for (KCharacteristics charac : characs) {
-				if (toString(charac.getIsConfigurable()).equals("1")) {
-					item.setConfigurable(true);
-				}
-
-				BaseChracteristic c = new BaseChracteristic();
-				c.setConfigCode(charac.getKeyCode());
-				c.setConfigValueCode(charac.getValueCode());
-				c.setOption(toString(charac.getIsConfigurable()));
-
-				configs.add(c);
-			}
-			item.setConfigs(configs);
-			// TODO configure material
-			// TODO attached info
-		}
-		order.setItems(items);
-	}
-
 	/**
 	 */
 	public void enginingCost(String operator, boolean isApproved, String seqnum, String version, double installation,
@@ -1693,6 +1728,158 @@ public class OrderService {
 			}
 		}
 
+	}
+	
+	/**
+	 * 
+	 * 发送订单到BPM审批
+	 * 
+	 * @param order
+	 */
+	public void sendToBpm(AbsOrder order) {
+		List<BaseItem> items = order.getItems();
+		if (items == null) {
+			items = new ArrayList<BaseItem>();
+		}
+		List<DMaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
+		DMaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
+		
+		BpmOrder bpmOrder = new BpmOrder();
+		Order bpmHeader = new Order();
+		List<OrderItem> bpmItems = new ArrayList<OrderItem>(items.size());
+		List<OrderMargin> bpmMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
+		List<OrderMargin> bpmWtwMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
+		
+		bpmOrder.setOrder(bpmHeader);
+		bpmOrder.setItems(bpmItems);
+		bpmOrder.setMargin(bpmMargins);
+		bpmOrder.setWtwMargin(bpmWtwMargins);
+		
+		// set bpm order
+//		bpmHeader.setAddress();
+		bpmHeader.setApprovalDiscount(order.getApprovedDiscount());
+		bpmHeader.setB2c("0");
+		List<BaseItem> l = order.getItems();
+		for (BaseItem baseItem : l) {
+			String c = baseItem.getB2cComments();
+			if (c != null && c.trim().length() > 0) {
+				bpmHeader.setB2c("1");
+				break;
+			}
+		}
+		bpmHeader.setBodyDiscount(order.getBodyDiscount());
+		bpmHeader.setComments(order.getComments());
+		bpmHeader.setContractAmount(order.getContractValue());
+		bpmHeader.setContractNumber(order.getContractNumber());
+		bpmHeader.setContractRmbAmount(order.getContractRMBValue());
+		bpmHeader.setCreateTime(order.getCreateTime());
+		bpmHeader.setCurrencyName(order.getCurrencyName());
+		bpmHeader.setCustomerName(order.getCustomerName());
+		bpmHeader.setDealer(order.getOrderType().equals(AbsOrder.ORDER_TYPE_CODE_DEALER) ? "1" : "0");
+		if (order instanceof DealerOrder) {
+			bpmHeader.setDiscount(((DealerOrder)order).getDiscount());
+		}
+		bpmHeader.setEarliestDeliveryDate(order.getEarliestDeliveryDate());
+		// TODO 
+//		bpmHeader.setElectricalFee(0);
+		bpmHeader.setExchange(order.getCurrencyExchange());
+//		bpmHeader.setInstallFee();
+//		bpmHeader.setMaintenanceFee();
+		bpmHeader.setMargin(sumMargin.getGrossProfitMargin());
+//		bpmHeader.setMaterialFee();
+//		bpmHeader.setMaterialGroupNames();
+		bpmHeader.setMergeDiscount(bpmHeader.getDiscount());
+		bpmHeader.setOrderType(order.getOrderType());
+		if (order.getPayments() != null && order.getPayments().size() > 0) {
+			bpmHeader.setPaymentTypeName(order.getPayments().get(0).getTermName());
+		}
+		bpmHeader.setReceiveTypeName(order.getConfirmTypeName());
+//		bpmHeader.setRefrigeratoryFee();
+		bpmHeader.setSalesCode(order.getSalesCode());
+		bpmHeader.setSalesTel(order.getSalesTelnumber());
+		bpmHeader.setSaleType(order.getSaleType());
+		bpmHeader.setSapOffice(order.getOfficeName());
+		bpmHeader.setSequenceNumber(order.getSequenceNumber());
+		bpmHeader.setShopName(order.getCustomerName());
+		bpmHeader.setSpecialDiscount(bpmHeader.getDiscount() == 0.48 ? "1" : "0");
+		bpmHeader.setStatus(order.getCurrentVersionStatus());
+		bpmHeader.setTaxRate(order.getTaxRate());
+		bpmHeader.setUnitDiscount(order.getMainDiscount());
+		bpmHeader.setWtwMargin(sumMargin.getWtwGrossProfitMargin());
+		
+		// set bpm order item
+		for (BaseItem baseItem : items) {
+			OrderItem bpmItem = new OrderItem();
+			bpmItems.add(bpmItem);
+			
+			bpmItem.setActuralAmount(baseItem.getActuralPrice() * baseItem.getQuantity());
+			bpmItem.setActuralAmountOfOptional(baseItem.getActuralPricaOfOptional() * baseItem.getQuantity());
+			bpmItem.setActuralPrice(baseItem.getActuralPrice());
+			bpmItem.setActuralPriceOfOptional(baseItem.getActuralPricaOfOptional());
+//			bpmItem.setAddress(baseItem.geta);
+			bpmItem.setB2cAmountEstimated(baseItem.getB2CPriceEstimated() * baseItem.getQuantity());
+			bpmItem.setB2cComments(baseItem.getB2cComments());
+			bpmItem.setB2cCostOfEstimated(baseItem.getB2CCostOfEstimated());
+			bpmItem.setB2cPriceEstimated(baseItem.getB2CPriceEstimated());
+			bpmItem.setColorComments(baseItem.getColorComments());
+			bpmItem.setDeliveryDate(baseItem.getDeliveryDate());
+			bpmItem.setDiscount(baseItem.getDiscount());
+			bpmItem.setItemCategoryName(baseItem.getItemCategory());
+			bpmItem.setItemRequirementPlanName(baseItem.getItemRequirementPlan());
+			bpmItem.setMaterialCode(baseItem.getMaterialCode());
+//			bpmItem.setMaterialAttribute();
+			bpmItem.setMaterialGroupName(baseItem.getGroupName());
+			bpmItem.setMaterialName(baseItem.getMaterialName());
+			bpmItem.setMeasureUnitName(baseItem.getMaterialName());
+			bpmItem.setOnStoreDate(baseItem.getOnStoreDate());
+			bpmItem.setPeriod(baseItem.getPeriod());
+			bpmItem.setProduceDate(baseItem.getProduceDate());
+			bpmItem.setQuantity(baseItem.getQuantity());
+			bpmItem.setRetailAmount(baseItem.getRetailPrice() * baseItem.getQuantity());
+			bpmItem.setRetailPrice(baseItem.getRetailPrice());
+			bpmItem.setRowNumber(baseItem.getRowNumber());
+			bpmItem.setShippDate(baseItem.getShippDate());
+			bpmItem.setSpecialComments(baseItem.getSpecialComments());
+			bpmItem.setTranscationPriceOfOptional(baseItem.getTranscationPriceOfOptional());
+			bpmItem.setTransfterPrice(baseItem.getTranscationPrice());
+		}
+		
+		// set bpm order margins and wtw margins
+		for (DMaterialGroups grossProfitMargin : grossProfitMargins) {
+			OrderMargin margin = new OrderMargin();
+			OrderMargin wtwMargin = new OrderMargin();
+			
+			bpmMargins.add(margin);
+			bpmWtwMargins.add(wtwMargin);
+			
+			margin.setAmount(grossProfitMargin.getAmount());
+			margin.setCode(grossProfitMargin.getCode());
+			margin.setName(grossProfitMargin.getName());
+			margin.setCost(grossProfitMargin.getCost());
+			margin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
+			margin.setGrossProfit(grossProfitMargin.getGrossProfit());
+			margin.setMargin(grossProfitMargin.getGrossProfitMargin());
+			margin.setStatus("1");
+			// 最后修改人和修改时间
+//			margin.setUpdateBy(order.get);
+//			margin.setUpdateTime(updateTime);
+			
+
+			
+			wtwMargin.setAmount(grossProfitMargin.getAmount());
+			wtwMargin.setCode(grossProfitMargin.getCode());
+			wtwMargin.setName(grossProfitMargin.getName());
+			wtwMargin.setCost(grossProfitMargin.getWtwCost());
+			wtwMargin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
+			wtwMargin.setGrossProfit(grossProfitMargin.getWtwGrossProfit());
+			wtwMargin.setMargin(grossProfitMargin.getWtwGrossProfitMargin());
+			wtwMargin.setStatus("1");
+			// 最后修改人和修改时间
+//			wtwMargin.setUpdateBy(order.get);
+//			wtwMargin.setUpdateTime(updateTime);
+		}
+		
+		// TODO Call the bpm interface to start the order approval process 
 	}
 
 	private boolean isEmpty(String v) {

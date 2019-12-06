@@ -1,5 +1,7 @@
 package com.qhc.frye.rest.controller.entity.bpm;
 
+import java.math.BigDecimal;
+
 public class OrderMargin {
 	/* 状态 */
 	private String status;
@@ -10,15 +12,15 @@ public class OrderMargin {
 	/* 名称 */
 	private String name;
 	/* 金额 */
-	private String amount;
+	private BigDecimal amount;
 	/* 成本 */
-	private String cost;
+	private BigDecimal cost;
 	/* 毛利 */
-	private String grossProfit;
+	private BigDecimal grossProfit;
 	/* 不含税金额 */
-	private String excludingTaxAmount;
+	private BigDecimal excludingTaxAmount;
 	/* 毛利率 */
-	private String margin;
+	private Double margin;
 	/* 序号 */
 	private String code;
 
@@ -54,43 +56,43 @@ public class OrderMargin {
 		this.name = name;
 	}
 
-	public String getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public String getCost() {
+	public BigDecimal getCost() {
 		return cost;
 	}
 
-	public void setCost(String cost) {
+	public void setCost(BigDecimal cost) {
 		this.cost = cost;
 	}
 
-	public String getGrossProfit() {
+	public BigDecimal getGrossProfit() {
 		return grossProfit;
 	}
 
-	public void setGrossProfit(String grossProfit) {
+	public void setGrossProfit(BigDecimal grossProfit) {
 		this.grossProfit = grossProfit;
 	}
 
-	public String getExcludingTaxAmount() {
+	public BigDecimal getExcludingTaxAmount() {
 		return excludingTaxAmount;
 	}
 
-	public void setExcludingTaxAmount(String excludingTaxAmount) {
+	public void setExcludingTaxAmount(BigDecimal excludingTaxAmount) {
 		this.excludingTaxAmount = excludingTaxAmount;
 	}
 
-	public String getMargin() {
+	public Double getMargin() {
 		return margin;
 	}
 
-	public void setMargin(String margin) {
+	public void setMargin(Double margin) {
 		this.margin = margin;
 	}
 

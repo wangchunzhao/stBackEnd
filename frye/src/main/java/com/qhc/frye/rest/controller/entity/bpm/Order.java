@@ -1,5 +1,7 @@
 package com.qhc.frye.rest.controller.entity.bpm;
 
+import java.util.Date;
+
 public class Order {
 	/* 客户经理域账号 */
 	private String salesCode;
@@ -10,7 +12,7 @@ public class Order {
 	/* 需求流水号 */
 	private String sequenceNumber;
 	/* 折扣 */
-	private String discount;
+	private double discount;
 	/* 签约单位 */
 	private String customerName;
 	/* 合同号 */
@@ -18,13 +20,13 @@ public class Order {
 	/* 店名 */
 	private String shopName;
 	/* 合同金额 */
-	private String contractRmbAmount;
+	private double contractRmbAmount;
 	/* 原币金额 */
-	private String contractAmount;
+	private double contractAmount;
 	/* 币种 */
 	private String currencyName;
 	/* 汇率 */
-	private String exchange;
+	private double exchange;
 	/* 提货方式 */
 	private String receiveTypeName;
 	/* 大区 */
@@ -34,17 +36,17 @@ public class Order {
 	/* 结算方式 */
 	private String paymentTypeName;
 	/* 税率 */
-	private String taxRate;
+	private double taxRate;
 	/* 柜体折扣 */
-	private String bodyDiscount;
+	private double bodyDiscount;
 	/* 机组折扣 */
-	private String unitDiscount;
+	private double unitDiscount;
 	/* 合并折扣 */
-	private String mergeDiscount;
+	private double mergeDiscount;
 	/* 批准折扣 */
-	private String approvalDiscount;
+	private double approvalDiscount;
 	/* 要求发货时间 */
-	private String earliestDeliveryDate;
+	private Date earliestDeliveryDate;
 	/* 是否经销商 */
 	private String dealer;
 	/* 是否特批折扣 */
@@ -52,25 +54,25 @@ public class Order {
 	/* 是否B2C */
 	private String b2c;
 	/* 订单创建时间 */
-	private String createTime;
+	private Date createTime;
 	/* 毛利率 */
-	private String margin;
+	private double margin;
 	/* WTW毛利率 */
-	private String wtwMargin;
+	private double wtwMargin;
 	/* 订单状态 */
 	private String status;
 	/* 备注 */
 	private String comments;
 	/* 安装费 */
-	private String installFee;
+	private double installFee;
 	/* 材料费 */
-	private String materialFee;
+	private double materialFee;
 	/* 电气费 */
-	private String electricalFee;
+	private double electricalFee;
 	/* 冷库费 */
-	private String refrigeratoryFee;
+	private double refrigeratoryFee;
 	/* 维保费 */
-	private String maintenanceFee;
+	private double maintenanceFee;
 	/* 地址 */
 	private String address;
 	/* 物料类型 */
@@ -108,11 +110,11 @@ public class Order {
 		this.sequenceNumber = sequenceNumber;
 	}
 
-	public String getDiscount() {
+	public double getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(String discount) {
+	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
 
@@ -140,19 +142,19 @@ public class Order {
 		this.shopName = shopName;
 	}
 
-	public String getContractRmbAmount() {
+	public double getContractRmbAmount() {
 		return contractRmbAmount;
 	}
 
-	public void setContractRmbAmount(String contractRmbAmount) {
+	public void setContractRmbAmount(double contractRmbAmount) {
 		this.contractRmbAmount = contractRmbAmount;
 	}
 
-	public String getContractAmount() {
+	public double getContractAmount() {
 		return contractAmount;
 	}
 
-	public void setContractAmount(String contractAmount) {
+	public void setContractAmount(double contractAmount) {
 		this.contractAmount = contractAmount;
 	}
 
@@ -164,11 +166,11 @@ public class Order {
 		this.currencyName = currencyName;
 	}
 
-	public String getExchange() {
+	public double getExchange() {
 		return exchange;
 	}
 
-	public void setExchange(String exchange) {
+	public void setExchange(double exchange) {
 		this.exchange = exchange;
 	}
 
@@ -204,51 +206,51 @@ public class Order {
 		this.paymentTypeName = paymentTypeName;
 	}
 
-	public String getTaxRate() {
+	public double getTaxRate() {
 		return taxRate;
 	}
 
-	public void setTaxRate(String taxRate) {
+	public void setTaxRate(double taxRate) {
 		this.taxRate = taxRate;
 	}
 
-	public String getBodyDiscount() {
+	public double getBodyDiscount() {
 		return bodyDiscount;
 	}
 
-	public void setBodyDiscount(String bodyDiscount) {
+	public void setBodyDiscount(double bodyDiscount) {
 		this.bodyDiscount = bodyDiscount;
 	}
 
-	public String getUnitDiscount() {
+	public double getUnitDiscount() {
 		return unitDiscount;
 	}
 
-	public void setUnitDiscount(String unitDiscount) {
+	public void setUnitDiscount(double unitDiscount) {
 		this.unitDiscount = unitDiscount;
 	}
 
-	public String getMergeDiscount() {
+	public double getMergeDiscount() {
 		return mergeDiscount;
 	}
 
-	public void setMergeDiscount(String mergeDiscount) {
+	public void setMergeDiscount(double mergeDiscount) {
 		this.mergeDiscount = mergeDiscount;
 	}
 
-	public String getApprovalDiscount() {
+	public double getApprovalDiscount() {
 		return approvalDiscount;
 	}
 
-	public void setApprovalDiscount(String approvalDiscount) {
+	public void setApprovalDiscount(double approvalDiscount) {
 		this.approvalDiscount = approvalDiscount;
 	}
 
-	public String getEarliestDeliveryDate() {
+	public Date getEarliestDeliveryDate() {
 		return earliestDeliveryDate;
 	}
 
-	public void setEarliestDeliveryDate(String earliestDeliveryDate) {
+	public void setEarliestDeliveryDate(Date earliestDeliveryDate) {
 		this.earliestDeliveryDate = earliestDeliveryDate;
 	}
 
@@ -276,27 +278,27 @@ public class Order {
 		this.b2c = b2c;
 	}
 
-	public String getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
-	public String getMargin() {
+	public double getMargin() {
 		return margin;
 	}
 
-	public void setMargin(String margin) {
+	public void setMargin(double margin) {
 		this.margin = margin;
 	}
 
-	public String getWtwMargin() {
+	public double getWtwMargin() {
 		return wtwMargin;
 	}
 
-	public void setWtwMargin(String wtwMargin) {
+	public void setWtwMargin(double wtwMargin) {
 		this.wtwMargin = wtwMargin;
 	}
 
@@ -316,43 +318,43 @@ public class Order {
 		this.comments = comments;
 	}
 
-	public String getInstallFee() {
+	public double getInstallFee() {
 		return installFee;
 	}
 
-	public void setInstallFee(String installFee) {
+	public void setInstallFee(double installFee) {
 		this.installFee = installFee;
 	}
 
-	public String getMaterialFee() {
+	public double getMaterialFee() {
 		return materialFee;
 	}
 
-	public void setMaterialFee(String materialFee) {
+	public void setMaterialFee(double materialFee) {
 		this.materialFee = materialFee;
 	}
 
-	public String getElectricalFee() {
+	public double getElectricalFee() {
 		return electricalFee;
 	}
 
-	public void setElectricalFee(String electricalFee) {
+	public void setElectricalFee(double electricalFee) {
 		this.electricalFee = electricalFee;
 	}
 
-	public String getRefrigeratoryFee() {
+	public double getRefrigeratoryFee() {
 		return refrigeratoryFee;
 	}
 
-	public void setRefrigeratoryFee(String refrigeratoryFee) {
+	public void setRefrigeratoryFee(double refrigeratoryFee) {
 		this.refrigeratoryFee = refrigeratoryFee;
 	}
 
-	public String getMaintenanceFee() {
+	public double getMaintenanceFee() {
 		return maintenanceFee;
 	}
 
-	public void setMaintenanceFee(String maintenanceFee) {
+	public void setMaintenanceFee(double maintenanceFee) {
 		this.maintenanceFee = maintenanceFee;
 	}
 
