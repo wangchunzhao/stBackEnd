@@ -25,16 +25,16 @@ public class BomExplosion {
 			boms.addAll(src);
 			//
 			for(Bom bom:boms) {
-				bom.setMarkedByDefault(true);
+				bom.setIsMarkedByDefault(1);
 			}
 			//
 			for(Bom tbom:targ){
-				if(tbom.isMarked()) {
+				if(tbom.getIsMarked()>0) {
 					int myindex = boms.indexOf(tbom);
 					Bom temp = boms.get(myindex);
-					temp.setMarkedByConfig(true);
+					temp.setIsMarkedByConfig(1);;
 					temp.setPrice(tbom.getPrice());
-					temp.setMarked(true);
+					temp.setIsMarked(1);;
 				}
 			}
 			this.calPriceGap();
@@ -44,7 +44,7 @@ public class BomExplosion {
 	}
 	private void calPriceGap() {
 		for(Bom bom:boms) {
-			if(bom.isMarkedByDefault()) {
+			if(bom.getIsMarkedByDefault()>0) {
 				Bom peer = getConfigPeerBom(bom);
 				
 				BigDecimal n = new BigDecimal(peer.getPrice());
@@ -66,7 +66,7 @@ public class BomExplosion {
 		if(parentCode!=null) {
 			for(Bom bo:boms) {
 				if(bo.getParentCode().equals(parentCode)) {
-					if(bo.isMarkedByConfig()) {
+					if(bo.getIsMarkedByConfig()>0) {
 						return bo;
 					}
 				}

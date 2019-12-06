@@ -20,13 +20,13 @@ public class Bom implements Serializable{
 	//
 	private String code;
 	private String parentCode;
-	private boolean isConfigurable;
+	private int isConfigurable;
 	private double price;
 	private double quantity;
-	private boolean isMarked;
+	private int isMarked;
 	//
-	private boolean isMarkedByDefault;
-	private boolean isMarkedByConfig;
+	private int isMarkedByDefault;
+	private int isMarkedByConfig;
 	
 	public String getCode() {
 		return code;
@@ -41,12 +41,7 @@ public class Bom implements Serializable{
 	public void setParentCode(String parentCode) {
 		this.parentCode = parentCode;
 	}
-	public boolean isConfigurable() {
-		return isConfigurable;
-	}
-	public void setConfigurable(boolean isConfigurable) {
-		this.isConfigurable = isConfigurable;
-	}
+
 	public double getPrice() {
 		return price;
 	}
@@ -59,11 +54,30 @@ public class Bom implements Serializable{
 	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
-	public boolean isMarked() {
+	
+	public int getIsConfigurable() {
+		return isConfigurable;
+	}
+	public void setIsConfigurable(int isConfigurable) {
+		this.isConfigurable = isConfigurable;
+	}
+	public int getIsMarked() {
 		return isMarked;
 	}
-	public void setMarked(boolean isMarked) {
+	public void setIsMarked(int isMarked) {
 		this.isMarked = isMarked;
+	}
+	public int getIsMarkedByDefault() {
+		return isMarkedByDefault;
+	}
+	public void setIsMarkedByDefault(int isMarkedByDefault) {
+		this.isMarkedByDefault = isMarkedByDefault;
+	}
+	public int getIsMarkedByConfig() {
+		return isMarkedByConfig;
+	}
+	public void setIsMarkedByConfig(int isMarkedByConfig) {
+		this.isMarkedByConfig = isMarkedByConfig;
 	}
 	@Override
 	public int hashCode() {
@@ -80,18 +94,6 @@ public class Bom implements Serializable{
 			}
 		}
 		return false;
-	}
-	public boolean isMarkedByDefault() {
-		return isMarkedByDefault;
-	}
-	public void setMarkedByDefault(boolean isMarkedByDefault) {
-		this.isMarkedByDefault = isMarkedByDefault;
-	}
-	public boolean isMarkedByConfig() {
-		return isMarkedByConfig;
-	}
-	public void setMarkedByConfig(boolean isMarkedByConfig) {
-		this.isMarkedByConfig = isMarkedByConfig;
 	}
 
 }
