@@ -337,15 +337,15 @@ public class OrderService {
 	 * @param detail
 	 * @param item
 	 */
-	private void saveCharater(AbsItem item,String detailId,boolean isCreate) throws Exception {
+	private void saveCharater(AbsItem item,String detailId) throws Exception {
 
 		if (item.getConfigs() == null) {
-			if(isCreate) {
-				// 数据库中的设置
-				List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
-				List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
-				kCharaRepo.saveAll(kcs);
-			}
+	
+			// 数据库中的设置
+			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
+			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
+			kCharaRepo.saveAll(kcs);
+			
 		} else {
 			//定制配置
 			List<BaseChracteristic> bas = item.getConfigs();
@@ -399,11 +399,8 @@ public class OrderService {
 
 			temp = itemDetailRepository.save(temp);
 			// 特征
-			boolean isCreate = false;
-			if(order.getSubmitType()==1)
-				isCreate = true;
 			if(item.isConfigurable())
-				this.saveCharater(item,temp.getId(),isCreate);
+				this.saveCharater(item,temp.getId());
 		}
 		//
 
