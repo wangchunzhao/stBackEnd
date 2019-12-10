@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -256,6 +257,28 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public String getDealerOrder(@RequestParam String sequenceNumber) throws Exception {	
     	return orderService.getOrderType(sequenceNumber);
+    }
+    
+    /**
+     * 订单BPM回调接口
+     * <li>sequenceNumber</li>
+     * <li>status</li>
+     * <li>bodyDiscount</li>
+     * <li>unitDiscount</li>
+     * 
+     * @return
+     */
+	@ApiOperation(value="查询订单类型", notes="查询订单类型")
+	@PutMapping(value = "order/callback")
+	@ResponseBody
+	public boolean bpmCallback(@RequestBody Map data) {
+		String status = String.valueOf(data.get("status"));
+		String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
+		Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
+		Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
+		
+		
+    	return true;
     }
 
 }
