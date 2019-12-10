@@ -340,10 +340,12 @@ public class OrderService {
 	private void saveCharater(AbsItem item,String detailId) throws Exception {
 
 		if (item.getConfigs() == null) {
+	
 			// 数据库中的设置
 			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
 			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
 			kCharaRepo.saveAll(kcs);
+			
 		} else {
 			//定制配置
 			List<BaseChracteristic> bas = item.getConfigs();

@@ -110,13 +110,6 @@ public class OrderController {
 		orderService.enginingCost(operator,isPro, seqnum, version, installation,materials,electrical,coolroom,maintanance);
 	}
 	
-	@ApiOperation(value = "BPM送审", notes = "BPM送审")
-	@PostMapping(value = "order/bpm")
-	@ResponseStatus(HttpStatus.OK)
-	public void toBPM() throws Exception{
-		
-	}
-
 	@ApiOperation(value = "查询订单类型", notes = "查询订单类型")
 	@GetMapping(value = "order/salesType")
 	@ResponseStatus(HttpStatus.OK)
