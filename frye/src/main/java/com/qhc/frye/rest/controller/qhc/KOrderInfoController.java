@@ -67,7 +67,7 @@ public class KOrderInfoController {
 	@ApiOperation(value=" Find  kOrderInfo by id", notes="Find  kOrderInfo by id")
 	@GetMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-	public KOrderInfo findPagingList(@PathVariable Integer orderId) throws Exception{
+	public KOrderInfo findPagingList(@PathVariable String orderId) throws Exception{
 		
         return kOrderInfoService.findById(orderId);
     }

@@ -112,7 +112,7 @@ public class KOrderInfoService {
 		return this.kOrderInfoRepository.findAll(specification, pageable);
 	}
 
-	public KOrderInfo findById(Integer orderId) {
+	public KOrderInfo findById(String orderId) {
 		return kOrderInfoRepository.getOne(orderId);
 	}
 	
