@@ -277,6 +277,7 @@ public class OrderController {
 		Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
 		Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
 		
+		this.orderService.updateBpmStatus(sequenceNumber, status, bodyDiscount, unitDiscount);
 		
     	return true;
     }

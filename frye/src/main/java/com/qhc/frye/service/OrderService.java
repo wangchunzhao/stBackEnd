@@ -1881,6 +1881,21 @@ public class OrderService {
 		
 		// TODO Call the bpm interface to start the order approval process 
 	}
+	
+	/**
+	 * 更新BPM审批状态和折扣 
+	 */
+	public void updateBpmStatus(String sequenceNumber, String status, Double bodyDiscount, Double unitDiscount) {
+		KOrderVersion version = this.orderVersionRepo.findLastVersion(sequenceNumber);
+		version.setStatus(status);
+		orderVersionRepo.save(version);
+		
+		String orderInfoId = version.getOrderInfoId();
+		KOrderInfo orderInfo = this.orderInfoRepo.findById(orderInfoId).get();
+		orderInfo.setBodyDiscount(bodyDiscount);
+		orderInfo.setMainDiscount(unitDiscount);
+		orderInfoRepo.save(orderInfo);		
+	}
 
 	private boolean isEmpty(String v) {
 		return v == null || v.trim().length() == 0;
