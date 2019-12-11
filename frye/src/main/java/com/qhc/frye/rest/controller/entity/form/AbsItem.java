@@ -64,8 +64,15 @@ public abstract class AbsItem {
 	private String requestCircult;
 	private String comments;
 	private String colorComments;
+	private String clazzCode;//物料分类代码
 	
 	
+	public String getClazzCode() {
+		return clazzCode;
+	}
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
+	}
 	public String getRequestBrand() {
 		return requestBrand;
 	}

@@ -971,6 +971,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `config_transfer_price` DECIMAL(13,2) NULL,
   `config_retail_price` DECIMAL(13,2) NULL,
   `is_configurable` TINYINT(1) NOT NULL COMMENT '是否是可配置物料',
+  `clazz_code` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) INVISIBLE,
@@ -1946,7 +1947,6 @@ INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('BOT',
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MON', 'MON');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q16', 'Q16');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q4', 'Q4');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q6', 'Q6');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ST', 'ST');
 
 COMMIT;

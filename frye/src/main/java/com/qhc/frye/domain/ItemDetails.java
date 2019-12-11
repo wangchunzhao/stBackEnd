@@ -157,8 +157,20 @@ public class ItemDetails implements Serializable{
 	@Column(name = "is_configurable",columnDefinition = "BIT",length=1)
 	private boolean isConfigurable;
 	
+	@NotNull
+	@Column(name = "clazz_code",columnDefinition = "char",length=45)
+	private String clazzCode;
 	
 	
+	
+	public String getClazzCode() {
+		return clazzCode;
+	}
+
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
+	}
+
 	public boolean isConfigurable() {
 		return isConfigurable;
 	}
