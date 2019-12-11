@@ -143,6 +143,7 @@ public class ContractController {
 		try {
 			Contract c = contractService.findOne(contractId);
 			c.setFileHashCode(hashcode);
+			c.setStatus(3);
 			contractService.save(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
