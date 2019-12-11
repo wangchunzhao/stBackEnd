@@ -344,6 +344,7 @@ public class OrderHelper {
 		temp.setComments(item.getComments());
 		temp.setColorComments(item.getColorComments());
 		temp.setConfigurable(item.isConfigurable());
+		temp.setClazzCode(item.getClazzCode());
 		//
 		temp.setkFormsId(formId);
 		return temp;
