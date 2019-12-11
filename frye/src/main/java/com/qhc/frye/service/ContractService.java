@@ -113,7 +113,10 @@ public class ContractService {
 		sql.append("contract.contractor_3_tel              as contractor3Tel,");
 		sql.append("contract.contract_status              as status,");
 		sql.append("contract.production_time              as productionTime,");
-		sql.append("contract.send_time              as sendTime" + " from k_orders as orders");
+		sql.append("contract.send_time              as sendTime, ");
+		sql.append("contract.file_hashcode              as fileHashCode, ");
+		sql.append("contract.sign_contractid              as signContractId ");
+		sql.append(" from k_orders as orders");
 		sql.append(" left join k_order_support_info as support on support.k_orders_id = orders.id");
 		sql.append(" left join k_order_version as version on version.k_orders_id = orders.id");
 		sql.append(" left join k_order_info as info on info.id = version.k_order_info_id");
@@ -233,9 +236,16 @@ public class ContractService {
 			if (fileHashCode == null || fileHashCode.isEmpty())
 				continue;
 
-			Optional<ContractSignSys> signed = signList.stream().filter(s -> fileHashCode.equals(s.getFileHashCode()))
-					.findFirst();
-			String signContractId = signed.isPresent() ? signed.get().getSignContractId() : null;
+			ContractSignSys theOne = null;
+			for (ContractSignSys one : signList) {
+				if (one.getFileHashCode().equalsIgnoreCase(fileHashCode)) {
+					if (theOne == null || theOne.getCreateDate().before(one.getCreateDate())) {
+						theOne = one;
+					}
+				}
+			}
+			String signContractId = theOne != null ? theOne.getSignContractId() : null;
+			
 			String state = "03";
 			if (signContractId != null) {
 				state = bestsignService.getContractStatus(signContractId, contract.getContractorName());

@@ -179,7 +179,8 @@ public class ContractController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = { "/refreshState" }, method = { RequestMethod.PUT })
+	@RequestMapping(value = { "refreshState" }, method = { RequestMethod.PUT })
+	@ResponseBody
 	public Result<?> refreshState() throws JsonProcessingException {
 		Result<?> r = null;
 		boolean flag = this.contractService.doRefreshContractState();
@@ -199,6 +200,7 @@ public class ContractController {
 	 * @throws JsonProcessingException
 	 */
 	@RequestMapping(value = { "{id}/sign" }, method = { RequestMethod.PUT })
+	@ResponseBody
 	public Result<?> signContract(@PathVariable("id") Integer contractId) throws JsonProcessingException {
 		Result<?> r = null;
 		boolean flag = this.contractService.doSignContract(contractId);
