@@ -355,6 +355,7 @@ public class OrderService {
 				kc.setKeyCode(bc.getConfigCode());
 				kc.setValueCode(bc.getConfigValueCode());
 				kc.setItemDetailsId(detailId);
+				kc.setIsConfigurable(1);
 				kcs.add(kc);
 			}
 			//
