@@ -946,6 +946,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
   `k_forms_id` CHAR(32) NOT NULL,
   `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
+  `measure_unit_name` TEXT NULL,
   `sale_amount` DECIMAL(13,2) NULL COMMENT '产品实卖金额',
   `transfter_price` DECIMAL(13,2) NULL COMMENT '产品转移价',
   `standard_price` DECIMAL(13,2) NULL COMMENT '移动平均价，即成本价格',
