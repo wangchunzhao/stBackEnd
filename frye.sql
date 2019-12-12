@@ -1158,7 +1158,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key_code` VARCHAR(45) NOT NULL COMMENT '选定的特征代码',
   `value_code` VARCHAR(45) NOT NULL COMMENT '选定的特征值的代码',
-  `is_configurable` TINYINT(1) NOT NULL,
+  `is_configurable` TINYINT(1) NULL COMMENT '废弃字段，由于多处有代码使用，所以未删除',
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
