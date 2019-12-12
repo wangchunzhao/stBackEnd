@@ -94,9 +94,10 @@ public class OrderController {
 	@ResponseStatus(HttpStatus.OK)
 	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestBody List<B2CComments> b2cs) throws Exception{
 		boolean isPro = false;
+		String operator = "b2c";
 		if(isApproved!=0)
 			isPro = true;
-		orderService.b2cCost(isPro, seqnum, version, b2cs);
+		orderService.b2cCost(isPro, seqnum, version, operator,b2cs);
 	}
 	
 	

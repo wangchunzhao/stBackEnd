@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author wang@dxc.com
@@ -24,15 +25,19 @@ public class B2CCost {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull
 	@Column(name="cost", columnDefinition="DECIMAL")
     private double cost;
 	
+	@NotNull
 	@Column(name="opt_time", columnDefinition="Date")
 	private Date optTime;
 	
+	@NotNull
 	@Column(name="k_item_details_id", columnDefinition="CHAR")
 	private String itemId;
 	
+	@NotNull
 	@Column(name="operator", columnDefinition="CHAR")
 	private String operator;
 	
@@ -59,6 +64,12 @@ public class B2CCost {
 	}
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
+	}
+	public String getOperator() {
+		return operator;
+	}
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 	
 	

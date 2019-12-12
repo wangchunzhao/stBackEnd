@@ -1700,16 +1700,20 @@ public class OrderService {
 	 * @param version
 	 * @param b2cs
 	 */
-	public void b2cCost(boolean isApproved, String seqnum, String version, List<B2CComments> b2cs) {
+	public void b2cCost(boolean isApproved, String seqnum, String version, String operator,List<B2CComments> b2cs) {
 
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
 		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
 		String status = ov.getStatus();
-
+		String orderStatus = status.substring(0, 2);
+		char lastchar = status.charAt(3); 
+		String turnkeyStatus = String.valueOf(lastchar);
+		
 		if (isApproved) {
-			ov.setStatus(status.substring(0, 2) + "02" + status.substring(3, -1));
+			
+			ov.setStatus(orderStatus + "2" + turnkeyStatus);
 		} else {
-			ov.setStatus(status.substring(0, 2) + "00" + status.substring(3, -1));
+			ov.setStatus(orderStatus + "0" + turnkeyStatus);
 		}
 		//
 		for (ItemDetails item : items) {
@@ -1722,10 +1726,12 @@ public class OrderService {
 					cost.setItemId(item.getId());
 					cost.setOptTime(new Date());
 					cost.setCost(b2.getCost());
+					cost.setOperator(operator);
 
 					b2cRepo.save(cost);
-					item.getB2cComments().equals(b2.getB2cComments());
-					itemDetailRepository.save(item);
+					if(!item.getB2cComments().equals(b2.getB2cComments())) {
+						itemDetailRepository.save(item);
+					}
 				}
 			}
 		}
