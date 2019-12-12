@@ -92,9 +92,8 @@ public class OrderController {
 	@ApiOperation(value = "B2c审核订单", notes = "B2c审核订单")
 	@PostMapping(value = "order/b2c")
 	@ResponseStatus(HttpStatus.OK)
-	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestBody List<B2CComments> b2cs) throws Exception{
+	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam String operator,@RequestBody List<B2CComments> b2cs) throws Exception{
 		boolean isPro = false;
-		String operator = "b2c";
 		if(isApproved!=0)
 			isPro = true;
 		orderService.b2cCost(isPro, seqnum, version, operator,b2cs);
