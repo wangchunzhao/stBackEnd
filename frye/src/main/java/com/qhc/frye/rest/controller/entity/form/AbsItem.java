@@ -33,6 +33,7 @@ public abstract class AbsItem {
 	private double standardPrice;//标准价格
 	private double discount;//折扣
 	private int period;//生产、采购周期
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date deliveryDate;//最早交货时间
@@ -66,7 +67,45 @@ public abstract class AbsItem {
 	private String colorComments;
 	private String clazzCode;//物料分类代码
 	
+	private String proviceCode;
+	private String proviceName;
+	private String cityCode;
+	private String cityName;
+	private String address;
 	
+	
+	
+	
+	public String getProviceCode() {
+		return proviceCode;
+	}
+	public void setProviceCode(String proviceCode) {
+		this.proviceCode = proviceCode;
+	}
+	public String getProviceName() {
+		return proviceName;
+	}
+	public void setProviceName(String proviceName) {
+		this.proviceName = proviceName;
+	}
+	public String getCityCode() {
+		return cityCode;
+	}
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	public String getClazzCode() {
 		return clazzCode;
 	}

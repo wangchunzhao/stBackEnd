@@ -346,6 +346,12 @@ public class OrderHelper {
 		temp.setColorComments(item.getColorComments());
 		temp.setConfigurable(item.isConfigurable());
 		temp.setClazzCode(item.getClazzCode());
+		//address
+		temp.setProvienceCode(item.getProviceCode());
+		temp.setProvienceName(item.getProviceName());
+		temp.setCityCode(item.getCityCode());
+		temp.setCityName(item.getCityName());
+		temp.setAddress(item.getAddress());
 		//
 		temp.setkFormsId(formId);
 		return temp;

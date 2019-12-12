@@ -164,7 +164,20 @@ public class ItemDetails implements Serializable{
 	@Column(name = "clazz_code",columnDefinition = "char",length=45)
 	private String clazzCode;
 	
+	@Column(name = "delivery_provience_code",columnDefinition = "char",length=45)
+	private String provienceCode;
 	
+	@Column(name = "delivery_provience_name",columnDefinition = "char",length=45)
+	private String provienceName;
+	
+	@Column(name = "delivery_city_code",columnDefinition = "char",length=45)
+	private String cityCode;
+	
+	@Column(name = "delivery_city_name",columnDefinition = "char",length=45)
+	private String cityName;
+	
+	@Column(name = "delivery_address",columnDefinition = "text")
+	private String address;
 	
 	public String getMeasureUnitName() {
 		return measureUnitName;
@@ -172,6 +185,47 @@ public class ItemDetails implements Serializable{
 
 	public void setMeasureUnitName(String measureUnitName) {
 		this.measureUnitName = measureUnitName;
+	}
+
+	
+	public String getProvienceCode() {
+		return provienceCode;
+	}
+
+	public void setProvienceCode(String provienceCode) {
+		this.provienceCode = provienceCode;
+	}
+
+	public String getProvienceName() {
+		return provienceName;
+	}
+
+	public void setProvienceName(String provienceName) {
+		this.provienceName = provienceName;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getClazzCode() {
