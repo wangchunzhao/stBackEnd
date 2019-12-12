@@ -318,6 +318,7 @@ public class OrderHelper {
 		temp.setMaterialAttribute(item.isPurchased());
 		temp.setQuantity(item.getQuantity());
 		temp.setMeasureUnitCode(item.getUnitCode());
+		temp.setMeasureUnitName(item.getUnitName());
 		temp.setAmount(new BigDecimal(item.getRetailPrice() * item.getQuantity()));
 		temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
 		temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));

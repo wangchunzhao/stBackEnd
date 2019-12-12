@@ -69,6 +69,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "measure_unit_code",columnDefinition="char",length=3)
 	private String measureUnitCode;
 	
+	@Column(name = "measure_unit_name",columnDefinition="text")
+	private String measureUnitName;
+	
 	//@NotNull
 	@Column(name = "special_need",columnDefinition = "TEXT")
 	private String specialNeed;
@@ -163,6 +166,14 @@ public class ItemDetails implements Serializable{
 	
 	
 	
+	public String getMeasureUnitName() {
+		return measureUnitName;
+	}
+
+	public void setMeasureUnitName(String measureUnitName) {
+		this.measureUnitName = measureUnitName;
+	}
+
 	public String getClazzCode() {
 		return clazzCode;
 	}
