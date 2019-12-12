@@ -133,6 +133,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "delievery_date")
 	private Date delieveryDate;
 	
+	@Column(name = "ship_date")
+	private Date shipDate;
+	
 	@Column(name = "mosaic_image",columnDefinition = "TEXT")
 	private String mosaicImage;
 	
@@ -179,6 +182,16 @@ public class ItemDetails implements Serializable{
 	@Column(name = "delivery_address",columnDefinition = "text")
 	private String address;
 	
+	
+	
+	public Date getShipDate() {
+		return shipDate;
+	}
+
+	public void setShipDate(Date shipDate) {
+		this.shipDate = shipDate;
+	}
+
 	public String getMeasureUnitName() {
 		return measureUnitName;
 	}

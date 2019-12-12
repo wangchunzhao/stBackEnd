@@ -334,7 +334,7 @@ public class OrderHelper {
 		temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
 		temp.setFreight(new BigDecimal(item.getFeight()));
 		temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
-		temp.setDelieveryDate(item.getDeliveryDate());
+		temp.setShipDate(item.getShippDate());
 		temp.setSpecialNeed(item.getSpecialComments());
 		temp.setMosaicImage(item.getMosaicImage());
 		temp.setAttachedImage(item.getAttachedImage());
