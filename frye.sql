@@ -1956,6 +1956,7 @@ INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MON',
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q16', 'Q16');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q4', 'Q4');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ST', 'ST');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MT', 'MT');
 
 COMMIT;
 
