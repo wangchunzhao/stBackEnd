@@ -292,6 +292,10 @@ public class OrderHelper {
 			case 5:
 				orderStatus = "02";
 				temp.setBpmSubmitDate(order.getOptTime());
+				break;
+			case 7:
+				orderStatus = "10";
+				break;
 			default:
 				temp.setStatus("00");
 				break;
