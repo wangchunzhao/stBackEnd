@@ -69,6 +69,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "measure_unit_code",columnDefinition="char",length=3)
 	private String measureUnitCode;
 	
+	@Column(name = "measure_unit_name",columnDefinition="text")
+	private String measureUnitName;
+	
 	//@NotNull
 	@Column(name = "special_need",columnDefinition = "TEXT")
 	private String specialNeed;
@@ -130,6 +133,9 @@ public class ItemDetails implements Serializable{
 	@Column(name = "delievery_date")
 	private Date delieveryDate;
 	
+	@Column(name = "ship_date")
+	private Date shipDate;
+	
 	@Column(name = "mosaic_image",columnDefinition = "TEXT")
 	private String mosaicImage;
 	
@@ -157,8 +163,92 @@ public class ItemDetails implements Serializable{
 	@Column(name = "is_configurable",columnDefinition = "BIT",length=1)
 	private boolean isConfigurable;
 	
+	@NotNull
+	@Column(name = "clazz_code",columnDefinition = "char",length=45)
+	private String clazzCode;
+	
+	@Column(name = "delivery_provience_code",columnDefinition = "char",length=45)
+	private String provienceCode;
+	
+	@Column(name = "delivery_provience_name",columnDefinition = "char",length=45)
+	private String provienceName;
+	
+	@Column(name = "delivery_city_code",columnDefinition = "char",length=45)
+	private String cityCode;
+	
+	@Column(name = "delivery_city_name",columnDefinition = "char",length=45)
+	private String cityName;
+	
+	@Column(name = "delivery_address",columnDefinition = "text")
+	private String address;
 	
 	
+	
+	public Date getShipDate() {
+		return shipDate;
+	}
+
+	public void setShipDate(Date shipDate) {
+		this.shipDate = shipDate;
+	}
+
+	public String getMeasureUnitName() {
+		return measureUnitName;
+	}
+
+	public void setMeasureUnitName(String measureUnitName) {
+		this.measureUnitName = measureUnitName;
+	}
+
+	
+	public String getProvienceCode() {
+		return provienceCode;
+	}
+
+	public void setProvienceCode(String provienceCode) {
+		this.provienceCode = provienceCode;
+	}
+
+	public String getProvienceName() {
+		return provienceName;
+	}
+
+	public void setProvienceName(String provienceName) {
+		this.provienceName = provienceName;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getClazzCode() {
+		return clazzCode;
+	}
+
+	public void setClazzCode(String clazzCode) {
+		this.clazzCode = clazzCode;
+	}
+
 	public boolean isConfigurable() {
 		return isConfigurable;
 	}

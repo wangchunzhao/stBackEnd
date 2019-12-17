@@ -340,10 +340,12 @@ public class OrderService {
 	private void saveCharater(AbsItem item,String detailId) throws Exception {
 
 		if (item.getConfigs() == null) {
+	
 			// 数据库中的设置
 			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
 			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
 			kCharaRepo.saveAll(kcs);
+			
 		} else {
 			//定制配置
 			List<BaseChracteristic> bas = item.getConfigs();
@@ -353,6 +355,7 @@ public class OrderService {
 				kc.setKeyCode(bc.getConfigCode());
 				kc.setValueCode(bc.getConfigValueCode());
 				kc.setItemDetailsId(detailId);
+				kc.setIsConfigurable(1);
 				kcs.add(kc);
 			}
 			//
@@ -440,164 +443,6 @@ public class OrderService {
 		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(orderInforId);
 		biddingPlanRepository.saveAll(bidding);
 		// attachment
-
-	}
-
-	private void submitOrder2(final AbsOrder order) throws Exception {
-
-//		String seq = order.getSequenceNumber();
-//
-//		OrderHelper ohelper = new OrderHelper(order);
-//		DOrder dorder = ohelper.toDOrder();
-//		DOrder forder = dOrderRepository.findBySequence(order.getSequenceNumber());
-//		if (forder != null) {
-//			dorder.setId(forder.getId());
-//		}
-//		//save order header
-//		dorder = dOrderRepository.saveAndFlush(dorder);
-//
-//		//for support manager
-////		if (fromSupportor) {
-////			OrderSupportInfo supportInfo = ohelper.toSupportInforOfOrder();
-////			OrderSupportInfo osi = supportRepo.findByOrderId(dorder.getId());
-////			if (osi.getId() != 0) {
-////				supportInfo.setId(osi.getId());
-////			}
-////			supportRepo.save(supportInfo);
-////		}
-//		String orderId = this.saveOrder(order,ohelper);
-//		//
-//		boolean b2cFlag = false;
-//		//
-//		KOrderInfo kOrderInfo = ohelper.toOrderInfo();
-//
-//		//String orderId = null;
-//		KOrderVersion lversion = orderVersionRepo.findLastOneByOrderId(orderId);
-//		if (lversion != null) {
-//			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-//			//order form
-//			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-//			ItemsForm oldForm = formRepo.findOneByHeaderId(kOrderInfo.getId());
-//			//new form
-//			if(oldForm==null) {
-//				form = formRepo.save(form);
-//				String formId = form.getId();
-//				//detail
-//				for (AbsItem item : order.getItems()) {
-//					//
-//					ItemDetails temp = OrderHelper.itemConversion(item, formId);
-//					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-//						b2cFlag = true;
-//					}
-//					
-//					temp = itemDetailRepository.save(temp);
-//					if(item.getConfigs()!=null) {
-//						for (AbsCharacteristic ac : item.getConfigs()) {
-//							KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-//							cha.setItemDetailsId(temp.getId());
-//							characteristicsRepository.save(cha);
-//						}
-//					}else {
-//						saveCharacter(item.getMaterialCode(),temp.getId());
-//						
-//					}
-//				}
-//					
-//			}else {
-//				form.setId(oldForm.getId());
-//				form = formRepo.save(form);
-//				List<ItemDetails> oldItems = itemDetailRepository.findByKFormsId(form.getId());
-//				List<BaseItem> newItems = order.getItems();
-//				//
-//				Set<KCharacteristics> characters = new HashSet<KCharacteristics>();
-//				for(AbsItem item:newItems) {
-//					
-//					ItemDetails temp = OrderHelper.itemConversion(item, form.getId());
-//					if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-//						b2cFlag = true;
-//					}
-//					for(ItemDetails old:oldItems) {
-//						if(old.getRowNumber()==temp.getRowNumber()) {
-//							temp.setId(old.getId());
-//							break;
-//						}
-//					}
-//
-//					temp = itemDetailRepository.save(temp);					
-//				}				
-//			}
-//			// 订单原版本保存
-//			KOrderVersion v = ohelper.keepOrderVersion(lversion,b2cFlag,false);
-//			v = orderVersionRepo.save(v);
-//		} else {
-//			
-//			kOrderInfo = orderInfoRepo.save(kOrderInfo);
-//			
-//			// form
-//			ItemsForm form = ohelper.toForm(kOrderInfo.getId());
-//			form = formRepo.save(form);
-//			
-//			String formId = form.getId();
-//			//detail
-//			for (AbsItem item : order.getItems()) {
-//				//
-//				ItemDetails temp = OrderHelper.itemConversion(item, formId);
-//				if(temp.getB2cComments()!=null && temp.getB2cComments().trim().length()>0) {
-//					b2cFlag = true;
-//				}
-//				temp = itemDetailRepository.save(temp);
-//				if(item.getConfigs()!=null) {
-//					for (AbsCharacteristic ac : item.getConfigs()) {
-//						KCharacteristics cha = OrderHelper.CharacteristicConversion(ac);
-//						cha.setItemDetailsId(temp.getId());
-//						characteristicsRepository.save(cha);
-//					}
-//				}else {
-//					saveCharacter(item.getMaterialCode(),temp.getId());
-//				}
-//				//attachment
-//
-//			}
-//		}
-//		// 新订单版本版本
-//		lversion = ohelper.toOrderVersion(b2cFlag,false);
-//		lversion.setOrderId(orderId);
-//		lversion.setOrderInfoId(kOrderInfo.getId());
-//		if(lversion.getCreateTime()==null)
-//			lversion.setCreateTime(new Date());
-//		// 订单版本保存
-//		orderVersionRepo.save(lversion);
-//		
-//		// 订单地址
-//		List<KDelieveryAddress> adds = ohelper.toAddress(kOrderInfo.getId());
-//		deliveryAddressRepository.saveAll(adds);
-//		// bidding plan
-//		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(kOrderInfo.getId());
-//		biddingPlanRepository.saveAll(bidding);
-//		// attachment
-
-	}
-	/**
-	 * 
-	 * @param absOrder
-	 */
-//	public void submit(AbsOrder order) {
-//
-//		DOrder sDorder = dOrderRepository.saveAndFlush(order.getDorder());
-//		OrderSupportInfo ori = order.getSupportInforOfOrder();
-//		if (!order.getContractNumber().trim().isEmpty())
-//			ori.setOrderId(sDorder.getId());
-//		supportRepo.saveAndFlush(ori);
-//		KOrderVersion over = order.getOrderVersion();
-//		over.setOrderId(sDorder.getId());
-//		KOrderVersion kov = versionRepo.saveAndFlush(over);
-//	}
-
-	/**
-	 * 
-	 * @param absOrder
-	 */
-	public void update(AbsOrder absOrder) {
 
 	}
 
@@ -1698,16 +1543,20 @@ public class OrderService {
 	 * @param version
 	 * @param b2cs
 	 */
-	public void b2cCost(boolean isApproved, String seqnum, String version, List<B2CComments> b2cs) {
+	public void b2cCost(boolean isApproved, String seqnum, String version, String operator,List<B2CComments> b2cs) {
 
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
 		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
 		String status = ov.getStatus();
-
+		String orderStatus = status.substring(0, 2);
+		char lastchar = status.charAt(3); 
+		String turnkeyStatus = String.valueOf(lastchar);
+		
 		if (isApproved) {
-			ov.setStatus(status.substring(0, 2) + "02" + status.substring(3, -1));
+			
+			ov.setStatus(orderStatus + "2" + turnkeyStatus);
 		} else {
-			ov.setStatus(status.substring(0, 2) + "00" + status.substring(3, -1));
+			ov.setStatus(orderStatus + "0" + turnkeyStatus);
 		}
 		//
 		for (ItemDetails item : items) {
@@ -1720,10 +1569,12 @@ public class OrderService {
 					cost.setItemId(item.getId());
 					cost.setOptTime(new Date());
 					cost.setCost(b2.getCost());
+					cost.setOperator(operator);
 
 					b2cRepo.save(cost);
-					item.getB2cComments().equals(b2.getB2cComments());
-					itemDetailRepository.save(item);
+					if(!item.getB2cComments().equals(b2.getB2cComments())) {
+						itemDetailRepository.save(item);
+					}
 				}
 			}
 		}
@@ -1880,6 +1731,21 @@ public class OrderService {
 		}
 		
 		// TODO Call the bpm interface to start the order approval process 
+	}
+	
+	/**
+	 * 更新BPM审批状态和折扣 
+	 */
+	public void updateBpmStatus(String sequenceNumber, String status, Double bodyDiscount, Double unitDiscount) {
+		KOrderVersion version = this.orderVersionRepo.findLastVersion(sequenceNumber);
+		version.setStatus(status);
+		orderVersionRepo.save(version);
+		
+		String orderInfoId = version.getOrderInfoId();
+		KOrderInfo orderInfo = this.orderInfoRepo.findById(orderInfoId).get();
+		orderInfo.setBodyDiscount(bodyDiscount);
+		orderInfo.setMainDiscount(unitDiscount);
+		orderInfoRepo.save(orderInfo);		
 	}
 
 	private boolean isEmpty(String v) {

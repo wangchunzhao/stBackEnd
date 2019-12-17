@@ -318,6 +318,7 @@ public class OrderHelper {
 		temp.setMaterialAttribute(item.isPurchased());
 		temp.setQuantity(item.getQuantity());
 		temp.setMeasureUnitCode(item.getUnitCode());
+		temp.setMeasureUnitName(item.getUnitName());
 		temp.setAmount(new BigDecimal(item.getRetailPrice() * item.getQuantity()));
 		temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
 		temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
@@ -333,7 +334,7 @@ public class OrderHelper {
 		temp.setVolumeCube(new BigDecimal(item.getVolumeCube()));
 		temp.setFreight(new BigDecimal(item.getFeight()));
 		temp.setRetailPrice(new BigDecimal(item.getRetailPrice()));
-		temp.setDelieveryDate(item.getDeliveryDate());
+		temp.setShipDate(item.getShippDate());
 		temp.setSpecialNeed(item.getSpecialComments());
 		temp.setMosaicImage(item.getMosaicImage());
 		temp.setAttachedImage(item.getAttachedImage());
@@ -344,6 +345,13 @@ public class OrderHelper {
 		temp.setComments(item.getComments());
 		temp.setColorComments(item.getColorComments());
 		temp.setConfigurable(item.isConfigurable());
+		temp.setClazzCode(item.getClazzCode());
+		//address
+		temp.setProvienceCode(item.getProviceCode());
+		temp.setProvienceName(item.getProviceName());
+		temp.setCityCode(item.getCityCode());
+		temp.setCityName(item.getCityName());
+		temp.setAddress(item.getAddress());
 		//
 		temp.setkFormsId(formId);
 		return temp;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -91,11 +92,11 @@ public class OrderController {
 	@ApiOperation(value = "B2c审核订单", notes = "B2c审核订单")
 	@PostMapping(value = "order/b2c")
 	@ResponseStatus(HttpStatus.OK)
-	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestBody List<B2CComments> b2cs) throws Exception{
+	public void approvedByB2C(@RequestParam int isApproved,@RequestParam String seqnum,@RequestParam String version,@RequestParam String operator,@RequestBody List<B2CComments> b2cs) throws Exception{
 		boolean isPro = false;
 		if(isApproved!=0)
 			isPro = true;
-		orderService.b2cCost(isPro, seqnum, version, b2cs);
+		orderService.b2cCost(isPro, seqnum, version, operator,b2cs);
 	}
 	
 	
@@ -109,13 +110,6 @@ public class OrderController {
 		orderService.enginingCost(operator,isPro, seqnum, version, installation,materials,electrical,coolroom,maintanance);
 	}
 	
-	@ApiOperation(value = "BPM送审", notes = "BPM送审")
-	@PostMapping(value = "order/bpm")
-	@ResponseStatus(HttpStatus.OK)
-	public void toBPM() throws Exception{
-		
-	}
-
 	@ApiOperation(value = "查询订单类型", notes = "查询订单类型")
 	@GetMapping(value = "order/salesType")
 	@ResponseStatus(HttpStatus.OK)
@@ -256,6 +250,29 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public String getDealerOrder(@RequestParam String sequenceNumber) throws Exception {	
     	return orderService.getOrderType(sequenceNumber);
+    }
+    
+    /**
+     * 订单BPM回调接口
+     * <li>sequenceNumber</li>
+     * <li>status</li>
+     * <li>bodyDiscount</li>
+     * <li>unitDiscount</li>
+     * 
+     * @return
+     */
+	@ApiOperation(value="查询订单类型", notes="查询订单类型")
+	@PutMapping(value = "order/callback")
+	@ResponseBody
+	public boolean bpmCallback(@RequestBody Map data) {
+		String status = String.valueOf(data.get("status"));
+		String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
+		Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
+		Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
+		
+		this.orderService.updateBpmStatus(sequenceNumber, status, bodyDiscount, unitDiscount);
+		
+    	return true;
     }
 
 }

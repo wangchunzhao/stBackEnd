@@ -18,7 +18,7 @@ public interface KCharacteristicsRepository extends JpaRepository<KCharacteristi
 	
 	List<KCharacteristics> findByItemDetailsId(String itemId);
 	
-	@Query(value = "delete from k_characteristics where k_item_detail_id=:itemDetailId", nativeQuery = true)
+	@Query(value = "delete from k_characteristics where k_item_details_id=:itemDetailId", nativeQuery = true)
 	@Modifying
 	@Transactional
 	void deleteInBatchByItemDetail(@Param(value="itemDetailId")String itemDetailId);

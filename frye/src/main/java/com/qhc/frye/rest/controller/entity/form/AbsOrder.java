@@ -39,6 +39,7 @@ public abstract class AbsOrder {
 	private String salesTelnumber;//客户经理电话 Customer manager Tel
 	private int isNew;//是否新客户 new customer
 	private int isReformed;//是否改造店
+	private String recordCode;//项目报备编号
 	/**
 	 * 合同详细信息 Contract details
 	 */
@@ -541,5 +542,12 @@ public abstract class AbsOrder {
 	public void setPayments(List<BiddingPayment> payments) {
 		this.payments = payments;
 	}
-		
+
+	public String getRecordCode() {
+		return recordCode;
+	}
+
+	public void setRecordCode(String recordCode) {
+		this.recordCode = recordCode;
+	}
 }

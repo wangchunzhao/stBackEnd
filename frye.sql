@@ -946,14 +946,14 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `item_requirement_plan` VARCHAR(45) NOT NULL COMMENT '需求计划',
   `k_forms_id` CHAR(32) NOT NULL,
   `measure_unit_code` VARCHAR(3) NULL COMMENT '物料销售单位代码',
+  `measure_unit_name` TEXT NULL,
   `sale_amount` DECIMAL(13,2) NULL COMMENT '产品实卖金额',
   `transfter_price` DECIMAL(13,2) NULL COMMENT '产品转移价',
   `standard_price` DECIMAL(13,2) NULL COMMENT '移动平均价，即成本价格',
   `b2c_estimation_amount` DECIMAL(13,2) NULL COMMENT 'bc2评估价成本',
   `b2c_estimation_cost` DECIMAL(13,2) NULL COMMENT 'bc2预估成本',
   `b2c_comments` TEXT NULL COMMENT 'B2C备注',
-  `discount` DOUBLE(3,3) NULL COMMENT '折扣',
-  `address` TEXT NULL COMMENT '运输目的地，格式为{省 code:名字,市code:名字，区code:名字,address:名字}',
+  `discount` DOUBLE(3,3) NOT NULL COMMENT '折扣',
   `volume_cube` DECIMAL(13,2) NULL COMMENT '体积',
   `freight` DECIMAL(13,2) NULL COMMENT '运费',
   `retail_price` DECIMAL(13,2) NULL COMMENT '零售价格',
@@ -971,6 +971,15 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_item_details` (
   `config_transfer_price` DECIMAL(13,2) NULL,
   `config_retail_price` DECIMAL(13,2) NULL,
   `is_configurable` TINYINT(1) NOT NULL COMMENT '是否是可配置物料',
+  `clazz_code` VARCHAR(45) NOT NULL,
+  `delivery_provience_code` VARCHAR(45) NULL,
+  `delivery_provience_name` VARCHAR(45) NULL,
+  `delivery_city_code` VARCHAR(45) NULL,
+  `delivery_city_name` VARCHAR(45) NULL,
+  `delivery_distict_code` VARCHAR(45) NULL,
+  `delivery_distict_name` VARCHAR(45) NULL,
+  `delivery_address` TEXT NULL,
+  `ship_date` DATE NULL COMMENT '要求发货日期',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_k_item_details_k_forms1_idx` (`k_forms_id` ASC) INVISIBLE,
@@ -1156,7 +1165,7 @@ CREATE TABLE IF NOT EXISTS `bohemian`.`k_characteristics` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key_code` VARCHAR(45) NOT NULL COMMENT '选定的特征代码',
   `value_code` VARCHAR(45) NOT NULL COMMENT '选定的特征值的代码',
-  `is_configurable` TINYINT(1) NOT NULL,
+  `is_configurable` TINYINT(1) NULL COMMENT '废弃字段，由于多处有代码使用，所以未删除',
   `k_item_details_id` CHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
@@ -1946,8 +1955,8 @@ INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('BOT',
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MON', 'MON');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q16', 'Q16');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q4', 'Q4');
-INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('Q6', 'Q6');
 INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('ST', 'ST');
+INSERT INTO `bohemian`.`sap_unit_of_measurement` (`code`, `name`) VALUES ('MT', 'MT');
 
 COMMIT;
 
