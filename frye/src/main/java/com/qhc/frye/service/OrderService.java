@@ -1733,6 +1733,8 @@ public class OrderService {
 		}
 		
 		// TODO Call the bpm interface to start the order approval process 
+		// TODO For test 直接改状态
+		updateBpmStatus(order.getSequenceNumber(), "1", order.getBodyDiscount(), order.getMainDiscount());
 	}
 	
 	/**
