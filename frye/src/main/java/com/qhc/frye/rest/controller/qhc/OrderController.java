@@ -83,6 +83,9 @@ public class OrderController {
 				// submit to bpm
 				orderService.sendToBpm(order);
 				break;
+			case 7:
+				orderService.save(order);
+				break;
 			default:
 				throw new Exception();
 		}
