@@ -1846,6 +1846,7 @@ INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('101
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1017', '下订单', '新建订单页面，点击下订单');
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1018', '下备货订单', NULL);
 INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1019', '运费导入', NULL);
+INSERT INTO `bohemian`.`b_operations` (`id`, `name`, `description`) VALUES ('1020', '下推订单到SAP              ', NULL);
 
 COMMIT;
 
