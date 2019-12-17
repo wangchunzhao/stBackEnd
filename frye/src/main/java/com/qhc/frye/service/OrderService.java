@@ -1738,6 +1738,15 @@ public class OrderService {
 	 */
 	public void updateBpmStatus(String sequenceNumber, String status, Double bodyDiscount, Double unitDiscount) {
 		KOrderVersion version = this.orderVersionRepo.findLastVersion(sequenceNumber);
+		if (status.equals("1")) {
+			// 审批通过
+			status = version.getStatus();
+			status = "03" + status.substring(2);
+		} else {
+			// 审批拒绝
+			status = version.getStatus();
+			status = "04" + status.substring(2);
+		}
 		version.setStatus(status);
 		orderVersionRepo.save(version);
 		
