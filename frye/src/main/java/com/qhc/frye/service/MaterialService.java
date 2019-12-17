@@ -224,15 +224,21 @@ public class MaterialService {
 	 * @return
 	 */
 	public BomExplosion findBOMWithPrice(Map<String,String> pars){
-		Map<String,List<Bom>> boms = (Map<String, List<Bom>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);	
+		Map<String,List<String>> boms = (Map<String, List<String>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);	
 		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
 			
 			BomExplosion be = new BomExplosion();
-			List<Bom> defaultBoms = boms.get(BOM_CONFIGURATION_DEFAULT);
+			List<String> defaultBomsStr = boms.get(BOM_CONFIGURATION_DEFAULT);
 			ObjectMapper mapper = new ObjectMapper(); 
-			//List<Bom> boms = mapper.convertValue(defaultBoms, Bom[].class); 
-			List<Bom> configedBoms = boms.get(BOM_CONFIGURATION_CONFIGURATED);
-					
+			Bom[] defaultBomsTemp = mapper.convertValue(defaultBomsStr,Bom[].class); 
+			List<Bom> defaultBoms = new ArrayList();
+			for(Bom temp:defaultBomsTemp)
+				defaultBoms.add(temp);
+			List<String> configedBomsStr = boms.get(BOM_CONFIGURATION_CONFIGURATED);
+			Bom[] configedBomsTemp = mapper.convertValue(configedBomsStr,Bom[].class); 
+			List<Bom> configedBoms = new ArrayList();
+			for(Bom temp:configedBomsTemp)
+				configedBoms.add(temp);
 			boolean result = be.fillIn(defaultBoms,configedBoms);
 			if(result)
 				return be;

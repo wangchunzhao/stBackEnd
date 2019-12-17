@@ -347,8 +347,8 @@ public class OrderHelper {
 		temp.setConfigurable(item.isConfigurable());
 		temp.setClazzCode(item.getClazzCode());
 		//address
-		temp.setProvienceCode(item.getProviceCode());
-		temp.setProvienceName(item.getProviceName());
+		temp.setProvienceCode(item.getProvinceCode());
+		temp.setProvienceName(item.getProvinceName());
 		temp.setCityCode(item.getCityCode());
 		temp.setCityName(item.getCityName());
 		temp.setAddress(item.getAddress());

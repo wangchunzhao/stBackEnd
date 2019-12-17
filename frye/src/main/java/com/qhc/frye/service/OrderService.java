@@ -344,7 +344,9 @@ public class OrderService {
 			// 数据库中的设置
 			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
 			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
-			kCharaRepo.saveAll(kcs);
+			if(kcs!=null && !kcs.isEmpty())
+				kCharaRepo.deleteInBatchByItemDetail(detailId);
+				kCharaRepo.saveAll(kcs);
 			
 		} else {
 			//定制配置
