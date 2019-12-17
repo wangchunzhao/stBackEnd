@@ -59,9 +59,10 @@ public class BomExplosion {
 		Set<Bom> children = new HashSet<Bom>();
 		String parentCode = null;
 		for(Bom bo:boms) {
-			if(bo.getCode().equals(bom.getParentCode()))
+			if(bo.getCode().equals(bom.getParentCode())) {
 				parentCode = bo.getCode();
 				break;
+			}
 		}
 		if(parentCode!=null) {
 			for(Bom bo:boms) {

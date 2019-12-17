@@ -179,11 +179,33 @@ public class ItemDetails implements Serializable{
 	@Column(name = "delivery_city_name",columnDefinition = "char",length=45)
 	private String cityName;
 	
+	@Column(name = "delivery_district_code",columnDefinition = "char",length=45)
+	private String districtCode;
+	
+	@Column(name = "delivery_district_name",columnDefinition = "char",length=45)
+	private String districtName;
+	
 	@Column(name = "delivery_address",columnDefinition = "text")
 	private String address;
 	
 	
 	
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public String getDistrictName() {
+		return districtName;
+	}
+
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
+
 	public Date getShipDate() {
 		return shipDate;
 	}

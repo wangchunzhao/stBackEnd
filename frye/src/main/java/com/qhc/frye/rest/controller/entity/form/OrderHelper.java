@@ -351,6 +351,8 @@ public class OrderHelper {
 		temp.setProvienceName(item.getProvinceName());
 		temp.setCityCode(item.getCityCode());
 		temp.setCityName(item.getCityName());
+		temp.setDistrictCode(item.getDistrictCode());
+		temp.setDistrictName(item.getDistrictName());
 		temp.setAddress(item.getAddress());
 		//
 		temp.setkFormsId(formId);
