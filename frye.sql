@@ -1899,13 +1899,16 @@ COMMIT;
 START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('unknow', '未知', 0);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0001', 'MNC（国际连锁）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0003', 'Dealer（代理商）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0004', 'Local others（本地其他）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0005', 'Cold room（冷库)', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0006', 'Export（出口）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0007', '便利店', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0001', 'MNC（国际连锁）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0003', 'Dealer（代理商）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0004', 'Local others（本地其他）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0005', 'Cold room（冷库)', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0006', 'Export（出口）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0007', '便利店', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1001', '连锁百强', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1002', '国际大连锁', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1003', '散户', 1);
 
 COMMIT;
 

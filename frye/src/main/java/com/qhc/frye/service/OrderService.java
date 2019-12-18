@@ -449,9 +449,11 @@ public class OrderService {
 
 		// 订单地址
 		List<KDelieveryAddress> adds = ohelper.toAddress(orderInforId);
+		deliveryAddressRepository.deleteByOrderInfoId(orderInforId);
 		deliveryAddressRepository.saveAll(adds);
 		// bidding plan
 		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(orderInforId);
+		biddingPlanRepository.deleteByOrderInfoId(orderInforId);
 		biddingPlanRepository.saveAll(bidding);
 		// attachment
 
