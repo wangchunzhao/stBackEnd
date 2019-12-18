@@ -77,8 +77,8 @@ public class OrderHelper {
 			temp.setNew(true);
 		else
 			temp.setNew(false);
-		temp.setTerminalIndustryCode(order.getCustomerClazzCode());
-		temp.setTerminalIndustryCodeName(order.getCustomerClazzName());
+		temp.setTerminalIndustryCode(order.getTerminalIndustryCode());
+		temp.setTerminalIndustryCodeName(order.getTerminalIndustryName());
 		temp.setBodyDiscount(order.getBodyDiscount());
 		temp.setMainDiscount(order.getMainDiscount());
 		temp.setInstallTermCode(order.getInstallCode());

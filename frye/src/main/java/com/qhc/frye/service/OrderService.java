@@ -15,6 +15,8 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,7 +114,7 @@ public class OrderService {
 	private final static String ORDER_TYPE_DEALER = "ZH0D"; // '经销商订单'
 	private final static String ORDER_TYPE_BULK = "ZH0M"; // '备货订单'
 	private final static String ORDER_TYPE_KEYACCOUNT = "ZH0T"; // '大客户订单'
-
+	private static Logger log = LoggerFactory.getLogger(OrderService.class);
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
 
@@ -349,6 +351,7 @@ public class OrderService {
 				kCharaRepo.saveAll(kcs);
 			
 		} else {
+			log.info("save config data");
 			//定制配置
 			List<BaseChracteristic> bas = item.getConfigs();
 			List<KCharacteristics> kcs = new ArrayList();
@@ -356,6 +359,10 @@ public class OrderService {
 				KCharacteristics kc = new KCharacteristics();
 				kc.setKeyCode(bc.getConfigCode());
 				kc.setValueCode(bc.getConfigValueCode());
+				
+				log.info(kc.getItemDetailsId()+"config code is :"+bc.getConfigCode());
+				log.info(kc.getItemDetailsId()+"config value code is :"+bc.getConfigValueCode());
+				
 				kc.setItemDetailsId(detailId);
 				kc.setIsConfigurable(1);
 				kcs.add(kc);
@@ -387,6 +394,7 @@ public class OrderService {
 		boolean b2cFlag = false;
 		List<ItemDetails> existItems = itemDetailRepository.findByKFormsId(formDao.getId());
 		List<BaseItem> newItems = order.getItems();
+		
 		for (AbsItem item : newItems) {
 
 			ItemDetails temp = OrderHelper.itemConversion(item, formDao.getId());
@@ -402,6 +410,7 @@ public class OrderService {
 
 			temp = itemDetailRepository.save(temp);
 			// 特征
+			log.info("is configurable");
 			if(item.isConfigurable())
 				this.saveCharater(item,temp.getId());
 		}
@@ -1188,7 +1197,7 @@ public class OrderService {
 		order.setCurrency(orderView.getCurrencyCode());
 		order.setInstallCode(orderView.getInstallTermCode());
 		order.setInstallName(orderView.getInstallTermName());
-		order.setTerminalType(orderView.getTerminalIndustryCode());
+		order.setTerminalIndustryCode(orderView.getTerminalIndustryCode());
 		order.setWarrenty(orderView.getWarranty());
 		order.setContractValue(toDouble(orderView.getContractAmount()));
 		order.setContractRMBValue(toDouble(orderView.getContractRmbAmount()));
