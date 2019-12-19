@@ -1134,11 +1134,11 @@ DROP TABLE IF EXISTS `bohemian`.`k_delievery_address` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
   `id` CHAR(32) NOT NULL,
-  `province_code` VARCHAR(6) NULL,
+  `province_code` VARCHAR(45) NULL,
   `province_name` TEXT NULL,
-  `city_code` VARCHAR(6) NULL,
+  `city_code` VARCHAR(45) NULL,
   `city_name` TEXT NULL,
-  `distinct_code` VARCHAR(6) NULL,
+  `distinct_code` VARCHAR(45) NULL,
   `distinct_name` TEXT NULL,
   `address` TEXT NOT NULL,
   `k_order_info_id` CHAR(32) NOT NULL,
