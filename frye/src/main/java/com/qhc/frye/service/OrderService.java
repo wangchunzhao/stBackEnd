@@ -595,11 +595,11 @@ public class OrderService {
 						excludingTaxAmount = excludingTaxAmount.add(saleAmount.subtract(taxAmount));
 						// wtw成本
 						if (submitType == 4) {
-							wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice()));
+							wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice() * item.getQuantity()));
 							// 毛利
 							wtwgrossProfit = excludingTaxAmount.subtract(wtwcost);
 						}
-						cost = cost.add(BigDecimal.valueOf(item.getTranscationPrice()));
+						cost = cost.add(BigDecimal.valueOf(item.getTranscationPrice() * item.getQuantity()));
 						// 毛利
 						grossProfit = excludingTaxAmount.subtract(cost);
 
