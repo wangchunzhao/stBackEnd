@@ -77,8 +77,8 @@ public class OrderHelper {
 			temp.setNew(true);
 		else
 			temp.setNew(false);
-		temp.setTerminalIndustryCode(order.getCustomerClazzCode());
-		temp.setTerminalIndustryCodeName(order.getCustomerClazzName());
+		temp.setTerminalIndustryCode(order.getTerminalIndustryCode());
+		temp.setTerminalIndustryCodeName(order.getTerminalIndustryName());
 		temp.setBodyDiscount(order.getBodyDiscount());
 		temp.setMainDiscount(order.getMainDiscount());
 		temp.setInstallTermCode(order.getInstallCode());
@@ -326,7 +326,7 @@ public class OrderHelper {
 		temp.setQuantity(item.getQuantity());
 		temp.setMeasureUnitCode(item.getUnitCode());
 		temp.setMeasureUnitName(item.getUnitName());
-		temp.setAmount(new BigDecimal(item.getRetailPrice() * item.getQuantity()));
+		temp.setAmount(new BigDecimal(item.getActuralPrice() * item.getQuantity()));
 		temp.setTransfterPrice(new BigDecimal(item.getTranscationPrice()));
 		temp.setStandardPrice(new BigDecimal(item.getStandardPrice()));
 		temp.setB2cComments(item.getB2cComments());

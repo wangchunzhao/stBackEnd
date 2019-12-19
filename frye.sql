@@ -1134,11 +1134,11 @@ DROP TABLE IF EXISTS `bohemian`.`k_delievery_address` ;
 
 CREATE TABLE IF NOT EXISTS `bohemian`.`k_delievery_address` (
   `id` CHAR(32) NOT NULL,
-  `province_code` VARCHAR(6) NULL,
+  `province_code` VARCHAR(45) NULL,
   `province_name` TEXT NULL,
-  `city_code` VARCHAR(6) NULL,
+  `city_code` VARCHAR(45) NULL,
   `city_name` TEXT NULL,
-  `distinct_code` VARCHAR(6) NULL,
+  `distinct_code` VARCHAR(45) NULL,
   `distinct_name` TEXT NULL,
   `address` TEXT NOT NULL,
   `k_order_info_id` CHAR(32) NOT NULL,
@@ -1899,13 +1899,16 @@ COMMIT;
 START TRANSACTION;
 USE `bohemian`;
 INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('unknow', '未知', 0);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0001', 'MNC（国际连锁）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0003', 'Dealer（代理商）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0004', 'Local others（本地其他）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0005', 'Cold room（冷库)', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0006', 'Export（出口）', 1);
-INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0007', '便利店', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0001', 'MNC（国际连锁）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0003', 'Dealer（代理商）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0004', 'Local others（本地其他）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0005', 'Cold room（冷库)', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0006', 'Export（出口）', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('0007', '便利店', 0);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1001', '连锁百强', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1002', '国际大连锁', 1);
+INSERT INTO `bohemian`.`sap_industry_code` (`code`, `name`, `is_forDealer`) VALUES ('1003', '散户', 1);
 
 COMMIT;
 
