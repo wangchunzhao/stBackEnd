@@ -410,7 +410,6 @@ public class OrderService {
 
 			temp = itemDetailRepository.save(temp);
 			// 特征
-			log.info("is configurable");
 			if(item.isConfigurable())
 				this.saveCharater(item,temp.getId());
 		}
