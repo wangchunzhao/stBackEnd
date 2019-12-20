@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
-import com.qhc.order.domain.PageHelper;
-import com.qhc.order.domain.form.AbsOrder;
 import com.qhc.order.entity.OrderView;
 import com.qhc.order.mapper.OrderMapper;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.system.domain.PageHelper;
 
 @SpringBootTest
 class OrderServiceTest {
@@ -72,7 +72,7 @@ class OrderServiceTest {
 		query.setSpecialDiscount("1");
 		query.setVersion("1");
 		query.setVersionId("1");
-		PageHelper<AbsOrder> result = orderService.findOrders(query);
+		PageHelper<OrderDto> result = orderService.findOrders(query);
 		System.out.println(result);
 		
 		List<OrderView> orders = orderMapper.findOrderViewByParams(query);
@@ -85,8 +85,8 @@ class OrderServiceTest {
 		query.setSequenceNumber("123");
 		query.setVersion("1-1");
 		query.setIncludeDetail(true);
-		PageHelper<AbsOrder> result = orderService.findOrders(query);
-		AbsOrder order = result.getRows().get(0);
+		PageHelper<OrderDto> result = orderService.findOrders(query);
+		OrderDto order = result.getRows().get(0);
 		List<DMaterialGroups> groups = orderService.calcGrossProfit(order);
 		System.out.println(groups);
 	}

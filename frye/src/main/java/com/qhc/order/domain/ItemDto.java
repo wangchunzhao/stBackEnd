@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain.form;
+package com.qhc.order.domain;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author wang@dxc.com
  *
  */
-public abstract class AbsItem {
+public class ItemDto {
 	private Integer rowNumber;//行号
 	private String materialCode;//物料号,专用号
 	private String materialName;//物料名称,规格型号
@@ -55,7 +55,7 @@ public abstract class AbsItem {
 	private String configComments;//配置表备注(配置表页面)
 	private String mosaicImage;//拼接图备注(配置表页面)
 	private String attachedImage;//拼接图附件(配置表页面)
-	private List<BaseChracteristic> configs;//配置表数据(配置表页面)
+	private List<CharacteristicDto> configs;//配置表数据(配置表页面)
 	private int isVirtual;//工程虚拟物料
 	private double volumeCube;//工程虚拟物料
 	private double feight;//运费
@@ -364,10 +364,10 @@ public abstract class AbsItem {
 	public void setAttachedImage(String attachedImage) {
 		this.attachedImage = attachedImage;
 	}
-	public List<BaseChracteristic> getConfigs() {
+	public List<CharacteristicDto> getConfigs() {
 		return configs;
 	}
-	public void setConfigs(List<BaseChracteristic> configs) {
+	public void setConfigs(List<CharacteristicDto> configs) {
 		this.configs = configs;
 	}
 	

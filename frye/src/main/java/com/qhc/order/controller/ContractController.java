@@ -40,10 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qhc.order.domain.ContractView;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.entity.Contract;
 import com.qhc.order.service.BestsignService;
 import com.qhc.order.service.ContractService;
+import com.qhc.system.domain.PageHelper;
 import com.qhc.system.domain.Result;
 
 import io.swagger.annotations.Api;

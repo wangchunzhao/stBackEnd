@@ -1,9 +1,10 @@
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.qhc.order.domain.AbsConObject;
 import com.qhc.sap.entity.DCurrency;
 import com.qhc.sap.entity.SapCurrencySaleType;
 import com.qhc.sap.entity.identity.CurrencySaleTypeIdentity;

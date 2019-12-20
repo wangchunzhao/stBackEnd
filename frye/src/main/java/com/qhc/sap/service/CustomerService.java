@@ -17,12 +17,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.domain.Customer;
 import com.qhc.order.service.ConstantService;
 import com.qhc.sap.dao.CustomerAffiliationRepository;
 import com.qhc.sap.dao.CustomerIndustryRepository;
 import com.qhc.sap.dao.CustomerRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
+import com.qhc.sap.domain.Customer;
 import com.qhc.sap.entity.CustomerAffiliation;
 import com.qhc.sap.entity.DCustomer;
 import com.qhc.sap.entity.DIndustryCode;

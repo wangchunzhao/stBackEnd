@@ -10,14 +10,14 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.domain.CharacteristicValue;
-import com.qhc.order.domain.Clazz;
-import com.qhc.order.domain.DefaultCharacteristics;
 import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.CharacteristicRepository;
 import com.qhc.sap.dao.CharacteristicValueRepository;
 import com.qhc.sap.dao.ClassAndCharacterRepository;
 import com.qhc.sap.dao.ClazzOfMaterialRepository;
+import com.qhc.sap.domain.CharacteristicValue;
+import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.DefaultCharacteristics;
 import com.qhc.sap.entity.DCharacteristic;
 import com.qhc.sap.entity.DCharacteristicDefault;
 import com.qhc.sap.entity.DCharacteristicValue;

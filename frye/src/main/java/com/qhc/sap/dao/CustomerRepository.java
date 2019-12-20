@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.order.domain.Customer;
+import com.qhc.sap.domain.Customer;
 import com.qhc.sap.entity.DCustomer;
 
 /**

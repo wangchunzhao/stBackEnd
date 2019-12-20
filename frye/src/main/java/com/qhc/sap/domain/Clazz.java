@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 /**
  * @author wang@dxc.com

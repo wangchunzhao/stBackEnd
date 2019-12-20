@@ -1,4 +1,4 @@
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 public class DefaultCharacteristics {
 	

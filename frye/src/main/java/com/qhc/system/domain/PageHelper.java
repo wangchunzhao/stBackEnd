@@ -1,4 +1,4 @@
-package com.qhc.order.domain;
+package com.qhc.system.domain;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain.form;
+package com.qhc.order.domain;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author wang@dxc.com
  *
  */
-public abstract class AbsOrder {
+public class OrderDto {
 	
 	public final static String ORDER_TYPE_CODE_DEALER = "Z001";
 	public final static String ORDER_TYPE_CODE_KEYACCOUNT = "Z002";
@@ -109,27 +109,44 @@ public abstract class AbsOrder {
 	 * 购销明细 Purchase and sale subsidiar
 	 */
 	//private List<ProductItem> items;//购销明细
-	private List<BaseItem> items;
+	private List<ItemDto> items;
 	private String comments;//备注
 	private List<OrderAddress> orderAddress;//合同明细地址
-	private List<BiddingPayment> payments;//付款条件或bidding plan 
+	private List<BillingPayment> payments;//付款条件或bidding plan 
 	
 	private String currentVersion;//当前版本,创建时steigenberger创建
 	private String currentVersionStatus;
 	private List<String> versions;
 	private String userOfficeCode;//用户所在销售办公室
 	
-	public AbsOrder() {
+	private String customerNatureCode;//终端客户性质 customer nature
+	/**
+	 * 
+	 */
+	private double discount;//合并折扣
+	
+//	private double bodyDiscount;//柜体折扣 standard discount
+//
+//
+//	private double mainDiscount;//机组折扣 standard discount
+	
+	private int isLongterm;//是否为长期折扣
+	
+	private double approvedDicount;//批准的折扣、标准折扣
+	
+	private String paymentType;//结算方式
+	
+	public OrderDto() {
 		
 	}
-	public AbsOrder(String json) {
+	public OrderDto(String json) {
 		
 	}
 	
-	public List<BaseItem> getItems() {
+	public List<ItemDto> getItems() {
 		return items;
 	}
-	public void setItems(List<BaseItem> items) {
+	public void setItems(List<ItemDto> items) {
 		this.items = items;
 	}
 	public String getCurrentVersion() {
@@ -544,10 +561,10 @@ public abstract class AbsOrder {
 	public void setApprovedDiscount(double approvedDiscount) {
 		this.approvedDiscount = approvedDiscount;
 	}
-	public List<BiddingPayment> getPayments() {
+	public List<BillingPayment> getPayments() {
 		return payments;
 	}
-	public void setPayments(List<BiddingPayment> payments) {
+	public void setPayments(List<BillingPayment> payments) {
 		this.payments = payments;
 	}
 
@@ -557,5 +574,35 @@ public abstract class AbsOrder {
 
 	public void setRecordCode(String recordCode) {
 		this.recordCode = recordCode;
+	}
+	public String getCustomerNatureCode() {
+		return customerNatureCode;
+	}
+	public void setCustomerNatureCode(String customerNatureCode) {
+		this.customerNatureCode = customerNatureCode;
+	}
+	public double getDiscount() {
+		return discount;
+	}
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+	public int getIsLongterm() {
+		return isLongterm;
+	}
+	public void setIsLongterm(int isLongterm) {
+		this.isLongterm = isLongterm;
+	}
+	public double getApprovedDicount() {
+		return approvedDicount;
+	}
+	public void setApprovedDicount(double approvedDicount) {
+		this.approvedDicount = approvedDicount;
+	}
+	public String getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 }

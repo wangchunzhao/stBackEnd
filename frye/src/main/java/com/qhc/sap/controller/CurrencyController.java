@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.domain.Currency;
-import com.qhc.order.domain.DateUtil;
 import com.qhc.order.domain.Incoterm;
-import com.qhc.order.domain.Material;
 import com.qhc.order.domain.Price;
+import com.qhc.sap.domain.Currency;
+import com.qhc.sap.domain.Material;
 import com.qhc.sap.service.CurrencyService;
 import com.qhc.sap.service.CustomerService;
+import com.qhc.utils.DateUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

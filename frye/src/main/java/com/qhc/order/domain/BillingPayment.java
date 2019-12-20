@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain.form;
+package com.qhc.order.domain;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author wang@dxc.com
  *
  */
-public class BiddingPayment {
+public class BillingPayment {
 	private String termCode;//付款条件或biding plan 
 	private String termName;//付款条件名称
 	private double percentage;//付款比例

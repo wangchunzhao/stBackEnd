@@ -23,9 +23,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.order.dao.ContractRepository;
 import com.qhc.order.domain.ContractView;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.entity.Contract;
 import com.qhc.order.entity.ContractSignSys;
+import com.qhc.system.domain.PageHelper;
 
 /**
  * @author walker

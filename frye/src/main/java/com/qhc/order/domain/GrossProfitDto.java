@@ -1,10 +1,8 @@
-package com.qhc.order.entity;
+package com.qhc.order.domain;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.qhc.order.domain.AbsOrder;
-import com.qhc.order.domain.SalesOrder;
 import com.qhc.sap.entity.SapSalesGroup;
 
 /**
@@ -12,10 +10,10 @@ import com.qhc.sap.entity.SapSalesGroup;
  * @author lizuoshan
  *
  */
-public class GrossProfitDTO implements Serializable {
+public class GrossProfitDto implements Serializable {
 	
 
-	private SalesOrder salesOrder;
+	private OrderDto salesOrder;
 	private List<SapSalesGroup> sapSalesGroupList;
 	
 	
@@ -30,10 +28,10 @@ public class GrossProfitDTO implements Serializable {
 	public void setSapSalesGroupList(List<SapSalesGroup> sapSalesGroupList) {
 		this.sapSalesGroupList = sapSalesGroupList;
 	}
-	public SalesOrder getSalesOrder() {
+	public OrderDto getSalesOrder() {
 		return salesOrder;
 	}
-	public void setSalesOrder(SalesOrder salesOrder) {
+	public void setSalesOrder(OrderDto salesOrder) {
 		this.salesOrder = salesOrder;
 	}
 	

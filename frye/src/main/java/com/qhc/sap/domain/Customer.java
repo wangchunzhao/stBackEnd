@@ -1,13 +1,14 @@
 /**
  * 
  */
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.qhc.order.domain.InterEntityToDao;
 import com.qhc.sap.entity.CustomerAffiliation;
 import com.qhc.sap.entity.DCustomer;
 import com.qhc.sap.entity.Industry;

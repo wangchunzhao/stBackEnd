@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain.form;
+package com.qhc.order.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import com.qhc.order.entity.OrderSupportInfo;
  *
  */
 public class OrderHelper {
-	private AbsOrder order;
-	public OrderHelper(AbsOrder order) {
+	private OrderDto order;
+	public OrderHelper(OrderDto order) {
 		this.order = order;
 	}
 	/**
@@ -122,8 +122,8 @@ public class OrderHelper {
 		else
 			temp.setTerm2(false);
 		temp.setComments(order.getComments());
-		if(order instanceof AbsOrderDealer) {
-			AbsOrderDealer dorder = (AbsOrderDealer)order;
+		if(order instanceof OrderDto) {
+			OrderDto dorder = (OrderDto)order;
 			temp.setRecordNumber(dorder.getRecordCode());
 		}
 		return temp;
@@ -140,7 +140,7 @@ public class OrderHelper {
 	public List<BillingPlan> toBiddingPlan(String orderInfoId) {
 		List<BillingPlan> kbList = new ArrayList<BillingPlan>();
 		if(order.getPayments()!=null) {
-			for(BiddingPayment bp:order.getPayments()) {
+			for(BillingPayment bp:order.getPayments()) {
 				BillingPlan temp = new BillingPlan();
 				temp.setCode(bp.getTermCode());
 				temp.setName(bp.getTermName());
@@ -209,7 +209,7 @@ public class OrderHelper {
 	 */
 	public List<ItemDetails> toDetails(String formId) {
 		List<ItemDetails> idList = new ArrayList<ItemDetails>();
-		for(AbsItem item: order.getItems()) {
+		for(ItemDto item: order.getItems()) {
 			ItemDetails temp = new ItemDetails();
 			temp.setRowNumber(item.getRowNumber());
 			temp.setMaterialCode(item.getMaterialCode());
@@ -258,8 +258,8 @@ public class OrderHelper {
 	 */
 	public List<Characteristics> toCharacteristics(List<ItemDetails> details){
 		List<Characteristics> kcList = new ArrayList<Characteristics>();
-		for(AbsItem item:order.getItems()) {
-			for(AbsCharacteristic ac :item.getConfigs()) {
+		for(ItemDto item:order.getItems()) {
+			for(CharacteristicDto ac :item.getConfigs()) {
 				Characteristics temp = new Characteristics();
 				temp.setKeyCode(ac.getConfigCode());
 				temp.setValueCode(ac.getConfigValueCode());
@@ -313,7 +313,7 @@ public class OrderHelper {
 		temp.setOrderInfoId(old.getOrderInfoId());
 		return temp;
 	}
-	public static ItemDetails itemConversion(final AbsItem  item,final String formId) {
+	public static ItemDetails itemConversion(final ItemDto  item,final String formId) {
 		ItemDetails temp = new ItemDetails();
 		temp.setRowNumber(item.getRowNumber());
 		temp.setMaterialCode(item.getMaterialCode());
@@ -365,7 +365,7 @@ public class OrderHelper {
 		temp.setkFormsId(formId);
 		return temp;
 	}
-	public static Characteristics CharacteristicConversion(final AbsCharacteristic character) {
+	public static Characteristics CharacteristicConversion(final CharacteristicDto character) {
 		Characteristics temp = new Characteristics();
 		temp.setKeyCode(character.getConfigCode());
 		temp.setValueCode(character.getConfigValueCode());

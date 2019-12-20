@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.qhc.order.domain.form;
+package com.qhc.order.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author wang@dxc.com
  *
  */
-public abstract class AbsCharacteristic {
+public class CharacteristicDto {
 	private Boolean optional;//可选、必选
 	@JsonProperty(value = "code")
 	private String configCode;//配置项

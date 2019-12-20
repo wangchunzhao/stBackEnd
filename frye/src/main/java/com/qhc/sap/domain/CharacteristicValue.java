@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qhc.order.domain.InterEntityToDao;
 import com.qhc.sap.entity.DCharacteristic;
 import com.qhc.sap.entity.DCharacteristicValue;
 import com.qhc.sap.entity.DClassAndCharacter;

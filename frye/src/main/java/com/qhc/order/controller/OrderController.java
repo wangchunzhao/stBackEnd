@@ -22,22 +22,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.order.domain.B2cComments;
+import com.qhc.order.domain.GrossProfitDto;
+import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.domain.PaymentPlan;
-import com.qhc.order.domain.SalesOrder;
-import com.qhc.order.domain.form.AbsOrder;
-import com.qhc.order.domain.form.BaseOrder;
-import com.qhc.order.domain.form.DealerOrder;
 import com.qhc.order.entity.DOrder;
-import com.qhc.order.entity.GrossProfitDTO;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.entity.DMaterialGroups;
 import com.qhc.sap.entity.DSalesType;
 import com.qhc.sap.entity.SapSalesGroup;
+import com.qhc.system.domain.PageHelper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,7 +63,7 @@ public class OrderController {
 	@ApiOperation(value = "保存订单信息", notes = "保存订单信息")
 	@PostMapping(value = "order")
 	@ResponseStatus(HttpStatus.OK)
-	public void submitOrder(@RequestBody(required = true) DealerOrder order) throws Exception {
+	public void submitOrder(@RequestBody(required = true) OrderDto order) throws Exception {
 		//
 		switch(order.getSubmitType()) {
 			case 1:
@@ -149,7 +146,7 @@ public class OrderController {
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/grossprofit")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DMaterialGroups> calcGrossProfit(@RequestBody BaseOrder order) throws Exception {
+	public List<DMaterialGroups> calcGrossProfit(@RequestBody OrderDto order) throws Exception {
 		return orderService.calcGrossProfit(order);
 	}
 
@@ -225,7 +222,7 @@ public class OrderController {
     @ApiOperation(value="查询订单列表", notes="查询订单列表")
     @PostMapping(value = "order/query")
     @ResponseStatus(HttpStatus.OK)
-    public PageHelper<AbsOrder> findOrders(@RequestBody OrderQuery query) throws Exception {	
+    public PageHelper<OrderDto> findOrders(@RequestBody OrderQuery query) throws Exception {	
     	return orderService.findOrders(query);
     }
     
@@ -238,7 +235,7 @@ public class OrderController {
     @ApiOperation(value="查询订单详情", notes="查询订单详情")
     @GetMapping(value = "order/detail")
     @ResponseStatus(HttpStatus.OK)
-    public AbsOrder getOrder(@RequestParam String sequenceNumber, @RequestParam String version) throws Exception {	
+    public OrderDto getOrder(@RequestParam String sequenceNumber, @RequestParam String version) throws Exception {	
     	return orderService.findOrder(sequenceNumber, version);
     }
     

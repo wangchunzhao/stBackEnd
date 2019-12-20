@@ -17,22 +17,22 @@ import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.MaterialInfoRepository;
 import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
+import com.qhc.sap.domain.Bom;
+import com.qhc.sap.domain.BomExplosion;
+import com.qhc.sap.domain.Characteristic;
+import com.qhc.sap.domain.DefaultCharacteristics;
+import com.qhc.sap.domain.Material;
 import com.qhc.sap.entity.CharacteristicConfiguration;
 import com.qhc.sap.entity.DCharacteristicDefault;
 import com.qhc.sap.entity.DMaterial;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.MaterialPrice;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
+import com.qhc.system.domain.PageHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.exception.NotExistException;
 import com.qhc.exception.NotMatchException;
-import com.qhc.order.domain.Bom;
-import com.qhc.order.domain.BomExplosion;
-import com.qhc.order.domain.Characteristic;
 import com.qhc.order.domain.Configuration;
-import com.qhc.order.domain.DefaultCharacteristics;
-import com.qhc.order.domain.Material;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.service.BayernService;
 
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qhc.order.mapper.OrderMapper" >
 	<!-- 按参数查询 -->
-	<select id="findOrderViewByParams" resultType="com.qhc.frye.entity.KOrderView" parameterType="com.qhc.frye.domain.OrderQuery" >
+	<select id="findOrderViewByParams" resultType="com.qhc.order.entity.OrderView" parameterType="com.qhc.order.domain.OrderQuery" >
     SELECT 
     	<include refid="order_view_column_list" />
     FROM

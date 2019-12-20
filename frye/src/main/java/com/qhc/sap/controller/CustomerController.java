@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.domain.Customer;
-import com.qhc.order.domain.DateUtil;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.service.ConstantService;
+import com.qhc.sap.domain.Customer;
 import com.qhc.sap.entity.DCustomer;
 import com.qhc.sap.service.CustomerService;
+import com.qhc.system.domain.PageHelper;
+import com.qhc.utils.DateUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

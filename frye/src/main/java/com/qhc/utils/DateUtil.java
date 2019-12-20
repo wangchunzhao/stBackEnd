@@ -1,4 +1,4 @@
-package com.qhc.order.domain;
+package com.qhc.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

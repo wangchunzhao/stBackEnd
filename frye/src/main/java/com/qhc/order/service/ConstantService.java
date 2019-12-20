@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import com.qhc.order.dao.AcceptanceCriteriaRepository;
-import com.qhc.order.domain.Currency;
 import com.qhc.order.entity.AcceptanceCriteria;
 import com.qhc.order.entity.MaterialGroupOrder;
 import com.qhc.sap.dao.BMaterialGroupOrderRepository;
@@ -33,6 +32,7 @@ import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
+import com.qhc.sap.domain.Currency;
 import com.qhc.sap.entity.CustomerClass;
 import com.qhc.sap.entity.DCurrency;
 import com.qhc.sap.entity.DIncoterm;

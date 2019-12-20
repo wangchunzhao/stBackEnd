@@ -2,12 +2,11 @@ package com.qhc.order.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,9 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.order.dao.AttachedInfoRepository;
 import com.qhc.order.dao.AttachementRepository;
 import com.qhc.order.dao.EnginingCostRepository;
@@ -39,29 +36,20 @@ import com.qhc.order.dao.KOrderViewRepository;
 import com.qhc.order.dao.OrderRepository;
 import com.qhc.order.dao.OrderSupportInforRepository;
 import com.qhc.order.domain.B2cComments;
-import com.qhc.order.domain.Currency;
+import com.qhc.order.domain.BillingPayment;
+import com.qhc.order.domain.CharacteristicDto;
+import com.qhc.order.domain.ItemDto;
+import com.qhc.order.domain.OrderAddress;
+import com.qhc.order.domain.OrderDto;
+import com.qhc.order.domain.OrderHelper;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
-import com.qhc.order.domain.PageHelper;
 import com.qhc.order.domain.PaymentPlan;
-import com.qhc.order.domain.SalesOrder;
 import com.qhc.order.domain.bpm.BpmOrder;
 import com.qhc.order.domain.bpm.Order;
 import com.qhc.order.domain.bpm.OrderItem;
 import com.qhc.order.domain.bpm.OrderMargin;
-import com.qhc.order.domain.form.AbsCharacteristic;
-import com.qhc.order.domain.form.AbsItem;
-import com.qhc.order.domain.form.AbsOrder;
-import com.qhc.order.domain.form.BaseChracteristic;
-import com.qhc.order.domain.form.BaseItem;
-import com.qhc.order.domain.form.BaseOrder;
-import com.qhc.order.domain.form.BiddingPayment;
-import com.qhc.order.domain.form.BulkOrder;
-import com.qhc.order.domain.form.DealerOrder;
-import com.qhc.order.domain.form.KeyAccountOrder;
-import com.qhc.order.domain.form.OrderAddress;
-import com.qhc.order.domain.form.OrderHelper;
 import com.qhc.order.domain.sap.SapOrder;
 import com.qhc.order.domain.sap.SapOrderCharacteristics;
 import com.qhc.order.domain.sap.SapOrderHeader;
@@ -83,7 +71,6 @@ import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.entity.OrderSupportInfo;
 import com.qhc.order.entity.OrderVersionView;
 import com.qhc.order.entity.OrderView;
-import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.DefaultCharacterViewRepository;
 import com.qhc.sap.dao.PaymentTermRepository;
@@ -92,8 +79,6 @@ import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
-import com.qhc.sap.entity.DCharacteristicDefault;
-import com.qhc.sap.entity.DCurrency;
 import com.qhc.sap.entity.DMaterialGroups;
 import com.qhc.sap.entity.DSalesType;
 import com.qhc.sap.entity.DefaultCharacterView;
@@ -104,10 +89,11 @@ import com.qhc.system.dao.BAreaRepository;
 import com.qhc.system.dao.BCityRepository;
 import com.qhc.system.dao.BProvinceRepository;
 import com.qhc.system.dao.ParameterSettingsRepository;
+import com.qhc.system.domain.PageHelper;
 import com.qhc.system.entity.Area;
 import com.qhc.system.entity.City;
-import com.qhc.system.entity.Province;
 import com.qhc.system.entity.Parameter;
+import com.qhc.system.entity.Province;
 
 @Service
 public class OrderService {
@@ -264,7 +250,7 @@ public class OrderService {
 	 * 
 	 * @param absOrder
 	 */
-	public void save(final AbsOrder order) throws Exception {
+	public void save(final OrderDto order) throws Exception {
 		this.submitOrder(order);
 	}
 
@@ -274,7 +260,7 @@ public class OrderService {
 	 * @param ohelper
 	 * @return
 	 */
-	private String saveOrder(final AbsOrder order, final OrderHelper ohelper) {
+	private String saveOrder(final OrderDto order, final OrderHelper ohelper) {
 
 		String seq = order.getSequenceNumber();
 
@@ -306,7 +292,7 @@ public class OrderService {
 	 * @param orderId
 	 * @return
 	 */
-	private String saveOrderInfo(final AbsOrder order, final OrderHelper ohelper, String orderId) {
+	private String saveOrderInfo(final OrderDto order, final OrderHelper ohelper, String orderId) {
 
 		KOrderVersion lastVersion = orderVersionRepo.findLastOneByOrderId(orderId);
 		String version = null;
@@ -339,7 +325,7 @@ public class OrderService {
 	 * @param detail
 	 * @param item
 	 */
-	private void saveCharater(AbsItem item,String detailId) throws Exception {
+	private void saveCharater(ItemDto item,String detailId) throws Exception {
 
 		if (item.getConfigs() == null) {
 	
@@ -353,9 +339,9 @@ public class OrderService {
 		} else {
 			log.info("save config data");
 			//定制配置
-			List<BaseChracteristic> bas = item.getConfigs();
+			List<CharacteristicDto> bas = item.getConfigs();
 			List<Characteristics> kcs = new ArrayList();
-			for (BaseChracteristic bc : bas) {
+			for (CharacteristicDto bc : bas) {
 				Characteristics kc = new Characteristics();
 				kc.setKeyCode(bc.getConfigCode());
 				kc.setValueCode(bc.getConfigValueCode());
@@ -380,7 +366,7 @@ public class OrderService {
 	 * @param orderInforId
 	 * @return
 	 */
-	private boolean saveForm(final AbsOrder order, final OrderHelper ohelper, String orderInforId) throws Exception{
+	private boolean saveForm(final OrderDto order, final OrderHelper ohelper, String orderInforId) throws Exception{
 
 		ItemsForm existForm = formRepo.findOneByHeaderId(orderInforId);
 		ItemsForm formDao = ohelper.toForm(orderInforId);
@@ -393,9 +379,9 @@ public class OrderService {
 		List<ItemDetails> details = new ArrayList();
 		boolean b2cFlag = false;
 		List<ItemDetails> existItems = itemDetailRepository.findByKFormsId(formDao.getId());
-		List<BaseItem> newItems = order.getItems();
+		List<ItemDto> newItems = order.getItems();
 		
-		for (AbsItem item : newItems) {
+		for (ItemDto item : newItems) {
 
 			ItemDetails temp = OrderHelper.itemConversion(item, formDao.getId());
 			if (temp.getB2cComments() != null && temp.getB2cComments().trim().length() > 0) {
@@ -418,7 +404,7 @@ public class OrderService {
 		return b2cFlag;
 	}
 
-	private void saveVersion(final AbsOrder order, final OrderHelper ohelper, boolean b2cFlag, String orderId,
+	private void saveVersion(final OrderDto order, final OrderHelper ohelper, boolean b2cFlag, String orderId,
 			String orderInforId) throws Exception {
 		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag, false);
 		lversion.setOrderId(orderId);
@@ -433,7 +419,7 @@ public class OrderService {
 		orderVersionRepo.save(lversion);
 	}
 
-	private void submitOrder(final AbsOrder order) throws Exception {
+	private void submitOrder(final OrderDto order) throws Exception {
 
 		OrderHelper ohelper = new OrderHelper(order);
 
@@ -463,7 +449,7 @@ public class OrderService {
 		return dOrderRepository.getOne(id);
 	}
 
-	public List<SapSalesGroup> findGrossProfitBySalesOrder(SalesOrder saleOrder, List<SapSalesGroup> salesGroups) {
+	public List<SapSalesGroup> findGrossProfitBySalesOrder(OrderDto saleOrder, List<SapSalesGroup> salesGroups) {
 
 //		List<ItemDetails> details = new ArrayList<ItemDetails>();
 //		;
@@ -550,21 +536,21 @@ public class OrderService {
 	}
 
 	public List<DMaterialGroups> calcWtwGrossProfit(String sequenceNumber, String version) {
-		AbsOrder order = this.findOrder(sequenceNumber, version);
+		OrderDto order = this.findOrder(sequenceNumber, version);
 		order.setSubmitType(4);
 		return calcGrossProfit(order);
 	}
 
 	public List<DMaterialGroups> calcGrossProfit(String sequenceNumber, String version) {
-		AbsOrder order = this.findOrder(sequenceNumber, version);
+		OrderDto order = this.findOrder(sequenceNumber, version);
 		return calcGrossProfit(order);
 	}
 
 	// sap_material_group分组
-	public List<DMaterialGroups> calcGrossProfit(AbsOrder order) {
+	public List<DMaterialGroups> calcGrossProfit(OrderDto order) {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<DMaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
-		List<BaseItem> items = new ArrayList<BaseItem>();
+		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		items = order.getItems();
 
@@ -594,7 +580,7 @@ public class OrderService {
 				Double wtwgrossProfitMargin = 0D;// wtw毛利率
 				Double grossProfitMargin = 0D;// 毛利率
 
-				for (BaseItem item : items) {
+				for (ItemDto item : items) {
 					if (item.getGroupCode().equals(entity.getCode())) {
 						// 总金额
 						BigDecimal saleAmount = BigDecimal.valueOf(
@@ -1096,8 +1082,8 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public AbsOrder findOrder(String sequenceNumber, String version) {
-		AbsOrder order = null;
+	public OrderDto findOrder(String sequenceNumber, String version) {
+		OrderDto order = null;
 		OrderQuery orderQuery = new OrderQuery();
 		orderQuery.setSequenceNumber(sequenceNumber);
 		orderQuery.setVersion(version);
@@ -1109,19 +1095,6 @@ public class OrderService {
 		if (orderViews.size() > 0) {
 			OrderView orderView = orderViews.get(0);
 			String orderType = orderView.getOrderType();
-			switch (orderType) {
-			case ORDER_TYPE_DEALER:
-				order = new DealerOrder();
-				break;
-			case ORDER_TYPE_KEYACCOUNT:
-				order = new KeyAccountOrder();
-				break;
-			case ORDER_TYPE_BULK:
-				order = new BulkOrder();
-				break;
-			default:
-				throw new RuntimeException(MessageFormat.format("Unknown order type [{0}]", orderType));
-			}
 			assembleOrder(orderView, order, true);
 		}
 
@@ -1134,14 +1107,14 @@ public class OrderService {
 	 * @param query
 	 * @return
 	 */
-	public PageHelper<AbsOrder> findOrders(OrderQuery orderQuery) {
+	public PageHelper<OrderDto> findOrders(OrderQuery orderQuery) {
 		boolean includeDetail = orderQuery.isIncludeDetail();
-		List<AbsOrder> orders = new ArrayList<>();
+		List<OrderDto> orders = new ArrayList<>();
 
 		PageHelper<OrderView> page = queryOrderView(orderQuery);
 		List<OrderView> orderViews = page.getRows();
 		for (OrderView orderView : orderViews) {
-			AbsOrder order = new BaseOrder();
+			OrderDto order = new OrderDto();
 //				switch (orderType) {
 //				case ORDER_TYPE_DEALER:
 //					order = new DealerOrder();
@@ -1172,7 +1145,7 @@ public class OrderService {
 	 * @param order
 	 * @param includeDetail
 	 */
-	private void assembleOrder(OrderView orderView, AbsOrder order, boolean includeDetail) {
+	private void assembleOrder(OrderView orderView, OrderDto order, boolean includeDetail) {
 		String orderId = orderView.getOrderId();
 		String orderInfoId = orderView.getOrderInfoId();
 		String orderType = orderView.getOrderType();
@@ -1208,14 +1181,12 @@ public class OrderService {
 		// 运费
 		order.setFreight(toDouble(orderView.getFreight()));
 
-		if (order instanceof DealerOrder) {
-			DealerOrder dealerOrder = (DealerOrder)order;
-			
-			dealerOrder.setRecordCode(orderView.getRecordCode());
+		if (order.getOrderType().equals(OrderDto.ORDER_TYPE_CODE_DEALER)) {
+			order.setRecordCode(orderView.getRecordCode());
 			
 			List<BillingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 			if (billingPlanList.size() > 0) {
-				dealerOrder.setPaymentType(billingPlanList.get(0).getCode());
+				order.setPaymentType(billingPlanList.get(0).getCode());
 			}
 		}
 
@@ -1224,7 +1195,7 @@ public class OrderService {
 		}
 	}
 
-	private void assembleOrderDetail(AbsOrder order, String orderId, String orderInfoId, String formId) {
+	private void assembleOrderDetail(OrderDto order, String orderId, String orderInfoId, String formId) {
 		// Attached File
 		List<Attachment> attachments = attachementRepository.findByOrderInfo(orderInfoId);
 		List<String> attachmentNames = new ArrayList<String>();
@@ -1245,9 +1216,9 @@ public class OrderService {
 
 		// billing plan
 		List<BillingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-		List<BiddingPayment> payments = new ArrayList<BiddingPayment>();
+		List<BillingPayment> payments = new ArrayList<BillingPayment>();
 		for (BillingPlan kBiddingPlan : billingPlanList) {
-			BiddingPayment payment = new BiddingPayment();
+			BillingPayment payment = new BillingPayment();
 			payment.setPayDate(kBiddingPlan.getPayDate());
 			payment.setPercentage(kBiddingPlan.getAmount() == null ? 0 : kBiddingPlan.getAmount().doubleValue());
 			payment.setReason(kBiddingPlan.getReason());
@@ -1263,13 +1234,13 @@ public class OrderService {
 		assembleItems(order, formId);
 	}
 
-	private void assembleItems(AbsOrder order, String formId) {
+	private void assembleItems(OrderDto order, String formId) {
 		List<ItemDetails> detailsList = itemDetailRepository.findByKFormsId(formId);
 		// 新的AbsOrder
-		List<BaseItem> items = new ArrayList<BaseItem>(detailsList.size());
+		List<ItemDto> items = new ArrayList<ItemDto>(detailsList.size());
 		for (ItemDetails itemDetails : detailsList) {
 			String itemId = itemDetails.getId();
-			BaseItem item = new BaseItem();
+			ItemDto item = new ItemDto();
 			BeanUtils.copyProperties(itemDetails, item, (String[]) null);
 			item.setDeliveryDate(itemDetails.getDelieveryDate());
 			item.setShippDate(itemDetails.getDelieveryDate());
@@ -1305,13 +1276,13 @@ public class OrderService {
 			// TODO item b2c
 			// characteristics
 			List<Characteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
-			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
+			List<CharacteristicDto> configs = new ArrayList<CharacteristicDto>();
 			for (Characteristics charac : characs) {
 				if (toString(charac.getIsConfigurable()).equals("1")) {
 					item.setConfigurable(true);
 				}
 
-				BaseChracteristic c = new BaseChracteristic();
+				CharacteristicDto c = new CharacteristicDto();
 				c.setConfigCode(charac.getKeyCode());
 				c.setConfigValueCode(charac.getValueCode());
 				c.setOptional(toString(charac.getIsConfigurable()).equals("1"));
@@ -1457,7 +1428,7 @@ public class OrderService {
 			countQuery.setParameter(entry.getKey(), entry.getValue());
 		}
 		BigInteger totalCount = (BigInteger) countQuery.getSingleResult();
-		PageHelper page = new PageHelper<AbsOrder>();
+		PageHelper page = new PageHelper<OrderDto>();
 		page.setRows(orderViews);
 		page.setTotal(totalCount.intValue());
 
@@ -1599,10 +1570,10 @@ public class OrderService {
 	 * 
 	 * @param order
 	 */
-	public void sendToBpm(AbsOrder order) {
-		List<BaseItem> items = order.getItems();
+	public void sendToBpm(OrderDto order) {
+		List<ItemDto> items = order.getItems();
 		if (items == null) {
-			items = new ArrayList<BaseItem>();
+			items = new ArrayList<ItemDto>();
 		}
 		List<DMaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
 		DMaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
@@ -1622,9 +1593,9 @@ public class OrderService {
 //		bpmHeader.setAddress();
 		bpmHeader.setApprovalDiscount(order.getApprovedDiscount());
 		bpmHeader.setB2c("0");
-		List<BaseItem> l = order.getItems();
-		for (BaseItem baseItem : l) {
-			String c = baseItem.getB2cComments();
+		List<ItemDto> l = order.getItems();
+		for (ItemDto ItemDto : l) {
+			String c = ItemDto.getB2cComments();
 			if (c != null && c.trim().length() > 0) {
 				bpmHeader.setB2c("1");
 				break;
@@ -1638,9 +1609,9 @@ public class OrderService {
 		bpmHeader.setCreateTime(order.getCreateTime());
 		bpmHeader.setCurrencyName(order.getCurrencyName());
 		bpmHeader.setCustomerName(order.getCustomerName());
-		bpmHeader.setDealer(order.getOrderType().equals(AbsOrder.ORDER_TYPE_CODE_DEALER) ? "1" : "0");
-		if (order instanceof DealerOrder) {
-			bpmHeader.setDiscount(((DealerOrder)order).getDiscount());
+		bpmHeader.setDealer(order.getOrderType().equals(OrderDto.ORDER_TYPE_CODE_DEALER) ? "1" : "0");
+		if (order.getOrderType().equals(OrderDto.ORDER_TYPE_CODE_DEALER)) {
+			bpmHeader.setDiscount(order.getDiscount());
 		}
 		bpmHeader.setEarliestDeliveryDate(order.getEarliestDeliveryDate());
 		// TODO 
@@ -1671,40 +1642,40 @@ public class OrderService {
 		bpmHeader.setWtwMargin(sumMargin.getWtwGrossProfitMargin());
 		
 		// set bpm order item
-		for (BaseItem baseItem : items) {
+		for (ItemDto ItemDto : items) {
 			OrderItem bpmItem = new OrderItem();
 			bpmItems.add(bpmItem);
 			
-			bpmItem.setActuralAmount(baseItem.getActuralPrice() * baseItem.getQuantity());
-			bpmItem.setActuralAmountOfOptional(baseItem.getActuralPricaOfOptional() * baseItem.getQuantity());
-			bpmItem.setActuralPrice(baseItem.getActuralPrice());
-			bpmItem.setActuralPriceOfOptional(baseItem.getActuralPricaOfOptional());
-//			bpmItem.setAddress(baseItem.geta);
-			bpmItem.setB2cAmountEstimated(baseItem.getB2cPriceEstimated() * baseItem.getQuantity());
-			bpmItem.setB2cComments(baseItem.getB2cComments());
-			bpmItem.setB2cCostOfEstimated(baseItem.getB2cCostOfEstimated());
-			bpmItem.setB2cPriceEstimated(baseItem.getB2cPriceEstimated());
-			bpmItem.setColorComments(baseItem.getColorComments());
-			bpmItem.setDeliveryDate(baseItem.getDeliveryDate());
-			bpmItem.setDiscount(baseItem.getDiscount());
-			bpmItem.setItemCategoryName(baseItem.getItemCategory());
-			bpmItem.setItemRequirementPlanName(baseItem.getItemRequirementPlan());
-			bpmItem.setMaterialCode(baseItem.getMaterialCode());
+			bpmItem.setActuralAmount(ItemDto.getActuralPrice() * ItemDto.getQuantity());
+			bpmItem.setActuralAmountOfOptional(ItemDto.getActuralPricaOfOptional() * ItemDto.getQuantity());
+			bpmItem.setActuralPrice(ItemDto.getActuralPrice());
+			bpmItem.setActuralPriceOfOptional(ItemDto.getActuralPricaOfOptional());
+//			bpmItem.setAddress(ItemDto.geta);
+			bpmItem.setB2cAmountEstimated(ItemDto.getB2cPriceEstimated() * ItemDto.getQuantity());
+			bpmItem.setB2cComments(ItemDto.getB2cComments());
+			bpmItem.setB2cCostOfEstimated(ItemDto.getB2cCostOfEstimated());
+			bpmItem.setB2cPriceEstimated(ItemDto.getB2cPriceEstimated());
+			bpmItem.setColorComments(ItemDto.getColorComments());
+			bpmItem.setDeliveryDate(ItemDto.getDeliveryDate());
+			bpmItem.setDiscount(ItemDto.getDiscount());
+			bpmItem.setItemCategoryName(ItemDto.getItemCategory());
+			bpmItem.setItemRequirementPlanName(ItemDto.getItemRequirementPlan());
+			bpmItem.setMaterialCode(ItemDto.getMaterialCode());
 //			bpmItem.setMaterialAttribute();
-			bpmItem.setMaterialGroupName(baseItem.getGroupName());
-			bpmItem.setMaterialName(baseItem.getMaterialName());
-			bpmItem.setMeasureUnitName(baseItem.getMaterialName());
-			bpmItem.setOnStoreDate(baseItem.getOnStoreDate());
-			bpmItem.setPeriod(baseItem.getPeriod());
-			bpmItem.setProduceDate(baseItem.getProduceDate());
-			bpmItem.setQuantity(baseItem.getQuantity());
-			bpmItem.setRetailAmount(baseItem.getRetailPrice() * baseItem.getQuantity());
-			bpmItem.setRetailPrice(baseItem.getRetailPrice());
-			bpmItem.setRowNumber(baseItem.getRowNumber());
-			bpmItem.setShippDate(baseItem.getShippDate());
-			bpmItem.setSpecialComments(baseItem.getSpecialComments());
-			bpmItem.setTranscationPriceOfOptional(baseItem.getTranscationPriceOfOptional());
-			bpmItem.setTransfterPrice(baseItem.getTranscationPrice());
+			bpmItem.setMaterialGroupName(ItemDto.getGroupName());
+			bpmItem.setMaterialName(ItemDto.getMaterialName());
+			bpmItem.setMeasureUnitName(ItemDto.getMaterialName());
+			bpmItem.setOnStoreDate(ItemDto.getOnStoreDate());
+			bpmItem.setPeriod(ItemDto.getPeriod());
+			bpmItem.setProduceDate(ItemDto.getProduceDate());
+			bpmItem.setQuantity(ItemDto.getQuantity());
+			bpmItem.setRetailAmount(ItemDto.getRetailPrice() * ItemDto.getQuantity());
+			bpmItem.setRetailPrice(ItemDto.getRetailPrice());
+			bpmItem.setRowNumber(ItemDto.getRowNumber());
+			bpmItem.setShippDate(ItemDto.getShippDate());
+			bpmItem.setSpecialComments(ItemDto.getSpecialComments());
+			bpmItem.setTranscationPriceOfOptional(ItemDto.getTranscationPriceOfOptional());
+			bpmItem.setTransfterPrice(ItemDto.getTranscationPrice());
 		}
 		
 		// set bpm order margins and wtw margins

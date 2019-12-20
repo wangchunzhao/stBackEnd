@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.qhc.sap.domain.Currency;
 import com.qhc.system.entity.Area;
 
 import lombok.Getter;
