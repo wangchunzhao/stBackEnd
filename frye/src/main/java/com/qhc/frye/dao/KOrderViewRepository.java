@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.DIndustryCode;
-import com.qhc.frye.domain.KOrderView;
+import com.qhc.frye.entity.DIndustryCode;
+import com.qhc.frye.entity.KOrderView;
 
 @Repository
 public interface KOrderViewRepository extends JpaRepository<KOrderView, String> {

@@ -13,8 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.DCustomer;
-import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.domain.Customer;
+import com.qhc.frye.entity.DCustomer;
 
 /**
  * @author wang@dxc.com

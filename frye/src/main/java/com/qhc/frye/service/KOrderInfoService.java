@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.KOrderInfoRepository;
-import com.qhc.frye.domain.KOrderInfo;
+import com.qhc.frye.entity.KOrderInfo;
 
 @Service
 public class KOrderInfoService {

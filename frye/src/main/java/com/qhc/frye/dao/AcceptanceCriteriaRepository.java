@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.AcceptanceCriteria;
-import com.qhc.frye.domain.BArea;
+import com.qhc.frye.entity.AcceptanceCriteria;
+import com.qhc.frye.entity.BArea;
 @Repository
 public interface AcceptanceCriteriaRepository extends JpaRepository<AcceptanceCriteria, String>{
 	

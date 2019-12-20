@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.User;
+import com.qhc.frye.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>,JpaSpecificationExecutor<User> {

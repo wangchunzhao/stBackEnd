@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.BAreaRepository;
 import com.qhc.frye.dao.BCityRepository;
 import com.qhc.frye.dao.BProvinceRepository;
-import com.qhc.frye.domain.BArea;
-import com.qhc.frye.domain.BCity;
-import com.qhc.frye.domain.BProvince;
+import com.qhc.frye.entity.BArea;
+import com.qhc.frye.entity.BCity;
+import com.qhc.frye.entity.BProvince;
 
 @Service
 public class BAreaService {

@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.ApplicationRepository;
-import com.qhc.frye.domain.ApplicationOfRolechange;
-import com.qhc.frye.domain.Role;
-import com.qhc.frye.domain.User;
+import com.qhc.frye.entity.ApplicationOfRolechange;
+import com.qhc.frye.entity.Role;
+import com.qhc.frye.entity.User;
 
 /**
  */

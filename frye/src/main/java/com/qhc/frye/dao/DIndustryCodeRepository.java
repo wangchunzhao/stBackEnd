@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.DIndustryCode;
+import com.qhc.frye.entity.DIndustryCode;
 
 @Repository
 public interface DIndustryCodeRepository extends JpaRepository<DIndustryCode, String> {

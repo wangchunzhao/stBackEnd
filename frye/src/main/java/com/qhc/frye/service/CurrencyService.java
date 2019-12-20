@@ -17,17 +17,17 @@ import com.qhc.frye.dao.IncotermRepository;
 import com.qhc.frye.dao.PriceRepository;
 import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
-import com.qhc.frye.domain.DCurrency;
-import com.qhc.frye.domain.DIncoterm;
-import com.qhc.frye.domain.DPrice;
-import com.qhc.frye.domain.Industry;
-import com.qhc.frye.domain.LastUpdated;
-import com.qhc.frye.domain.SapCurrencySaleType;
-import com.qhc.frye.rest.controller.entity.Currency;
-import com.qhc.frye.rest.controller.entity.DateUtil;
-import com.qhc.frye.rest.controller.entity.Incoterm;
-import com.qhc.frye.rest.controller.entity.Material;
-import com.qhc.frye.rest.controller.entity.Price;
+import com.qhc.frye.domain.Currency;
+import com.qhc.frye.domain.DateUtil;
+import com.qhc.frye.domain.Incoterm;
+import com.qhc.frye.domain.Material;
+import com.qhc.frye.domain.Price;
+import com.qhc.frye.entity.DCurrency;
+import com.qhc.frye.entity.DIncoterm;
+import com.qhc.frye.entity.DPrice;
+import com.qhc.frye.entity.Industry;
+import com.qhc.frye.entity.LastUpdated;
+import com.qhc.frye.entity.SapCurrencySaleType;
 
 /**
  * 

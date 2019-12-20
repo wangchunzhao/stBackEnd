@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.ParameterSettingsRepository;
-import com.qhc.frye.domain.Parameter;
+import com.qhc.frye.entity.Parameter;
 
 
 @Service

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.DCharacteristicValue;
+import com.qhc.frye.entity.DCharacteristicValue;
 
 
 /**

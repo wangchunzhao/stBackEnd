@@ -13,8 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.SapSalesOffice;
-import com.qhc.frye.domain.LastUpdated;
+import com.qhc.frye.entity.LastUpdated;
+import com.qhc.frye.entity.SapSalesOffice;
 
 /**
  * @author wang@dxc.com

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.SpecialDeliveryVoInfoRepository;
-import com.qhc.frye.rest.controller.entity.SpecialDeliveryVoInfo;
+import com.qhc.frye.domain.SpecialDeliveryVoInfo;
 
 @Service
 public class SpecialDeliveryVoInfoService {

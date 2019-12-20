@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.qhc.frye.domain.BProvince;
-import com.qhc.frye.domain.KBiddingPlan;
+import com.qhc.frye.entity.BProvince;
+import com.qhc.frye.entity.KBiddingPlan;
 
 @Repository
 @Transactional

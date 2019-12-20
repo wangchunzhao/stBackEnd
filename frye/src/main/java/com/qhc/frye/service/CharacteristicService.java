@@ -15,14 +15,14 @@ import com.qhc.frye.dao.CharacteristicRepository;
 import com.qhc.frye.dao.CharacteristicValueRepository;
 import com.qhc.frye.dao.ClassAndCharacterRepository;
 import com.qhc.frye.dao.ClazzOfMaterialRepository;
-import com.qhc.frye.domain.DCharacteristic;
-import com.qhc.frye.domain.DCharacteristicDefault;
-import com.qhc.frye.domain.DCharacteristicValue;
-import com.qhc.frye.domain.DClassAndCharacter;
-import com.qhc.frye.domain.DClazzOfMaterial;
-import com.qhc.frye.rest.controller.entity.CharacteristicValue;
-import com.qhc.frye.rest.controller.entity.Clazz;
-import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
+import com.qhc.frye.domain.CharacteristicValue;
+import com.qhc.frye.domain.Clazz;
+import com.qhc.frye.domain.DefaultCharacteristics;
+import com.qhc.frye.entity.DCharacteristic;
+import com.qhc.frye.entity.DCharacteristicDefault;
+import com.qhc.frye.entity.DCharacteristicValue;
+import com.qhc.frye.entity.DClassAndCharacter;
+import com.qhc.frye.entity.DClazzOfMaterial;
 
 /**
  * @author wang@dxc.com

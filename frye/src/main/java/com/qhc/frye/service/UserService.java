@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.UserRepository;
-import com.qhc.frye.domain.User;
+import com.qhc.frye.entity.User;
 
 /**
  * @author lizuoshan

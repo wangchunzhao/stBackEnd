@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.Operation2roleRepository;
-import com.qhc.frye.domain.Operation2role;
-import com.qhc.frye.domain.Operations;
-import com.qhc.frye.domain.Role;
+import com.qhc.frye.entity.Operation2role;
+import com.qhc.frye.entity.Operations;
+import com.qhc.frye.entity.Role;
 
 /**
  * query role info

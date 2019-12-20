@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.OrderMapper" >
+	<!-- 按参数查询 -->
+	<select id="findOrderViewByParams" resultType="com.qhc.frye.domain.KOrderView" parameterType="com.qhc.frye.rest.controller.entity.OrderQuery" >
+    SELECT 
+    	<include refid="order_view_column_list" />
+    FROM
+    	<include refid="order_view_table_list" />
+		<include refid="order_view_where" />
+		<!-- <choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose> -->
+	</select>
+	<sql id="order_view_column_list" >
+        o.sequence_number,
+        o.order_type_code,
+        o.create_time,
+        o.owner_domain_id,
+        o.owner_name,
+        o.sales_tel,
+        o.contractor_code,
+        o.contractor_name,
+        o.contractor_class_code,
+        o.contractor_class_name,
+        o.office_code AS sales_office_code,
+        v.k_orders_id AS order_id,
+        v.id AS version_id,
+        v.version,
+        v.status,
+        v.create_time AS version_create_time,
+        v.submit_date,
+        v.bpm_submit_time,
+        v.opt_time,
+        v.k_order_info_id AS order_info_id,
+        d.*,
+        f.id AS form_id,
+        f.earliest_delivery_date,
+        f.earliest_product_date,
+        f.comments AS form_comments,
+        f.operator AS form_operator,
+        f.type AS form_type,
+        f.opt_time AS form_opt_time,
+        s.id AS support_info_id,
+        s.contract_number,
+        s.opterator_domain_id,
+        s.opt_time AS support_info_opt_time
+	</sql>
+	
+	<sql id="order_view_table_list" >
+        k_orders o
+            LEFT JOIN
+        k_order_support_info s ON s.k_orders_id = o.id
+            LEFT JOIN
+        k_order_version v ON v.k_orders_id = o.id
+            LEFT JOIN
+        k_order_info d ON d.id = v.k_order_info_id
+            LEFT JOIN
+        k_forms f ON f.k_order_info_id = d.id
+    </sql>
+    
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from 
+		<include refid="order_view_table_list" />
+		<include refid="order_view_where" />
+	</select>
+	
+	<sql id="order_view_where" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="orderId != null and orderId != ''" >
+				AND o.id = #{orderId, jdbcType=CHAR}
+			</if>
+			<if test="sequenceNumber != null and sequenceNumber != ''" >
+				AND UPPER(sequence_number) like '%${sequenceNumber.toUpperCase()}%'
+			</if>
+			<if test="versionId != null and versionId != ''" >
+				AND v.id = #{versionId, jdbcType=CHAR}
+			</if>
+			<if test="version != null and version != ''" >
+				AND v.version = #{version, jdbcType=CHAR}
+			</if>
+			<if test="status != null and status != ''" >
+				AND v.status = #{status, jdbcType=CHAR}
+			</if>
+			<if test="salesCode != null and salesCode != ''" >
+				AND o.owner_domain_id = #{salesCode, jdbcType=CHAR}
+			</if>
+			<if test="salesName != null and salesName != ''" >
+				AND UPPER(o.owner_name) = '%${salesName.toUpperCase()}%'
+			</if>
+			<!-- 2019-04-07 - 2019-11-07 -->
+			<if test="createTime != null and createTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(o.create_time, '%Y-%m-%d') >= ${createTime.substring(0, createTime.indexOf(" - "))} and DATE_FORMAT(o.create_time, '%Y-%m-%d') <= ${createTime.substring(createTime.indexOf(" - ") + 3)}
+			]]>
+			</if>
+			<!-- 2019-04-07 - 2019-11-07 -->
+			<if test="submitTime != null and submitTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(v.submit_date, '%Y-%m-%d') >= ${submitTime.substring(0, submitTime.indexOf(" - "))} and DATE_FORMAT(v.submit_date, '%Y-%m-%d') <= ${submitTime.substring(submitTime.indexOf(" - ") + 3)}
+			]]>
+			</if>
+			<if test="officeCode != null and officeCode != ''" >
+				AND d.office_code = #{officeCode, jdbcType=CHAR}
+			</if>
+			<if test="orderType != null and orderType != ''" >
+				AND o.order_type_code = #{orderType, jdbcType=CHAR}
+			</if>
+			<if test="contractNumber != null and contractNumber != ''" >
+				AND UPPER(s.contract_number) like '%${contractNumber.toUpperCase()}%'
+			</if>
+			<if test="contracterName != null and contracterName != ''" >
+				AND UPPER(o.contractor_name) like '%${contracterName.toUpperCase()}%'
+			</if>
+			<if test="statusList != null and statusList.size() > 0" >
+				<choose>
+					<when test="dominStatusList != null and dominStatusList.size() > 0">
+				AND (v.status in <foreach item="item" index="index" collection="statusList" open="("
+            separator="," close=")">#{item}</foreach>
+            		 or (o.owner_domain_id = #{dominSalesCode} and v.status in <foreach item="item" index="index" collection="dominStatusList" open="("
+            separator="," close=")">#{item}</foreach>))
+					</when>
+					<otherwise>
+				AND v.status in (<foreach item="item" index="index" collection="statusList" open="("
+            separator="," close=")">#{item}</foreach>)
+					</otherwise>
+				</choose>				
+			</if>
+			<if test="specialDiscount != null and specialDiscount != ''">
+				<if test="specialDiscount == '1'">
+				AND (d.body_discount + d.main_discount) != 96
+				</if>
+				<if test="specialDiscount != '1'">
+				AND (d.body_discount + d.main_discount) = 96
+				</if>
+			</if>
+			<if test="last">
+				AND v.create_time = (select max(create_time) from k_order_version where k_order_version.k_orders_id = o.id)
+			</if>
+			<if test="b2c != null and b2c != ''">
+				AND exists (select 1 from k_item_details where k_item_details.k_forms_id = f.id
+				<if test="b2c == '1'">
+				AND k_item_details.b2c_comments is not null and LENGTH(TRIM(k_item_details.b2c_comments)) > 0
+				</if>
+				<if test="b2c != '1'">
+				AND (k_item_details.b2c_comments is null or LENGTH(TRIM(k_item_details.b2c_comments)) = 0)
+				</if>
+				)
+			</if>
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+</mapper>

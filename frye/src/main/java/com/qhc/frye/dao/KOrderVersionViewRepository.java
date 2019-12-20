@@ -8,8 +8,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.KOrderVersion;
-import com.qhc.frye.domain.KOrderVersionView;
+import com.qhc.frye.entity.KOrderVersion;
+import com.qhc.frye.entity.KOrderVersionView;
 
 /**
  * @author  zuwei.su@dxc.com

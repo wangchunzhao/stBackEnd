@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.BArea;
-import com.qhc.frye.domain.Contract;
+import com.qhc.frye.entity.BArea;
+import com.qhc.frye.entity.Contract;
 
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Integer>{

@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qhc.frye.domain.ContractSignSys;
+import com.qhc.frye.entity.ContractSignSys;
 
 import cn.bestsign.ultimate.delta.api.client.BestSignClient;
 import cn.bestsign.ultimate.delta.api.domain.contract.sign.SignContractVO;

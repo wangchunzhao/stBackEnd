@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.KOrderInfo;
+import com.qhc.frye.entity.KOrderInfo;
 @Repository
 public interface SapSaleGroupRepository extends JpaRepository<KOrderInfo, Integer> ,JpaSpecificationExecutor<KOrderInfo>{
 	

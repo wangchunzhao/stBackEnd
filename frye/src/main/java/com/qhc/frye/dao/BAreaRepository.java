@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.BArea;
+import com.qhc.frye.entity.BArea;
 @Repository
 public interface BAreaRepository extends JpaRepository<BArea, Integer> ,JpaSpecificationExecutor<BArea>{
 	

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.qhc.frye.rest.controller.entity.ContractView;
+import com.qhc.frye.domain.ContractView;
 
 @SpringBootTest
 class ContractServiceTest {

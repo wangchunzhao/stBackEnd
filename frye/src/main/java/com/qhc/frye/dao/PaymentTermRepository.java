@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.PaymentTerm;
+import com.qhc.frye.entity.PaymentTerm;
 
 /**
  * @author wang@dxc.com

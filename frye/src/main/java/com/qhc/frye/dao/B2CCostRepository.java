@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.B2CCost;
+import com.qhc.frye.entity.B2CCost;
 
 /**
  * @author wang@dxc.com	

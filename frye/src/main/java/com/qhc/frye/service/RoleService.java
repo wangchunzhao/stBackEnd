@@ -10,10 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.RoleRepository;
-import com.qhc.frye.domain.ApplicationOfRolechange;
-import com.qhc.frye.domain.Operation2role;
-import com.qhc.frye.domain.Operations;
-import com.qhc.frye.domain.Role;
+import com.qhc.frye.entity.ApplicationOfRolechange;
+import com.qhc.frye.entity.Operation2role;
+import com.qhc.frye.entity.Operations;
+import com.qhc.frye.entity.Role;
 
 /**
  * query role info

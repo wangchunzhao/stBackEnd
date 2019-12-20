@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.qhc.frye.domain.KCharacteristics;
+import com.qhc.frye.entity.KCharacteristics;
 
 @Repository
 @Transactional

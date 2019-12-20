@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.BCityRepository;
-import com.qhc.frye.domain.BCity;
+import com.qhc.frye.entity.BCity;
 
 @Service
 public class BCityService {

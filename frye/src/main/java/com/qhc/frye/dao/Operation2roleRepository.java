@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.Operation2role;
+import com.qhc.frye.entity.Operation2role;
 
 @Repository
 public interface Operation2roleRepository extends JpaRepository<Operation2role, Integer> {

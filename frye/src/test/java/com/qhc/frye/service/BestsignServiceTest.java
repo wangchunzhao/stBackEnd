@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.qhc.frye.domain.ContractSignSys;
+import com.qhc.frye.entity.ContractSignSys;
 import com.qhc.frye.service.BestsignService;
 
 import cn.bestsign.ultimate.delta.api.client.BestSignClient;

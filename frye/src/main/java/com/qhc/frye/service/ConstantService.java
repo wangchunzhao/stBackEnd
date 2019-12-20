@@ -30,22 +30,22 @@ import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
 import com.qhc.frye.dao.SapCurrencySaleTypeRepository;
 import com.qhc.frye.dao.SapMaterialGroupsRepository;
-import com.qhc.frye.domain.AcceptanceCriteria;
-import com.qhc.frye.domain.BMaterialGroupOrder;
-import com.qhc.frye.domain.CustomerClass;
-import com.qhc.frye.domain.DCurrency;
-import com.qhc.frye.domain.DIncoterm;
-import com.qhc.frye.domain.DIndustryCode;
-import com.qhc.frye.domain.DInstallationTerms;
-import com.qhc.frye.domain.DMaterialGroups;
-import com.qhc.frye.domain.DReceiveTerms;
-import com.qhc.frye.domain.DShippingType;
-import com.qhc.frye.domain.DUnit;
-import com.qhc.frye.domain.OrderTypeCustomerClass;
-import com.qhc.frye.domain.SapCurrencySaleType;
-import com.qhc.frye.domain.SapSalesGroup;
-import com.qhc.frye.domain.SapSalesOffice;
-import com.qhc.frye.rest.controller.entity.Currency;
+import com.qhc.frye.domain.Currency;
+import com.qhc.frye.entity.AcceptanceCriteria;
+import com.qhc.frye.entity.BMaterialGroupOrder;
+import com.qhc.frye.entity.CustomerClass;
+import com.qhc.frye.entity.DCurrency;
+import com.qhc.frye.entity.DIncoterm;
+import com.qhc.frye.entity.DIndustryCode;
+import com.qhc.frye.entity.DInstallationTerms;
+import com.qhc.frye.entity.DMaterialGroups;
+import com.qhc.frye.entity.DReceiveTerms;
+import com.qhc.frye.entity.DShippingType;
+import com.qhc.frye.entity.DUnit;
+import com.qhc.frye.entity.OrderTypeCustomerClass;
+import com.qhc.frye.entity.SapCurrencySaleType;
+import com.qhc.frye.entity.SapSalesGroup;
+import com.qhc.frye.entity.SapSalesOffice;
 
 /**
  * @author wang@dxc.com

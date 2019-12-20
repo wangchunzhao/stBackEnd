@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.frye.domain.DOrder;
+import com.qhc.frye.entity.DOrder;
 @Repository
 public interface DOrderRepository extends JpaRepository<DOrder, String> ,JpaSpecificationExecutor<DOrder>{
 

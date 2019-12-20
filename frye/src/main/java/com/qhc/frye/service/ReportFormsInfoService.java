@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.ReportFormsInfoRepository;
-import com.qhc.frye.domain.ReportFormsInfo;
+import com.qhc.frye.entity.ReportFormsInfo;
 
 @Service
 public class ReportFormsInfoService {

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.qhc.frye.domain.ItemDetails;
+import com.qhc.frye.entity.ItemDetails;
 
 /**
  * @author lizuoshan

@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.SpecialDeliveryRepository;
-import com.qhc.frye.domain.SpecialDelivery;
+import com.qhc.frye.entity.SpecialDelivery;
 
 @Service
 public class SpecialDeliveryService {

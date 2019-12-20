@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import com.qhc.frye.domain.SpecialDelivery;
+
+import com.qhc.frye.entity.SpecialDelivery;
 
 @Repository
 public interface SpecialDeliveryRepository extends JpaRepository<SpecialDelivery, Integer>,JpaSpecificationExecutor<SpecialDelivery> {

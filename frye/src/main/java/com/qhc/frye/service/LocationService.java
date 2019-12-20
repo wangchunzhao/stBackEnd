@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.frye.dao.SalesGroupRepository;
 import com.qhc.frye.dao.SalesOfficeRepository;
-import com.qhc.frye.domain.SapSalesGroup;
-import com.qhc.frye.domain.SapSalesOffice;
-
-import com.qhc.frye.rest.controller.entity.SalesGroup;
+import com.qhc.frye.domain.SalesGroup;
+import com.qhc.frye.entity.SapSalesGroup;
+import com.qhc.frye.entity.SapSalesOffice;
 
 /**
  * @author wang@dxc.com

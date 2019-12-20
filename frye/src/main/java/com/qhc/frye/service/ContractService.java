@@ -22,10 +22,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.frye.dao.ContractRepository;
-import com.qhc.frye.domain.Contract;
-import com.qhc.frye.domain.ContractSignSys;
-import com.qhc.frye.rest.controller.entity.ContractView;
-import com.qhc.frye.rest.controller.entity.PageHelper;
+import com.qhc.frye.domain.ContractView;
+import com.qhc.frye.domain.PageHelper;
+import com.qhc.frye.entity.Contract;
+import com.qhc.frye.entity.ContractSignSys;
 
 /**
  * @author walker

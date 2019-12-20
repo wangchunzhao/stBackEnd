@@ -12,13 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.qhc.frye.rest.controller.entity.Bom;
-import com.qhc.frye.rest.controller.entity.BomExplosion;
-import com.qhc.frye.rest.controller.entity.Characteristic;
-import com.qhc.frye.rest.controller.entity.Configuration;
-import com.qhc.frye.rest.controller.entity.DefaultCharacteristics;
-import com.qhc.frye.rest.controller.entity.Material;
-import com.qhc.frye.rest.controller.entity.PageHelper;
 import com.qhc.frye.service.exception.NotExistException;
 import com.qhc.frye.service.exception.NotMatchException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,12 +20,19 @@ import com.qhc.frye.dao.CharacteristicDefaultRepository;
 import com.qhc.frye.dao.MaterialInfoRepository;
 import com.qhc.frye.dao.MaterialRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
-import com.qhc.frye.domain.CharacteristicConfiguration;
-import com.qhc.frye.domain.DCharacteristicDefault;
-import com.qhc.frye.domain.DMaterial;
-import com.qhc.frye.domain.LastUpdated;
-import com.qhc.frye.domain.MaterialPrice;
-import com.qhc.frye.domain.identity.MaterialClazzIdentity;
+import com.qhc.frye.domain.Bom;
+import com.qhc.frye.domain.BomExplosion;
+import com.qhc.frye.domain.Characteristic;
+import com.qhc.frye.domain.Configuration;
+import com.qhc.frye.domain.DefaultCharacteristics;
+import com.qhc.frye.domain.Material;
+import com.qhc.frye.domain.PageHelper;
+import com.qhc.frye.entity.CharacteristicConfiguration;
+import com.qhc.frye.entity.DCharacteristicDefault;
+import com.qhc.frye.entity.DMaterial;
+import com.qhc.frye.entity.LastUpdated;
+import com.qhc.frye.entity.MaterialPrice;
+import com.qhc.frye.entity.identity.MaterialClazzIdentity;
 
 
 

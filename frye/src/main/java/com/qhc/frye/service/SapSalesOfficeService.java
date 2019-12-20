@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qhc.frye.dao.SalesOfficeRepository;
-import com.qhc.frye.domain.SapSalesOffice;
+import com.qhc.frye.entity.SapSalesOffice;
 
 /**
  */

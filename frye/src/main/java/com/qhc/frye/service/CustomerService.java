@@ -21,12 +21,12 @@ import com.qhc.frye.dao.CustomerAffiliationRepository;
 import com.qhc.frye.dao.CustomerIndustryRepository;
 import com.qhc.frye.dao.CustomerRepository;
 import com.qhc.frye.dao.SapLastUpdatedRepository;
-import com.qhc.frye.domain.CustomerAffiliation;
-import com.qhc.frye.domain.DCustomer;
-import com.qhc.frye.domain.DIndustryCode;
-import com.qhc.frye.domain.Industry;
-import com.qhc.frye.domain.LastUpdated;
-import com.qhc.frye.rest.controller.entity.Customer;
+import com.qhc.frye.domain.Customer;
+import com.qhc.frye.entity.CustomerAffiliation;
+import com.qhc.frye.entity.DCustomer;
+import com.qhc.frye.entity.DIndustryCode;
+import com.qhc.frye.entity.Industry;
+import com.qhc.frye.entity.LastUpdated;
 
 /**
  * @author wang@dxc.com
