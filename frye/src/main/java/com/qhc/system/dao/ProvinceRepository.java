@@ -4,9 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.system.entity.City;
-
+import com.qhc.system.entity.Province;
 @Repository
-public interface BCityRepository extends JpaRepository<City, Integer> ,JpaSpecificationExecutor<City>{
+public interface ProvinceRepository extends JpaRepository<Province, Integer> ,JpaSpecificationExecutor<Province>{
 
 }

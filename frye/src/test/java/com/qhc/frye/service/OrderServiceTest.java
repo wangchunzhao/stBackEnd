@@ -17,7 +17,7 @@ import com.qhc.order.domain.OrderVersionDto;
 import com.qhc.order.entity.OrderView;
 import com.qhc.order.mapper.OrderMapper;
 import com.qhc.order.service.OrderService;
-import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.system.domain.PageHelper;
 
 @SpringBootTest
@@ -87,7 +87,7 @@ class OrderServiceTest {
 		query.setIncludeDetail(true);
 		PageHelper<OrderDto> result = orderService.findOrders(query);
 		OrderDto order = result.getRows().get(0);
-		List<DMaterialGroups> groups = orderService.calcGrossProfit(order);
+		List<MaterialGroups> groups = orderService.calcGrossProfit(order);
 		System.out.println(groups);
 	}
 

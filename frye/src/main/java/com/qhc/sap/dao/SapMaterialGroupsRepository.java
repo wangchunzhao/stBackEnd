@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.MaterialGroups;
 
 @Repository
-public interface SapMaterialGroupsRepository extends JpaRepository<DMaterialGroups, String> {
-	public List<DMaterialGroups> findByIsenableNotOrderByCode(int i);
+public interface SapMaterialGroupsRepository extends JpaRepository<MaterialGroups, String> {
+	public List<MaterialGroups> findByIsenableNotOrderByCode(int i);
 }

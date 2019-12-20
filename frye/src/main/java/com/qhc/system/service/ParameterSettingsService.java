@@ -14,32 +14,32 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.system.dao.ParameterSettingsRepository;
-import com.qhc.system.entity.Parameter;
+import com.qhc.system.dao.SettingsRepository;
+import com.qhc.system.entity.Settings;
 
 
 @Service
 public class ParameterSettingsService {
 	
 	@Autowired
-	private ParameterSettingsRepository parameterSettingsRepository;
+	private SettingsRepository parameterSettingsRepository;
 
-	public List<Parameter> findAll() {
+	public List<Settings> findAll() {
 		return parameterSettingsRepository.findAll();
 	}
 
-	public Parameter updateParameter(Parameter p) {
+	public Settings updateParameter(Settings p) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer id = p.getId();
 		String code = p.getCode();
-		Parameter old = parameterSettingsRepository.getOne(id);
+		Settings old = parameterSettingsRepository.getOne(id);
 		String tdate = sdf.format(new Date());
 		String sdate = sdf.format(p.getEnableDate());
 		String osdate = sdf.format(old.getEnableDate());
 		p.setOptTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		if (!sdate.equals(osdate)) {
 			if (sdate.compareTo(tdate) > 0) {
-				Parameter after = parameterSettingsRepository.findAfterInfo(code);
+				Settings after = parameterSettingsRepository.findAfterInfo(code);
 				if (after == null) {
 					p.setId(null);
 				} else {
@@ -57,17 +57,17 @@ public class ParameterSettingsService {
 		return parameterSettingsRepository.save(p);
 	}
 
-	public Parameter findById(Integer id) {
+	public Settings findById(Integer id) {
 		return parameterSettingsRepository.findById(id).get();
 	}
 	
-	public List<Parameter> findDistinctInfo() {
+	public List<Settings> findDistinctInfo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(new Date());
-		List<Parameter> list = parameterSettingsRepository.findSettings();
-		List<Parameter> ps = new ArrayList<Parameter>();
-		Map<String, Parameter> map = new LinkedHashMap<String, Parameter>();
-		for (Parameter parameter : list) {
+		List<Settings> list = parameterSettingsRepository.findSettings();
+		List<Settings> ps = new ArrayList<Settings>();
+		Map<String, Settings> map = new LinkedHashMap<String, Settings>();
+		for (Settings parameter : list) {
 			String code = parameter.getCode();
 			String date = sdf.format(parameter.getEnableDate());
 			if (date.compareTo(today) <= 0) {
@@ -82,13 +82,13 @@ public class ParameterSettingsService {
 			}
 		}
 		
-		for (Map.Entry<String, Parameter> e : map.entrySet()) {
+		for (Map.Entry<String, Settings> e : map.entrySet()) {
 			String key = e.getKey();
 			String code = key.substring(0, key.length() - 4);
-			Parameter parameter = e.getValue();
+			Settings parameter = e.getValue();
 			if (key.endsWith("_pre")) {
 				ps.add(parameter);
-				Parameter after = map.get(code + "_aft");
+				Settings after = map.get(code + "_aft");
 				if (after != null ) {
 					parameter.setAfterValue(after.getsValue());
 					parameter.setAfterEnableDate(after.getEnableDate());

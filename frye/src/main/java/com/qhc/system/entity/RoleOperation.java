@@ -1,81 +1,1 @@
-package com.qhc.system.entity;
-
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-@Entity
-@Table(name = "b_operation2role")
-public class RoleOperation implements Serializable{
-	
-	@Id
-    @NotNull
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
-	
-	@NotNull
-	@Column(name="opt_time",columnDefinition="datetime")
-    private Date optTime;
-	
-	@NotNull
-	@Column(name="isActive",columnDefinition="BIT")//设置成boolean类型存在序列化问题
-    private int isActive;
-	
-	@NotNull
-	@Column(name="b_operations_id",columnDefinition="CHAR",length = 32)
-    private String operationId;
-	
-	@NotNull
-	@Column(name="b_roles_id")
-    private int roleId;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public Date getOptTime() {
-		return optTime;
-	}
-
-	public void setOptTime(Date optTime) {
-		this.optTime = optTime;
-	}
-
-	public String getOperationId() {
-		return operationId;
-	}
-
-	public void setOperationId(String operationId) {
-		this.operationId = operationId;
-	}
-
-	public int getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(int roleId) {
-		this.roleId = roleId;
-	}
-
-	public int getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(int isActive) {
-		this.isActive = isActive;
-	}
-	
-
-	
-}
+package com.qhc.system.entity;import java.io.Serializable;import java.util.Date;/** *  * Function: Data transfer object. <br>  * * @author walker */public class RoleOperation		implements Serializable {	private static final long serialVersionUID = 5792949569585810882L;		/* RoleId */	private Integer roleId = null;	/* OperationId */	private String operationId = null;	public RoleOperation(){	}	public Integer getRoleId() {		return this.roleId;	}	public void setRoleId(Integer roleId) {		this.roleId = roleId;	}	 	public String getOperationId() {		return this.operationId;	}	public void setOperationId(String operationId) {		this.operationId = operationId;	}	 	@Override	public int hashCode() {		final int prime = 31;		int result = 1;		result = prime * result + ((roleId == null) ? 0 : roleId.hashCode());		result = prime * result + ((operationId == null) ? 0 : operationId.hashCode());		return result;	}	@Override	public boolean equals(Object obj) {		if (this == obj) {			return true;		}		if (obj == null) {			return false;		}		if (getClass() != obj.getClass()) {			return false;		}		final RoleOperation other = (RoleOperation) obj;		return (this.roleId == null ? other.roleId == null : this.roleId.equals(other.roleId))			&&(this.operationId == null ? other.operationId == null : this.operationId.equals(other.operationId));	}		public String toString() {	    final String tab = "  ";	    String str = "";	    str = "RoleOperation ( "	        + "roleId = " + this.roleId + tab	        + "operationId = " + this.operationId + tab	        + " )";		    return str;	}}

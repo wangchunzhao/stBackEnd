@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="sap_material_groups")
-public class DMaterialGroups {
+public class MaterialGroups {
 	
 	@Id
     @NotNull

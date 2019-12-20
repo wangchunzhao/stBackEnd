@@ -25,7 +25,7 @@ import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.entity.CustomerAffiliation;
 import com.qhc.sap.entity.Customer;
-import com.qhc.sap.entity.DIndustryCode;
+import com.qhc.sap.entity.IndustryCode;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
 
@@ -86,7 +86,7 @@ public class CustomerService {
 		for(Customer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
 			
-			DIndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
+			IndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
 			String industryCodeName = industryCode == null ? null : industryCode.getName();
 			dc.setIndustryCodeName(industryCodeName);
 		}

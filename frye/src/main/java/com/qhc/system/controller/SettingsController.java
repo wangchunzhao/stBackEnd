@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.system.entity.Parameter;
+import com.qhc.system.entity.Settings;
 import com.qhc.system.service.ParameterSettingsService;
 
 import io.swagger.annotations.Api;
@@ -32,21 +32,21 @@ public class SettingsController {
 	@ApiOperation(value = "查询所有系统参数 ", notes = "查询所有系统参数")
 	@GetMapping(value = "parameterSettings")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Parameter> findAll() throws Exception {
+	public List<Settings> findAll() throws Exception {
 		return settingService.findDistinctInfo();
 	}
 
 	@ApiOperation(value = "查询所有系统参数 ", notes = "查询所有系统参数")
 	@GetMapping(value = "parameterSettings/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Parameter findById(@PathVariable Integer id) throws Exception {
+	public Settings findById(@PathVariable Integer id) throws Exception {
 		return settingService.findById(id);
 	}
 
 	@ApiOperation(value = "新增修改参数", notes = "新增修改参数")
 	@PostMapping(value = "parameterSettings")
 	@ResponseStatus(HttpStatus.OK)
-	public Parameter update(@RequestBody Parameter p) {
+	public Settings update(@RequestBody Settings p) {
 		return settingService.updateParameter(p);
 	}
 }

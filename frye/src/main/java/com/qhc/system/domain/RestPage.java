@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
+import com.github.pagehelper.PageInfo;
 import com.qhc.system.entity.Role;
  
 
@@ -38,6 +39,15 @@ public class RestPage<T> implements Serializable {
         this.pageNumber = page.getPageable().getPageNumber();
         this.pageSize = page.getPageable().getPageSize();
         this.numberOfElements = page.getNumberOfElements();
+    }
+ 
+    //只用把原来的page类放进来即可
+    public RestPage(PageInfo<T> page) {
+        this.content = page.getList();
+        this.totalElements = page.getTotal();
+        this.pageNumber = page.getPageNum();
+        this.pageSize = page.getPageSize();
+        this.numberOfElements = page.getPages();
     }
  
     //是否有前一页

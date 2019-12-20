@@ -1,30 +1,32 @@
 package com.qhc.system.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.qhc.system.entity.UserRole;
-import com.qhc.system.entity.RoleOperation;
-import com.qhc.system.dao.RoleRepository;
-import com.qhc.system.entity.Operation;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.qhc.system.domain.OperationDto;
+import com.qhc.system.domain.RoleDto;
 import com.qhc.system.entity.Role;
+import com.qhc.system.mapper.RoleMapper;
 
 /**
- * query role info
- * 查询角色信息
+ * query role info 查询角色信息
  */
 @Service
 public class RoleService {
 
 	@Autowired
-	private RoleRepository roleRepository;
+	private RoleMapper roleMapper;
 	@Autowired
 	private OperationService operationService;
 	@Autowired
@@ -32,87 +34,137 @@ public class RoleService {
 
 	/**
 	 * 通过id查询角色
+	 * 
 	 * @param id
 	 * @return
 	 * @throws NoSuchElementException
 	 */
-	public Role findById(int id) throws NoSuchElementException{
-		Role role = roleRepository.findById(id).get();
-		Set<UserRole> sets = role.getApps();
-		for(UserRole set:sets) {
-			set.setApprovalTime(null);
-			set.setCreateTime(null);
+	public RoleDto findById(int id) throws NoSuchElementException {
+		Role role = roleMapper.findById(id);
+		RoleDto roleDto = new RoleDto();
+		try {
+			BeanUtils.copyProperties(role, roleDto);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		List<RoleOperation> relationList= relationService.findByRoleId(id,1);
-		Set<Operation> operations = new HashSet<Operation>();
-		if(relationList!=null&&relationList.size()>0) {
-			for(RoleOperation or:relationList) {
-				or.setOptTime(null);
-				operations.add(operationService.findById(or.getOperationId()));
-			}
-		}
-			role.setOperations(new ArrayList<Operation>(operations));
-		return role;	
-		
+//		Set<UserRole> sets = role.getApps();
+		List<OperationDto> operations = relationService.findByRoleId(id);
+		roleDto.setOperations(operations);
+		return roleDto;
+
 	}
 
 	/**
 	 * 查询角色列表
+	 * 
 	 * @return
 	 */
-	public List<Role> findAll() {
-		return roleRepository.findAll();
+	public List<RoleDto> findAll() {
+		List<Role> list = roleMapper.findByParams(new HashMap<String, Object>());
+		List<RoleDto> roles = new ArrayList();
+		toDtoList(list, roles);
+		
+		return roles;
 	}
-	
+
+	private void toDtoList(List<Role> list, List<RoleDto> roles) {
+		for (Role role : list) {
+			RoleDto roleDto = new RoleDto();
+			roles.add(roleDto);
+			
+			try {
+				BeanUtils.copyProperties(role, roleDto);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * 分页查询角色列表
+	 * 
 	 * @return
 	 */
-	public Page<Role> getPageRoleList(Pageable pageable) {
+	public PageInfo<RoleDto> getPageRoleList(Pageable pageable) {
+		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+		PageInfo p = new PageInfo(roleMapper.findByParams(new HashMap<String, Object>()));
+
+		List<RoleDto> roles = new ArrayList();
+		toDtoList(p.getList(), roles);
+		p.setList(roles);
 		
-		return roleRepository.findAll(pageable);
+		return p;
 	}
-	
-	
+
 	/**
 	 * 新增，修改角色
+	 * 
 	 * @param role
 	 */
-	public Role createOrUpdateRole(Role role) {
+	public RoleDto createOrUpdateRole(RoleDto role) {
+		Role r = new Role();
+		try {
+			BeanUtils.copyProperties(r, role);
+			if (role.getId() == null) {
+				roleMapper.insert(r);
+			} else {
+				roleMapper.update(r);
+			}
+			role.setId(r.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		return roleRepository.save(role);
+		return role;
 	}
 
 	/**
 	 * 删除角色
+	 * 
 	 * @param role
 	 */
 	public void remove(int id) {
-		
-		roleRepository.deleteById(id);
-		roleRepository.flush();
+		roleMapper.deleteById(id);
 	}
-
 
 	public List<Role> findByNameLike(String name) {
-		return roleRepository.findByNameLike("%"+name+"%");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("name", "%" + name + "%");
+		return roleMapper.findByParams(params);
 	}
-	
+
 	public Role findByName(String name) {
-		return roleRepository.findByName(name);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("name", name);
+		List<Role> list = roleMapper.findByParams(params);
+		
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
 	}
 
-	public Page<Role> getByConditions(Role role, Pageable pageable) {	
-		if(role.getIsActive()==2) {
-			//查询全部
-			return roleRepository.findAll(pageable);
+	/**
+	 * 查询用户所有的角色
+	 * 
+	 * @param userIdentity
+	 * @return
+	 */
+	public List<RoleDto> findByUserIdentity(String userIdentity) {
+		List<Role> list = roleMapper.findByUserIdentity(userIdentity);
+		List<RoleDto> roles = new ArrayList<>();
 		
-		}else {
-			//查询启用或禁用的
-			return roleRepository.findByIsActive(role.getIsActive(),pageable);
-			
-		}
-    }
+		this.toDtoList(list, roles);
+		
+		return roles;
+	}
 
-	
+	public PageInfo<Role> getByConditions(Role role, Pageable pageable) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<Role> list = roleMapper.findByParams(params);
+		
+		return new PageInfo<Role>(list);
+	}
+
 }

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="sap_industry_code")
-public class DIndustryCode implements Serializable{
+public class IndustryCode implements Serializable{
 	@Id
     @NotNull
     @Column(name="code",columnDefinition="CHAR",length=3)
@@ -26,7 +26,7 @@ public class DIndustryCode implements Serializable{
 	private String name;
     
     @NotNull
-    @Column(name="is_forDealer",columnDefinition="BIT",length=1)
+    @Column(name="is_fordealer",columnDefinition="BIT",length=1)
     private boolean isFordealer;
     
 
@@ -57,7 +57,7 @@ public class DIndustryCode implements Serializable{
 	@Override
 	public boolean equals(Object o) {
 		if(o.getClass().equals(this.getClass()) ) {
-			DIndustryCode obj = (DIndustryCode)o;
+			IndustryCode obj = (IndustryCode)o;
 			if(obj.getCode().equals(this.getCode())) {
 				return true;
 			}

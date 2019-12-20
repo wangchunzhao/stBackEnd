@@ -9,8 +9,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.system.dao.OperationRepository;
+import com.qhc.system.domain.OperationDto;
 import com.qhc.system.entity.Operation;
+import com.qhc.system.mapper.OperationMapper;
 
 /**
  * query operation info
@@ -20,7 +21,7 @@ import com.qhc.system.entity.Operation;
 public class OperationService implements Serializable{
 
 	@Autowired
-	private OperationRepository operationRepository;
+	private OperationMapper operationMapper;
 
 
 	/**
@@ -28,7 +29,7 @@ public class OperationService implements Serializable{
 	 * @return
 	 */
 	public List<Operation> findAll() {
-		return operationRepository.findAll();
+		return operationMapper.findByParams(null);
 	}
 	/**
 	 * 通过id查询权限
@@ -37,12 +38,22 @@ public class OperationService implements Serializable{
 	 * @throws NoSuchElementException
 	 */
 	public Operation findById(String id) {
-		return operationRepository.findById(id);
+		return operationMapper.findById(id);
 	}
 
 	public Operation createOrUpdateOperations(@Valid Operation operations) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	
+	/**
+	 * 查询用过的所有权限
+	 * 
+	 * @param userIdentity
+	 */
+	public List<OperationDto> findByUser(String userIdentity) {
+		return operationMapper.findByUserIdentity(userIdentity);
 	}
 	
 

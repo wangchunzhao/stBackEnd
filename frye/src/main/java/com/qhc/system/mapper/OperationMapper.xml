@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.OperationMapper" >
+	<resultMap id="OperationBaseMap" type="com.qhc.system.entity.Operation" >
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+		<result column="operation_type" property="operationType" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="OperationMap" type="com.qhc.system.entity.Operation" extends="OperationBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.Operation">
+		insert into b_operation ( name, description, parent_id, 
+			operation_type )
+		values ( #{name, jdbcType=VARCHAR}, #{description, jdbcType=VARCHAR}, #{parentId, jdbcType=VARCHAR}, 
+			#{operationType, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.Operation" >
+		update b_operation
+		set name = #{name, jdbcType=VARCHAR}, 
+			description = #{description, jdbcType=VARCHAR}, 
+			parent_id = #{parentId, jdbcType=VARCHAR}, 
+			operation_type = #{operationType, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from b_operation
+		where id = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_operation.id, b_operation.name, b_operation.description, b_operation.parent_id, b_operation.operation_type
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="OperationMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from b_operation 
+		where b_operation.id = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null and id != ''" >
+				AND b_operation.id = #{id, jdbcType=VARCHAR}
+			</if>
+			<if test="name != null and name != ''" >
+				AND b_operation.name = #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="description != null and description != ''" >
+				AND b_operation.description = #{description, jdbcType=VARCHAR}
+			</if>
+			<if test="parentId != null and parentId != ''" >
+				AND b_operation.parent_id = #{parentId, jdbcType=VARCHAR}
+			</if>
+			<if test="operationType != null and operationType != ''" >
+				AND b_operation.operation_type = #{operationType, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_operation
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="OperationMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_operation
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByUserIdentity" resultType="com.qhc.system.domain.OperationDto" parameterType="String" >
+		select 
+		b_operation.*
+		from b_operation
+		left join b_role_operation ro on ro.operation_id = b_operation.id
+		left join b_user_role ur on ur.role_id = ro.role_id
+		left join b_user u on u.id = ur.user_id
+		where u.user_identity = #{value}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByRoleId" resultMap="OperationMap" parameterType="Integer" >
+		select 
+		b_operation.*
+		from b_operation
+		left join b_role_operation ro on ro.operation_id = b_operation.id
+		where ro.role_id = #{value}
+	</select>
+</mapper>

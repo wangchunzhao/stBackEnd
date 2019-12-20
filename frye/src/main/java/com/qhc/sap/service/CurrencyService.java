@@ -20,10 +20,10 @@ import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.domain.IncotermDto;
 import com.qhc.sap.domain.MaterialDto;
-import com.qhc.sap.domain.Price;
+import com.qhc.sap.domain.PriceDto;
 import com.qhc.sap.entity.Currency;
 import com.qhc.sap.entity.Incoterm;
-import com.qhc.sap.entity.DPrice;
+import com.qhc.sap.entity.MaterialPrice;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.SapCurrencySaleType;
@@ -120,15 +120,15 @@ public class CurrencyService {
 		return incos;
 	}
 	
-	public void savePrice(List<Price> price) {
-		Set<DPrice> dps = new HashSet<DPrice>();
+	public void savePrice(List<PriceDto> price) {
+		Set<MaterialPrice> dps = new HashSet<MaterialPrice>();
 		//
 		LastUpdated lastUpdated = new LastUpdated();
-		lastUpdated.setCode(Price.PRICE_CODE);
+		lastUpdated.setCode(PriceDto.PRICE_CODE);
 		lastUpdated.setName("price");
 		//
-		for(Price pri:price) {
-			DPrice temp = new DPrice();
+		for(PriceDto pri:price) {
+			MaterialPrice temp = new MaterialPrice();
 			temp.setPrice(pri.getPrice());
 			temp.setType(pri.getType());
 			temp.setMaterialCode(pri.getMaterialCode());
@@ -140,15 +140,15 @@ public class CurrencyService {
 		lastUpdatedRepo.save(lastUpdated);
 	}
 	
-	public void savePriceA(List<Price> price) {
-		Set<DPrice> dps = new HashSet<DPrice>();
+	public void savePriceA(List<PriceDto> price) {
+		Set<MaterialPrice> dps = new HashSet<MaterialPrice>();
 		//
 		LastUpdated lastUpdated = new LastUpdated();
-		lastUpdated.setCode(Price.PRICEA_CODE);
+		lastUpdated.setCode(PriceDto.PRICEA_CODE);
 		lastUpdated.setName("priceA");
 		//
-		for(Price pri:price) {
-			DPrice temp = new DPrice();
+		for(PriceDto pri:price) {
+			MaterialPrice temp = new MaterialPrice();
 			temp.setPrice(pri.getPrice());
 			temp.setType(pri.getType());
 			temp.setMaterialCode(pri.getMaterialCode());

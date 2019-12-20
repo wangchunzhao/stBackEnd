@@ -36,9 +36,9 @@ import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.entity.CustomerClass;
 import com.qhc.sap.entity.Currency;
 import com.qhc.sap.entity.Incoterm;
-import com.qhc.sap.entity.DIndustryCode;
-import com.qhc.sap.entity.DInstallationTerms;
-import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.IndustryCode;
+import com.qhc.sap.entity.InstallationTerms;
+import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.ReceiveTerms;
 import com.qhc.sap.entity.ShippingType;
 import com.qhc.sap.entity.Unit;
@@ -164,16 +164,16 @@ public class ConstantService {
 
 	}
 
-	public DIndustryCode findIndustryCodeByCode(String code) {
+	public IndustryCode findIndustryCodeByCode(String code) {
 		return industryCodeRepository.findByCode(code);
 	}
 
 	public Map<String, String> findFordealerIndustryCodes() {
 		if (dealerIndustryCodes == null || dealerIndustryCodes.isEmpty()) {
-			List<DIndustryCode> industryCodeList = industryCodeRepository.findAllFordealer();
+			List<IndustryCode> industryCodeList = industryCodeRepository.findAllFordealer();
 			dealerIndustryCodes = new HashMap<String, String>();
 
-			for (DIndustryCode dIndustryCode : industryCodeList) {
+			for (IndustryCode dIndustryCode : industryCodeList) {
 				dealerIndustryCodes.put(dIndustryCode.getCode(), dIndustryCode.getName());
 			}
 		}
@@ -196,11 +196,11 @@ public class ConstantService {
 
 	public Map<String, String> findMaterialGroups() {
 		if (materialGroups == null || materialGroups.isEmpty()) {
-			List<DMaterialGroups> list = materialGroupsRepository.findAll(Sort.by(Order.asc("code")));
+			List<MaterialGroups> list = materialGroupsRepository.findAll(Sort.by(Order.asc("code")));
 			materialGroups = new LinkedHashMap<String, String>();
 			materialGroupMapGroupOrders = new LinkedHashMap<String, String>();
 
-			for (DMaterialGroups dMaterialGroups : list) {
+			for (MaterialGroups dMaterialGroups : list) {
 				String groupCode = dMaterialGroups.getCode();
 				materialGroups.put(groupCode, dMaterialGroups.getName());
 
@@ -323,10 +323,10 @@ public class ConstantService {
 	
 	public Map<String, Map<String, String>> findInstallationTerms() {
 		if (installationTerms == null || installationTerms.isEmpty()) {
-			List<DInstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
+			List<InstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
 			installationTerms = new LinkedHashMap<String, Map<String, String>>();
 
-			for (DInstallationTerms term : list) {
+			for (InstallationTerms term : list) {
 				String classCode = term.getCustomerClassCode();
 				Map<String, String> terms = installationTerms.get(classCode);
 				if (terms == null) {

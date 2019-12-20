@@ -31,7 +31,7 @@ import com.qhc.order.domain.PaymentPlan;
 import com.qhc.order.entity.Order;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.dao.SalesGroupRepository;
-import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.system.domain.PageHelper;
@@ -146,21 +146,21 @@ public class OrderController {
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/grossprofit")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DMaterialGroups> calcGrossProfit(@RequestBody OrderDto order) throws Exception {
+	public List<MaterialGroups> calcGrossProfit(@RequestBody OrderDto order) throws Exception {
 		return orderService.calcGrossProfit(order);
 	}
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/{sequenceNumber}/{version}/wtwgrossprofit")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DMaterialGroups> calcWtwGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
+	public List<MaterialGroups> calcWtwGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
 		return orderService.calcWtwGrossProfit(sequenceNumber, version);
 	}
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
 	@ResponseStatus(HttpStatus.OK)
-	public List<DMaterialGroups> calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
+	public List<MaterialGroups> calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version) throws Exception {
 		return orderService.calcGrossProfit(sequenceNumber, version);
 	}
 

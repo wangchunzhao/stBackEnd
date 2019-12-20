@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.qhc.order.entity.MaterialGroupOrder;
-import com.qhc.sap.entity.DIndustryCode;
+import com.qhc.sap.entity.IndustryCode;
 
 @Repository
 public interface BMaterialGroupOrderRepository extends JpaRepository<MaterialGroupOrder, String> {

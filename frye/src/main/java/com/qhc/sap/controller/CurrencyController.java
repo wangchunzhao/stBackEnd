@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.domain.IncotermDto;
 import com.qhc.sap.domain.MaterialDto;
-import com.qhc.sap.domain.Price;
+import com.qhc.sap.domain.PriceDto;
 import com.qhc.sap.service.CurrencyService;
 import com.qhc.sap.service.CustomerService;
 import com.qhc.utils.DateUtil;
@@ -47,7 +47,7 @@ public class CurrencyController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public String getLastUpdatedDate() throws Exception {
-		Date date = currencyService.getLastUpdated(Price.PRICE_CODE);
+		Date date = currencyService.getLastUpdated(PriceDto.PRICE_CODE);
 		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
 	
@@ -56,7 +56,7 @@ public class CurrencyController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public String getALastUpdatedDate() throws Exception {
-		Date date = currencyService.getLastUpdated(Price.PRICEA_CODE);
+		Date date = currencyService.getLastUpdated(PriceDto.PRICEA_CODE);
 		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
 	
@@ -95,14 +95,14 @@ public class CurrencyController {
 	@ApiOperation(value = "新增价格",notes="新增价格")
 	@PutMapping(value = "currency/price")
 	@ResponseStatus(HttpStatus.OK)
-	public void putPrice(@RequestBody(required = true) @Valid List<Price> price) {
+	public void putPrice(@RequestBody(required = true) @Valid List<PriceDto> price) {
 		currencyService.savePrice(price);
 	}
 	
 	@ApiOperation(value = "新增价格(年采价)",notes="新增价格(年采价)")
 	@PutMapping(value = "currency/priceA")
 	@ResponseStatus(HttpStatus.OK)
-	public void putPriceA(@RequestBody(required = true) @Valid List<Price> price) {
+	public void putPriceA(@RequestBody(required = true) @Valid List<PriceDto> price) {
 		currencyService.savePriceA(price);
 	}
 

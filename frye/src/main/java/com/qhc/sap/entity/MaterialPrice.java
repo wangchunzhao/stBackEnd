@@ -3,164 +3,66 @@
  */
 package com.qhc.sap.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author wang@dxc.com
  *
  */
 @Entity
-@Table(name = "sap_material_info_view")
-public class MaterialPrice implements Serializable {
-		
-	@Column(name = "code",columnDefinition ="CHAR")
-	private String code;
+@Table(name="sap_materials_price")
+public class MaterialPrice {
 	
-	@Column(name = "description",columnDefinition ="TEXT")
-	private String description;
-	@Id 
-	@Column(name = "price_type_code",columnDefinition ="CHAR")
-	private String priceTypeCode;
-	
-	@Column(name = "price_type_name",columnDefinition ="TEXT")
-	private String priceTypeName;
-	
-	
-	@Column(name = "price",columnDefinition ="DECIMAL")
+	@Id
+	@NotNull
+	@Column(name="price",columnDefinition="DECIMAL",precision = 13 ,scale=2)
 	private double price;
-    
-	@Column(name = "is_configurable",columnDefinition ="BIT")
-	private boolean isConfigurable;
 	
-	@Column(name = "is_purchased",columnDefinition ="BIT")
-	private boolean isPurchased;
 	
-	@Column(name = "stand_price",columnDefinition ="DECIMAL")
-	private double standPrice;
+	@NotNull
+	@Column(name="sap_price_type_code",columnDefinition ="CHAR",length=4)
+	private String type;
 	
-	@Column(name ="sap_unit_of_measurement_code")
-	private String unitCode;
 	
-	@Column(name ="unit_name",columnDefinition ="TEXT")
-	private String unitName;
+	@NotNull      
+	@Column(name="sap_materials_code",length=18)
+	private String materialCode;
 	
-	@Column(name ="sap_material_groups_code",columnDefinition ="CHAR",length=4)
-	private String groupCode;
+	@NotNull      
+	@Column(name="sap_industry_code",length=4)
+	private String industryCode;
 	
-	@Column(name ="group_name",columnDefinition ="TEXT")
-	private String groupName;
 	
-	@Column(name ="sap_clazz_code",columnDefinition ="CHAR")
-	private String clazzCode;
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getPriceTypeCode() {
-		return priceTypeCode;
-	}
-
-	public void setPriceTypeCode(String priceTypeCode) {
-		this.priceTypeCode = priceTypeCode;
-	}
-
-	public String getPriceTypeName() {
-		return priceTypeName;
-	}
-
-	public void setPriceTypeName(String priceTypeName) {
-		this.priceTypeName = priceTypeName;
-	}
-
 	public double getPrice() {
 		return price;
 	}
-
 	public void setPrice(double price) {
 		this.price = price;
 	}
-
-	public boolean isConfigurable() {
-		return isConfigurable;
+	public String getType() {
+		return type;
 	}
-
-	public void setConfigurable(boolean isConfigurable) {
-		this.isConfigurable = isConfigurable;
+	public void setType(String type) {
+		this.type = type;
 	}
-
-	public boolean isPurchased() {
-		return isPurchased;
+	public String getMaterialCode() {
+		return materialCode;
 	}
-
-	public void setPurchased(boolean isPurchased) {
-		this.isPurchased = isPurchased;
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
 	}
-
-	public double getStandPrice() {
-		return standPrice;
+	public String getIndustryCode() {
+		return industryCode;
 	}
-
-	public void setStandPrice(double standPrice) {
-		this.standPrice = standPrice;
+	public void setIndustryCode(String industryCode) {
+		this.industryCode = industryCode;
 	}
-
-	public String getUnitCode() {
-		return unitCode;
-	}
-
-	public void setUnitCode(String unitCode) {
-		this.unitCode = unitCode;
-	}
-
-	public String getUnitName() {
-		return unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
-
-	public String getGroupCode() {
-		return groupCode;
-	}
-
-	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public String getClazzCode() {
-		return clazzCode;
-	}
-
-	public void setClazzCode(String clazzCode) {
-		this.clazzCode = clazzCode;
-	}
-
+	
 	
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.RoleMapper" >
+	<resultMap id="RoleBaseMap" type="com.qhc.system.entity.Role" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_active" property="isActive" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="RoleMap" type="com.qhc.system.entity.Role" extends="RoleBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.Role">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into b_role ( id, name, is_active)
+		values ( #{id, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR}, #{isActive, jdbcType=INTEGER} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.Role" >
+		update b_role
+		set name = #{name, jdbcType=VARCHAR},
+			is_active = #{isActive, jdbcType=INTEGER}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from b_role
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_role.id, b_role.name, b_role.is_active
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="RoleMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from b_role 
+		where b_role.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND b_role.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="name != null and name != ''" >
+				AND b_role.name = #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="isActive != null" >
+				AND b_role.is_active = #{isActive, jdbcType=INTEGER}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_role
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="RoleMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_role
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByUserIdentity" resultMap="RoleMap" parameterType="String" >
+		select 
+		<include refid="Column_List" />
+		from b_role
+		left join b_user_role on b_user_role.role_id = b_role.id
+		left join b_user on b_user.id = b_user_role.user_id
+		where b_user.user_identity = #{value}
+	</select>
+</mapper>

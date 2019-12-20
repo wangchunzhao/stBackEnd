@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.RoleOperationMapper" >
+	<resultMap id="RoleOperationBaseMap" type="com.qhc.system.entity.RoleOperation" >
+		<id column="role_id" property="roleId" jdbcType="INTEGER" />
+		<id column="operation_id" property="operationId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="RoleOperationMap" type="com.qhc.system.entity.RoleOperation" extends="RoleOperationBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.RoleOperation">
+		insert into b_role_operation ( role_id, operation_id )
+		values ( #{roleId, jdbcType=INTEGER}, #{operationId, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.RoleOperation" >
+		update b_role_operation
+		set role_id = #{roleId, jdbcType=INTEGER}, 
+			operation_id = #{operationId, jdbcType=VARCHAR}
+		where role_id = #{roleId, jdbcType=INTEGER}
+			and operation_id = #{operationId, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="com.qhc.system.entity.RoleOperation" >
+		delete from b_role_operation
+		where role_id = #{roleId, jdbcType=INTEGER} 
+			and operation_id = #{operationId, jdbcType=VARCHAR} 
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_role_operation.role_id, b_role_operation.operation_id
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="RoleOperationMap" parameterType="com.qhc.system.entity.RoleOperation" >
+		select 
+		<include refid="Column_List" />
+		from b_role_operation 
+		where b_role_operation.role_id = #{roleId, jdbcType=INTEGER} 
+			and b_role_operation.operation_id = #{operationId, jdbcType=VARCHAR} 
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="roleId != null" >
+				AND b_role_operation.role_id = #{roleId, jdbcType=INTEGER}
+			</if>
+			<if test="operationId != null and operationId != ''" >
+				AND b_role_operation.operation_id = #{operationId, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_role_operation
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="RoleOperationMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_role_operation
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by role_id , operation_id 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按角色删除 -->
+	<delete id="deleteByRoleId" parameterType="Integer" >
+		delete from b_role_operation
+		where role_id = #{roleId, jdbcType=INTEGER} 
+	</delete>
+</mapper>

@@ -3,7 +3,7 @@ package com.qhc.sap.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DPrice;
+import com.qhc.sap.entity.MaterialPrice;
 
 /**
  * 
@@ -11,6 +11,6 @@ import com.qhc.sap.entity.DPrice;
  *
  */
 @Repository
-public interface PriceRepository extends JpaRepository<DPrice, String>{
+public interface PriceRepository extends JpaRepository<MaterialPrice, String>{
 
 }

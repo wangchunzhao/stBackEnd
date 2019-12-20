@@ -27,7 +27,7 @@ import com.qhc.sap.entity.CharacteristicConfiguration;
 import com.qhc.sap.entity.CharacteristicDefault;
 import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.LastUpdated;
-import com.qhc.sap.entity.MaterialPrice;
+import com.qhc.sap.entity.MaterialView;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
 import com.qhc.system.domain.PageHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,8 +132,8 @@ public class MaterialService {
 	 */
 	public MaterialDto getMaterialsById(String code){
 		MaterialDto m = new MaterialDto();;
-		List<MaterialPrice> dmo = materialInfoRepo.findByMaterialId(code);
-		for(MaterialPrice mp:dmo) {
+		List<MaterialView> dmo = materialInfoRepo.findByMaterialId(code);
+		for(MaterialView mp:dmo) {
 			
 			m.setCode(mp.getCode());
 			m.setDescription(mp.getDescription());

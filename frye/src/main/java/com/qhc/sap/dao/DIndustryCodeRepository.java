@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DIndustryCode;
+import com.qhc.sap.entity.IndustryCode;
 
 @Repository
-public interface DIndustryCodeRepository extends JpaRepository<DIndustryCode, String> {
+public interface DIndustryCodeRepository extends JpaRepository<IndustryCode, String> {
 	
-	DIndustryCode findByCode(String code);
+	IndustryCode findByCode(String code);
 	
 	@Query(value="select * from sap_industry_code where is_forDealer = 1", nativeQuery=true)
-	List<DIndustryCode> findAllFordealer();
+	List<IndustryCode> findAllFordealer();
 }

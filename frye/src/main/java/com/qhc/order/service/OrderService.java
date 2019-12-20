@@ -77,20 +77,20 @@ import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
-import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.DefaultCharacterView;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.sap.entity.TermianlIndustryCode;
-import com.qhc.system.dao.BAreaRepository;
-import com.qhc.system.dao.BCityRepository;
-import com.qhc.system.dao.BProvinceRepository;
-import com.qhc.system.dao.ParameterSettingsRepository;
+import com.qhc.system.dao.AreaRepository;
+import com.qhc.system.dao.CityRepository;
+import com.qhc.system.dao.ProvinceRepository;
+import com.qhc.system.dao.SettingsRepository;
 import com.qhc.system.domain.PageHelper;
 import com.qhc.system.entity.Area;
 import com.qhc.system.entity.City;
-import com.qhc.system.entity.Parameter;
+import com.qhc.system.entity.Settings;
 import com.qhc.system.entity.Province;
 
 @Service
@@ -109,13 +109,13 @@ public class OrderService {
 	private OrderSupportInforRepository supportRepo;
 
 	@Autowired
-	private BAreaRepository distinctRepo;
+	private AreaRepository distinctRepo;
 
 	@Autowired
-	private BCityRepository cityRepo;
+	private CityRepository cityRepo;
 
 	@Autowired
-	private BProvinceRepository provinceRepo;
+	private ProvinceRepository provinceRepo;
 
 	@Autowired
 	private TerminalIndustryCodeRepository industryCodeRepo;
@@ -175,7 +175,7 @@ public class OrderService {
 	private KOrderFormRepository formRepo;
 
 	@Autowired
-	private ParameterSettingsRepository settingsRepository;
+	private SettingsRepository settingsRepository;
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
@@ -530,21 +530,21 @@ public class OrderService {
 		return null;
 	}
 
-	public List<DMaterialGroups> calcWtwGrossProfit(String sequenceNumber, String version) {
+	public List<MaterialGroups> calcWtwGrossProfit(String sequenceNumber, String version) {
 		OrderDto order = this.findOrder(sequenceNumber, version);
 		order.setSubmitType(4);
 		return calcGrossProfit(order);
 	}
 
-	public List<DMaterialGroups> calcGrossProfit(String sequenceNumber, String version) {
+	public List<MaterialGroups> calcGrossProfit(String sequenceNumber, String version) {
 		OrderDto order = this.findOrder(sequenceNumber, version);
 		return calcGrossProfit(order);
 	}
 
 	// sap_material_group分组
-	public List<DMaterialGroups> calcGrossProfit(OrderDto order) {
+	public List<MaterialGroups> calcGrossProfit(OrderDto order) {
 		// 查询所有物料类型sap_material_group isenable != 0
-		List<DMaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
+		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		items = order.getItems();
@@ -565,7 +565,7 @@ public class OrderService {
 		Double sumWtwGrossProfitMargin = 0D;// 毛利率
 		Double sumGrossProfitMargin = 0D;// 毛利率
 		if (items != null && items.size() > 0) {
-			for (DMaterialGroups entity : groups) {
+			for (MaterialGroups entity : groups) {
 				BigDecimal amount = BigDecimal.ZERO;// 金额
 				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
 				BigDecimal wtwcost = BigDecimal.ZERO;// wtw成本
@@ -624,7 +624,7 @@ public class OrderService {
 			throw new RuntimeException("订单行项目为空，无法计算毛利率！");
 		}
 
-		DMaterialGroups sumssg = new DMaterialGroups();
+		MaterialGroups sumssg = new MaterialGroups();
 		sumssg.setAmount(sumAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
 		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
 		sumssg.setWtwCost(sumWtwCost.setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -773,7 +773,7 @@ public class OrderService {
 		oo.setInstallationTerms(constService.findInstallationTerms());
 
 		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
-		Parameter p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
+		Settings p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
 		if (p != null) {
 			oo.setStandardDiscount(p.getsValue());
 		}
@@ -1570,8 +1570,8 @@ public class OrderService {
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
 		}
-		List<DMaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
-		DMaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
+		List<MaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
+		MaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 		
 		BpmOrder bpmOrder = new BpmOrder();
 		OrderHeader bpmHeader = new OrderHeader();
@@ -1674,7 +1674,7 @@ public class OrderService {
 		}
 		
 		// set bpm order margins and wtw margins
-		for (DMaterialGroups grossProfitMargin : grossProfitMargins) {
+		for (MaterialGroups grossProfitMargin : grossProfitMargins) {
 			OrderMargin margin = new OrderMargin();
 			OrderMargin wtwMargin = new OrderMargin();
 			

@@ -1,43 +1,24 @@
 /**
  * 
  */
-package com.qhc.sap.entity;
+package com.qhc.sap.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author wang@dxc.com
  *
  */
-@Entity
-@Table(name="sap_materials_price")
-public class DPrice {
+public class PriceDto implements Serializable{
 	
-	@Id
-	@NotNull
-	@Column(name="price",columnDefinition="DECIMAL",precision = 13 ,scale=2)
+	public final static String PRICE_CODE = "59870645008146f9938f7e8718031779";
+	public final static String PRICEA_CODE = "59870645008146f9938f7e8718031780";
+	
 	private double price;
-	
-	
-	@NotNull
-	@Column(name="sap_price_type_code",columnDefinition ="CHAR",length=4)
 	private String type;
-	
-	
-	@NotNull      
-	@Column(name="sap_materials_code",length=18)
 	private String materialCode;
-	
-	@NotNull      
-	@Column(name="sap_industry_code",length=4)
 	private String industryCode;
-	
+	private String lastDate;
 	
 	public double getPrice() {
 		return price;
@@ -63,6 +44,13 @@ public class DPrice {
 	public void setIndustryCode(String industryCode) {
 		this.industryCode = industryCode;
 	}
+	public String getLastDate() {
+		return lastDate;
+	}
+	public void setLastDate(String lastDate) {
+		this.lastDate = lastDate;
+	}
+	
 	
 	
 }

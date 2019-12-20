@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.UserMapper" >
+	<resultMap id="UserBaseMap" type="com.qhc.system.entity.User" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_identity" property="userIdentity" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="user_mail" property="userMail" jdbcType="VARCHAR" />
+		<result column="is_active" property="isActive" jdbcType="INTEGER" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="updater" property="updater" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="UserMap" type="com.qhc.system.entity.User" extends="UserBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.User">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into b_user ( id, user_identity, name, 
+			user_mail, is_active, creater, 
+			create_time, updater, update_time, 
+			tel )
+		values ( #{id, jdbcType=INTEGER}, #{userIdentity, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, 
+			#{userMail, jdbcType=VARCHAR}, #{isActive, jdbcType=INTEGER}, #{creater, jdbcType=VARCHAR}, 
+			#{createTime, jdbcType=TIMESTAMP}, #{updater, jdbcType=VARCHAR}, #{updateTime, jdbcType=TIMESTAMP}, 
+			#{tel, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.User" >
+		update b_user
+		set user_identity = #{userIdentity, jdbcType=VARCHAR}, 
+			name = #{name, jdbcType=VARCHAR}, 
+			user_mail = #{userMail, jdbcType=VARCHAR}, 
+			is_active = #{isActive, jdbcType=INTEGER}, 
+			creater = #{creater, jdbcType=VARCHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP}, 
+			updater = #{updater, jdbcType=VARCHAR}, 
+			update_time = #{updateTime, jdbcType=TIMESTAMP}, 
+			tel = #{tel, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from b_user
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_user.id, b_user.user_identity, b_user.name, b_user.user_mail, b_user.is_active, 
+		b_user.creater, b_user.create_time, b_user.updater, b_user.update_time, b_user.tel
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="UserMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from b_user 
+		where b_user.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND b_user.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="userIdentity != null and userIdentity != ''" >
+				AND b_user.user_identity = #{userIdentity, jdbcType=VARCHAR}
+			</if>
+			<if test="name != null and name != ''" >
+				AND b_user.name like #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="userMail != null and userMail != ''" >
+				AND b_user.user_mail like #{userMail, jdbcType=VARCHAR}
+			</if>
+			<if test="isActive != null and isActive == 1" >
+				AND b_user.is_active = 1
+			</if>
+			<if test="isActive != null and isActive == 2" >
+				AND b_user.is_active != 1
+			</if>
+			<if test="creater != null and creater != ''" >
+				AND b_user.creater = #{creater, jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null" >
+				AND b_user.create_time = #{createTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="updater != null and updater != ''" >
+				AND b_user.updater = #{updater, jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime != null" >
+				AND b_user.update_time = #{updateTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="tel != null and tel != ''" >
+				AND b_user.tel like #{tel, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_user
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="UserMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_user
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

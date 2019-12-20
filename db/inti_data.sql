@@ -55,20 +55,20 @@ INSERT INTO `b_role` (`id`,`name`) VALUES (6,'区域经理');
 INSERT INTO `b_role` (`id`,`name`) VALUES (7,'领导组');
 
 /*
--- Query: select * from b_operation_role
+-- Query: select * from b_role_operation
 */
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1013', 1 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1010', 1 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1009', 1 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1008', 1 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1017', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1002', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1001', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1003', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1004', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1005', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1006', 2 );
-INSERT INTO `b_operation_role` (`operation_id`,`role_id`) VALUES ('1013', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 1 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1010', 1 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1009', 1 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1008', 1 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1017', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1002', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1001', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1003', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1004', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1005', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1006', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 2 );
 
 /*
 -- Query: select * from b_user_role
@@ -551,14 +551,14 @@ INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('02', '自装自�
 -- -----------------------------------------------------
 -- Data for table `sap_industry_code`
 -- -----------------------------------------------------
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('unknow', '未知', 0);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0001', 'MNC（国际连锁）', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0003', 'Dealer（代理商）', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0004', 'Local others（本地其他）', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0005', 'Cold room（冷库)', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0006', 'Export（出口）', 1);
-INSERT INTO `sap_industry_code` (`code`, `name`, `is_for_dealer`) VALUES ('0007', '便利店', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('unknow', '未知', 0);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0001', 'MNC（国际连锁）', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0002', 'Local top 100-国内连锁百强', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0003', 'Dealer（代理商）', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0004', 'Local others（本地其他）', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0005', 'Cold room（冷库)', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0006', 'Export（出口）', 1);
+INSERT INTO `sap_industry_code` (`code`, `name`, `is_fordealer`) VALUES ('0007', '便利店', 1);
 
 -- -----------------------------------------------------
 -- Data for table `sap_price_type`
@@ -602,24 +602,24 @@ INSERT INTO `sap_unit_of_measurement` (`code`, `name`) VALUES ('MT', 'MT');
 -- -----------------------------------------------------
 -- Data for table `sap_material_groups`
 -- -----------------------------------------------------
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3212', '安装费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3233', '材料费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3235', '电气费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3236', '维保费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3105', '冷库', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3231', '其他项目收费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3237', '不可预估费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3234', '销售运费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3101', '整机柜', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3102', '分体柜', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3109', '机组', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3103', '换热器和冷凝器', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('3104', '侧板', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('9101', 'B2C', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('9102', '可选项', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('9103', '追加运费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('1000', '散件', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `is_enable`) VALUES ('9999', '不可用物料类别', 'T106', 0);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3212', '安装费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3233', '材料费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3235', '电气费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3236', '维保费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3105', '冷库', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3231', '其他项目收费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3237', '不可预估费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3234', '销售运费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3101', '整机柜', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3102', '分体柜', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3109', '机组', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3103', '换热器和冷凝器', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3104', '侧板', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9101', 'B2C', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9102', '可选项', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9103', '追加运费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('1000', '散件', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9999', '不可用物料类别', 'T106', 0);
 
 -- -----------------------------------------------------
 -- Data for table `sap_sales_type`

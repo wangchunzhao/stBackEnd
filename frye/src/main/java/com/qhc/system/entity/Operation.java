@@ -1,73 +1,1 @@
-package com.qhc.system.entity;
-
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-/**
- * 
- * @author lizuoshan
- * 主键策略UUid
- *
- */
-@Entity
-@Table(name = "b_operations")
-public class Operation implements Serializable{
-	
-	@Id
-    @NotNull
-//    @GeneratedValue(strategy= GenerationType.AUTO, generator="uuid")
-    @Column(name="id",columnDefinition="CHAR",length=32)
-    private String id;
-	
-	@NotNull
-	@Column(name="name",columnDefinition="TEXT")
-    private String name;
-	
-	@Column(name="description",columnDefinition="TEXT")
-	private String description;
-	
-	@Transient
-	public boolean selected;
-	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-
-
-}
+package com.qhc.system.entity;import java.io.Serializable;import java.util.Date;/** *  * Function: Data transfer object. <br>  * * @author walker */public class Operation		implements Serializable {	private static final long serialVersionUID = 3946749221766968198L;		/* Id */	private String id = null;	/* 名称 */	private String name = null;	/* 描述 */	private String description = null;	/* 父ID */	private String parentId = null;	/* 类型，menu为菜单 */	private String operationType = null;	public Operation(){	}	public String getId() {		return this.id;	}	public void setId(String id) {		this.id = id;	}	 	public String getName() {		return this.name;	}	public void setName(String name) {		this.name = name;	}	 	public String getDescription() {		return this.description;	}	public void setDescription(String description) {		this.description = description;	}	 	public String getParentId() {		return this.parentId;	}	public void setParentId(String parentId) {		this.parentId = parentId;	}	 	public String getOperationType() {		return this.operationType;	}	public void setOperationType(String operationType) {		this.operationType = operationType;	}	 	@Override	public int hashCode() {		final int prime = 31;		int result = 1;		result = prime * result + ((id == null) ? 0 : id.hashCode());		return result;	}	@Override	public boolean equals(Object obj) {		if (this == obj) {			return true;		}		if (obj == null) {			return false;		}		if (getClass() != obj.getClass()) {			return false;		}		final Operation other = (Operation) obj;		return (this.id == null ? other.id == null : this.id.equals(other.id));	}		public String toString() {	    final String tab = "  ";	    String str = "";	    str = "Operation ( "	        + "id = " + this.id + tab	        + "name = " + this.name + tab	        + "description = " + this.description + tab	        + "parentId = " + this.parentId + tab	        + "operationType = " + this.operationType + tab	        + " )";		    return str;	}}

@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.qhc.system.dao.BAreaRepository;
-import com.qhc.system.dao.BCityRepository;
-import com.qhc.system.dao.BProvinceRepository;
+import com.qhc.system.dao.AreaRepository;
+import com.qhc.system.dao.CityRepository;
+import com.qhc.system.dao.ProvinceRepository;
 import com.qhc.system.entity.Area;
 import com.qhc.system.entity.City;
 import com.qhc.system.entity.Province;
@@ -20,13 +20,13 @@ import com.qhc.system.entity.Province;
 public class AreaService {
 	
 	@Autowired
-	private BProvinceRepository bProvinceRepository;
+	private ProvinceRepository bProvinceRepository;
 	
 	@Autowired
-	private BCityRepository bCityRepository;
+	private CityRepository bCityRepository;
 	
 	@Autowired
-	private BAreaRepository bAreaRepository;
+	private AreaRepository bAreaRepository;
 	
 	public Area add(Area bArea) {
 		return bAreaRepository.save(bArea);

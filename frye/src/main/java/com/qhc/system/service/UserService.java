@@ -1,19 +1,28 @@
 package com.qhc.system.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.qhc.system.dao.UserRepository;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.qhc.system.domain.OperationDto;
+import com.qhc.system.domain.RoleDto;
+import com.qhc.system.domain.UserDto;
+import com.qhc.system.entity.Role;
 import com.qhc.system.entity.User;
+import com.qhc.system.entity.UserRole;
+import com.qhc.system.mapper.RoleMapper;
+import com.qhc.system.mapper.UserMapper;
+import com.qhc.system.mapper.UserRoleMapper;
 
 /**
  * @author lizuoshan
@@ -23,7 +32,16 @@ import com.qhc.system.entity.User;
 public class UserService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserMapper userMapper;
+
+	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
+	private OperationService operationService;
+	
+	@Autowired
+	private UserRoleMapper userRoleMapper;
 	
 	public User getUser(String mail) throws NoSuchElementException{
 		User u = new User();
@@ -36,8 +54,35 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
-	public User createOrUpdateUser(User user) {
-		return userRepository.save(user);
+	public UserDto createOrUpdateUser(UserDto userDto) {
+		User user = new User();
+		try {
+			BeanUtils.copyProperties(user, userDto);
+			if (user.getId() == null) {
+				userMapper.insert(user);
+			} else {
+				userMapper.update(user);
+			}
+			
+			userRoleMapper.deleteByUserId(user.getId());
+			
+			List<RoleDto> roles = userDto.getRoles();
+			
+			for (RoleDto roleDto : roles) {
+				UserRole userRole = new UserRole();
+				userRole.setUserId(user.getId());
+				userRole.setRoleId(roleDto.getId());
+				
+				userRoleMapper.insert(userRole);
+			}
+			
+			this.findByUserIdentity(user.getUserIdentity());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return userDto;
 	}
 
 	/**
@@ -46,7 +91,7 @@ public class UserService {
 	 * @return
 	 */
 	public List<User> findAll() {
-		return userRepository.findAll();
+		return userMapper.findByParams(new HashMap());
 	}
 	
 	/**
@@ -55,7 +100,13 @@ public class UserService {
 	 * @return
 	 */
 	public List<User> findByMultipleConditions(int isActice,String userName,String userMail,String userIdentity) {
-		return userRepository.findByMultipleConditions(isActice, userName, userMail, userIdentity);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userIdentity", userIdentity);
+		params.put("isActice", isActice);
+		params.put("name", userName);
+		params.put("userMail", userMail);
+		List<User> list = userMapper.findByParams(params);
+		return list;
 	}
 
 	/**
@@ -63,13 +114,20 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
-	public User findById(Integer id) {
-		return userRepository.findById(id).get();
+	public UserDto findById(Integer id) {
+		User user = userMapper.findById(id);
+		UserDto dto = new UserDto();
+		try {
+			BeanUtils.copyProperties(dto, user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
 	}
 
 	public void delete(Integer id) {
-		User user = userRepository.findById(id).get();
-		userRepository.delete(user);
+		userMapper.deleteById(id);
 	}
 
 	/**
@@ -78,76 +136,70 @@ public class UserService {
 	 * @return
 	 */
 	public User notAvailable(Integer id) {
-		User user = userRepository.findById(id).get();
+		User user = userMapper.findById(id);
 		user.setIsActive(1);
 		
-		return userRepository.save(user);
+		userMapper.update(user);
+		
+		return user;
 	}
 
-	public List<User> findByUserMailAndIsActive(String userMail, Integer isActive) {
-		return userRepository.findByUserMailLikeAndIsActive(userMail,isActive);
-	}
+//	public List<User> findByUserMailAndIsActive(String userMail, Integer isActive) {
+//		return userMapper.findByUserMailLikeAndIsActive(userMail,isActive);
+//	}
+//
+//	public List<User> findByUserMail(String userMail) {
+//		return userMapper.findByUserMailLike(userMail);
+//	}
+//
+//	public List<User> findByIsActive(Integer isActive) {
+//		return userMapper.findByIsActive(isActive);
+//	}
 
-	public List<User> findByUserMail(String userMail) {
-		return userRepository.findByUserMailLike(userMail);
-	}
-
-	public List<User> findByIsActive(Integer isActive) {
-		return userRepository.findByIsActive(isActive);
-	}
-
-	public User findByUserName(String userName) {
-		return userRepository.findByUserName(userName);
-	}
+//	public User findByUserName(String userName) {
+//		return userMapper.findByUserName(userName);
+//	}
 
 	/**
 	 * find by identity
 	 * @param userIdentity
 	 * @return
 	 */
-	public User findByUserIdentity(String userIdentity) {
-		return userRepository.findByUserIdentity(userIdentity);
+	public UserDto findByUserIdentity(String userIdentity) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userIdentity", userIdentity);
+		List<User> list = userMapper.findByParams(params);
+		
+		UserDto dto = new UserDto();
+		if (list.size() > 0) {
+			User user = list.get(0);
+			try {
+				BeanUtils.copyProperties(dto, user);
+				List<RoleDto> roles = roleService.findByUserIdentity(userIdentity);
+				dto.setRoles(roles);
+				
+				List<OperationDto> operations = operationService.findByUser(userIdentity);
+				dto.setOperations(operations);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			return null;
+		}
+		
+		return dto;
 	}
 
-	public Page<User> getByConditions(User user, Pageable pageable) {
-		 Specification<User> specification = new Specification<User>() {
-	            @Override
-	            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-	                //增加筛选条件
-	                Predicate predicate = cb.conjunction();
-	                if(user.getIsActive()==2) {
-	                	
-	                	predicate.getExpressions().add(cb.notEqual(root.get("isActive").as(Integer.class), user.getIsActive()));
-	                }else {
-	                	predicate.getExpressions().add(cb.equal(root.get("isActive").as(Integer.class), user.getIsActive()));
-	                }
-	                 //模糊查找
-	                if(!"".equals(user.getUserIdentity())&&user.getUserIdentity()!=null) {
-	                	
-	                	predicate.getExpressions().add(cb.like(root.get("userIdentity").as(String.class), "%" + user.getUserIdentity() + "%"));
-	                }
-                    if(!"".equals(user.getUserName())&&user.getUserName()!=null) {
-                    	
-                    	predicate.getExpressions().add(cb.like(root.get("name").as(String.class), "%" + user.getUserName() + "%"));
-                    }
-                    if(!"".equals(user.getUserMail())&&user.getUserMail()!=null) {
-                    	
-                    	predicate.getExpressions().add(cb.like(root.get("userMail").as(String.class), "%" + user.getUserMail() + "%"));
-                    }
+	public PageInfo<User> getByConditions(User user, Pageable pageable) {
+		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+		Map<String, Object> params = new HashMap<String, Object>();
+		//增加筛选条件
+		params.put("isActive", user.getIsActive());
+		params.put("userIdentity", user.getUserIdentity());
+		params.put("name", "%" + user.getName() + "%");
+		params.put("userMail", "%" + user.getUserMail() + "%");
 
-//	    		   //起始日期
-//	                if (startTime != null && !startTime.trim().equals("")) {
-//	                    predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime").as(String.class), startTime));
-//	                }
-//	                //结束日期
-//	                if (endTime != null && !endTime.trim().equals("")) {
-//	                    predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime").as(String.class), endTime));
-//	                }
-	                return predicate;
-	            }
-	       };
-
-		return userRepository.findAll(specification,pageable);
+		return new PageInfo(userMapper.findByParams(params));
 	}
 
 }
