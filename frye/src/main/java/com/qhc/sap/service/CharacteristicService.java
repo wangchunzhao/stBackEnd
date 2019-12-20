@@ -15,14 +15,14 @@ import com.qhc.sap.dao.CharacteristicRepository;
 import com.qhc.sap.dao.CharacteristicValueRepository;
 import com.qhc.sap.dao.ClassAndCharacterRepository;
 import com.qhc.sap.dao.ClazzOfMaterialRepository;
-import com.qhc.sap.domain.CharacteristicValue;
+import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
-import com.qhc.sap.domain.DefaultCharacteristics;
-import com.qhc.sap.entity.DCharacteristic;
-import com.qhc.sap.entity.DCharacteristicDefault;
-import com.qhc.sap.entity.DCharacteristicValue;
-import com.qhc.sap.entity.DClassAndCharacter;
-import com.qhc.sap.entity.DClazzOfMaterial;
+import com.qhc.sap.domain.DefaultCharacteristicsDto;
+import com.qhc.sap.entity.Characteristic;
+import com.qhc.sap.entity.CharacteristicDefault;
+import com.qhc.sap.entity.CharacteristicValue;
+import com.qhc.sap.entity.ClassAndCharacter;
+import com.qhc.sap.entity.ClazzOfMaterial;
 
 /**
  * @author wang@dxc.com
@@ -49,9 +49,9 @@ public class CharacteristicService {
 	 * @param clazz
 	 */
 	public void saveClass(List<Clazz> clazz) {
-		Set<DClazzOfMaterial> dcs = new HashSet<DClazzOfMaterial>();
+		Set<ClazzOfMaterial> dcs = new HashSet<ClazzOfMaterial>();
 		for(Clazz cl:clazz) {
-			DClazzOfMaterial dc = new DClazzOfMaterial();
+			ClazzOfMaterial dc = new ClazzOfMaterial();
 			dc.setCode(cl.getCode());
 			dc.setName(cl.getName());
 			//从sap抽取的数据该字段为0，其他自己存在的该字段为1
@@ -64,12 +64,12 @@ public class CharacteristicService {
 	 * 
 	 * @param chaValues
 	 */
-	public void saveCharacteristicValue(List<CharacteristicValue> chaValues) {
-		Set<DCharacteristic> dcs = new HashSet<DCharacteristic>();
-		Set<DCharacteristicValue> dcvs = new HashSet<DCharacteristicValue>();
-		Set<DClassAndCharacter> cacs = new HashSet<DClassAndCharacter>();
+	public void saveCharacteristicValue(List<CharacteristicValueDto> chaValues) {
+		Set<Characteristic> dcs = new HashSet<Characteristic>();
+		Set<CharacteristicValue> dcvs = new HashSet<CharacteristicValue>();
+		Set<ClassAndCharacter> cacs = new HashSet<ClassAndCharacter>();
 		//
-		for(CharacteristicValue cv: chaValues) {		
+		for(CharacteristicValueDto cv: chaValues) {		
 			cacs.add(cv.toDClassAndCharacter());
 			dcs.add(cv.toDCharacteristic());
 			if(!dcvs.contains(cv.toDCharacteristicValue())) {
@@ -89,14 +89,14 @@ public class CharacteristicService {
 	 * 
 	 * @param defaultChavalue
 	 */
-	public void saveCharacteristicDefault(List<DefaultCharacteristics> defaultChavalue) {
-		Set<DCharacteristicDefault> dcs = new HashSet<DCharacteristicDefault>();
-		for(DefaultCharacteristics cd: defaultChavalue) {
+	public void saveCharacteristicDefault(List<DefaultCharacteristicsDto> defaultChavalue) {
+		Set<CharacteristicDefault> dcs = new HashSet<CharacteristicDefault>();
+		for(DefaultCharacteristicsDto cd: defaultChavalue) {
 			try {
 				//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
 				int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
 				//
-				DCharacteristicDefault defaultCh = new DCharacteristicDefault();
+				CharacteristicDefault defaultCh = new CharacteristicDefault();
 				defaultCh.setMaterialsCode(cd.getMaterialCode());
 				defaultCh.setCharacteristicCode(cd.getCharacteristic());
 				defaultCh.setValueId(valueId);

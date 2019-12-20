@@ -21,11 +21,11 @@ import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomExplosion;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.Configuration;
-import com.qhc.sap.domain.DefaultCharacteristics;
-import com.qhc.sap.domain.Material;
+import com.qhc.sap.domain.DefaultCharacteristicsDto;
+import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.CharacteristicConfiguration;
-import com.qhc.sap.entity.DCharacteristicDefault;
-import com.qhc.sap.entity.DMaterial;
+import com.qhc.sap.entity.CharacteristicDefault;
+import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.MaterialPrice;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
@@ -75,16 +75,16 @@ public class MaterialService {
 	@Autowired
 	private CharacteristicDefaultRepository defaultCharacterRep;
 	
-	public void saveMaterials(List<Material> materials) {
-		Set<DMaterial> mset = new HashSet<DMaterial>();
+	public void saveMaterials(List<MaterialDto> materials) {
+		Set<Material> mset = new HashSet<Material>();
 //		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
 		//
 		LastUpdated lastUpdated = new LastUpdated();
-		lastUpdated.setCode(Material.MATERIAL_CODE);
+		lastUpdated.setCode(MaterialDto.MATERIAL_CODE);
 		lastUpdated.setName("material");
 		//
-		for(Material ma: materials){
-			DMaterial dm = new DMaterial();
+		for(MaterialDto ma: materials){
+			Material dm = new Material();
 			dm.setCode(ma.getCode());
 			dm.setDescription(ma.getDescription());
 			dm.setConfigurable(ma.isConfigurable());
@@ -117,12 +117,12 @@ public class MaterialService {
 	 * @param pageNo
 	 * @return
 	 */
-	public PageHelper<DMaterial> findMaterialsByName(String name,int pageNo){
+	public PageHelper<Material> findMaterialsByName(String name,int pageNo){
 		if( pageNo >0){
 			pageNo = pageNo-1;
 		}
-		Page<DMaterial> dms = materialRepo.findAllByName(name.toUpperCase(),PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
-		PageHelper<DMaterial> ph = new PageHelper<DMaterial>(dms);
+		Page<Material> dms = materialRepo.findAllByName(name.toUpperCase(),PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
+		PageHelper<Material> ph = new PageHelper<Material>(dms);
 		return ph;
 	}
 	/**
@@ -130,8 +130,8 @@ public class MaterialService {
 	 * @param code id of material
 	 * @return corresponded material information
 	 */
-	public Material getMaterialsById(String code){
-		Material m = new Material();;
+	public MaterialDto getMaterialsById(String code){
+		MaterialDto m = new MaterialDto();;
 		List<MaterialPrice> dmo = materialInfoRepo.findByMaterialId(code);
 		for(MaterialPrice mp:dmo) {
 			
@@ -176,9 +176,9 @@ public class MaterialService {
 	 */
 	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode) throws NotMatchException{
 		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
-		List<DCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
+		List<CharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		Set<Integer> ids = new HashSet<Integer>();
-		for(DCharacteristicDefault dc: defaultValues) {
+		for(CharacteristicDefault dc: defaultValues) {
 			ids.add(dc.getValueId());
 		}
 		//temp valiable

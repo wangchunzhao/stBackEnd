@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.sap.domain.Currency;
-import com.qhc.sap.domain.Incoterm;
-import com.qhc.sap.domain.Material;
+import com.qhc.sap.domain.CurrencyDto;
+import com.qhc.sap.domain.IncotermDto;
+import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.domain.Price;
 import com.qhc.sap.service.CurrencyService;
 import com.qhc.sap.service.CustomerService;
@@ -63,7 +63,7 @@ public class CurrencyController {
 	@ApiOperation(value = "保存或修改币种",notes="保存或修改币种")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
-	public void putCurrency(@RequestBody(required = true) @Valid List<Currency> currency) {
+	public void putCurrency(@RequestBody(required = true) @Valid List<CurrencyDto> currency) {
 		currencyService.saveCurrency(currency);
 	}
 	
@@ -72,8 +72,8 @@ public class CurrencyController {
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,String> getCurrency() {
 		Map<String,String> currencies = new HashMap<String,String>();
-		List<Currency> curList = currencyService.getCurrency();
-		for(Currency cur:curList) {
+		List<CurrencyDto> curList = currencyService.getCurrency();
+		for(CurrencyDto cur:curList) {
 			currencies.put(cur.getCode(),cur.getName());
 		}
 		return currencies;
@@ -82,7 +82,7 @@ public class CurrencyController {
 	@ApiOperation(value = "修改国际贸易条件",notes="修改国际贸易条件")
 	@PutMapping(value = "currency/incoterms")
 	@ResponseStatus(HttpStatus.OK)
-	public void putIncoterm(@RequestBody(required = true) @Valid List<Incoterm> incoterm) {
+	public void putIncoterm(@RequestBody(required = true) @Valid List<IncotermDto> incoterm) {
 		currencyService.saveIncoterm(incoterm);
 	}
 	@ApiOperation(value = "查询国际贸易条件",notes="查询国际贸易条件")

@@ -8,9 +8,9 @@ package com.qhc.sap.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DSalesType;
+import com.qhc.sap.entity.SalesType;
 
 @Repository
-public interface SalesTypeRepository extends JpaRepository<DSalesType, String>{
+public interface SalesTypeRepository extends JpaRepository<SalesType, String>{
 
 }

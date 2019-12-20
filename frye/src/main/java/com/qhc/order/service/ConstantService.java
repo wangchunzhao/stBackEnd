@@ -32,16 +32,16 @@ import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
-import com.qhc.sap.domain.Currency;
+import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.entity.CustomerClass;
-import com.qhc.sap.entity.DCurrency;
-import com.qhc.sap.entity.DIncoterm;
+import com.qhc.sap.entity.Currency;
+import com.qhc.sap.entity.Incoterm;
 import com.qhc.sap.entity.DIndustryCode;
 import com.qhc.sap.entity.DInstallationTerms;
 import com.qhc.sap.entity.DMaterialGroups;
-import com.qhc.sap.entity.DReceiveTerms;
-import com.qhc.sap.entity.DShippingType;
-import com.qhc.sap.entity.DUnit;
+import com.qhc.sap.entity.ReceiveTerms;
+import com.qhc.sap.entity.ShippingType;
+import com.qhc.sap.entity.Unit;
 import com.qhc.sap.entity.OrderTypeCustomerClass;
 import com.qhc.sap.entity.SapCurrencySaleType;
 import com.qhc.sap.entity.SapSalesGroup;
@@ -123,7 +123,7 @@ public class ConstantService {
 	
 	public static Map<String, String> incoterms = null;
 	
-	public static Map<String, List<Currency>> currencies = null;
+	public static Map<String, List<CurrencyDto>> currencies = null;
 	
 	public static Map<String, Map<String, String>> installationTerms = null;
 	
@@ -256,10 +256,10 @@ public class ConstantService {
 
 	public Map<String, String> findShippingTypes() {
 		if (shippingTypes == null || shippingTypes.isEmpty()) {
-			List<DShippingType> list = shippingTypeRepository.findAll(Sort.by(Order.asc("code")));
+			List<ShippingType> list = shippingTypeRepository.findAll(Sort.by(Order.asc("code")));
 			shippingTypes = new LinkedHashMap<String, String>();
 
-			for (DShippingType dShippingType : list) {
+			for (ShippingType dShippingType : list) {
 				shippingTypes.put(dShippingType.getCode(), dShippingType.getName());
 			}
 		}
@@ -269,10 +269,10 @@ public class ConstantService {
 
 	public Map<String, String> findReceiveTerms() {
 		if (receiveTerms == null || receiveTerms.isEmpty()) {
-			List<DReceiveTerms> list = receiveTermsRepository.findAll(Sort.by(Order.asc("code")));
+			List<ReceiveTerms> list = receiveTermsRepository.findAll(Sort.by(Order.asc("code")));
 			receiveTerms = new LinkedHashMap<String, String>();
 
-			for (DReceiveTerms dReceiveTerms : list) {
+			for (ReceiveTerms dReceiveTerms : list) {
 				receiveTerms.put(dReceiveTerms.getCode(), dReceiveTerms.getName());
 			}
 		}
@@ -282,10 +282,10 @@ public class ConstantService {
 	
 	public Map<String, String> findIncoterms() {
 		if (incoterms == null || incoterms.isEmpty()) {
-			List<DIncoterm> list = incotermRepository.findAll(Sort.by(Order.asc("code")));
+			List<Incoterm> list = incotermRepository.findAll(Sort.by(Order.asc("code")));
 			incoterms = new LinkedHashMap<String, String>();
 
-			for (DIncoterm dIncoterm : list) {
+			for (Incoterm dIncoterm : list) {
 				incoterms.put(dIncoterm.getCode(), dIncoterm.getName());
 			}
 		}
@@ -293,13 +293,13 @@ public class ConstantService {
 		return incoterms;
 	}
 	
-	public Map<String, List<Currency>> findCurrencies() {
+	public Map<String, List<CurrencyDto>> findCurrencies() {
 		if (currencies == null || currencies.isEmpty()) {
-			currencies = new HashMap<String, List<Currency>>();
-			List<DCurrency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
-			Map<String, Currency> cmap = new LinkedHashMap<String, Currency>();
+			currencies = new HashMap<String, List<CurrencyDto>>();
+			List<Currency> list = currencyRepository.findAll(Sort.by(Order.asc("code")));
+			Map<String, CurrencyDto> cmap = new LinkedHashMap<String, CurrencyDto>();
 			list.forEach(dCurrency -> {
-				Currency currency = new Currency();
+				CurrencyDto currency = new CurrencyDto();
 				currency.setCode(dCurrency.getCode());
 				currency.setName(dCurrency.getName());
 				currency.setRate(dCurrency.getRate());
@@ -309,9 +309,9 @@ public class ConstantService {
 			saleTypes.forEach(cs -> {
 				String salesType = cs.getCii().getSaleTypeCode();
 				String currencyCode = cs.getCii().getCurrencyCode();
-				List<Currency> currencyList = currencies.get(salesType);
+				List<CurrencyDto> currencyList = currencies.get(salesType);
 				if (currencyList == null) {
-					currencyList = new ArrayList<Currency>();
+					currencyList = new ArrayList<CurrencyDto>();
 					currencies.put(salesType, currencyList);
 				}
 				currencyList.add(cmap.get(currencyCode));
@@ -342,10 +342,10 @@ public class ConstantService {
 	
 	public Map<String, String> findMeasurementUnits() {
 		if (measurementUnit == null || measurementUnit.isEmpty()) {
-			List<DUnit> list = measurementUnitRepository.findAll(Sort.by(Order.asc("code")));
+			List<Unit> list = measurementUnitRepository.findAll(Sort.by(Order.asc("code")));
 			measurementUnit = new LinkedHashMap<String, String>();
 
-			for (DUnit unit : list) {
+			for (Unit unit : list) {
 				measurementUnit.put(unit.getCode(), unit.getName());
 			}
 		}

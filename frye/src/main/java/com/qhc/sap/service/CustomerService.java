@@ -22,9 +22,9 @@ import com.qhc.sap.dao.CustomerAffiliationRepository;
 import com.qhc.sap.dao.CustomerIndustryRepository;
 import com.qhc.sap.dao.CustomerRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
-import com.qhc.sap.domain.Customer;
+import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.entity.CustomerAffiliation;
-import com.qhc.sap.entity.DCustomer;
+import com.qhc.sap.entity.Customer;
 import com.qhc.sap.entity.DIndustryCode;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
@@ -70,12 +70,12 @@ public class CustomerService {
 	 * @param name
 	 * @return
 	 */
-	public Page<DCustomer> searchCustomers(String clazzCode,String name,int pageNo) {
+	public Page<Customer> searchCustomers(String clazzCode,String name,int pageNo) {
 		
 		if( pageNo >0){
 			pageNo = pageNo-1;
 		}
-		Page<DCustomer> dcuList= null;
+		Page<Customer> dcuList= null;
 		
 		if(clazzCode==null || clazzCode.isEmpty()) {
 			
@@ -83,7 +83,7 @@ public class CustomerService {
 		}else {
 			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,QUANTITY_PAGE));
 		}
-		for(DCustomer dc:dcuList) {		
+		for(Customer dc:dcuList) {		
 			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
 			
 			DIndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
@@ -99,19 +99,19 @@ public class CustomerService {
 	 * 
 	 * @param customers
 	 */
-	public void saveCustomers(List<Customer> customers) {
-		Set<DCustomer> dcList = new HashSet<DCustomer>();
+	public void saveCustomers(List<CustomerDto> customers) {
+		Set<Customer> dcList = new HashSet<Customer>();
 		Set<Industry> induList = new HashSet<Industry>();
 		Set<CustomerAffiliation> caList = new HashSet<CustomerAffiliation>();
-		for(Customer cus:customers) {
-			List<Object> objs = cus.toDaos();
+		for(CustomerDto cus:customers) {
+			List<Object> objs = cus.toEntity();
 			for(Object obj:objs) {
 				if( obj instanceof Industry) {
 					induList.add((Industry)obj);
 				}else if (obj instanceof CustomerAffiliation) {
 					caList.add((CustomerAffiliation)obj);
-				}else if (obj instanceof DCustomer){
-					dcList.add((DCustomer)obj);
+				}else if (obj instanceof Customer){
+					dcList.add((Customer)obj);
 				}			
 			}
 		}

@@ -78,7 +78,7 @@ import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
 import com.qhc.sap.entity.DMaterialGroups;
-import com.qhc.sap.entity.DSalesType;
+import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.DefaultCharacterView;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SapSalesGroup;
@@ -204,7 +204,7 @@ public class OrderService {
 	 * 
 	 * @return sales type
 	 */
-	public List<DSalesType> getSalesTypes() {
+	public List<SalesType> getSalesTypes() {
 		return salesTypeRepo.findAll();
 	}
 
@@ -693,8 +693,8 @@ public class OrderService {
 		}
 		//
 		Map<String, String> st = oo.getSaleTypes();
-		List<DSalesType> dsts = saleTypeRepo.findAll();
-		for (DSalesType dst : dsts) {
+		List<SalesType> dsts = saleTypeRepo.findAll();
+		for (SalesType dst : dsts) {
 			st.put(dst.getCode(), dst.getName());
 		}
 		//

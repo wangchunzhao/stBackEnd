@@ -6,13 +6,13 @@ package com.qhc.sap.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DCharacteristic;
+import com.qhc.sap.entity.Characteristic;
 
 /**
  * @author wang@dxc.com
  *
  */
 @Repository
-public interface CharacteristicRepository extends JpaRepository<DCharacteristic, String>{
+public interface CharacteristicRepository extends JpaRepository<Characteristic, String>{
 
 }

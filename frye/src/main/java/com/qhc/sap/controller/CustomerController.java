@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qhc.order.service.ConstantService;
-import com.qhc.sap.domain.Customer;
-import com.qhc.sap.entity.DCustomer;
+import com.qhc.sap.domain.CustomerDto;
+import com.qhc.sap.entity.Customer;
 import com.qhc.sap.service.CustomerService;
 import com.qhc.system.domain.PageHelper;
 import com.qhc.utils.DateUtil;
@@ -50,29 +50,29 @@ public class CustomerController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public String getLastUpdatedDate() throws Exception {
-		Date date = customerService.getLastUpdated(Customer.CODE_CUSTOMER);
+		Date date = customerService.getLastUpdated(CustomerDto.CODE_CUSTOMER);
 		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
 	
 	@ApiOperation(value = "新增客户信息")
 	@PostMapping(value = "customer")
 	@ResponseStatus(HttpStatus.OK)
-	public void putCustomers(@RequestBody(required = true) @Valid List<Customer> customers) throws Exception {
+	public void putCustomers(@RequestBody(required = true) @Valid List<CustomerDto> customers) throws Exception {
 		
 		customerService.saveCustomers(customers);
 	}
 	@ApiOperation(value = "根据名称查询客户信息")
 	@GetMapping(value = "customer/{clazzCode},{name},{pageNo}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<DCustomer> findCustomers(@PathVariable String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
+	public PageHelper<Customer> findCustomers(@PathVariable String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
 		if(clazzCode.equals("null")) {
 			clazzCode =null;
 		}
 		if(name.equals("null")) {
 			name = null;
 		}
-		Page<DCustomer> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
-		PageHelper<DCustomer> ph = new PageHelper<DCustomer>(dcs);
+		Page<Customer> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
+		PageHelper<Customer> ph = new PageHelper<Customer>(dcs);
 		return ph;
 	}
 	

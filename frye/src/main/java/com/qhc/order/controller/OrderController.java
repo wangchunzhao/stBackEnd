@@ -32,7 +32,7 @@ import com.qhc.order.entity.Order;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.entity.DMaterialGroups;
-import com.qhc.sap.entity.DSalesType;
+import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.system.domain.PageHelper;
 
@@ -115,8 +115,8 @@ public class OrderController {
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, String> getOrderType() throws Exception {
 		Map<String, String> saleTypes = new HashMap<String, String>();
-		List<DSalesType> dsl = orderService.getSalesTypes();
-		for (DSalesType ds : dsl) {
+		List<SalesType> dsl = orderService.getSalesTypes();
+		for (SalesType ds : dsl) {
 			saleTypes.put(ds.getCode(), ds.getName());
 		}
 		return saleTypes;

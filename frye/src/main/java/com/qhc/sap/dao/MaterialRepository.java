@@ -10,15 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.DMaterial;
+import com.qhc.sap.entity.Material;
 
 /**
  * @author wang@dxc.com
  *
  */
 @Repository
-public interface MaterialRepository extends JpaRepository<DMaterial, String>{
+public interface MaterialRepository extends JpaRepository<Material, String>{
 	@Query(value ="SELECT * FROM sap_materials where (UPPER(description) like %:name% or UPPER(code) like %:name%)",
 			countQuery="SELECT count(1) FROM sap_materials where (UPPER(description) like %:name% or UPPER(code) like %:name%)",nativeQuery = true)
-	public Page<DMaterial> findAllByName(@Param("name")String name,Pageable pageable); 
+	public Page<Material> findAllByName(@Param("name")String name,Pageable pageable); 
 }

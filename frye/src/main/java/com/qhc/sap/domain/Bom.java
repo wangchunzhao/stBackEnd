@@ -5,7 +5,7 @@ package com.qhc.sap.domain;
 
 import java.io.Serializable;
 
-import com.qhc.sap.entity.DCurrency;
+import com.qhc.sap.entity.Currency;
 
 /**
  * @author wang@dxc.com

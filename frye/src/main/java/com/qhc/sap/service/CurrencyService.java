@@ -17,12 +17,12 @@ import com.qhc.sap.dao.IncotermRepository;
 import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
-import com.qhc.sap.domain.Currency;
-import com.qhc.sap.domain.Incoterm;
-import com.qhc.sap.domain.Material;
+import com.qhc.sap.domain.CurrencyDto;
+import com.qhc.sap.domain.IncotermDto;
+import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.domain.Price;
-import com.qhc.sap.entity.DCurrency;
-import com.qhc.sap.entity.DIncoterm;
+import com.qhc.sap.entity.Currency;
+import com.qhc.sap.entity.Incoterm;
 import com.qhc.sap.entity.DPrice;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
@@ -60,14 +60,14 @@ public class CurrencyService {
 	 * 
 	 * @param currency
 	 */
-	public void saveCurrency(List<Currency> currency) {
-		Set<DCurrency> dcs = new HashSet<DCurrency>();
+	public void saveCurrency(List<CurrencyDto> currency) {
+		Set<Currency> dcs = new HashSet<Currency>();
 		Set<SapCurrencySaleType> sc = new HashSet<SapCurrencySaleType>();
-		for(Currency cur:currency) {
+		for(CurrencyDto cur:currency) {
 			List<Object> objs = cur.toDaos();
 			for(Object obj:objs) {
-				if(obj instanceof DCurrency) {
-					dcs.add((DCurrency) obj);
+				if(obj instanceof Currency) {
+					dcs.add((Currency) obj);
 				}else if(obj instanceof SapCurrencySaleType){
 					sc.add((SapCurrencySaleType) obj);
 				}
@@ -80,11 +80,11 @@ public class CurrencyService {
 	 * 
 	 * @return
 	 */
-	public List<Currency> getCurrency(){
-		List<Currency> cs = new ArrayList<Currency>();
-		List<DCurrency> dcs=currencyRepo.findAll();
-		for(DCurrency cur:dcs) {
-			Currency dc = new Currency();
+	public List<CurrencyDto> getCurrency(){
+		List<CurrencyDto> cs = new ArrayList<CurrencyDto>();
+		List<Currency> dcs=currencyRepo.findAll();
+		for(Currency cur:dcs) {
+			CurrencyDto dc = new CurrencyDto();
 			dc.setCode(cur.getCode());
 			dc.setName(cur.getName());
 			dc.setRate(cur.getRate());
@@ -96,10 +96,10 @@ public class CurrencyService {
 	 * 
 	 * @param incoterm
 	 */
-	public void saveIncoterm(List<Incoterm> incoterm) {
-		Set<DIncoterm> incos = new HashSet<DIncoterm>();
-		for(Incoterm inco:incoterm) {
-			DIncoterm temp = new DIncoterm();
+	public void saveIncoterm(List<IncotermDto> incoterm) {
+		Set<Incoterm> incos = new HashSet<Incoterm>();
+		for(IncotermDto inco:incoterm) {
+			Incoterm temp = new Incoterm();
 			temp.setCode(inco.getCode());
 			temp.setName(inco.getName());
 			temp.setSapSalesTypeCode(inco.getSapSalesTypeCode());
@@ -113,8 +113,8 @@ public class CurrencyService {
 	 */
 	public Map<String,String> getIncoterms(){
 		Map<String,String> incos = new HashMap<String,String>();
-		List<DIncoterm> dincos = incotermRepo.findAll();
-		for(DIncoterm di:dincos) {
+		List<Incoterm> dincos = incotermRepo.findAll();
+		for(Incoterm di:dincos) {
 			incos.put(di.getCode(), di.getName());
 		}
 		return incos;
