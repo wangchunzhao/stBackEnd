@@ -22,9 +22,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.order.dao.ContractRepository;
-import com.qhc.order.domain.ContractView;
+import com.qhc.order.domain.ContractDto;
+import com.qhc.order.domain.ContractSignSys;
 import com.qhc.order.entity.Contract;
-import com.qhc.order.entity.ContractSignSys;
 import com.qhc.system.domain.PageHelper;
 
 /**
@@ -45,11 +45,11 @@ public class ContractService {
 	@Autowired
 	private EntityManager entityManager;
 
-	public ContractView findById(Integer id) {
+	public ContractDto findById(Integer id) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
-		PageHelper<ContractView> pageHelper = find(params);
-		List<ContractView> contracts = pageHelper.getRows();
+		PageHelper<ContractDto> pageHelper = find(params);
+		List<ContractDto> contracts = pageHelper.getRows();
 		return contracts.size() > 0 ? contracts.get(0) : null;
 	}
 
@@ -61,7 +61,7 @@ public class ContractService {
 		return contractRepository.saveAndFlush(contract);
 	}
 
-	public PageHelper<ContractView> find(Map<String, Object> params) {
+	public PageHelper<ContractDto> find(Map<String, Object> params) {
 		StringBuilder sql = new StringBuilder("select ");
 		// 合同号
 		sql.append("support.contract_number                as contractNumber,");
@@ -183,15 +183,15 @@ public class ContractService {
 		query.setFirstResult(pageNo * pageSize);
 		query.setMaxResults(pageSize);
 
-		List<ContractView> contracts = query.unwrap(NativeQuery.class)
-				.setResultTransformer(Transformers.aliasToBean(ContractView.class)).list();
+		List<ContractDto> contracts = query.unwrap(NativeQuery.class)
+				.setResultTransformer(Transformers.aliasToBean(ContractDto.class)).list();
 
 		// 统计总记录数
 		String countSql = sql.toString();
 		countSql = "select count(1) " + countSql.substring(countSql.indexOf("from"));
 		Query countQuery = entityManager.createNativeQuery(countSql);
 		BigInteger totalCount = (BigInteger) countQuery.getSingleResult();
-		PageHelper<ContractView> page = new PageHelper<ContractView>();
+		PageHelper<ContractDto> page = new PageHelper<ContractDto>();
 		page.setRows(contracts);
 		page.setTotal(totalCount.intValue());
 
@@ -224,14 +224,14 @@ public class ContractService {
 		String states = "03,04,05,06";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("statusList", "3,4,5,6");
-		List<ContractView> contractList = this.find(params).getRows();
+		List<ContractDto> contractList = this.find(params).getRows();
 		List<ContractSignSys> signList = bestsignService.syncContractSignSysData();
 		if (signList == null || signList.size() <= 0) {
 			logger.info(System.currentTimeMillis() + ":--update contracts' state--Failed");
 			return false;
 		}
 
-		for (ContractView contract : contractList) {
+		for (ContractDto contract : contractList) {
 			String fileHashCode = contract.getFileHashCode();
 			if (fileHashCode == null || fileHashCode.isEmpty())
 				continue;
@@ -276,7 +276,7 @@ public class ContractService {
 	 * @throws JsonMappingException
 	 */
 	public boolean doSignContract(int contractId) throws JsonMappingException, JsonProcessingException {
-		ContractView contract = this.findById(contractId);
+		ContractDto contract = this.findById(contractId);
 
 		if (contract == null)
 			return false;

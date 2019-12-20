@@ -20,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.dao.AttachedInfoRepository;
 import com.qhc.order.dao.AttachementRepository;
 import com.qhc.order.dao.EnginingCostRepository;
 import com.qhc.order.dao.ItemB2cCostRepository;
@@ -44,10 +43,10 @@ import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderHelper;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
-import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.OrderVersionDto;
 import com.qhc.order.domain.PaymentPlan;
 import com.qhc.order.domain.bpm.BpmOrder;
-import com.qhc.order.domain.bpm.Order;
+import com.qhc.order.domain.bpm.OrderHeader;
 import com.qhc.order.domain.bpm.OrderItem;
 import com.qhc.order.domain.bpm.OrderMargin;
 import com.qhc.order.domain.sap.SapOrder;
@@ -56,17 +55,16 @@ import com.qhc.order.domain.sap.SapOrderHeader;
 import com.qhc.order.domain.sap.SapOrderItem;
 import com.qhc.order.domain.sap.SapOrderPlan;
 import com.qhc.order.domain.sap.SapOrderPrice;
-import com.qhc.order.entity.AttachedInfo;
 import com.qhc.order.entity.Attachment;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.Characteristics;
-import com.qhc.order.entity.DOrder;
+import com.qhc.order.entity.Order;
 import com.qhc.order.entity.DelieveryAddress;
 import com.qhc.order.entity.EnginingCost;
 import com.qhc.order.entity.ItemB2c;
 import com.qhc.order.entity.ItemDetails;
 import com.qhc.order.entity.ItemsForm;
-import com.qhc.order.entity.KOrderVersion;
+import com.qhc.order.entity.OrderVersion;
 import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.entity.OrderSupportInfo;
 import com.qhc.order.entity.OrderVersionView;
@@ -177,9 +175,6 @@ public class OrderService {
 	private KOrderFormRepository formRepo;
 
 	@Autowired
-	private AttachedInfoRepository attachedInfoRepository;
-
-	@Autowired
 	private ParameterSettingsRepository settingsRepository;
 
 	@Autowired
@@ -264,8 +259,8 @@ public class OrderService {
 
 		String seq = order.getSequenceNumber();
 
-		DOrder orderDao = ohelper.toDOrder();
-		DOrder extOrder = dOrderRepository.findBySequence(order.getSequenceNumber());
+		Order orderDao = ohelper.toDOrder();
+		Order extOrder = dOrderRepository.findBySequence(order.getSequenceNumber());
 		if (extOrder != null) {
 			orderDao.setId(extOrder.getId());
 		}
@@ -294,7 +289,7 @@ public class OrderService {
 	 */
 	private String saveOrderInfo(final OrderDto order, final OrderHelper ohelper, String orderId) {
 
-		KOrderVersion lastVersion = orderVersionRepo.findLastOneByOrderId(orderId);
+		OrderVersion lastVersion = orderVersionRepo.findLastOneByOrderId(orderId);
 		String version = null;
 		if (lastVersion != null) {
 			version = lastVersion.getVersion();
@@ -406,13 +401,13 @@ public class OrderService {
 
 	private void saveVersion(final OrderDto order, final OrderHelper ohelper, boolean b2cFlag, String orderId,
 			String orderInforId) throws Exception {
-		KOrderVersion lversion = ohelper.toOrderVersion(b2cFlag, false);
+		OrderVersion lversion = ohelper.toOrderVersion(b2cFlag, false);
 		lversion.setOrderId(orderId);
 		lversion.setOrderInfoId(orderInforId);
 		if (lversion.getCreateTime() == null)
 			lversion.setCreateTime(new Date());
 		//
-		KOrderVersion extVersion = orderVersionRepo.findByOrder(orderId, orderInforId);
+		OrderVersion extVersion = orderVersionRepo.findByOrder(orderId, orderInforId);
 		if (extVersion != null)
 			lversion.setId(extVersion.getId());
 		// 订单版本保存
@@ -444,7 +439,7 @@ public class OrderService {
 
 	}
 
-	public DOrder findByKOrderVersionId(String id) {
+	public Order findByKOrderVersionId(String id) {
 
 		return dOrderRepository.getOne(id);
 	}
@@ -1039,14 +1034,14 @@ public class OrderService {
 	 * @param sequenceNubmer
 	 * @return
 	 */
-	public List<OrderVersion> findOrderVersions(String sequenceNumber) {
+	public List<OrderVersionDto> findOrderVersions(String sequenceNumber) {
 		List<OrderVersionView> versions = orderVersionViewRepository
 				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
-		List<OrderVersion> list = new ArrayList<>(versions.size());
+		List<OrderVersionDto> list = new ArrayList<>(versions.size());
 		for (OrderVersionView version : versions) {
 			String versionId = version.getVersionId();
 
-			OrderVersion v = new OrderVersion();
+			OrderVersionDto v = new OrderVersionDto();
 			list.add(v);
 			v.setCreateTime(version.getCreateTime());
 			v.setId(versionId);
@@ -1068,7 +1063,7 @@ public class OrderService {
 	 */
 	public String getOrderType(String sequenceNumber) {
 		String orderTypeCode = null;
-		DOrder order = dOrderRepository.findBySequence(sequenceNumber);
+		Order order = dOrderRepository.findBySequence(sequenceNumber);
 		if (order != null) {
 			orderTypeCode = order.getOrderTypeCode();
 		}
@@ -1264,12 +1259,12 @@ public class OrderService {
 			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
 //			item.setPeriod(itemDetails.getp);
 
-			List<AttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
-			if (attachedInfoList.size() > 0) {
-				AttachedInfo attached = attachedInfoList.get(0);
-				item.setProduceDate(attached.getStartDateOfProduction());
-				item.setOnStoreDate(attached.getDateOfOnStore());
-			}
+//			List<AttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
+//			if (attachedInfoList.size() > 0) {
+//				AttachedInfo attached = attachedInfoList.get(0);
+//				item.setProduceDate(attached.getStartDateOfProduction());
+//				item.setOnStoreDate(attached.getDateOfOnStore());
+//			}
 
 			items.add(item);
 
@@ -1529,7 +1524,7 @@ public class OrderService {
 	public void b2cCost(boolean isApproved, String seqnum, String version, String operator,List<B2cComments> b2cs) {
 
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
-		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
+		OrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
 		String status = ov.getStatus();
 		String orderStatus = status.substring(0, 2);
 		char lastchar = status.charAt(3); 
@@ -1579,7 +1574,7 @@ public class OrderService {
 		DMaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 		
 		BpmOrder bpmOrder = new BpmOrder();
-		Order bpmHeader = new Order();
+		OrderHeader bpmHeader = new OrderHeader();
 		List<OrderItem> bpmItems = new ArrayList<OrderItem>(items.size());
 		List<OrderMargin> bpmMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
 		List<OrderMargin> bpmWtwMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
@@ -1722,7 +1717,7 @@ public class OrderService {
 	 * 更新BPM审批状态和折扣 
 	 */
 	public void updateBpmStatus(String sequenceNumber, String status, Double bodyDiscount, Double unitDiscount) {
-		KOrderVersion version = this.orderVersionRepo.findLastVersion(sequenceNumber);
+		OrderVersion version = this.orderVersionRepo.findLastVersion(sequenceNumber);
 		if (status.equals("1")) {
 			// 审批通过
 			status = version.getStatus();

@@ -1,4 +1,4 @@
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
 import java.util.Date;
 import java.util.List;

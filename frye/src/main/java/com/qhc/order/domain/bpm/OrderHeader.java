@@ -2,7 +2,7 @@ package com.qhc.order.domain.bpm;
 
 import java.util.Date;
 
-public class Order {
+public class OrderHeader {
 	/* 客户经理域账号 */
 	private String salesCode;
 	/* 客户经理电话 */

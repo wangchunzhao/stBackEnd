@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.qhc.order.domain.ContractView;
+import com.qhc.order.domain.ContractDto;
 import com.qhc.order.entity.Contract;
 import com.qhc.order.service.BestsignService;
 import com.qhc.order.service.ContractService;
@@ -74,7 +74,7 @@ public class ContractController {
 	public Result<? extends Object> find(@RequestParam(required = false) Map<String, Object> params) throws Exception {
 		Result<? extends Object> result = null;
 		try {
-			PageHelper<ContractView> page = contractService.find(params);
+			PageHelper<ContractDto> page = contractService.find(params);
 			result = Result.ok(page);
 		} catch (Exception e) {
 			logger.error("查询合同", e);
@@ -86,7 +86,7 @@ public class ContractController {
 	@ApiOperation(value = "保存或修改合同",notes="保存或修改合同")
 	@PostMapping(value = "")
 	@ResponseBody
-	public Result<? extends Object> save(@RequestBody(required = true) ContractView view ) {
+	public Result<? extends Object> save(@RequestBody(required = true) ContractDto view ) {
 		Result<? extends Object> result = null;
 		try {
 			Contract contract = new Contract();
@@ -107,7 +107,7 @@ public class ContractController {
 	public Result<? extends Object> getContract(@PathVariable("id") Integer contractId) {
 		Result<? extends Object> result = null;
 		try {
-			ContractView c = contractService.findById(contractId);
+			ContractDto c = contractService.findById(contractId);
 			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "查询合同详情，合同ID=" + contractId;
@@ -223,7 +223,7 @@ public class ContractController {
 	@RequestMapping({ "{id}/download" })
 	public void downloadContract(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String idStr = request.getParameter("id");
-		ContractView contract = this.contractService.findById(Integer.valueOf(idStr));
+		ContractDto contract = this.contractService.findById(Integer.valueOf(idStr));
 
 		String signContractId = contract.getSignContractId();
 		byte[] zipBytes = this.bestsignService.downloadContract(signContractId);

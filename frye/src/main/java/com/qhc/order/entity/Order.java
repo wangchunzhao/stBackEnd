@@ -1,91 +1,78 @@
-package com.qhc.order.domain;
+package com.qhc.order.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
-import com.qhc.order.entity.SpecialDelivery;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
-/**
- * @author lizuoshan
- *
- */
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
-@Table(name = "k_speical_order_vo_view")
-public class SpecialDeliveryVoInfo implements Serializable{
- 
+@Table(name = "k_orders")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+public class Order implements Serializable {
+	private final static int FACTOR = 43;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8162013779997326172L;
+
 	@Id
-	@Column(name="id")
+	@NotNull
+	@Column(name = "id", columnDefinition = "char", length = 32)
+	@GeneratedValue(generator = "jpa-uuid")
 	public String id;
-	
-	@Column(name="k_orders_id",columnDefinition="char")
-	public String kOrderId;
-	
-	@Column(name="sequence_number",columnDefinition="char")
+
+	@NotNull
+	@Column(name = "sequence_number", columnDefinition = "char")
 	public String sequenceNumber;
-	
-	@Column(name="order_type_code",columnDefinition="char")
+
+	@NotNull
+	@Column(name = "order_type_code", columnDefinition = "char")
 	public String orderTypeCode;
-	
-	@Column(name="create_time",columnDefinition="datetime")
+
+	@NotNull
+	@Column(name = "create_time", columnDefinition = "datetime")
+	@CreatedDate
 	public Date createTime;
-	
-	@Column(name="owner_domain_id")
+
+	@NotNull
+	@Column(name = "owner_domain_id")
 	public String ownerDomainId;
-	
-	@Column(name="owner_name",columnDefinition="TEXT")
-	private String	ownerName;
-	
-	@Column(name="sales_tel")
-	private String	salesTel;
-	
-	@Column(name="contractor_code")
-	private String	contractorCode;
-	
-	@Column(name="contractor_name",columnDefinition="TEXT")
-	private String	contractorName;
-	
-	@Column(name="contractor_class_code",columnDefinition="char")
-	private String	contractorClassCode;
-	
-	@Column(name="contractor_class_name",columnDefinition="TEXT")
-	private String	contractorClassName;
-	
-	@Column(name="office_code",columnDefinition="char")
-	private String	officeCode;
-	
-	
-	
-	@Column(name="k_order_version_id",columnDefinition="char")
-	public String kOrderVersionId;
-	
-	@Transient
-	public Double distcount;
 
-	@Transient
-	public String startTime;
-	
-	@Transient
-	public String endTime;
-	
-	
-	
-	
+	@NotNull
+	@Column(name = "owner_name", columnDefinition = "TEXT")
+	private String ownerName;
 
-	public Double getDistcount() {
-		return distcount;
-	}
+	@Column(name = "sales_tel")
+	private String salesTel;
 
-	public void setDistcount(Double distcount) {
-		this.distcount = distcount;
-	}
+	@NotNull
+	@Column(name = "contractor_code")
+	private String contractorCode;
 
+	@NotNull
+	@Column(name = "contractor_name", columnDefinition = "TEXT")
+	private String contractorName;
+
+	@NotNull
+	@Column(name = "contractor_class_code", columnDefinition = "char")
+	private String contractorClassCode;
+
+	@NotNull
+	@Column(name = "contractor_class_name", columnDefinition = "TEXT")
+	private String contractorClassName;
+
+	@Column(name = "office_code", columnDefinition = "char")
+	private String officeCode;
 
 	public String getId() {
 		return id;
@@ -183,48 +170,20 @@ public class SpecialDeliveryVoInfo implements Serializable{
 		this.officeCode = officeCode;
 	}
 
-	public String getStartTime() {
-		return startTime;
+	@Override
+	public int hashCode() {
+		return this.getSequenceNumber().hashCode() * FACTOR;
 	}
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
+	@Override
+	public boolean equals(Object o) {
+		if (o.getClass().equals(this.getClass())) {
+			Order obj = (Order) o;
+			if (obj.getSequenceNumber().equals(this.getSequenceNumber())) {
+				return true;
+			}
+		}
+		return false;
 	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
-	public String getkOrderVersionId() {
-		return kOrderVersionId;
-	}
-
-	public void setkOrderVersionId(String kOrderVersionId) {
-		this.kOrderVersionId = kOrderVersionId;
-	}
-
-	public String getkOrderId() {
-		return kOrderId;
-	}
-
-	public void setkOrderId(String kOrderId) {
-		this.kOrderId = kOrderId;
-	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 
 }

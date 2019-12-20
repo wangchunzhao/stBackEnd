@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.domain.SalesGroup;
+import com.qhc.sap.domain.SalesGroup;
 import com.qhc.sap.entity.SapSalesOffice;
 import com.qhc.sap.service.LocationService;
 import com.qhc.sap.service.SapSalesOfficeService;

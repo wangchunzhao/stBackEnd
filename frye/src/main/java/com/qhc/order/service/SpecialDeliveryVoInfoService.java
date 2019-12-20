@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.qhc.order.dao.SpecialDeliveryVoInfoRepository;
-import com.qhc.order.domain.SpecialDeliveryVoInfo;
+import com.qhc.order.entity.SpecialDeliveryVoInfo;
 
 @Service
 public class SpecialDeliveryVoInfoService {

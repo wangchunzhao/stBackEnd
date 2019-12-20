@@ -20,6 +20,7 @@ import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomExplosion;
 import com.qhc.sap.domain.Characteristic;
+import com.qhc.sap.domain.Configuration;
 import com.qhc.sap.domain.DefaultCharacteristics;
 import com.qhc.sap.domain.Material;
 import com.qhc.sap.entity.CharacteristicConfiguration;
@@ -32,7 +33,6 @@ import com.qhc.system.domain.PageHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.exception.NotExistException;
 import com.qhc.exception.NotMatchException;
-import com.qhc.order.domain.Configuration;
 import com.qhc.order.service.BayernService;
 
 

@@ -2,12 +2,12 @@ package com.qhc.order.domain;
 
 import java.util.Date;
 
-public class OrderVersion {
+public class OrderVersionDto {
 	String id;
 	String version;
 	Integer status;
 	Date createTime;
-	String kOrdersId;
+	String orderId;
 	
 	private Date submitDate = null;
 	private Date bpmSubmitTime = null;
@@ -57,10 +57,10 @@ public class OrderVersion {
 		this.optTime = optTime;
 	}
 	public String getkOrdersId() {
-		return kOrdersId;
+		return orderId;
 	}
 	public void setkOrdersId(String kOrdersId) {
-		this.kOrdersId = kOrdersId;
+		this.orderId = kOrdersId;
 	}
 	public String getkOrderInfoId() {
 		return kOrderInfoId;

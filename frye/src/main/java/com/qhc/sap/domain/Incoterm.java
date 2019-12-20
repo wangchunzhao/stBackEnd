@@ -1,8 +1,9 @@
 /**
  * 
  */
-package com.qhc.order.domain;
+package com.qhc.sap.domain;
 
+import com.qhc.order.domain.AbsConObject;
 
 /**
  * @author wang@dxc.com

@@ -6,8 +6,6 @@ package com.qhc.sap.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.qhc.order.domain.Configuration;
-
 /**
  * @author wang@dxc.com
  *

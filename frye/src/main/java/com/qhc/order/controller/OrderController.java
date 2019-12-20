@@ -26,9 +26,9 @@ import com.qhc.order.domain.GrossProfitDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
-import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.OrderVersionDto;
 import com.qhc.order.domain.PaymentPlan;
-import com.qhc.order.entity.DOrder;
+import com.qhc.order.entity.Order;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.entity.DMaterialGroups;
@@ -167,7 +167,7 @@ public class OrderController {
 	@ApiOperation(value = "根据id查询订单", notes = "根据id查询订单")
 	@GetMapping(value = "order/dOrder/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public DOrder findByKOrderVersionId(@PathVariable String id) throws Exception {
+	public Order findByKOrderVersionId(@PathVariable String id) throws Exception {
 
 		return orderService.findByKOrderVersionId(id);
 
@@ -209,7 +209,7 @@ public class OrderController {
     @ApiOperation(value="根据sequenceNumber查询订单版本历史", notes="根据sequenceNumber查询订单版本历史")
     @GetMapping(value = "order/{sequenceNumber}/version")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderVersion> orderVersions(@PathVariable String sequenceNumber) throws Exception {	
+    public List<OrderVersionDto> orderVersions(@PathVariable String sequenceNumber) throws Exception {	
     	return orderService.findOrderVersions(sequenceNumber);
     }
     

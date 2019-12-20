@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.qhc.order.entity.DOrder;
+import com.qhc.order.entity.Order;
 import com.qhc.order.entity.ItemDetails;
 import com.qhc.order.entity.ItemsForm;
 import com.qhc.order.entity.Attachment;
@@ -16,7 +16,7 @@ import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.Characteristics;
 import com.qhc.order.entity.DelieveryAddress;
 import com.qhc.order.entity.OrderInfo;
-import com.qhc.order.entity.KOrderVersion;
+import com.qhc.order.entity.OrderVersion;
 import com.qhc.order.entity.OrderSupportInfo;
 
 /**
@@ -32,8 +32,8 @@ public class OrderHelper {
 	 * 
 	 * @return
 	 */
-	public DOrder toDOrder() {
-		DOrder dorder = new DOrder();
+	public Order toDOrder() {
+		Order dorder = new Order();
 		//
 		dorder.setSequenceNumber(order.getSequenceNumber());//序列号
 		dorder.setOrderTypeCode(order.getOrderType());
@@ -273,8 +273,8 @@ public class OrderHelper {
 	 * 
 	 * @return
 	 */
-	public KOrderVersion toOrderVersion(boolean b2c,boolean dealer) {
-		KOrderVersion temp = new KOrderVersion();
+	public OrderVersion toOrderVersion(boolean b2c,boolean dealer) {
+		OrderVersion temp = new OrderVersion();
 		String orderStatus = "00";
 		String b2cStatus = String.valueOf(0);
 		String dealerStatus = String.valueOf(0);
@@ -306,8 +306,8 @@ public class OrderHelper {
 		temp.setOptTime(order.getOptTime());
 		return temp;
 	}
-	public KOrderVersion keepOrderVersion(KOrderVersion old,boolean b2c,boolean dealer) {
-		KOrderVersion temp = toOrderVersion(b2c,dealer);
+	public OrderVersion keepOrderVersion(OrderVersion old,boolean b2c,boolean dealer) {
+		OrderVersion temp = toOrderVersion(b2c,dealer);
 		temp.setId(old.getId());
 		temp.setOrderId(old.getOrderId());
 		temp.setOrderInfoId(old.getOrderInfoId());

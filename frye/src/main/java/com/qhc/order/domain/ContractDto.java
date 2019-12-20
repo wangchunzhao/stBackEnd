@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author walker
  */
-public class ContractView implements Serializable {
+public class ContractDto implements Serializable {
 	private static final long serialVersionUID = -7870996928236577566L;
 
 	/* Id */
@@ -162,7 +162,7 @@ public class ContractView implements Serializable {
 	@ApiModelProperty("电子签约中合同Id")
 	private String signContractId;
 
-	public ContractView() {
+	public ContractDto() {
 	}
 
 	public Integer getId() {
@@ -552,7 +552,7 @@ public class ContractView implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final ContractView other = (ContractView) obj;
+		final ContractDto other = (ContractDto) obj;
 		return (this.id == null ? other.id == null : this.id.equals(other.id));
 	}
 

@@ -1,4 +1,4 @@
-package com.qhc.order.entity;
+package com.qhc.order.domain;
 
 import io.swagger.annotations.*;
 import java.sql.Timestamp;

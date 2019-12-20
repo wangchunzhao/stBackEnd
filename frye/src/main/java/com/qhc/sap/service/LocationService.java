@@ -11,9 +11,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.domain.SalesGroup;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
+import com.qhc.sap.domain.SalesGroup;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.sap.entity.SapSalesOffice;
 

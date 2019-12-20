@@ -3,7 +3,7 @@ package com.qhc.order.domain.bpm;
 import java.util.List;
 
 public class BpmOrder {
-	private Order order;
+	private OrderHeader order;
 	private List<OrderItem> items;
 	private List<OrderMargin> margin;
 	private List<OrderMargin> wtwMargin;
@@ -14,11 +14,11 @@ public class BpmOrder {
 				+ "]";
 	}
 
-	public Order getOrder() {
+	public OrderHeader getOrder() {
 		return order;
 	}
 
-	public void setOrder(Order order) {
+	public void setOrder(OrderHeader order) {
 		this.order = order;
 	}
 

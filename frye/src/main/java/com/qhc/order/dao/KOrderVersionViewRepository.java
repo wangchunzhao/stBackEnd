@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.order.entity.KOrderVersion;
+import com.qhc.order.entity.OrderVersion;
 import com.qhc.order.entity.OrderVersionView;
 
 /**

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.qhc.order.domain.ContractView;
+import com.qhc.order.domain.ContractDto;
 import com.qhc.order.service.ContractService;
 
 @SpringBootTest
@@ -30,7 +30,7 @@ class ContractServiceTest {
 
 	@Test
 	void testFind() {
-		List<ContractView> list = contractService.find(new HashMap<String, Object>()).getRows();
+		List<ContractDto> list = contractService.find(new HashMap<String, Object>()).getRows();
 		System.out.println(list);
 	}
 

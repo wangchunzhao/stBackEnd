@@ -2,79 +2,88 @@ package com.qhc.order.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Transient;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
+/**
+ * @author lizuoshan
+ *
+ */
 @Entity
-@Table(name = "k_orders")
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
-@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-public class DOrder implements Serializable{
-	private final static int FACTOR = 43;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8162013779997326172L;
-
+@Table(name = "k_speical_order_vo_view")
+public class SpecialDeliveryVoInfo implements Serializable{
+ 
 	@Id
-    @NotNull
-    @Column(name="id",columnDefinition="char",length=32)
-    @GeneratedValue(generator = "jpa-uuid")
+	@Column(name="id")
 	public String id;
 	
-	@NotNull
+	@Column(name="k_orders_id",columnDefinition="char")
+	public String kOrderId;
+	
 	@Column(name="sequence_number",columnDefinition="char")
 	public String sequenceNumber;
 	
-	@NotNull
 	@Column(name="order_type_code",columnDefinition="char")
 	public String orderTypeCode;
 	
-	@NotNull
 	@Column(name="create_time",columnDefinition="datetime")
-	@CreatedDate
 	public Date createTime;
 	
-	@NotNull
 	@Column(name="owner_domain_id")
 	public String ownerDomainId;
 	
-	@NotNull
 	@Column(name="owner_name",columnDefinition="TEXT")
 	private String	ownerName;
 	
 	@Column(name="sales_tel")
 	private String	salesTel;
 	
-	@NotNull
 	@Column(name="contractor_code")
 	private String	contractorCode;
 	
-	@NotNull
 	@Column(name="contractor_name",columnDefinition="TEXT")
 	private String	contractorName;
 	
-	@NotNull
 	@Column(name="contractor_class_code",columnDefinition="char")
 	private String	contractorClassCode;
 	
-	@NotNull
 	@Column(name="contractor_class_name",columnDefinition="TEXT")
 	private String	contractorClassName;
 	
 	@Column(name="office_code",columnDefinition="char")
 	private String	officeCode;
 	
+	
+	
+	@Column(name="k_order_version_id",columnDefinition="char")
+	public String kOrderVersionId;
+	
+	@Transient
+	public Double distcount;
+
+	@Transient
+	public String startTime;
+	
+	@Transient
+	public String endTime;
+	
+	
+	
+	
+
+	public Double getDistcount() {
+		return distcount;
+	}
+
+	public void setDistcount(Double distcount) {
+		this.distcount = distcount;
+	}
+
 
 	public String getId() {
 		return id;
@@ -171,21 +180,49 @@ public class DOrder implements Serializable{
 	public void setOfficeCode(String officeCode) {
 		this.officeCode = officeCode;
 	}
-	@Override
-	public int hashCode() {
-		return this.getSequenceNumber().hashCode()*FACTOR;
+
+	public String getStartTime() {
+		return startTime;
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if(o.getClass().equals(this.getClass()) ) {
-			DOrder obj = (DOrder)o;
-			if(obj.getSequenceNumber().equals(this.getSequenceNumber())) {
-				return true;
-			}
-		}
-		return false;
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getkOrderVersionId() {
+		return kOrderVersionId;
+	}
+
+	public void setkOrderVersionId(String kOrderVersionId) {
+		this.kOrderVersionId = kOrderVersionId;
+	}
+
+	public String getkOrderId() {
+		return kOrderId;
+	}
+
+	public void setkOrderId(String kOrderId) {
+		this.kOrderId = kOrderId;
+	}
+
+
 	
 	
+	
+	
+	
+	
+	
+	
+	
+
+
 }

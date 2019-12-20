@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
-import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.OrderVersionDto;
 import com.qhc.order.entity.OrderView;
 import com.qhc.order.mapper.OrderMapper;
 import com.qhc.order.service.OrderService;
@@ -36,7 +36,7 @@ class OrderServiceTest {
 	
 	@Test
 	void testFindOrderVersionsByOrderIdString() {
-		List<OrderVersion> versions = orderService.findOrderVersions("123");
+		List<OrderVersionDto> versions = orderService.findOrderVersions("123");
 		System.out.println(versions);
 	}
 	

@@ -16,7 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "k_order_version")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-public class KOrderVersion {
+public class OrderVersion {
 
 
 	@Id
