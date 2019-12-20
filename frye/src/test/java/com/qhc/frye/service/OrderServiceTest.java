@@ -10,14 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.qhc.frye.domain.OrderOption;
-import com.qhc.frye.domain.OrderQuery;
-import com.qhc.frye.domain.OrderVersion;
-import com.qhc.frye.domain.PageHelper;
-import com.qhc.frye.domain.form.AbsOrder;
-import com.qhc.frye.entity.DMaterialGroups;
-import com.qhc.frye.entity.KOrderView;
+import com.qhc.order.domain.OrderOption;
+import com.qhc.order.domain.OrderQuery;
+import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.PageHelper;
+import com.qhc.order.domain.form.AbsOrder;
+import com.qhc.order.entity.OrderView;
 import com.qhc.order.mapper.OrderMapper;
+import com.qhc.order.service.OrderService;
+import com.qhc.sap.entity.DMaterialGroups;
 
 @SpringBootTest
 class OrderServiceTest {
@@ -74,7 +75,7 @@ class OrderServiceTest {
 		PageHelper<AbsOrder> result = orderService.findOrders(query);
 		System.out.println(result);
 		
-		List<KOrderView> orders = orderMapper.findOrderViewByParams(query);
+		List<OrderView> orders = orderMapper.findOrderViewByParams(query);
 		System.out.println(orders);
 	}
 	

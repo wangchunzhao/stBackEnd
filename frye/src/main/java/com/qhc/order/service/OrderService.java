@@ -15,111 +15,111 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qhc.frye.dao.AttachedInfoRepository;
-import com.qhc.frye.dao.AttachementRepository;
-import com.qhc.frye.dao.B2CCostRepository;
-import com.qhc.frye.dao.BAreaRepository;
-import com.qhc.frye.dao.BCityRepository;
-import com.qhc.frye.dao.BProvinceRepository;
-import com.qhc.frye.dao.CharacteristicDefaultRepository;
-import com.qhc.frye.dao.CurrencyRepository;
-import com.qhc.frye.dao.DOrderRepository;
-import com.qhc.frye.dao.DefaultCharacterViewRepository;
-import com.qhc.frye.dao.EnginingCostRepository;
-import com.qhc.frye.dao.ItemDetailRepository;
-import com.qhc.frye.dao.KBiddingPlanRepository;
-import com.qhc.frye.dao.KCharacteristicsRepository;
-import com.qhc.frye.dao.KDelieveryAddressRepository;
-import com.qhc.frye.dao.KOrderFormRepository;
-import com.qhc.frye.dao.KOrderInfoRepository;
-import com.qhc.frye.dao.KOrderVersionRepository;
-import com.qhc.frye.dao.KOrderVersionViewRepository;
-import com.qhc.frye.dao.KOrderViewRepository;
-import com.qhc.frye.dao.OrderSupportInforRepository;
-import com.qhc.frye.dao.ParameterSettingsRepository;
-import com.qhc.frye.dao.PaymentTermRepository;
-import com.qhc.frye.dao.SalesGroupRepository;
-import com.qhc.frye.dao.SalesOfficeRepository;
-import com.qhc.frye.dao.SalesTypeRepository;
-import com.qhc.frye.dao.SapMaterialGroupsRepository;
-import com.qhc.frye.dao.TerminalIndustryCodeRepository;
-import com.qhc.frye.domain.B2CComments;
-import com.qhc.frye.domain.Currency;
-import com.qhc.frye.domain.OrderOption;
-import com.qhc.frye.domain.OrderQuery;
-import com.qhc.frye.domain.OrderVersion;
-import com.qhc.frye.domain.PageHelper;
-import com.qhc.frye.domain.PaymentPlan;
-import com.qhc.frye.domain.SalesOrder;
-import com.qhc.frye.domain.bpm.BpmOrder;
-import com.qhc.frye.domain.bpm.Order;
-import com.qhc.frye.domain.bpm.OrderItem;
-import com.qhc.frye.domain.bpm.OrderMargin;
-import com.qhc.frye.domain.form.AbsCharacteristic;
-import com.qhc.frye.domain.form.AbsItem;
-import com.qhc.frye.domain.form.AbsOrder;
-import com.qhc.frye.domain.form.BaseChracteristic;
-import com.qhc.frye.domain.form.BaseItem;
-import com.qhc.frye.domain.form.BaseOrder;
-import com.qhc.frye.domain.form.BiddingPayment;
-import com.qhc.frye.domain.form.BulkOrder;
-import com.qhc.frye.domain.form.DealerOrder;
-import com.qhc.frye.domain.form.KeyAccountOrder;
-import com.qhc.frye.domain.form.OrderAddress;
-import com.qhc.frye.domain.form.OrderHelper;
-import com.qhc.frye.domain.sap.SapOrder;
-import com.qhc.frye.domain.sap.SapOrderCharacteristics;
-import com.qhc.frye.domain.sap.SapOrderHeader;
-import com.qhc.frye.domain.sap.SapOrderItem;
-import com.qhc.frye.domain.sap.SapOrderPlan;
-import com.qhc.frye.domain.sap.SapOrderPrice;
-import com.qhc.frye.entity.B2CCost;
-import com.qhc.frye.entity.BArea;
-import com.qhc.frye.entity.BCity;
-import com.qhc.frye.entity.BProvince;
-import com.qhc.frye.entity.DCharacteristicDefault;
-import com.qhc.frye.entity.DCurrency;
-import com.qhc.frye.entity.DMaterialGroups;
-import com.qhc.frye.entity.DOrder;
-import com.qhc.frye.entity.DSalesType;
-import com.qhc.frye.entity.DefaultCharacterView;
-import com.qhc.frye.entity.EnginingCost;
-import com.qhc.frye.entity.ItemDetails;
-import com.qhc.frye.entity.ItemsForm;
-import com.qhc.frye.entity.KAttachedInfo;
-import com.qhc.frye.entity.KAttachment;
-import com.qhc.frye.entity.KBiddingPlan;
-import com.qhc.frye.entity.KCharacteristics;
-import com.qhc.frye.entity.KDelieveryAddress;
-import com.qhc.frye.entity.KOrderInfo;
-import com.qhc.frye.entity.KOrderVersion;
-import com.qhc.frye.entity.KOrderVersionView;
-import com.qhc.frye.entity.KOrderView;
-import com.qhc.frye.entity.OrderSupportInfo;
-import com.qhc.frye.entity.Parameter;
-import com.qhc.frye.entity.PaymentTerm;
-import com.qhc.frye.entity.SapSalesGroup;
-import com.qhc.frye.entity.TermianlIndustryCode;
-import com.qhc.frye.service.BayernService;
-import com.qhc.frye.service.ConstantService;
+import com.qhc.order.dao.AttachedInfoRepository;
+import com.qhc.order.dao.AttachementRepository;
+import com.qhc.order.dao.EnginingCostRepository;
+import com.qhc.order.dao.ItemB2cCostRepository;
+import com.qhc.order.dao.ItemDetailRepository;
+import com.qhc.order.dao.KBiddingPlanRepository;
+import com.qhc.order.dao.KCharacteristicsRepository;
+import com.qhc.order.dao.KDelieveryAddressRepository;
+import com.qhc.order.dao.KOrderFormRepository;
+import com.qhc.order.dao.KOrderInfoRepository;
+import com.qhc.order.dao.KOrderVersionRepository;
+import com.qhc.order.dao.KOrderVersionViewRepository;
+import com.qhc.order.dao.KOrderViewRepository;
+import com.qhc.order.dao.OrderRepository;
+import com.qhc.order.dao.OrderSupportInforRepository;
+import com.qhc.order.domain.B2cComments;
+import com.qhc.order.domain.Currency;
+import com.qhc.order.domain.OrderOption;
+import com.qhc.order.domain.OrderQuery;
+import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.PageHelper;
+import com.qhc.order.domain.PaymentPlan;
+import com.qhc.order.domain.SalesOrder;
+import com.qhc.order.domain.bpm.BpmOrder;
+import com.qhc.order.domain.bpm.Order;
+import com.qhc.order.domain.bpm.OrderItem;
+import com.qhc.order.domain.bpm.OrderMargin;
+import com.qhc.order.domain.form.AbsCharacteristic;
+import com.qhc.order.domain.form.AbsItem;
+import com.qhc.order.domain.form.AbsOrder;
+import com.qhc.order.domain.form.BaseChracteristic;
+import com.qhc.order.domain.form.BaseItem;
+import com.qhc.order.domain.form.BaseOrder;
+import com.qhc.order.domain.form.BiddingPayment;
+import com.qhc.order.domain.form.BulkOrder;
+import com.qhc.order.domain.form.DealerOrder;
+import com.qhc.order.domain.form.KeyAccountOrder;
+import com.qhc.order.domain.form.OrderAddress;
+import com.qhc.order.domain.form.OrderHelper;
+import com.qhc.order.domain.sap.SapOrder;
+import com.qhc.order.domain.sap.SapOrderCharacteristics;
+import com.qhc.order.domain.sap.SapOrderHeader;
+import com.qhc.order.domain.sap.SapOrderItem;
+import com.qhc.order.domain.sap.SapOrderPlan;
+import com.qhc.order.domain.sap.SapOrderPrice;
+import com.qhc.order.entity.AttachedInfo;
+import com.qhc.order.entity.Attachment;
+import com.qhc.order.entity.BillingPlan;
+import com.qhc.order.entity.Characteristics;
+import com.qhc.order.entity.DOrder;
+import com.qhc.order.entity.DelieveryAddress;
+import com.qhc.order.entity.EnginingCost;
+import com.qhc.order.entity.ItemB2c;
+import com.qhc.order.entity.ItemDetails;
+import com.qhc.order.entity.ItemsForm;
+import com.qhc.order.entity.KOrderVersion;
+import com.qhc.order.entity.OrderInfo;
+import com.qhc.order.entity.OrderSupportInfo;
+import com.qhc.order.entity.OrderVersionView;
+import com.qhc.order.entity.OrderView;
+import com.qhc.sap.dao.CharacteristicDefaultRepository;
+import com.qhc.sap.dao.CurrencyRepository;
+import com.qhc.sap.dao.DefaultCharacterViewRepository;
+import com.qhc.sap.dao.PaymentTermRepository;
+import com.qhc.sap.dao.SalesGroupRepository;
+import com.qhc.sap.dao.SalesOfficeRepository;
+import com.qhc.sap.dao.SalesTypeRepository;
+import com.qhc.sap.dao.SapMaterialGroupsRepository;
+import com.qhc.sap.dao.TerminalIndustryCodeRepository;
+import com.qhc.sap.entity.DCharacteristicDefault;
+import com.qhc.sap.entity.DCurrency;
+import com.qhc.sap.entity.DMaterialGroups;
+import com.qhc.sap.entity.DSalesType;
+import com.qhc.sap.entity.DefaultCharacterView;
+import com.qhc.sap.entity.PaymentTerm;
+import com.qhc.sap.entity.SapSalesGroup;
+import com.qhc.sap.entity.TermianlIndustryCode;
+import com.qhc.system.dao.BAreaRepository;
+import com.qhc.system.dao.BCityRepository;
+import com.qhc.system.dao.BProvinceRepository;
+import com.qhc.system.dao.ParameterSettingsRepository;
+import com.qhc.system.entity.Area;
+import com.qhc.system.entity.City;
+import com.qhc.system.entity.Province;
+import com.qhc.system.entity.Parameter;
 
 @Service
 public class OrderService {
 	private final static String ORDER_TYPE_DEALER = "ZH0D"; // '经销商订单'
 	private final static String ORDER_TYPE_BULK = "ZH0M"; // '备货订单'
 	private final static String ORDER_TYPE_KEYACCOUNT = "ZH0T"; // '大客户订单'
-
+	private static Logger log = LoggerFactory.getLogger(OrderService.class);
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
 
 	@Autowired
-	private DOrderRepository dOrderRepository;
+	private OrderRepository dOrderRepository;
 
 	@Autowired
 	private OrderSupportInforRepository supportRepo;
@@ -203,7 +203,7 @@ public class OrderService {
 	private DefaultCharacterViewRepository defaultValueRepo;
 
 	@Autowired
-	private B2CCostRepository b2cRepo;
+	private ItemB2cCostRepository b2cRepo;
 
 	@Autowired
 	private EnginingCostRepository enginRepo;
@@ -313,19 +313,19 @@ public class OrderService {
 		if (lastVersion != null) {
 			version = lastVersion.getVersion();
 		}
-		KOrderInfo kOrderInfoDao = ohelper.toOrderInfo();
+		OrderInfo kOrderInfoDao = ohelper.toOrderInfo();
 		if (version != null && version.equals(order.getCurrentVersion())) {
-			KOrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(), version);
+			OrderInfo existOrderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(order.getSequenceNumber(), version);
 			kOrderInfoDao.setId(existOrderInfo.getId());
 		}
 		kOrderInfoDao = orderInfoRepo.save(kOrderInfoDao);
 		return kOrderInfoDao.getId();
 	}
 
-	private List<KCharacteristics> convertCharacters(List<DefaultCharacterView> dCharacters, String itemid) {
-		List<KCharacteristics> temp = new ArrayList();
+	private List<Characteristics> convertCharacters(List<DefaultCharacterView> dCharacters, String itemid) {
+		List<Characteristics> temp = new ArrayList();
 		for (DefaultCharacterView dcv : dCharacters) {
-			KCharacteristics kc = new KCharacteristics();
+			Characteristics kc = new Characteristics();
 			kc.setKeyCode(dcv.getKeyCode());
 			kc.setValueCode(dcv.getValueCode());
 			kc.setItemDetailsId(itemid);
@@ -345,19 +345,24 @@ public class OrderService {
 	
 			// 数据库中的设置
 			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
-			List<KCharacteristics> kcs = convertCharacters(dcs, detailId);
+			List<Characteristics> kcs = convertCharacters(dcs, detailId);
 			if(kcs!=null && !kcs.isEmpty())
 				kCharaRepo.deleteInBatchByItemDetail(detailId);
 				kCharaRepo.saveAll(kcs);
 			
 		} else {
+			log.info("save config data");
 			//定制配置
 			List<BaseChracteristic> bas = item.getConfigs();
-			List<KCharacteristics> kcs = new ArrayList();
+			List<Characteristics> kcs = new ArrayList();
 			for (BaseChracteristic bc : bas) {
-				KCharacteristics kc = new KCharacteristics();
+				Characteristics kc = new Characteristics();
 				kc.setKeyCode(bc.getConfigCode());
 				kc.setValueCode(bc.getConfigValueCode());
+				
+				log.info(kc.getItemDetailsId()+"config code is :"+bc.getConfigCode());
+				log.info(kc.getItemDetailsId()+"config value code is :"+bc.getConfigValueCode());
+				
 				kc.setItemDetailsId(detailId);
 				kc.setIsConfigurable(1);
 				kcs.add(kc);
@@ -389,6 +394,7 @@ public class OrderService {
 		boolean b2cFlag = false;
 		List<ItemDetails> existItems = itemDetailRepository.findByKFormsId(formDao.getId());
 		List<BaseItem> newItems = order.getItems();
+		
 		for (AbsItem item : newItems) {
 
 			ItemDetails temp = OrderHelper.itemConversion(item, formDao.getId());
@@ -441,10 +447,12 @@ public class OrderService {
 		saveVersion(order, ohelper, b2cFlag, orderId, orderInforId);
 
 		// 订单地址
-		List<KDelieveryAddress> adds = ohelper.toAddress(orderInforId);
+		List<DelieveryAddress> adds = ohelper.toAddress(orderInforId);
+		deliveryAddressRepository.deleteByOrderInfoId(orderInforId);
 		deliveryAddressRepository.saveAll(adds);
 		// bidding plan
-		List<KBiddingPlan> bidding = ohelper.toBiddingPlan(orderInforId);
+		List<BillingPlan> bidding = ohelper.toBiddingPlan(orderInforId);
+		biddingPlanRepository.deleteByOrderInfoId(orderInforId);
 		biddingPlanRepository.saveAll(bidding);
 		// attachment
 
@@ -675,15 +683,15 @@ public class OrderService {
 	public OrderOption getOrderOption() {
 		OrderOption oo = new OrderOption();
 		//
-		List<BProvince> bps = provinceRepo.findAll();
+		List<Province> bps = provinceRepo.findAll();
 		Map<String, String> provinces = oo.getProvinces();
-		for (BProvince bp : bps) {
+		for (Province bp : bps) {
 			provinces.put(bp.getCode(), bp.getName());
 		}
 		//
-		List<BCity> bcs = cityRepo.findAll();
+		List<City> bcs = cityRepo.findAll();
 		Map<String, Map<String, String>> citys = oo.getCitys();
-		for (BCity bc : bcs) {
+		for (City bc : bcs) {
 			String pcode = bc.getbProvinceCode();
 			Map<String, String> vals = new HashMap<String, String>();
 			vals.put(bc.getCode(), bc.getName());
@@ -693,8 +701,8 @@ public class OrderService {
 
 		}
 		//
-		List<BArea> bas = distinctRepo.findAll();
-		Set<BArea> distincts = oo.getDistricts();
+		List<Area> bas = distinctRepo.findAll();
+		Set<Area> distincts = oo.getDistricts();
 		distincts.addAll(bas);
 		//
 		Map<String, String> incs = oo.getTermialClass();
@@ -854,7 +862,7 @@ public class OrderService {
 //		OrderQuery query = new OrderQuery();
 //		List<SalesOrder> orders = findOrder(query);
 //		SalesOrder order = orders.get(0);
-		KOrderView orderView = orderViewRepository.findBySequenceNumberAndVersion(sequenceNumber, orderVersionId);
+		OrderView orderView = orderViewRepository.findBySequenceNumberAndVersion(sequenceNumber, orderVersionId);
 		String orderType = orderView.getOrderType();
 
 		// assemble sap order header
@@ -980,8 +988,8 @@ public class OrderService {
 			prices.add(price2);
 
 			// Characteristics value input
-			List<KCharacteristics> characList = characteristicsRepository.findByItemDetailsId(itemDetail.getId());
-			for (KCharacteristics charac : characList) {
+			List<Characteristics> characList = characteristicsRepository.findByItemDetailsId(itemDetail.getId());
+			for (Characteristics charac : characList) {
 				SapOrderCharacteristics c = new SapOrderCharacteristics();
 
 				if (charac.getIsConfigurable() == 1) {
@@ -1006,8 +1014,8 @@ public class OrderService {
 		// Billing plan
 		// 当订单为经销商订单，billing plan只有一条数据，金额为空或0，不向sap发送billing plan数据，sap order
 		// header的付款条款为billing plan 的 code
-		List<KBiddingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
-		for (KBiddingPlan kBiddingPlan : planList) {
+		List<BillingPlan> planList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+		for (BillingPlan kBiddingPlan : planList) {
 			if (orderType.equals(ORDER_TYPE_DEALER)) {
 				header.setZterm(kBiddingPlan.getCode());
 				break;
@@ -1046,10 +1054,10 @@ public class OrderService {
 	 * @return
 	 */
 	public List<OrderVersion> findOrderVersions(String sequenceNumber) {
-		List<KOrderVersionView> versions = orderVersionViewRepository
+		List<OrderVersionView> versions = orderVersionViewRepository
 				.findBySequenceNumberOrderByCreateTime(sequenceNumber);
 		List<OrderVersion> list = new ArrayList<>(versions.size());
-		for (KOrderVersionView version : versions) {
+		for (OrderVersionView version : versions) {
 			String versionId = version.getVersionId();
 
 			OrderVersion v = new OrderVersion();
@@ -1095,11 +1103,11 @@ public class OrderService {
 		orderQuery.setVersion(version);
 		orderQuery.setIncludeDetail(true);
 		
-		PageHelper<KOrderView> page = queryOrderView(orderQuery);
-		List<KOrderView> orderViews = page.getRows();
+		PageHelper<OrderView> page = queryOrderView(orderQuery);
+		List<OrderView> orderViews = page.getRows();
 		
 		if (orderViews.size() > 0) {
-			KOrderView orderView = orderViews.get(0);
+			OrderView orderView = orderViews.get(0);
 			String orderType = orderView.getOrderType();
 			switch (orderType) {
 			case ORDER_TYPE_DEALER:
@@ -1130,9 +1138,9 @@ public class OrderService {
 		boolean includeDetail = orderQuery.isIncludeDetail();
 		List<AbsOrder> orders = new ArrayList<>();
 
-		PageHelper<KOrderView> page = queryOrderView(orderQuery);
-		List<KOrderView> orderViews = page.getRows();
-		for (KOrderView orderView : orderViews) {
+		PageHelper<OrderView> page = queryOrderView(orderQuery);
+		List<OrderView> orderViews = page.getRows();
+		for (OrderView orderView : orderViews) {
 			AbsOrder order = new BaseOrder();
 //				switch (orderType) {
 //				case ORDER_TYPE_DEALER:
@@ -1164,7 +1172,7 @@ public class OrderService {
 	 * @param order
 	 * @param includeDetail
 	 */
-	private void assembleOrder(KOrderView orderView, AbsOrder order, boolean includeDetail) {
+	private void assembleOrder(OrderView orderView, AbsOrder order, boolean includeDetail) {
 		String orderId = orderView.getOrderId();
 		String orderInfoId = orderView.getOrderInfoId();
 		String orderType = orderView.getOrderType();
@@ -1205,7 +1213,7 @@ public class OrderService {
 			
 			dealerOrder.setRecordCode(orderView.getRecordCode());
 			
-			List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+			List<BillingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 			if (billingPlanList.size() > 0) {
 				dealerOrder.setPaymentType(billingPlanList.get(0).getCode());
 			}
@@ -1218,17 +1226,17 @@ public class OrderService {
 
 	private void assembleOrderDetail(AbsOrder order, String orderId, String orderInfoId, String formId) {
 		// Attached File
-		List<KAttachment> attachments = attachementRepository.findByOrderInfo(orderInfoId);
+		List<Attachment> attachments = attachementRepository.findByOrderInfo(orderInfoId);
 		List<String> attachmentNames = new ArrayList<String>();
-		for (KAttachment attachment : attachments) {
+		for (Attachment attachment : attachments) {
 			attachmentNames.add(attachment.getFileName());
 		}
 		order.setAttachedFileName(attachmentNames);
 
 		// 收货地址
-		List<KDelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderInfoId);
+		List<DelieveryAddress> addressList = deliveryAddressRepository.findByOrderInfoId(orderInfoId);
 		List<OrderAddress> addresses = new ArrayList<OrderAddress>(addressList.size());
-		for (KDelieveryAddress delieveryAddress : addressList) {
+		for (DelieveryAddress delieveryAddress : addressList) {
 			OrderAddress address = new OrderAddress();
 			addresses.add(address);
 			BeanUtils.copyProperties(delieveryAddress, address);
@@ -1236,9 +1244,9 @@ public class OrderService {
 		order.setOrderAddress(addresses);
 
 		// billing plan
-		List<KBiddingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
+		List<BillingPlan> billingPlanList = biddingPlanRepository.findByOrderInfoId(orderInfoId);
 		List<BiddingPayment> payments = new ArrayList<BiddingPayment>();
-		for (KBiddingPlan kBiddingPlan : billingPlanList) {
+		for (BillingPlan kBiddingPlan : billingPlanList) {
 			BiddingPayment payment = new BiddingPayment();
 			payment.setPayDate(kBiddingPlan.getPayDate());
 			payment.setPercentage(kBiddingPlan.getAmount() == null ? 0 : kBiddingPlan.getAmount().doubleValue());
@@ -1285,9 +1293,9 @@ public class OrderService {
 			item.setStandardPrice(toDouble(itemDetails.getStandardPrice()));
 //			item.setPeriod(itemDetails.getp);
 
-			List<KAttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
+			List<AttachedInfo> attachedInfoList = attachedInfoRepository.findByItemDetailsId(itemId);
 			if (attachedInfoList.size() > 0) {
-				KAttachedInfo attached = attachedInfoList.get(0);
+				AttachedInfo attached = attachedInfoList.get(0);
 				item.setProduceDate(attached.getStartDateOfProduction());
 				item.setOnStoreDate(attached.getDateOfOnStore());
 			}
@@ -1296,9 +1304,9 @@ public class OrderService {
 
 			// TODO item b2c
 			// characteristics
-			List<KCharacteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
+			List<Characteristics> characs = characteristicsRepository.findByItemDetailsId(itemId);
 			List<BaseChracteristic> configs = new ArrayList<BaseChracteristic>();
-			for (KCharacteristics charac : characs) {
+			for (Characteristics charac : characs) {
 				if (toString(charac.getIsConfigurable()).equals("1")) {
 					item.setConfigurable(true);
 				}
@@ -1323,7 +1331,7 @@ public class OrderService {
 	 * @param orderQuery
 	 * @return
 	 */
-	private PageHelper<KOrderView> queryOrderView(OrderQuery orderQuery) {
+	private PageHelper<OrderView> queryOrderView(OrderQuery orderQuery) {
 		StringBuilder querySql = new StringBuilder();
 		Map<String, Object> params = new HashMap<>();
 		querySql.append("select * from k_order_view where 1=1 ");
@@ -1428,7 +1436,7 @@ public class OrderService {
 			querySql.append(")");
 		}
 
-		Query query = entityManager.createNativeQuery(querySql.toString(), KOrderView.class);
+		Query query = entityManager.createNativeQuery(querySql.toString(), OrderView.class);
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
@@ -1439,7 +1447,7 @@ public class OrderService {
 		query.setFirstResult(pageNo * pageSize);
 		query.setMaxResults(pageSize);
 
-		List<KOrderView> orderViews = query.getResultList();
+		List<OrderView> orderViews = query.getResultList();
 
 		// 统计总记录数
 		String countSql = querySql.toString();
@@ -1461,7 +1469,7 @@ public class OrderService {
 	public void enginingCost(String operator, boolean isApproved, String seqnum, String version, double installation,
 			double materials, double electrical, double coolrome, double maintanance) {
 
-		KOrderInfo orderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(seqnum, version);
+		OrderInfo orderInfo = orderInfoRepo.findOrderInfoBySeqAndVersion(seqnum, version);
 		List<EnginingCost> engins = enginRepo.findAllEnginingByItem(orderInfo.getId());
 		if (engins == null || engins.isEmpty()) {
 			engins = new ArrayList<EnginingCost>();
@@ -1547,7 +1555,7 @@ public class OrderService {
 	 * @param version
 	 * @param b2cs
 	 */
-	public void b2cCost(boolean isApproved, String seqnum, String version, String operator,List<B2CComments> b2cs) {
+	public void b2cCost(boolean isApproved, String seqnum, String version, String operator,List<B2cComments> b2cs) {
 
 		List<ItemDetails> items = itemDetailRepository.findByOrder(seqnum, version);
 		KOrderVersion ov = orderVersionRepo.findVersion(seqnum, version);
@@ -1564,11 +1572,11 @@ public class OrderService {
 		}
 		//
 		for (ItemDetails item : items) {
-			for (B2CComments b2 : b2cs) {
+			for (B2cComments b2 : b2cs) {
 				if (item.getRowNumber() == b2.getRowNumber()) {
-					B2CCost cost = b2cRepo.findAllB2CByItem(item.getId());
+					ItemB2c cost = b2cRepo.findAllB2CByItem(item.getId());
 					if (cost == null) {
-						cost = new B2CCost();
+						cost = new ItemB2c();
 					}
 					cost.setItemId(item.getId());
 					cost.setOptTime(new Date());
@@ -1757,7 +1765,7 @@ public class OrderService {
 		orderVersionRepo.save(version);
 		
 		String orderInfoId = version.getOrderInfoId();
-		KOrderInfo orderInfo = this.orderInfoRepo.findById(orderInfoId).get();
+		OrderInfo orderInfo = this.orderInfoRepo.findById(orderInfoId).get();
 		orderInfo.setBodyDiscount(bodyDiscount);
 		orderInfo.setMainDiscount(unitDiscount);
 		orderInfoRepo.save(orderInfo);		
