@@ -12,9 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.qhc.sap.dao.CharacteristicConfigurationRepository;
 import com.qhc.sap.dao.CharacteristicDefaultRepository;
-import com.qhc.sap.dao.MaterialInfoRepository;
 import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
@@ -29,6 +27,7 @@ import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.MaterialView;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
+import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.domain.PageHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.exception.NotExistException;
@@ -66,10 +65,7 @@ public class MaterialService {
 	private BayernService bayernSer;
 	
 	@Autowired
-	private MaterialInfoRepository materialInfoRepo;
-	
-	@Autowired
-	private CharacteristicConfigurationRepository charaterRepo;
+	private SapViewMapper sapViewMapper;
 	
 	
 	@Autowired
@@ -132,7 +128,7 @@ public class MaterialService {
 	 */
 	public MaterialDto getMaterialsById(String code){
 		MaterialDto m = new MaterialDto();;
-		List<MaterialView> dmo = materialInfoRepo.findByMaterialId(code);
+		List<MaterialView> dmo = sapViewMapper.findMaterialInfoByMaterialId(code);
 		for(MaterialView mp:dmo) {
 			
 			m.setCode(mp.getCode());
@@ -175,7 +171,7 @@ public class MaterialService {
 	 * @return
 	 */
 	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode) throws NotMatchException{
-		List<CharacteristicConfiguration> ccs = charaterRepo.findAllByClazzCode(clazzCode);
+		List<CharacteristicConfiguration> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		List<CharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		Set<Integer> ids = new HashSet<Integer>();
 		for(CharacteristicDefault dc: defaultValues) {

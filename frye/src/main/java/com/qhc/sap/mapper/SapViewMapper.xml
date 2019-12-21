@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.sap.mapper.SapViewMapper" >
+	<!-- 查询物料信息 -->
+	<select id="findMaterialInfoByMaterialId" resultType="com.qhc.sap.entity.MaterialView" parameterType="Map" >
+		SELECT 
+	        t.code AS price_type_code,
+	        t.name AS price_type_name,
+	        p.price,
+	        m.code,
+	        m.description,
+	        m.is_configurable,
+	        m.is_purchased,
+	        m.stand_price,
+	        m.sap_unit_of_measurement_code,
+	        unit.name AS unit_name,
+	        m.sap_material_groups_code,
+	        g.name AS group_name,
+			m.sap_clazz_code
+	    FROM sap_materials m
+	    LEFT JOIN sap_material_groups g ON m.sap_material_groups_code = g.code
+	    LEFT JOIN sap_unit_of_measurement unit ON unit.code = m.sap_unit_of_measurement_code
+	    RIGHT JOIN sap_materials_price p ON p.sap_materials_code = m.code
+	    LEFT JOIN sap_price_type t ON t.code = p.sap_price_type_code
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND m.code = #{code, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 查询物料特征信息 -->
+	<select id="findCharacteristicValueByClazzCode" resultType="com.qhc.sap.entity.CharacteristicConfiguration" parameterType="Map" >
+		SELECT 
+	        v.id AS id,
+	        `l`.`sap_clazz_code` AS `sap_clazz_code`,
+	        `c`.`code` AS `key_code`,
+	        `c`.`name` AS `key_name`,
+	        `v`.`code` AS `value_code`,
+	        `v`.`name` AS `value_name`
+	    FROM `sap_characteristic_value` `v`
+        LEFT JOIN `sap_characteristic` `c` ON `c`.`code` = `v`.`sap_characteristic_code`
+    	LEFT JOIN `sap_clazz_and_character` `l` ON `l`.`sap_characteristic_code` = `c`.`code`
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND l.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 查询物料特征默认值 -->
+	<select id="findDefaultCharacterValueByMaterial" resultType="com.qhc.sap.entity.DefaultCharacterView" parameterType="Map" >
+		SELECT 
+	        v.id,
+	        v.code,
+	        v.name,
+	        m.sap_materials_code,
+	        m.sap_characteristic_code AS key_code
+	    FROM sap_material_default_characteristic m
+	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND m.sap_materials_code = #{material, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+</mapper>

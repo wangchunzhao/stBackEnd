@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * @author wang@dxc.com
  *
  */
-@Entity
-@Table(name = "sap_material_info_view")
+//@Entity
+//@Table(name = "sap_material_info_view")
 public class MaterialView implements Serializable {
 		
 	@Column(name = "code",columnDefinition ="CHAR")

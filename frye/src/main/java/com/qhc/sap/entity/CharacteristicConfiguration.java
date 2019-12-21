@@ -12,8 +12,8 @@ import javax.persistence.Table;
  * @author wang@dxc.com
  *
  */ 
-@Entity
-@Table(name = "sap_class_characteristic_value_view")
+//@Entity
+//@Table(name = "sap_class_characteristic_value_view")
 public class CharacteristicConfiguration {
 	
 	@Id 

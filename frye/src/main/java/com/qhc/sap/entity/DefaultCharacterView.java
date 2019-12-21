@@ -12,8 +12,8 @@ import javax.persistence.Table;
  * @author wang@dxc.com
  *
  */
-@Entity
-@Table(name = "sap_default_character_value_view")
+//@Entity
+//@Table(name = "sap_default_character_value_view")
 public class DefaultCharacterView {
 	@Id 
 	@Column(name = "id",columnDefinition ="int")

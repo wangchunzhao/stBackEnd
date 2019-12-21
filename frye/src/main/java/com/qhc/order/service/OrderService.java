@@ -70,7 +70,6 @@ import com.qhc.order.entity.OrderSupportInfo;
 import com.qhc.order.entity.OrderVersionView;
 import com.qhc.order.entity.OrderView;
 import com.qhc.sap.dao.CurrencyRepository;
-import com.qhc.sap.dao.DefaultCharacterViewRepository;
 import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
@@ -83,6 +82,7 @@ import com.qhc.sap.entity.DefaultCharacterView;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.sap.entity.TermianlIndustryCode;
+import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
 import com.qhc.system.dao.ProvinceRepository;
@@ -181,7 +181,7 @@ public class OrderService {
 	private SapMaterialGroupsRepository materialGroupsRepository;
 
 	@Autowired
-	private DefaultCharacterViewRepository defaultValueRepo;
+	private SapViewMapper sapViewMapper;
 
 	@Autowired
 	private ItemB2cCostRepository b2cRepo;
@@ -325,7 +325,7 @@ public class OrderService {
 		if (item.getConfigs() == null) {
 	
 			// 数据库中的设置
-			List<DefaultCharacterView> dcs = defaultValueRepo.findByMaterial(item.getMaterialCode());
+			List<DefaultCharacterView> dcs = sapViewMapper.findDefaultCharacterValueByMaterial(item.getMaterialCode());
 			List<Characteristics> kcs = convertCharacters(dcs, detailId);
 			if(kcs!=null && !kcs.isEmpty())
 				kCharaRepo.deleteInBatchByItemDetail(detailId);
