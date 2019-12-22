@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.AreaMapper" >
+	<resultMap id="AreaBaseMap" type="com.qhc.system.entity.Area" >
+		<id column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="price1" property="price1" jdbcType="DECIMAL" />
+		<result column="price2" property="price2" jdbcType="DECIMAL" />
+		<result column="price3" property="price3" jdbcType="DECIMAL" />
+		<result column="price4" property="price4" jdbcType="DECIMAL" />
+		<result column="price5" property="price5" jdbcType="DECIMAL" />
+		<result column="price6" property="price6" jdbcType="DECIMAL" />
+		<result column="price7" property="price7" jdbcType="DECIMAL" />
+		<result column="price8" property="price8" jdbcType="DECIMAL" />
+		<result column="price9" property="price9" jdbcType="DECIMAL" />
+		<result column="price10" property="price10" jdbcType="DECIMAL" />
+		<result column="price11" property="price11" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<resultMap id="AreaMap" type="com.qhc.system.entity.Area" extends="AreaBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.Area">
+		insert into b_area ( name, city_code, price, 
+			price1, price2, price3, 
+			price4, price5, price6, 
+			price7, price8, price9, 
+			price10, price11 )
+		values ( #{name, jdbcType=VARCHAR}, #{cityCode, jdbcType=VARCHAR}, #{price, jdbcType=DECIMAL}, 
+			#{price1, jdbcType=DECIMAL}, #{price2, jdbcType=DECIMAL}, #{price3, jdbcType=DECIMAL}, 
+			#{price4, jdbcType=DECIMAL}, #{price5, jdbcType=DECIMAL}, #{price6, jdbcType=DECIMAL}, 
+			#{price7, jdbcType=DECIMAL}, #{price8, jdbcType=DECIMAL}, #{price9, jdbcType=DECIMAL}, 
+			#{price10, jdbcType=DECIMAL}, #{price11, jdbcType=DECIMAL} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.Area" >
+		update b_area
+		set name = #{name, jdbcType=VARCHAR}, 
+			city_code = #{cityCode, jdbcType=VARCHAR}, 
+			price = #{price, jdbcType=DECIMAL}, 
+			price1 = #{price1, jdbcType=DECIMAL}, 
+			price2 = #{price2, jdbcType=DECIMAL}, 
+			price3 = #{price3, jdbcType=DECIMAL}, 
+			price4 = #{price4, jdbcType=DECIMAL}, 
+			price5 = #{price5, jdbcType=DECIMAL}, 
+			price6 = #{price6, jdbcType=DECIMAL}, 
+			price7 = #{price7, jdbcType=DECIMAL}, 
+			price8 = #{price8, jdbcType=DECIMAL}, 
+			price9 = #{price9, jdbcType=DECIMAL}, 
+			price10 = #{price10, jdbcType=DECIMAL}, 
+			price11 = #{price11, jdbcType=DECIMAL}
+		where code = #{code, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from b_area
+		where code = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_area.code, b_area.name, b_area.city_code, b_area.price, b_area.price1, 
+		b_area.price2, b_area.price3, b_area.price4, b_area.price5, b_area.price6, 
+		b_area.price7, b_area.price8, b_area.price9, b_area.price10, b_area.price11
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="AreaMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from b_area 
+		where b_area.code = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND b_area.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<if test="name != null and name != ''" >
+				AND b_area.name = #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="cityCode != null and cityCode != ''" >
+				AND b_area.city_code = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			<if test="price != null" >
+				AND b_area.price = #{price, jdbcType=DECIMAL}
+			</if>
+			<if test="price1 != null" >
+				AND b_area.price1 = #{price1, jdbcType=DECIMAL}
+			</if>
+			<if test="price2 != null" >
+				AND b_area.price2 = #{price2, jdbcType=DECIMAL}
+			</if>
+			<if test="price3 != null" >
+				AND b_area.price3 = #{price3, jdbcType=DECIMAL}
+			</if>
+			<if test="price4 != null" >
+				AND b_area.price4 = #{price4, jdbcType=DECIMAL}
+			</if>
+			<if test="price5 != null" >
+				AND b_area.price5 = #{price5, jdbcType=DECIMAL}
+			</if>
+			<if test="price6 != null" >
+				AND b_area.price6 = #{price6, jdbcType=DECIMAL}
+			</if>
+			<if test="price7 != null" >
+				AND b_area.price7 = #{price7, jdbcType=DECIMAL}
+			</if>
+			<if test="price8 != null" >
+				AND b_area.price8 = #{price8, jdbcType=DECIMAL}
+			</if>
+			<if test="price9 != null" >
+				AND b_area.price9 = #{price9, jdbcType=DECIMAL}
+			</if>
+			<if test="price10 != null" >
+				AND b_area.price10 = #{price10, jdbcType=DECIMAL}
+			</if>
+			<if test="price11 != null" >
+				AND b_area.price11 = #{price11, jdbcType=DECIMAL}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_area
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="AreaMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_area
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by code
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

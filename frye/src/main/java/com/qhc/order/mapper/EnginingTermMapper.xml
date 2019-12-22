@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.EnginingTermMapper" >
+	<resultMap id="EnginingTermBaseMap" type="com.qhc.order.entity.EnginingTerm" >
+		<id column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="EnginingTermMap" type="com.qhc.order.entity.EnginingTerm" extends="EnginingTermBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.EnginingTerm">
+		insert into k_engining_term ( name )
+		values ( #{name, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.EnginingTerm" >
+		update k_engining_term
+		set name = #{name, jdbcType=VARCHAR}
+		where code = #{code, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from k_engining_term
+		where code = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_engining_term.code, k_engining_term.name
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="EnginingTermMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from k_engining_term 
+		where k_engining_term.code = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND k_engining_term.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<if test="name != null and name != ''" >
+				AND k_engining_term.name = #{name, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_engining_term
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="EnginingTermMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_engining_term
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by code
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

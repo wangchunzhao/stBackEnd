@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.ContractMapper" >
+	<resultMap id="ContractBaseMap" type="com.qhc.order.entity.Contract" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_info_id" property="orderInfoId" jdbcType="INTEGER" />
+		<result column="delivery_days" property="deliveryDays" jdbcType="INTEGER" />
+		<result column="client_name" property="clientName" jdbcType="VARCHAR" />
+		<result column="install_location" property="installLocation" jdbcType="VARCHAR" />
+		<result column="acceptance_criteria_code" property="acceptanceCriteriaCode" jdbcType="VARCHAR" />
+		<result column="customer_email" property="customerEmail" jdbcType="VARCHAR" />
+		<result column="invoice_address" property="invoiceAddress" jdbcType="VARCHAR" />
+		<result column="invoice_post_code" property="invoicePostCode" jdbcType="VARCHAR" />
+		<result column="invoice_receiver" property="invoiceReceiver" jdbcType="VARCHAR" />
+		<result column="invoice_tel" property="invoiceTel" jdbcType="VARCHAR" />
+		<result column="broker" property="broker" jdbcType="VARCHAR" />
+		<result column="company_tel" property="companyTel" jdbcType="VARCHAR" />
+		<result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+		<result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
+		<result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
+		<result column="company_post_code" property="companyPostCode" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="sender" property="sender" jdbcType="VARCHAR" />
+		<result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+		<result column="signer" property="signer" jdbcType="VARCHAR" />
+		<result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+		<result column="file_hashcode" property="fileHashcode" jdbcType="VARCHAR" />
+		<result column="sign_contractid" property="signContractid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ContractMap" type="com.qhc.order.entity.Contract" extends="ContractBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.Contract">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_contract ( id, order_info_id, delivery_days, 
+			client_name, install_location, acceptance_criteria_code, 
+			customer_email, invoice_address, invoice_post_code, 
+			invoice_receiver, invoice_tel, broker, 
+			company_tel, bank_name, account_number, 
+			company_address, company_post_code, status, 
+			creater, create_time, sender, 
+			send_time, signer, sign_time, 
+			file_hashcode, sign_contractid )
+		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{deliveryDays, jdbcType=INTEGER}, 
+			#{clientName, jdbcType=VARCHAR}, #{installLocation, jdbcType=VARCHAR}, #{acceptanceCriteriaCode, jdbcType=VARCHAR}, 
+			#{customerEmail, jdbcType=VARCHAR}, #{invoiceAddress, jdbcType=VARCHAR}, #{invoicePostCode, jdbcType=VARCHAR}, 
+			#{invoiceReceiver, jdbcType=VARCHAR}, #{invoiceTel, jdbcType=VARCHAR}, #{broker, jdbcType=VARCHAR}, 
+			#{companyTel, jdbcType=VARCHAR}, #{bankName, jdbcType=VARCHAR}, #{accountNumber, jdbcType=VARCHAR}, 
+			#{companyAddress, jdbcType=VARCHAR}, #{companyPostCode, jdbcType=VARCHAR}, #{status, jdbcType=INTEGER}, 
+			#{creater, jdbcType=VARCHAR}, #{createTime, jdbcType=TIMESTAMP}, #{sender, jdbcType=VARCHAR}, 
+			#{sendTime, jdbcType=TIMESTAMP}, #{signer, jdbcType=VARCHAR}, #{signTime, jdbcType=TIMESTAMP}, 
+			#{fileHashcode, jdbcType=VARCHAR}, #{signContractid, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.Contract" >
+		update k_contract
+		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
+			delivery_days = #{deliveryDays, jdbcType=INTEGER}, 
+			client_name = #{clientName, jdbcType=VARCHAR}, 
+			install_location = #{installLocation, jdbcType=VARCHAR}, 
+			acceptance_criteria_code = #{acceptanceCriteriaCode, jdbcType=VARCHAR}, 
+			customer_email = #{customerEmail, jdbcType=VARCHAR}, 
+			invoice_address = #{invoiceAddress, jdbcType=VARCHAR}, 
+			invoice_post_code = #{invoicePostCode, jdbcType=VARCHAR}, 
+			invoice_receiver = #{invoiceReceiver, jdbcType=VARCHAR}, 
+			invoice_tel = #{invoiceTel, jdbcType=VARCHAR}, 
+			broker = #{broker, jdbcType=VARCHAR}, 
+			company_tel = #{companyTel, jdbcType=VARCHAR}, 
+			bank_name = #{bankName, jdbcType=VARCHAR}, 
+			account_number = #{accountNumber, jdbcType=VARCHAR}, 
+			company_address = #{companyAddress, jdbcType=VARCHAR}, 
+			company_post_code = #{companyPostCode, jdbcType=VARCHAR}, 
+			status = #{status, jdbcType=INTEGER}, 
+			creater = #{creater, jdbcType=VARCHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP}, 
+			sender = #{sender, jdbcType=VARCHAR}, 
+			send_time = #{sendTime, jdbcType=TIMESTAMP}, 
+			signer = #{signer, jdbcType=VARCHAR}, 
+			sign_time = #{signTime, jdbcType=TIMESTAMP}, 
+			file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
+			sign_contractid = #{signContractid, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_contract
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_contract.id, k_contract.order_info_id, k_contract.delivery_days, k_contract.client_name, k_contract.install_location, 
+		k_contract.acceptance_criteria_code, k_contract.customer_email, k_contract.invoice_address, k_contract.invoice_post_code, k_contract.invoice_receiver, 
+		k_contract.invoice_tel, k_contract.broker, k_contract.company_tel, k_contract.bank_name, k_contract.account_number, 
+		k_contract.company_address, k_contract.company_post_code, k_contract.status, k_contract.creater, k_contract.create_time, 
+		k_contract.sender, k_contract.send_time, k_contract.signer, k_contract.sign_time, k_contract.file_hashcode, 
+		k_contract.sign_contractid
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ContractMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_contract 
+		where k_contract.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_contract.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND k_contract.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="deliveryDays != null" >
+				AND k_contract.delivery_days = #{deliveryDays, jdbcType=INTEGER}
+			</if>
+			<if test="clientName != null and clientName != ''" >
+				AND k_contract.client_name = #{clientName, jdbcType=VARCHAR}
+			</if>
+			<if test="installLocation != null and installLocation != ''" >
+				AND k_contract.install_location = #{installLocation, jdbcType=VARCHAR}
+			</if>
+			<if test="acceptanceCriteriaCode != null and acceptanceCriteriaCode != ''" >
+				AND k_contract.acceptance_criteria_code = #{acceptanceCriteriaCode, jdbcType=VARCHAR}
+			</if>
+			<if test="customerEmail != null and customerEmail != ''" >
+				AND k_contract.customer_email = #{customerEmail, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceAddress != null and invoiceAddress != ''" >
+				AND k_contract.invoice_address = #{invoiceAddress, jdbcType=VARCHAR}
+			</if>
+			<if test="invoicePostCode != null and invoicePostCode != ''" >
+				AND k_contract.invoice_post_code = #{invoicePostCode, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceReceiver != null and invoiceReceiver != ''" >
+				AND k_contract.invoice_receiver = #{invoiceReceiver, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceTel != null and invoiceTel != ''" >
+				AND k_contract.invoice_tel = #{invoiceTel, jdbcType=VARCHAR}
+			</if>
+			<if test="broker != null and broker != ''" >
+				AND k_contract.broker = #{broker, jdbcType=VARCHAR}
+			</if>
+			<if test="companyTel != null and companyTel != ''" >
+				AND k_contract.company_tel = #{companyTel, jdbcType=VARCHAR}
+			</if>
+			<if test="bankName != null and bankName != ''" >
+				AND k_contract.bank_name = #{bankName, jdbcType=VARCHAR}
+			</if>
+			<if test="accountNumber != null and accountNumber != ''" >
+				AND k_contract.account_number = #{accountNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="companyAddress != null and companyAddress != ''" >
+				AND k_contract.company_address = #{companyAddress, jdbcType=VARCHAR}
+			</if>
+			<if test="companyPostCode != null and companyPostCode != ''" >
+				AND k_contract.company_post_code = #{companyPostCode, jdbcType=VARCHAR}
+			</if>
+			<if test="status != null" >
+				AND k_contract.status = #{status, jdbcType=INTEGER}
+			</if>
+			<if test="creater != null and creater != ''" >
+				AND k_contract.creater = #{creater, jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null" >
+				AND k_contract.create_time = #{createTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="sender != null and sender != ''" >
+				AND k_contract.sender = #{sender, jdbcType=VARCHAR}
+			</if>
+			<if test="sendTime != null" >
+				AND k_contract.send_time = #{sendTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="signer != null and signer != ''" >
+				AND k_contract.signer = #{signer, jdbcType=VARCHAR}
+			</if>
+			<if test="signTime != null" >
+				AND k_contract.sign_time = #{signTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="fileHashcode != null and fileHashcode != ''" >
+				AND k_contract.file_hashcode = #{fileHashcode, jdbcType=VARCHAR}
+			</if>
+			<if test="signContractid != null and signContractid != ''" >
+				AND k_contract.sign_contractid = #{signContractid, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_contract
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ContractMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_contract
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

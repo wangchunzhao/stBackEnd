@@ -15,8 +15,8 @@ import javax.persistence.Transient;
  * @author lizuoshan
  *
  */
-@Entity
-@Table(name = "k_report_bymaterial_view")
+//@Entity
+//@Table(name = "k_report_bymaterial_view")
 public class ReportFormsInfo implements Serializable {
 	
 	

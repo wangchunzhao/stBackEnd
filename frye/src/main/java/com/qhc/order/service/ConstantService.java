@@ -15,15 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.dao.AcceptanceCriteriaRepository;
-import com.qhc.order.entity.AcceptanceCriteria;
 import com.qhc.order.entity.MaterialGroupOrder;
-import com.qhc.sap.dao.BMaterialGroupOrderRepository;
+import com.qhc.order.mapper.MaterialGroupOrderMapper;
 import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.CustomerClassRepository;
-import com.qhc.sap.dao.DIndustryCodeRepository;
-import com.qhc.sap.dao.DReceiveTermsRepository;
-import com.qhc.sap.dao.DShippingTypeRepository;
+import com.qhc.sap.dao.IndustryCodeRepository;
+import com.qhc.sap.dao.ReceiveTermsRepository;
+import com.qhc.sap.dao.ShippingTypeRepository;
 import com.qhc.sap.dao.IncotermRepository;
 import com.qhc.sap.dao.InstallationTermsRepository;
 import com.qhc.sap.dao.MeasurementUnitRepository;
@@ -63,10 +61,10 @@ public class ConstantService {
 	private OrderTypeRepository orderTypeRepository;
 
 	@Autowired
-	private DIndustryCodeRepository industryCodeRepository;
+	private IndustryCodeRepository industryCodeRepository;
 
 	@Autowired
-	private BMaterialGroupOrderRepository materialGroupOrderRepository;
+	private MaterialGroupOrderMapper materialGroupOrderMapper;
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
@@ -78,10 +76,10 @@ public class ConstantService {
 	private SalesGroupRepository salesGroupRepository;
 
 	@Autowired
-	private DShippingTypeRepository shippingTypeRepository;
+	private ShippingTypeRepository shippingTypeRepository;
 
 	@Autowired
-	private DReceiveTermsRepository receiveTermsRepository;
+	private ReceiveTermsRepository receiveTermsRepository;
 	
 	@Autowired
 	private CurrencyRepository currencyRepository;
@@ -98,9 +96,6 @@ public class ConstantService {
 	@Autowired
 	private MeasurementUnitRepository measurementUnitRepository;
 	
-	@Autowired
-	private AcceptanceCriteriaRepository acceptanceCriteriaRepository;
-
 	public static Map<String, String> customerClazz;
 
 	public static Map<String, String> orderType;// Map<customerClassCode,List<ordertype code>>
@@ -183,7 +178,7 @@ public class ConstantService {
 
 	public Map<String, String> findMaterialGroupOrders() {
 		if (materialGroupOrders == null || materialGroupOrders.isEmpty()) {
-			List<MaterialGroupOrder> list = materialGroupOrderRepository.findAll(Sort.by(Order.asc("code")));
+			List<MaterialGroupOrder> list = materialGroupOrderMapper.findByParams(null);
 			materialGroupOrders = new LinkedHashMap<String, String>();
 
 			for (MaterialGroupOrder bMaterialGroupOrder : list) {
@@ -323,18 +318,24 @@ public class ConstantService {
 	
 	public Map<String, Map<String, String>> findInstallationTerms() {
 		if (installationTerms == null || installationTerms.isEmpty()) {
-			List<InstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
+//			List<InstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
 			installationTerms = new LinkedHashMap<String, Map<String, String>>();
 
-			for (InstallationTerms term : list) {
-				String classCode = term.getCustomerClassCode();
-				Map<String, String> terms = installationTerms.get(classCode);
-				if (terms == null) {
-					terms = new HashMap<String, String>();
-					installationTerms.put(classCode, terms);
-				}
-				terms.put(term.getCode(), term.getName());
-			}
+//			for (InstallationTerms term : list) {
+//				String classCode = term.getCustomerClassCode();
+//				Map<String, String> terms = installationTerms.get(classCode);
+//				if (terms == null) {
+//					terms = new HashMap<String, String>();
+//					installationTerms.put(classCode, terms);
+//				}
+//				terms.put(term.getCode(), term.getName());
+//			}
+			Map<String, String> terms = new HashMap<String, String>();
+			terms.put("01", "招标");
+			installationTerms.put("01", terms);
+			terms = new HashMap<String, String>();
+			terms.put("02", "自装自提");
+			installationTerms.put("02", terms);
 		}
 
 		return installationTerms;
@@ -355,12 +356,16 @@ public class ConstantService {
 	
 	public Map<String, String> findAcceptanceCriteriaes() {
 		if (acceptanceCriteria == null || acceptanceCriteria.isEmpty()) {
-			List<AcceptanceCriteria> list = acceptanceCriteriaRepository.findAll(Sort.by(Order.asc("code")));
+//			List<AcceptanceCriteria> list = acceptanceCriteriaRepository.findAll(Sort.by(Order.asc("code")));
 			acceptanceCriteria = new LinkedHashMap<String, String>();
 
-			for (AcceptanceCriteria unit : list) {
-				acceptanceCriteria.put(unit.getCode(), unit.getName());
-			}
+//			for (AcceptanceCriteria unit : list) {
+//				acceptanceCriteria.put(unit.getCode(), unit.getName());
+//			}
+//			1001	需方负责安装调试
+//			1002	供方负责安装调试
+			acceptanceCriteria.put("1001", "需方负责安装调试");
+			acceptanceCriteria.put("1002", "供方负责安装调试");
 		}
 
 		return acceptanceCriteria;

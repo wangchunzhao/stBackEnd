@@ -11,14 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.dao.ReportFormsInfoRepository;
 import com.qhc.order.entity.ReportFormsInfo;
 
 @Service
 public class ReportFormsInfoService {
 
-	@Autowired
-	private ReportFormsInfoRepository reportFormsInfoRepository;
+//	@Autowired
+//	private ReportFormsInfoRepository reportFormsInfoRepository;
 
 
 	public Page<ReportFormsInfo> getReportFormsInfoByConditions(ReportFormsInfo reportFormsInfo, Pageable pageable) {
@@ -67,7 +66,8 @@ public class ReportFormsInfoService {
 				return predicate;
 			}
 		};
-		return reportFormsInfoRepository.findAll(specification, pageable);
+//		return reportFormsInfoRepository.findAll(specification, pageable);
+		return null;
 	}
 	
 	

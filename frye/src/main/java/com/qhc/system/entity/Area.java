@@ -16,8 +16,8 @@ public class Area {
 	@Column(name="name",columnDefinition="TEXT")
 	public String name;
 	
-	@Column(name="b_city_code",columnDefinition="TEXT")
-	public String bCityCode;
+	@Column(name="city_code",columnDefinition="TEXT")
+	public String cityCode;
 	
 	@Column(name="price",columnDefinition="decimal")
 	public Double price;
@@ -71,12 +71,12 @@ public class Area {
 		this.name = name;
 	}
 
-	public String getbCityCode() {
-		return bCityCode;
+	public String getCityCode() {
+		return cityCode;
 	}
 
-	public void setbCityCode(String bCityCode) {
-		this.bCityCode = bCityCode;
+	public void setCityCode(String bCityCode) {
+		this.cityCode = bCityCode;
 	}
 
 	public Double getPrice() {
@@ -181,7 +181,7 @@ public class Area {
 		super();
 		this.code = code;
 		this.name = name;
-		this.bCityCode = bCityCode;
+		this.cityCode = bCityCode;
 		this.price = price;
 		this.price1 = price1;
 		this.price2 = price2;

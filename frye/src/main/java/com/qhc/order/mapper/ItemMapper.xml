@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.ItemMapper" >
+	<resultMap id="ItemBaseMap" type="com.qhc.order.entity.Item" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_info_id" property="orderInfoId" jdbcType="INTEGER" />
+		<result column="row_num" property="rowNum" jdbcType="INTEGER" />
+		<result column="material_code" property="materialCode" jdbcType="VARCHAR" />
+		<result column="quantity" property="quantity" jdbcType="DOUBLE" />
+		<result column="item_category" property="itemCategory" jdbcType="VARCHAR" />
+		<result column="item_requirement_plan" property="itemRequirementPlan" jdbcType="VARCHAR" />
+		<result column="b2c_estimated_price" property="b2cEstimatedPrice" jdbcType="DECIMAL" />
+		<result column="delivery_address_seq" property="deliveryAddressSeq" jdbcType="INTEGER" />
+		<result column="delivery_address_id" property="deliveryAddressId" jdbcType="INTEGER" />
+		<result column="standard_price" property="standardPrice" jdbcType="DECIMAL" />
+		<result column="retail_price" property="retailPrice" jdbcType="DECIMAL" />
+		<result column="actural_price" property="acturalPrice" jdbcType="DECIMAL" />
+		<result column="transcation_price" property="transcationPrice" jdbcType="DECIMAL" />
+		<result column="actural_prica_of_optional" property="acturalPricaOfOptional" jdbcType="DECIMAL" />
+		<result column="transcation_prica_of_optional" property="transcationPricaOfOptional" jdbcType="DECIMAL" />
+		<result column="discount" property="discount" jdbcType="DOUBLE" />
+		<result column="produce_date" property="produceDate" jdbcType="DATE" />
+		<result column="on_store_date" property="onStoreDate" jdbcType="DATE" />
+		<result column="delivery_date" property="deliveryDate" jdbcType="DATE" />
+		<result column="shipp_date" property="shippDate" jdbcType="DATE" />
+		<result column="period" property="period" jdbcType="INTEGER" />
+		<result column="b2c_comments" property="b2cComments" jdbcType="VARCHAR" />
+		<result column="special_comments" property="specialComments" jdbcType="VARCHAR" />
+		<result column="color_comments" property="colorComments" jdbcType="VARCHAR" />
+		<result column="volume_cube" property="volumeCube" jdbcType="DECIMAL" />
+		<result column="freight" property="freight" jdbcType="DECIMAL" />
+		<result column="is_virtual" property="isVirtual" jdbcType="INTEGER" />
+		<result column="config_comments" property="configComments" jdbcType="CHAR" />
+		<result column="mosaic_image" property="mosaicImage" jdbcType="VARCHAR" />
+		<result column="attached_image" property="attachedImage" jdbcType="VARCHAR" />
+		<result column="request_brand" property="requestBrand" jdbcType="VARCHAR" />
+		<result column="request_package" property="requestPackage" jdbcType="VARCHAR" />
+		<result column="request_nameplate" property="requestNameplate" jdbcType="VARCHAR" />
+		<result column="request_circult" property="requestCircult" jdbcType="VARCHAR" />
+		<result column="config_transfer_price" property="configTransferPrice" jdbcType="DECIMAL" />
+		<result column="config_retail_price" property="configRetailPrice" jdbcType="DECIMAL" />
+		<result column="is_configurable" property="isConfigurable" jdbcType="INTEGER" />
+		<result column="clazz_code" property="clazzCode" jdbcType="VARCHAR" />
+		<result column="comments" property="comments" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ItemMap" type="com.qhc.order.entity.Item" extends="ItemBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.Item">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_item ( id, order_info_id, row_num, 
+			material_code, quantity, item_category, 
+			item_requirement_plan, b2c_estimated_price, delivery_address_seq, 
+			delivery_address_id, standard_price, retail_price, 
+			actural_price, transcation_price, actural_prica_of_optional, 
+			transcation_prica_of_optional, discount, produce_date, 
+			on_store_date, delivery_date, shipp_date, 
+			period, b2c_comments, special_comments, 
+			color_comments, volume_cube, freight, 
+			is_virtual, config_comments, mosaic_image, 
+			attached_image, request_brand, request_package, 
+			request_nameplate, request_circult, config_transfer_price, 
+			config_retail_price, is_configurable, clazz_code, 
+			comments )
+		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{rowNum, jdbcType=INTEGER}, 
+			#{materialCode, jdbcType=VARCHAR}, #{quantity, jdbcType=DOUBLE}, #{itemCategory, jdbcType=VARCHAR}, 
+			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
+			#{deliveryAddressId, jdbcType=INTEGER}, #{standardPrice, jdbcType=DECIMAL}, #{retailPrice, jdbcType=DECIMAL}, 
+			#{acturalPrice, jdbcType=DECIMAL}, #{transcationPrice, jdbcType=DECIMAL}, #{acturalPricaOfOptional, jdbcType=DECIMAL}, 
+			#{transcationPricaOfOptional, jdbcType=DECIMAL}, #{discount, jdbcType=DOUBLE}, #{produceDate, jdbcType=DATE}, 
+			#{onStoreDate, jdbcType=DATE}, #{deliveryDate, jdbcType=DATE}, #{shippDate, jdbcType=DATE}, 
+			#{period, jdbcType=INTEGER}, #{b2cComments, jdbcType=VARCHAR}, #{specialComments, jdbcType=VARCHAR}, 
+			#{colorComments, jdbcType=VARCHAR}, #{volumeCube, jdbcType=DECIMAL}, #{freight, jdbcType=DECIMAL}, 
+			#{isVirtual, jdbcType=INTEGER}, #{configComments, jdbcType=CHAR}, #{mosaicImage, jdbcType=VARCHAR}, 
+			#{attachedImage, jdbcType=VARCHAR}, #{requestBrand, jdbcType=VARCHAR}, #{requestPackage, jdbcType=VARCHAR}, 
+			#{requestNameplate, jdbcType=VARCHAR}, #{requestCircult, jdbcType=VARCHAR}, #{configTransferPrice, jdbcType=DECIMAL}, 
+			#{configRetailPrice, jdbcType=DECIMAL}, #{isConfigurable, jdbcType=INTEGER}, #{clazzCode, jdbcType=VARCHAR}, 
+			#{comments, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.Item" >
+		update k_item
+		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
+			row_num = #{rowNum, jdbcType=INTEGER}, 
+			material_code = #{materialCode, jdbcType=VARCHAR}, 
+			quantity = #{quantity, jdbcType=DOUBLE}, 
+			item_category = #{itemCategory, jdbcType=VARCHAR}, 
+			item_requirement_plan = #{itemRequirementPlan, jdbcType=VARCHAR}, 
+			b2c_estimated_price = #{b2cEstimatedPrice, jdbcType=DECIMAL}, 
+			delivery_address_seq = #{deliveryAddressSeq, jdbcType=INTEGER}, 
+			delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}, 
+			standard_price = #{standardPrice, jdbcType=DECIMAL}, 
+			retail_price = #{retailPrice, jdbcType=DECIMAL}, 
+			actural_price = #{acturalPrice, jdbcType=DECIMAL}, 
+			transcation_price = #{transcationPrice, jdbcType=DECIMAL}, 
+			actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}, 
+			transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}, 
+			discount = #{discount, jdbcType=DOUBLE}, 
+			produce_date = #{produceDate, jdbcType=DATE}, 
+			on_store_date = #{onStoreDate, jdbcType=DATE}, 
+			delivery_date = #{deliveryDate, jdbcType=DATE}, 
+			shipp_date = #{shippDate, jdbcType=DATE}, 
+			period = #{period, jdbcType=INTEGER}, 
+			b2c_comments = #{b2cComments, jdbcType=VARCHAR}, 
+			special_comments = #{specialComments, jdbcType=VARCHAR}, 
+			color_comments = #{colorComments, jdbcType=VARCHAR}, 
+			volume_cube = #{volumeCube, jdbcType=DECIMAL}, 
+			freight = #{freight, jdbcType=DECIMAL}, 
+			is_virtual = #{isVirtual, jdbcType=INTEGER}, 
+			config_comments = #{configComments, jdbcType=CHAR}, 
+			mosaic_image = #{mosaicImage, jdbcType=VARCHAR}, 
+			attached_image = #{attachedImage, jdbcType=VARCHAR}, 
+			request_brand = #{requestBrand, jdbcType=VARCHAR}, 
+			request_package = #{requestPackage, jdbcType=VARCHAR}, 
+			request_nameplate = #{requestNameplate, jdbcType=VARCHAR}, 
+			request_circult = #{requestCircult, jdbcType=VARCHAR}, 
+			config_transfer_price = #{configTransferPrice, jdbcType=DECIMAL}, 
+			config_retail_price = #{configRetailPrice, jdbcType=DECIMAL}, 
+			is_configurable = #{isConfigurable, jdbcType=INTEGER}, 
+			clazz_code = #{clazzCode, jdbcType=VARCHAR}, 
+			comments = #{comments, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_item
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_item.id, k_item.order_info_id, k_item.row_num, k_item.material_code, k_item.quantity, 
+		k_item.item_category, k_item.item_requirement_plan, k_item.b2c_estimated_price, k_item.delivery_address_seq, k_item.delivery_address_id, 
+		k_item.standard_price, k_item.retail_price, k_item.actural_price, k_item.transcation_price, k_item.actural_prica_of_optional, 
+		k_item.transcation_prica_of_optional, k_item.discount, k_item.produce_date, k_item.on_store_date, k_item.delivery_date, 
+		k_item.shipp_date, k_item.period, k_item.b2c_comments, k_item.special_comments, k_item.color_comments, 
+		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 
+		k_item.attached_image, k_item.request_brand, k_item.request_package, k_item.request_nameplate, k_item.request_circult, 
+		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ItemMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_item 
+		where k_item.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_item.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND k_item.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="rowNum != null" >
+				AND k_item.row_num = #{rowNum, jdbcType=INTEGER}
+			</if>
+			<if test="materialCode != null and materialCode != ''" >
+				AND k_item.material_code = #{materialCode, jdbcType=VARCHAR}
+			</if>
+			<if test="quantity != null" >
+				AND k_item.quantity = #{quantity, jdbcType=DOUBLE}
+			</if>
+			<if test="itemCategory != null and itemCategory != ''" >
+				AND k_item.item_category = #{itemCategory, jdbcType=VARCHAR}
+			</if>
+			<if test="itemRequirementPlan != null and itemRequirementPlan != ''" >
+				AND k_item.item_requirement_plan = #{itemRequirementPlan, jdbcType=VARCHAR}
+			</if>
+			<if test="b2cEstimatedPrice != null" >
+				AND k_item.b2c_estimated_price = #{b2cEstimatedPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="deliveryAddressSeq != null" >
+				AND k_item.delivery_address_seq = #{deliveryAddressSeq, jdbcType=INTEGER}
+			</if>
+			<if test="deliveryAddressId != null" >
+				AND k_item.delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}
+			</if>
+			<if test="standardPrice != null" >
+				AND k_item.standard_price = #{standardPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="retailPrice != null" >
+				AND k_item.retail_price = #{retailPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="acturalPrice != null" >
+				AND k_item.actural_price = #{acturalPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="transcationPrice != null" >
+				AND k_item.transcation_price = #{transcationPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="acturalPricaOfOptional != null" >
+				AND k_item.actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}
+			</if>
+			<if test="transcationPricaOfOptional != null" >
+				AND k_item.transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}
+			</if>
+			<if test="discount != null" >
+				AND k_item.discount = #{discount, jdbcType=DOUBLE}
+			</if>
+			<if test="produceDate != null" >
+				AND k_item.produce_date = #{produceDate, jdbcType=DATE}
+			</if>
+			<if test="onStoreDate != null" >
+				AND k_item.on_store_date = #{onStoreDate, jdbcType=DATE}
+			</if>
+			<if test="deliveryDate != null" >
+				AND k_item.delivery_date = #{deliveryDate, jdbcType=DATE}
+			</if>
+			<if test="shippDate != null" >
+				AND k_item.shipp_date = #{shippDate, jdbcType=DATE}
+			</if>
+			<if test="period != null" >
+				AND k_item.period = #{period, jdbcType=INTEGER}
+			</if>
+			<if test="b2cComments != null and b2cComments != ''" >
+				AND k_item.b2c_comments = #{b2cComments, jdbcType=VARCHAR}
+			</if>
+			<if test="specialComments != null and specialComments != ''" >
+				AND k_item.special_comments = #{specialComments, jdbcType=VARCHAR}
+			</if>
+			<if test="colorComments != null and colorComments != ''" >
+				AND k_item.color_comments = #{colorComments, jdbcType=VARCHAR}
+			</if>
+			<if test="volumeCube != null" >
+				AND k_item.volume_cube = #{volumeCube, jdbcType=DECIMAL}
+			</if>
+			<if test="freight != null" >
+				AND k_item.freight = #{freight, jdbcType=DECIMAL}
+			</if>
+			<if test="isVirtual != null" >
+				AND k_item.is_virtual = #{isVirtual, jdbcType=INTEGER}
+			</if>
+			<if test="configComments != null and configComments != ''" >
+				AND k_item.config_comments = #{configComments, jdbcType=CHAR}
+			</if>
+			<if test="mosaicImage != null and mosaicImage != ''" >
+				AND k_item.mosaic_image = #{mosaicImage, jdbcType=VARCHAR}
+			</if>
+			<if test="attachedImage != null and attachedImage != ''" >
+				AND k_item.attached_image = #{attachedImage, jdbcType=VARCHAR}
+			</if>
+			<if test="requestBrand != null and requestBrand != ''" >
+				AND k_item.request_brand = #{requestBrand, jdbcType=VARCHAR}
+			</if>
+			<if test="requestPackage != null and requestPackage != ''" >
+				AND k_item.request_package = #{requestPackage, jdbcType=VARCHAR}
+			</if>
+			<if test="requestNameplate != null and requestNameplate != ''" >
+				AND k_item.request_nameplate = #{requestNameplate, jdbcType=VARCHAR}
+			</if>
+			<if test="requestCircult != null and requestCircult != ''" >
+				AND k_item.request_circult = #{requestCircult, jdbcType=VARCHAR}
+			</if>
+			<if test="configTransferPrice != null" >
+				AND k_item.config_transfer_price = #{configTransferPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="configRetailPrice != null" >
+				AND k_item.config_retail_price = #{configRetailPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="isConfigurable != null" >
+				AND k_item.is_configurable = #{isConfigurable, jdbcType=INTEGER}
+			</if>
+			<if test="clazzCode != null and clazzCode != ''" >
+				AND k_item.clazz_code = #{clazzCode, jdbcType=VARCHAR}
+			</if>
+			<if test="comments != null and comments != ''" >
+				AND k_item.comments = #{comments, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_item
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ItemMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_item
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_item
+		where order_info_id = #{value}
+	</select>
+</mapper>

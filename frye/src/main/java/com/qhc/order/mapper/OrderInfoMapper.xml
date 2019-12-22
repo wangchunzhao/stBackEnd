@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.OrderInfoMapper" >
+	<resultMap id="OrderInfoBaseMap" type="com.qhc.order.entity.OrderInfo" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="version_num" property="versionNum" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="is_active" property="isActive" jdbcType="INTEGER" />
+		<result column="terminal_type" property="terminalType" jdbcType="VARCHAR" />
+		<result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+		<result column="record_code" property="recordCode" jdbcType="VARCHAR" />
+		<result column="sales_tel" property="salesTel" jdbcType="VARCHAR" />
+		<result column="is_convenient_store" property="isConvenientStore" jdbcType="INTEGER" />
+		<result column="is_reformed" property="isReformed" jdbcType="INTEGER" />
+		<result column="is_new" property="isNew" jdbcType="INTEGER" />
+		<result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />
+		<result column="sale_type" property="saleType" jdbcType="VARCHAR" />
+		<result column="tax_rate" property="taxRate" jdbcType="DOUBLE" />
+		<result column="incoterm" property="incoterm" jdbcType="VARCHAR" />
+		<result column="incoterm_contect" property="incotermContect" jdbcType="VARCHAR" />
+		<result column="contract_value" property="contractValue" jdbcType="DECIMAL" />
+		<result column="contract_rmb_value" property="contractRmbValue" jdbcType="DECIMAL" />
+		<result column="currency" property="currency" jdbcType="VARCHAR" />
+		<result column="currency_exchange" property="currencyExchange" jdbcType="DOUBLE" />
+		<result column="items_amount" property="itemsAmount" jdbcType="DECIMAL" />
+		<result column="contract_manager" property="contractManager" jdbcType="VARCHAR" />
+		<result column="office_code" property="officeCode" jdbcType="VARCHAR" />
+		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+		<result column="warranty" property="warranty" jdbcType="INTEGER" />
+		<result column="install_type" property="installType" jdbcType="VARCHAR" />
+		<result column="reveive_type" property="reveiveType" jdbcType="VARCHAR" />
+		<result column="transfer_type" property="transferType" jdbcType="VARCHAR" />
+		<result column="freight" property="freight" jdbcType="DECIMAL" />
+		<result column="contactor1_id" property="contactor1Id" jdbcType="VARCHAR" />
+		<result column="contactor1_tel" property="contactor1Tel" jdbcType="VARCHAR" />
+		<result column="contactor2_id" property="contactor2Id" jdbcType="VARCHAR" />
+		<result column="contactor2_tel" property="contactor2Tel" jdbcType="VARCHAR" />
+		<result column="contactor3_id" property="contactor3Id" jdbcType="VARCHAR" />
+		<result column="contactor3_tel" property="contactor3Tel" jdbcType="VARCHAR" />
+		<result column="body_discount" property="bodyDiscount" jdbcType="DOUBLE" />
+		<result column="approved_body_discount" property="approvedBodyDiscount" jdbcType="DOUBLE" />
+		<result column="main_discount" property="mainDiscount" jdbcType="DOUBLE" />
+		<result column="approved_main_discount" property="approvedMainDiscount" jdbcType="DOUBLE" />
+		<result column="discount" property="discount" jdbcType="DOUBLE" />
+		<result column="is_longterm" property="isLongterm" jdbcType="INTEGER" />
+		<result column="is_special" property="isSpecial" jdbcType="INTEGER" />
+		<result column="payment_type" property="paymentType" jdbcType="VARCHAR" />
+		<result column="is_term1" property="isTerm1" jdbcType="INTEGER" />
+		<result column="is_term2" property="isTerm2" jdbcType="INTEGER" />
+		<result column="is_term3" property="isTerm3" jdbcType="INTEGER" />
+		<result column="install_fee" property="installFee" jdbcType="DECIMAL" />
+		<result column="material_fee" property="materialFee" jdbcType="DECIMAL" />
+		<result column="electrical_fee" property="electricalFee" jdbcType="DECIMAL" />
+		<result column="refrigeratory_fee" property="refrigeratoryFee" jdbcType="DECIMAL" />
+		<result column="maintenance_fee" property="maintenanceFee" jdbcType="DECIMAL" />
+		<result column="earliest_delivery_date" property="earliestDeliveryDate" jdbcType="DATE" />
+		<result column="earliest_product_date" property="earliestProductDate" jdbcType="DATE" />
+		<result column="is_b2c" property="isB2c" jdbcType="INTEGER" />
+		<result column="gross_profit_margin" property="grossProfitMargin" jdbcType="LONGVARCHAR" />
+		<result column="comments" property="comments" jdbcType="VARCHAR" />
+		<result column="submit_time" property="submitTime" jdbcType="TIMESTAMP" />
+		<result column="bpm_submit_time" property="bpmSubmitTime" jdbcType="TIMESTAMP" />
+		<result column="creater" property="creater" jdbcType="CHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="updater" property="updater" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="OrderInfoMap" type="com.qhc.order.entity.OrderInfo" extends="OrderInfoBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.OrderInfo">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_order_info ( id, order_id, version, 
+			version_num, status, is_active, 
+			terminal_type, shop_name, record_code, 
+			sales_tel, is_convenient_store, is_reformed, 
+			is_new, contract_number, sale_type, 
+			tax_rate, incoterm, incoterm_contect, 
+			contract_value, contract_rmb_value, currency, 
+			currency_exchange, items_amount, contract_manager, 
+			office_code, group_code, warranty, 
+			install_type, reveive_type, transfer_type, 
+			freight, contactor1_id, contactor1_tel, 
+			contactor2_id, contactor2_tel, contactor3_id, 
+			contactor3_tel, body_discount, approved_body_discount, 
+			main_discount, approved_main_discount, discount, 
+			is_longterm, is_special, payment_type, 
+			is_term1, is_term2, is_term3, 
+			install_fee, material_fee, electrical_fee, 
+			refrigeratory_fee, maintenance_fee, earliest_delivery_date, 
+			earliest_product_date, is_b2c, gross_profit_margin, 
+			comments, submit_time, bpm_submit_time, 
+			creater, create_time, updater, 
+			update_time )
+		values ( #{id, jdbcType=INTEGER}, #{orderId, jdbcType=INTEGER}, #{version, jdbcType=VARCHAR}, 
+			#{versionNum, jdbcType=INTEGER}, #{status, jdbcType=VARCHAR}, #{isActive, jdbcType=INTEGER}, 
+			#{terminalType, jdbcType=VARCHAR}, #{shopName, jdbcType=VARCHAR}, #{recordCode, jdbcType=VARCHAR}, 
+			#{salesTel, jdbcType=VARCHAR}, #{isConvenientStore, jdbcType=INTEGER}, #{isReformed, jdbcType=INTEGER}, 
+			#{isNew, jdbcType=INTEGER}, #{contractNumber, jdbcType=VARCHAR}, #{saleType, jdbcType=VARCHAR}, 
+			#{taxRate, jdbcType=DOUBLE}, #{incoterm, jdbcType=VARCHAR}, #{incotermContect, jdbcType=VARCHAR}, 
+			#{contractValue, jdbcType=DECIMAL}, #{contractRmbValue, jdbcType=DECIMAL}, #{currency, jdbcType=VARCHAR}, 
+			#{currencyExchange, jdbcType=DOUBLE}, #{itemsAmount, jdbcType=DECIMAL}, #{contractManager, jdbcType=VARCHAR}, 
+			#{officeCode, jdbcType=VARCHAR}, #{groupCode, jdbcType=VARCHAR}, #{warranty, jdbcType=INTEGER}, 
+			#{installType, jdbcType=VARCHAR}, #{reveiveType, jdbcType=VARCHAR}, #{transferType, jdbcType=VARCHAR}, 
+			#{freight, jdbcType=DECIMAL}, #{contactor1Id, jdbcType=VARCHAR}, #{contactor1Tel, jdbcType=VARCHAR}, 
+			#{contactor2Id, jdbcType=VARCHAR}, #{contactor2Tel, jdbcType=VARCHAR}, #{contactor3Id, jdbcType=VARCHAR}, 
+			#{contactor3Tel, jdbcType=VARCHAR}, #{bodyDiscount, jdbcType=DOUBLE}, #{approvedBodyDiscount, jdbcType=DOUBLE}, 
+			#{mainDiscount, jdbcType=DOUBLE}, #{approvedMainDiscount, jdbcType=DOUBLE}, #{discount, jdbcType=DOUBLE}, 
+			#{isLongterm, jdbcType=INTEGER}, #{isSpecial, jdbcType=INTEGER}, #{paymentType, jdbcType=VARCHAR}, 
+			#{isTerm1, jdbcType=INTEGER}, #{isTerm2, jdbcType=INTEGER}, #{isTerm3, jdbcType=INTEGER}, 
+			#{installFee, jdbcType=DECIMAL}, #{materialFee, jdbcType=DECIMAL}, #{electricalFee, jdbcType=DECIMAL}, 
+			#{refrigeratoryFee, jdbcType=DECIMAL}, #{maintenanceFee, jdbcType=DECIMAL}, #{earliestDeliveryDate, jdbcType=DATE}, 
+			#{earliestProductDate, jdbcType=DATE}, #{isB2c, jdbcType=INTEGER}, #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
+			#{comments, jdbcType=VARCHAR}, #{submitTime, jdbcType=TIMESTAMP}, #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
+			#{creater, jdbcType=CHAR}, now(), #{updater, jdbcType=VARCHAR}, 
+			now() )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.OrderInfo" >
+		update k_order_info
+		set order_id = #{orderId, jdbcType=INTEGER}, 
+			version = #{version, jdbcType=VARCHAR}, 
+			version_num = #{versionNum, jdbcType=INTEGER}, 
+			status = #{status, jdbcType=VARCHAR}, 
+			is_active = #{isActive, jdbcType=INTEGER}, 
+			terminal_type = #{terminalType, jdbcType=VARCHAR}, 
+			shop_name = #{shopName, jdbcType=VARCHAR}, 
+			record_code = #{recordCode, jdbcType=VARCHAR}, 
+			sales_tel = #{salesTel, jdbcType=VARCHAR}, 
+			is_convenient_store = #{isConvenientStore, jdbcType=INTEGER}, 
+			is_reformed = #{isReformed, jdbcType=INTEGER}, 
+			is_new = #{isNew, jdbcType=INTEGER}, 
+			contract_number = #{contractNumber, jdbcType=VARCHAR}, 
+			sale_type = #{saleType, jdbcType=VARCHAR}, 
+			tax_rate = #{taxRate, jdbcType=DOUBLE}, 
+			incoterm = #{incoterm, jdbcType=VARCHAR}, 
+			incoterm_contect = #{incotermContect, jdbcType=VARCHAR}, 
+			contract_value = #{contractValue, jdbcType=DECIMAL}, 
+			contract_rmb_value = #{contractRmbValue, jdbcType=DECIMAL}, 
+			currency = #{currency, jdbcType=VARCHAR}, 
+			currency_exchange = #{currencyExchange, jdbcType=DOUBLE}, 
+			items_amount = #{itemsAmount, jdbcType=DECIMAL}, 
+			contract_manager = #{contractManager, jdbcType=VARCHAR}, 
+			office_code = #{officeCode, jdbcType=VARCHAR}, 
+			group_code = #{groupCode, jdbcType=VARCHAR}, 
+			warranty = #{warranty, jdbcType=INTEGER}, 
+			install_type = #{installType, jdbcType=VARCHAR}, 
+			reveive_type = #{reveiveType, jdbcType=VARCHAR}, 
+			transfer_type = #{transferType, jdbcType=VARCHAR}, 
+			freight = #{freight, jdbcType=DECIMAL}, 
+			contactor1_id = #{contactor1Id, jdbcType=VARCHAR}, 
+			contactor1_tel = #{contactor1Tel, jdbcType=VARCHAR}, 
+			contactor2_id = #{contactor2Id, jdbcType=VARCHAR}, 
+			contactor2_tel = #{contactor2Tel, jdbcType=VARCHAR}, 
+			contactor3_id = #{contactor3Id, jdbcType=VARCHAR}, 
+			contactor3_tel = #{contactor3Tel, jdbcType=VARCHAR}, 
+			body_discount = #{bodyDiscount, jdbcType=DOUBLE}, 
+			approved_body_discount = #{approvedBodyDiscount, jdbcType=DOUBLE}, 
+			main_discount = #{mainDiscount, jdbcType=DOUBLE}, 
+			approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}, 
+			discount = #{discount, jdbcType=DOUBLE}, 
+			is_longterm = #{isLongterm, jdbcType=INTEGER}, 
+			is_special = #{isSpecial, jdbcType=INTEGER}, 
+			payment_type = #{paymentType, jdbcType=VARCHAR}, 
+			is_term1 = #{isTerm1, jdbcType=INTEGER}, 
+			is_term2 = #{isTerm2, jdbcType=INTEGER}, 
+			is_term3 = #{isTerm3, jdbcType=INTEGER}, 
+			install_fee = #{installFee, jdbcType=DECIMAL}, 
+			material_fee = #{materialFee, jdbcType=DECIMAL}, 
+			electrical_fee = #{electricalFee, jdbcType=DECIMAL}, 
+			refrigeratory_fee = #{refrigeratoryFee, jdbcType=DECIMAL}, 
+			maintenance_fee = #{maintenanceFee, jdbcType=DECIMAL}, 
+			earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}, 
+			earliest_product_date = #{earliestProductDate, jdbcType=DATE}, 
+			is_b2c = #{isB2c, jdbcType=INTEGER}, 
+			gross_profit_margin = #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
+			comments = #{comments, jdbcType=VARCHAR}, 
+			submit_time = #{submitTime, jdbcType=TIMESTAMP}, 
+			bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
+			<!-- creater = #{creater, jdbcType=CHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP},  -->
+			updater = #{updater, jdbcType=VARCHAR}, 
+			update_time = now()
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_order_info
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_order_info.id, k_order_info.order_id, k_order_info.version, k_order_info.version_num, k_order_info.status, 
+		k_order_info.is_active, k_order_info.terminal_type, k_order_info.shop_name, k_order_info.record_code, k_order_info.sales_tel, 
+		k_order_info.is_convenient_store, k_order_info.is_reformed, k_order_info.is_new, k_order_info.contract_number, k_order_info.sale_type, 
+		k_order_info.tax_rate, k_order_info.incoterm, k_order_info.incoterm_contect, k_order_info.contract_value, k_order_info.contract_rmb_value, 
+		k_order_info.currency, k_order_info.currency_exchange, k_order_info.items_amount, k_order_info.contract_manager, k_order_info.office_code, 
+		k_order_info.group_code, k_order_info.warranty, k_order_info.install_type, k_order_info.reveive_type, k_order_info.transfer_type, 
+		k_order_info.freight, k_order_info.contactor1_id, k_order_info.contactor1_tel, k_order_info.contactor2_id, k_order_info.contactor2_tel, 
+		k_order_info.contactor3_id, k_order_info.contactor3_tel, k_order_info.body_discount, k_order_info.approved_body_discount, k_order_info.main_discount, 
+		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.payment_type, 
+		k_order_info.is_term1, k_order_info.is_term2, k_order_info.is_term3, k_order_info.install_fee, k_order_info.material_fee, 
+		k_order_info.electrical_fee, k_order_info.refrigeratory_fee, k_order_info.maintenance_fee, k_order_info.earliest_delivery_date, k_order_info.earliest_product_date, 
+		k_order_info.is_b2c, k_order_info.gross_profit_margin, k_order_info.comments, k_order_info.submit_time, k_order_info.bpm_submit_time, 
+		k_order_info.creater, k_order_info.create_time, k_order_info.updater, k_order_info.update_time
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="OrderInfoMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_order_info 
+		where k_order_info.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_order_info.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderId != null" >
+				AND k_order_info.order_id = #{orderId, jdbcType=INTEGER}
+			</if>
+			<if test="version != null and version != ''" >
+				AND k_order_info.version = #{version, jdbcType=VARCHAR}
+			</if>
+			<if test="versionNum != null" >
+				AND k_order_info.version_num = #{versionNum, jdbcType=INTEGER}
+			</if>
+			<if test="status != null and status != ''" >
+				AND k_order_info.status = #{status, jdbcType=VARCHAR}
+			</if>
+			<if test="isActive != null" >
+				AND k_order_info.is_active = #{isActive, jdbcType=INTEGER}
+			</if>
+			<if test="terminalType != null and terminalType != ''" >
+				AND k_order_info.terminal_type = #{terminalType, jdbcType=VARCHAR}
+			</if>
+			<if test="shopName != null and shopName != ''" >
+				AND k_order_info.shop_name = #{shopName, jdbcType=VARCHAR}
+			</if>
+			<if test="recordCode != null and recordCode != ''" >
+				AND k_order_info.record_code = #{recordCode, jdbcType=VARCHAR}
+			</if>
+			<if test="salesTel != null and salesTel != ''" >
+				AND k_order_info.sales_tel = #{salesTel, jdbcType=VARCHAR}
+			</if>
+			<if test="isConvenientStore != null" >
+				AND k_order_info.is_convenient_store = #{isConvenientStore, jdbcType=INTEGER}
+			</if>
+			<if test="isReformed != null" >
+				AND k_order_info.is_reformed = #{isReformed, jdbcType=INTEGER}
+			</if>
+			<if test="isNew != null" >
+				AND k_order_info.is_new = #{isNew, jdbcType=INTEGER}
+			</if>
+			<if test="contractNumber != null and contractNumber != ''" >
+				AND k_order_info.contract_number = #{contractNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="saleType != null and saleType != ''" >
+				AND k_order_info.sale_type = #{saleType, jdbcType=VARCHAR}
+			</if>
+			<if test="taxRate != null" >
+				AND k_order_info.tax_rate = #{taxRate, jdbcType=DOUBLE}
+			</if>
+			<if test="incoterm != null and incoterm != ''" >
+				AND k_order_info.incoterm = #{incoterm, jdbcType=VARCHAR}
+			</if>
+			<if test="incotermContect != null and incotermContect != ''" >
+				AND k_order_info.incoterm_contect = #{incotermContect, jdbcType=VARCHAR}
+			</if>
+			<if test="contractValue != null" >
+				AND k_order_info.contract_value = #{contractValue, jdbcType=DECIMAL}
+			</if>
+			<if test="contractRmbValue != null" >
+				AND k_order_info.contract_rmb_value = #{contractRmbValue, jdbcType=DECIMAL}
+			</if>
+			<if test="currency != null and currency != ''" >
+				AND k_order_info.currency = #{currency, jdbcType=VARCHAR}
+			</if>
+			<if test="currencyExchange != null" >
+				AND k_order_info.currency_exchange = #{currencyExchange, jdbcType=DOUBLE}
+			</if>
+			<if test="itemsAmount != null" >
+				AND k_order_info.items_amount = #{itemsAmount, jdbcType=DECIMAL}
+			</if>
+			<if test="contractManager != null and contractManager != ''" >
+				AND k_order_info.contract_manager = #{contractManager, jdbcType=VARCHAR}
+			</if>
+			<if test="officeCode != null and officeCode != ''" >
+				AND k_order_info.office_code = #{officeCode, jdbcType=VARCHAR}
+			</if>
+			<if test="groupCode != null and groupCode != ''" >
+				AND k_order_info.group_code = #{groupCode, jdbcType=VARCHAR}
+			</if>
+			<if test="warranty != null" >
+				AND k_order_info.warranty = #{warranty, jdbcType=INTEGER}
+			</if>
+			<if test="installType != null and installType != ''" >
+				AND k_order_info.install_type = #{installType, jdbcType=VARCHAR}
+			</if>
+			<if test="reveiveType != null and reveiveType != ''" >
+				AND k_order_info.reveive_type = #{reveiveType, jdbcType=VARCHAR}
+			</if>
+			<if test="transferType != null and transferType != ''" >
+				AND k_order_info.transfer_type = #{transferType, jdbcType=VARCHAR}
+			</if>
+			<if test="freight != null" >
+				AND k_order_info.freight = #{freight, jdbcType=DECIMAL}
+			</if>
+			<if test="contactor1Id != null and contactor1Id != ''" >
+				AND k_order_info.contactor1_id = #{contactor1Id, jdbcType=VARCHAR}
+			</if>
+			<if test="contactor1Tel != null and contactor1Tel != ''" >
+				AND k_order_info.contactor1_tel = #{contactor1Tel, jdbcType=VARCHAR}
+			</if>
+			<if test="contactor2Id != null and contactor2Id != ''" >
+				AND k_order_info.contactor2_id = #{contactor2Id, jdbcType=VARCHAR}
+			</if>
+			<if test="contactor2Tel != null and contactor2Tel != ''" >
+				AND k_order_info.contactor2_tel = #{contactor2Tel, jdbcType=VARCHAR}
+			</if>
+			<if test="contactor3Id != null and contactor3Id != ''" >
+				AND k_order_info.contactor3_id = #{contactor3Id, jdbcType=VARCHAR}
+			</if>
+			<if test="contactor3Tel != null and contactor3Tel != ''" >
+				AND k_order_info.contactor3_tel = #{contactor3Tel, jdbcType=VARCHAR}
+			</if>
+			<if test="bodyDiscount != null" >
+				AND k_order_info.body_discount = #{bodyDiscount, jdbcType=DOUBLE}
+			</if>
+			<if test="approvedBodyDiscount != null" >
+				AND k_order_info.approved_body_discount = #{approvedBodyDiscount, jdbcType=DOUBLE}
+			</if>
+			<if test="mainDiscount != null" >
+				AND k_order_info.main_discount = #{mainDiscount, jdbcType=DOUBLE}
+			</if>
+			<if test="approvedMainDiscount != null" >
+				AND k_order_info.approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}
+			</if>
+			<if test="discount != null" >
+				AND k_order_info.discount = #{discount, jdbcType=DOUBLE}
+			</if>
+			<if test="isLongterm != null" >
+				AND k_order_info.is_longterm = #{isLongterm, jdbcType=INTEGER}
+			</if>
+			<if test="isSpecial != null" >
+				AND k_order_info.is_special = #{isSpecial, jdbcType=INTEGER}
+			</if>
+			<if test="paymentType != null and paymentType != ''" >
+				AND k_order_info.payment_type = #{paymentType, jdbcType=VARCHAR}
+			</if>
+			<if test="isTerm1 != null" >
+				AND k_order_info.is_term1 = #{isTerm1, jdbcType=INTEGER}
+			</if>
+			<if test="isTerm2 != null" >
+				AND k_order_info.is_term2 = #{isTerm2, jdbcType=INTEGER}
+			</if>
+			<if test="isTerm3 != null" >
+				AND k_order_info.is_term3 = #{isTerm3, jdbcType=INTEGER}
+			</if>
+			<if test="installFee != null" >
+				AND k_order_info.install_fee = #{installFee, jdbcType=DECIMAL}
+			</if>
+			<if test="materialFee != null" >
+				AND k_order_info.material_fee = #{materialFee, jdbcType=DECIMAL}
+			</if>
+			<if test="electricalFee != null" >
+				AND k_order_info.electrical_fee = #{electricalFee, jdbcType=DECIMAL}
+			</if>
+			<if test="refrigeratoryFee != null" >
+				AND k_order_info.refrigeratory_fee = #{refrigeratoryFee, jdbcType=DECIMAL}
+			</if>
+			<if test="maintenanceFee != null" >
+				AND k_order_info.maintenance_fee = #{maintenanceFee, jdbcType=DECIMAL}
+			</if>
+			<if test="earliestDeliveryDate != null" >
+				AND k_order_info.earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}
+			</if>
+			<if test="earliestProductDate != null" >
+				AND k_order_info.earliest_product_date = #{earliestProductDate, jdbcType=DATE}
+			</if>
+			<if test="isB2c != null" >
+				AND k_order_info.is_b2c = #{isB2c, jdbcType=INTEGER}
+			</if>
+			<if test="grossProfitMargin != null and grossProfitMargin != ''" >
+				AND k_order_info.gross_profit_margin = #{grossProfitMargin, jdbcType=LONGVARCHAR}
+			</if>
+			<if test="comments != null and comments != ''" >
+				AND k_order_info.comments = #{comments, jdbcType=VARCHAR}
+			</if>
+			<if test="submitTime != null" >
+				AND k_order_info.submit_time = #{submitTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="bpmSubmitTime != null" >
+				AND k_order_info.bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="creater != null and creater != ''" >
+				AND k_order_info.creater = #{creater, jdbcType=CHAR}
+			</if>
+			<if test="createTime != null" >
+				AND k_order_info.create_time = #{createTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="updater != null and updater != ''" >
+				AND k_order_info.updater = #{updater, jdbcType=VARCHAR}
+			</if>
+			<if test="updateTime != null" >
+				AND k_order_info.update_time = #{updateTime, jdbcType=TIMESTAMP}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_order_info
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="OrderInfoMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_order_info
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 按参数查询订单视图 -->
+	<select id="findOrderViewByParams" resultType="com.qhc.order.domain.OrderDto" parameterType="com.qhc.order.domain.OrderQuery" >
+    SELECT 
+    	<include refid="order_view_column_list" />
+    FROM
+    	<include refid="order_view_table_list" />
+		<include refid="order_view_where" />
+		<!-- <choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose> -->
+	</select>
+	<sql id="order_view_column_list" >
+        oi.*,
+        o.order_type,
+        o.sequence_number,
+        o.customer_code,
+        o.customer_clazz,
+        o.sales_code,
+        su.name as sales_name
+	</sql>
+	
+	<sql id="order_view_table_list" >
+        	k_order_info oi 
+        LEFT JOIN k_order o ON o.id = oi.order_id
+        LEFT JOIN b_user su ON su.user_identity = o.sales_code
+        LEFT JOIN sap_customer c on c.code = o.customer_code
+    </sql>
+    
+	<!-- 按参数统计 -->
+	<select id="count" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from 
+		<include refid="order_view_table_list" />
+		<include refid="order_view_where" />
+	</select>
+	
+	<sql id="order_view_where" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="orderId != null" >
+				AND o.id = #{orderId, jdbcType=INTEGER}
+			</if>
+			<if test="id != null" >
+				AND oi.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="sequenceNumber != null and sequenceNumber != ''" >
+				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%'
+			</if>
+			<if test="version != null and version != ''" >
+				AND oi.version = #{version, jdbcType=CHAR}
+			</if>
+			<if test="status != null and status != ''" >
+				AND oi.status = #{status, jdbcType=CHAR}
+			</if>
+			<if test="salesCode != null and salesCode != ''" >
+				AND o.sales_code = #{salesCode, jdbcType=CHAR}
+			</if>
+			<if test="salesName != null and salesName != ''" >
+				AND UPPER(su.name) = '%${salesName.toUpperCase()}%'
+			</if>
+			<!-- 2019-04-07 - 2019-11-07 -->
+			<if test="createTime != null and createTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= ${createTime.substring(0, createTime.indexOf(" - "))} and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= ${createTime.substring(createTime.indexOf(" - ") + 3)}
+			]]>
+			</if>
+			<!-- 2019-04-07 - 2019-11-07 -->
+			<if test="submitTime != null and submitTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.submit_time, '%Y-%m-%d') >= ${submitTime.substring(0, submitTime.indexOf(" - "))} and DATE_FORMAT(oi.submit_time, '%Y-%m-%d') <= ${submitTime.substring(submitTime.indexOf(" - ") + 3)}
+			]]>
+			</if>
+			<if test="officeCode != null and officeCode != ''" >
+				AND oi.office_code = #{officeCode, jdbcType=CHAR}
+			</if>
+			<if test="orderType != null and orderType != ''" >
+				AND o.order_type = #{orderType, jdbcType=CHAR}
+			</if>
+			<if test="contractNumber != null and contractNumber != ''" >
+				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%'
+			</if>
+			<if test="contracterName != null and contracterName != ''" >
+				AND UPPER(c.name) like '%${contracterName.toUpperCase()}%'
+			</if>
+			<if test="statusList != null and statusList.size() > 0" >
+				<choose>
+					<when test="dominStatusList != null and dominStatusList.size() > 0">
+				AND (oi.status in <foreach item="item" index="index" collection="statusList" open="("
+				            separator="," close=")">#{item}</foreach>
+            		 or (o.sales_code = #{dominSalesCode} and oi.status in <foreach item="item" index="index" collection="dominStatusList" open="("
+            		             separator="," close=")">#{item}</foreach>))
+					</when>
+					<otherwise>
+				AND oi.status in (<foreach item="item" index="index" collection="statusList" open="("
+            separator="," close=")">#{item}</foreach>)
+					</otherwise>
+				</choose>				
+			</if>
+			<if test="specialDiscount != null and specialDiscount != ''">
+				AND oi.is_special = #{specialDiscount}
+			</if>
+			<if test="last">
+				AND oi.is_active = 1
+			</if>
+			<if test="b2c != null and b2c != ''">
+				AND oi.is_b2c = #{b2c}
+			</if>
+		</trim>
+	</sql>
+	
+	<update id="inactive" parameterType="String" >
+		update k_order_info set is_active = 0 
+		where exists ( select 1 from k_order 
+					where k_order.id = k_order_info.order_id 
+					and k_order.sequnce_number=#{value} )
+	</update>
+	
+	<!-- 修改订单状态 -->
+	<update id="updateStatus" parameterType="Map" >
+		update k_order_info
+		set status = #{status, jdbcType=VARCHAR}
+		<if test="submitTime">
+			, submit_time = now()
+		</if>
+		<if test="bpmSubmitTime">
+			, bpm_submit_time = now()
+		</if>
+		<if test="approvedBodyDiscount != null">
+			, approved_body_discount = approvedBodyDiscount
+		</if>
+		<if test="approvedMainDiscount != null">
+			, approved_main_discount = approvedMainDiscount
+		</if>
+		<if test="user">
+			, updater = #{user, jdbcType=VARCHAR}
+			, update_time = now()
+		</if>
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="findOrderVersions" resultType="com.qhc.order.domain.OrderVersion" parameterType="String">
+		select 
+			k_order_info.id,
+			k_order.id as order_id,
+			k_order_info.version,
+			k_order_info.status,
+			k_order_info.create_time
+		from k_order 
+		left join k_order_info on k_order.id = k_order_info.order_id
+		where k_order.sequence_number = #{sequenceNumber}
+	</select>
+</mapper>

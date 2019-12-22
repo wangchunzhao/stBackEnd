@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.qhc.order.dao.ContractRepository;
 import com.qhc.order.domain.ContractDto;
 import com.qhc.order.domain.ContractSignSys;
 import com.qhc.order.entity.Contract;
+import com.qhc.order.mapper.ContractMapper;
 import com.qhc.system.domain.PageHelper;
 
 /**
@@ -37,10 +37,9 @@ public class ContractService {
 	@Autowired
 	private ConstantService constantService;
 	@Autowired
-	private BestsignService bestsignService;
-
+	private ContractMapper contractMapper;
 	@Autowired
-	private ContractRepository contractRepository;
+	private BestsignService bestsignService;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -54,11 +53,17 @@ public class ContractService {
 	}
 
 	public Contract findOne(Integer id) {
-		return contractRepository.findById(id).get();
+		return contractMapper.findById(id);
 	}
 
 	public Contract save(Contract contract) {
-		return contractRepository.saveAndFlush(contract);
+		if (contract.getId() == null) {
+			contractMapper.insert(contract);
+		} else {
+			contractMapper.update(contract);
+		}
+		
+		return contract;
 	}
 
 	public PageHelper<ContractDto> find(Map<String, Object> params) {
@@ -232,7 +237,7 @@ public class ContractService {
 		}
 
 		for (ContractDto contract : contractList) {
-			String fileHashCode = contract.getFileHashCode();
+			String fileHashCode = contract.getFileHashcode();
 			if (fileHashCode == null || fileHashCode.isEmpty())
 				continue;
 
@@ -246,18 +251,18 @@ public class ContractService {
 			}
 			String signContractId = theOne != null ? theOne.getSignContractId() : null;
 			
-			String state = "03";
+			String status = "03";
 			if (signContractId != null) {
-				state = bestsignService.getContractStatus(signContractId, contract.getContractorName());
+				status = bestsignService.getContractStatus(signContractId, contract.getCustomerName());
 			}
-			if (!contract.getStatus().equals(Integer.parseInt(state))) {
-				contract.setSignContractId(signContractId);
-				contract.setStatus(Integer.parseInt(state));
+			if (!contract.getStatus().equals(Integer.parseInt(status))) {
+//				contract.setSignContractId(signContractId);
+//				contract.setStatus(Integer.parseInt(status));
 
 				// 更新合同状态及电子签约合同ID
 				Contract c = findOne(contract.getId());
-				c.setSignContractId(signContractId);
-				c.setStatus(Integer.parseInt(state));
+				c.setSignContractid(signContractId);
+				c.setStatus(status);
 				save(c);
 //				this.updateSignId(contract.getId(), signContractId, Integer.parseInt(state));
 ////				this.updateStatus(contract.getId(), Integer.parseInt(state));
@@ -282,18 +287,17 @@ public class ContractService {
 			return false;
 
 		// 电子签约中合同Id
-		String signContractId = contract.getSignContractId();
+		String signContractId = contract.getSignContractid();
 		boolean result = bestsignService.doSignContract(signContractId);
-		String state = bestsignService.getContractStatus(signContractId, contract.getContractorName());
+		String state = bestsignService.getContractStatus(signContractId, contract.getCustomerName());
 		System.out.println("state:" + state);
 		if (result || state.equals("06")) {
-//			contract.setState("06");
-			contract.setStatus(6);
+//			contract.setStatus("06");
 
 			// 使用上上签电子合同状态更新数据库更新合同状态
 //			this.updateStatus(contractId, 6);
 			Contract c = findOne(contract.getId());
-			c.setStatus(6);
+			c.setStatus("06");
 			save(c);
 		}
 

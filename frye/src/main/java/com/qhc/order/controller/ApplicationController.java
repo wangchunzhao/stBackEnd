@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.entity.SpecialDelivery;
 import com.qhc.order.entity.SpecialDeliveryVoInfo;
+import com.qhc.order.entity.SpecialOrderApplication;
 import com.qhc.order.service.SpecialDeliveryService;
 import com.qhc.order.service.SpecialDeliveryVoInfoService;
 import com.qhc.system.domain.PageHelper;
@@ -44,7 +44,7 @@ public class ApplicationController {
 	@ApiOperation(value="修改或者新增特批发货 ", notes="修改或者新增特批发货")
 	@PostMapping(value="specialDelivery")
     @ResponseStatus(HttpStatus.OK)
-    public SpecialDelivery updateRoleOperations(@RequestBody SpecialDelivery sd) throws Exception
+    public SpecialOrderApplication updateRoleOperations(@RequestBody SpecialOrderApplication sd) throws Exception
     {	
 
 		return specialDeliveryService.saveOrUpdate(sd);
@@ -54,7 +54,7 @@ public class ApplicationController {
 	@ApiOperation(value="根据订单ID查询 ", notes="根据订单ID查询")
 	@GetMapping("specialDelivery/{ordersId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SpecialDelivery> findByOrdersId(@PathVariable Integer ordersId) throws Exception
+    public List<SpecialOrderApplication> findByOrdersId(@PathVariable Integer ordersId) throws Exception
     {	
 
 		return specialDeliveryService.findByOrdersId(ordersId);
@@ -64,7 +64,7 @@ public class ApplicationController {
 	@ApiOperation(value="根据申请ID查询 ", notes="根据申请ID查询")
 	@GetMapping("specialApply/{applyId}")
     @ResponseStatus(HttpStatus.OK)
-    public SpecialDelivery findById(@PathVariable Integer applyId) throws Exception
+    public SpecialOrderApplication findById(@PathVariable Integer applyId) throws Exception
     {	
 
 		return specialDeliveryService.findById(applyId);

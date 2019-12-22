@@ -33,15 +33,15 @@ INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_
 /*
 -- Query: select * from b_user
 */
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (2,'st','st@dxc.com','st name',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (3,'sales','wang@dxc.com','sales',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (4,'support','support@qhc.com','support',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (5,'b2c','b2c@qhc.com','b2c',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (6,'enginer','enginer@qhc.com','enginer',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (7,'manger','manger@qhc.com','manager',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (8,'admin','admin@qhc.com','admin',1,'12345678901','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (9,'ads','ads@carrier.com','ads',1,'','admin',now(),'admin',now());
-INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`creater`,`create_time`,`updater`,`update_time`) VALUES (10,'abc','aa@qq.com','aa',1,'1','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (2,'st','st@dxc.com','st name',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (3,'sales','wang@dxc.com','sales',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (4,'support','support@qhc.com','support',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (5,'b2c','b2c@qhc.com','b2c',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (6,'enginer','enginer@qhc.com','enginer',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (7,'manger','manger@qhc.com','manager',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (8,'admin','admin@qhc.com','admin',1,'12345678901','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (9,'ads','ads@carrier.com','ads',1,'','0841','admin',now(),'admin',now());
+INSERT INTO `b_user` (`id`,`user_identity`,`user_mail`,`name`,`is_active`,`tel`,`office_code`,`creater`,`create_time`,`updater`,`update_time`) VALUES (10,'abc','aa@qq.com','aa',1,'1','0841','admin',now(),'admin',now());
 
 /*
 -- Query: select * from b_role

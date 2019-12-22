@@ -48,13 +48,13 @@ public class AreaService {
 			 bProvinceList.add(bProvince);
 			 
 			 City bCity = new City();
-			 bCity.setbProvinceCode(freight.get(i).get(1));
+			 bCity.setProvinceCode(freight.get(i).get(1));
 			 bCity.setName(freight.get(i).get(2));
 			 bCity.setCode(freight.get(i).get(3));
 			 bCityList.add(bCity);
 			 
 			 Area bArea = new Area();
-			 bArea.setbCityCode(freight.get(i).get(3));
+			 bArea.setCityCode(freight.get(i).get(3));
 			 bArea.setName(freight.get(i).get(4));
 			 bArea.setCode(freight.get(i).get(5));
 			 bArea.setPrice(Double.valueOf(freight.get(i).get(6)));

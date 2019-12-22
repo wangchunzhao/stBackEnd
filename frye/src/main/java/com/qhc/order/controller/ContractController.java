@@ -120,7 +120,7 @@ public class ContractController {
 	@ApiOperation(value = "更新合同状态",notes="更新合同状态")
 	@PutMapping(value = "{id}/status/{status}")
 	@ResponseBody
-	public Result<?> updateContractStatus(@PathVariable("id") Integer contractId, @PathVariable("status") Integer status) {
+	public Result<?> updateContractStatus(@PathVariable("id") Integer contractId, @PathVariable("status") String status) {
 		Result<?> result = null;
 		try {
 			Contract c = contractService.findOne(contractId);
@@ -142,8 +142,8 @@ public class ContractController {
 		Result<?> result = null;
 		try {
 			Contract c = contractService.findOne(contractId);
-			c.setFileHashCode(hashcode);
-			c.setStatus(3);
+			c.setFileHashcode(hashcode);
+			c.setStatus("03");
 			contractService.save(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
@@ -157,11 +157,11 @@ public class ContractController {
 	@ApiOperation(value = "更新合同电子签约合同ID信息",notes="更新合同电子签约合同ID信息")
 	@PutMapping(value = "{id}/signid/{signContractId}/{status}")
 	@ResponseBody
-	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId, @PathVariable("status") Integer status) {
+	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId, @PathVariable("status") String status) {
 		Result<? extends Object> result = null;
 		try {
 			Contract c = contractService.findOne(contractId);
-			c.setSignContractId(signContractId);
+			c.setSignContractid(signContractId);
 			c.setStatus(status);
 			contractService.save(c);
 			result = Result.ok(c);
@@ -225,11 +225,11 @@ public class ContractController {
 		String idStr = request.getParameter("id");
 		ContractDto contract = this.contractService.findById(Integer.valueOf(idStr));
 
-		String signContractId = contract.getSignContractId();
+		String signContractId = contract.getSignContractid();
 		byte[] zipBytes = this.bestsignService.downloadContract(signContractId);
 
 		String time = String.valueOf(System.currentTimeMillis());
-		String path = this.contractDir + contract.getSequenceNumber() + "_" + contract.getContractorName() + "_" + time
+		String path = this.contractDir + contract.getSequenceNumber() + "_" + contract.getCustomerName() + "_" + time
 				+ ".zip";
 		ZipFile zf = null;
 		InputStream in = null;
@@ -252,8 +252,8 @@ public class ContractController {
 		}
 
 		String customerName = "";
-		if (contract.getContractorName() != null) {
-			customerName = new String(contract.getContractorName().getBytes("gb2312"), "ISO8859-1");
+		if (contract.getCustomerName() != null) {
+			customerName = new String(contract.getCustomerName().getBytes("gb2312"), "ISO8859-1");
 		}
 		String pdfFileName = contract.getSequenceNumber() + "-" + customerName + "(" + contract.getContractNumber()
 				+ ").pdf";

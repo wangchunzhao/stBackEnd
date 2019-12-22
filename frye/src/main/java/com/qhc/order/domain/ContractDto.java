@@ -1,11 +1,7 @@
 package com.qhc.order.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -23,23 +19,29 @@ public class ContractDto implements Serializable {
 	/* Id */
 	private Integer id = null;
 
+	/* OrderInfoId */
+	private Integer orderInfoId = null;
+
+	private String version = null;
+
 	/* SequenceNumber */
 	private String sequenceNumber = null;
+	
+	private String contractNumber = null;
 
-	/* PartyaCode */
-	private String partyaCode = null;
+	private String contractManager = null;
 
-	/* PartyaName */
-	private String partyaName = null;
+	private String customerCode;// 签约单位 Contract unit
+	private String customerName;// 签约单位 Contract Name
 
 	/* PartyaMail */
-	private String partyaMail = null;
+	private String customerEmail = null;
 
 	/* AmountOnContract */
-	private BigDecimal amountOnContract = null;
+	private Double contractRmbValue = null;
 
 	/* DeliveryDaysAfterPrepay */
-	private Short deliveryDaysAfterPrepay = null;
+	private Short deliveryDays = null;
 
 	/* ClientName */
 	private String clientName = null;
@@ -95,56 +97,27 @@ public class ContractDto implements Serializable {
 //	/* Mail */
 //	private String mail = null;
 
-	/* Contractor1Id */
-	private String contractor1Id = null;
-
-	/* Contractor1Tel */
-	private String contractor1Tel = null;
-
-	/* Contractor2Id */
-	private String contractor2Id = null;
-
-	/* Contractor2Tel */
-	private String contractor2Tel = null;
-
-	/* Contractor3Id */
-	private String contractor3Id = null;
-
-	/* Contractor3Tel */
-	private String contractor3Tel = null;
+	private String contactor1Id;// 授权人1及身份证号
+	private String contactor1Tel;// 授权人1电话
+	private String contactor2Id;// 授权人2及身份证号
+	private String contactor2Tel;// 授权人2电话
+	private String contactor3Id;// 授权人3及身份证号
+	private String contactor3Tel;// 授权人3电话
 
 	/* 合同制作时间 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date productionTime = null;
+	private Date createTime = null;
 
 	/* 合同发送时间 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date sendTime = null;
 
+	/* 合同发送时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date signTime = null;
+
 	/* 合同状态：1 未发送 2 已发送 */
-	private Integer status = null;
-
-	// 订单信息
-	/* order id */
-	private String orderId = null;
-
-	/* order version id */
-	private String versionId = null;
-
-	/* order version */
-	private String version = null;
-
-	/* 支持经理，订单管理 */
-	private String contractNumber = null;
-
-	/* 支持经理，订单管理 */
-	private String opteratorDomainId = null;
-
-	/* 签约单位 Contract unit */
-	private String contractorCode = null;
-
-	/* 签约单位 Contract Name */
-	private String contractorName = null;
+	private String status = null;
 
 	/* 性质分类 Classification */
 	private String contractorClassCode = null;
@@ -152,77 +125,102 @@ public class ContractDto implements Serializable {
 	/* 性质分类 Classification */
 	private String contractorClassName = null;
 
-	/* 订单创建时间 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date createTime = null;
-
 	@ApiModelProperty("文档Hash值")
-	private String fileHashCode;
+	private String fileHashcode;
 
 	@ApiModelProperty("电子签约中合同Id")
-	private String signContractId;
-
-	public ContractDto() {
-	}
+	private String signContractid;
 
 	public Integer getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	public Integer getOrderInfoId() {
+		return orderInfoId;
+	}
+
+	public void setOrderInfoId(Integer orderInfoId) {
+		this.orderInfoId = orderInfoId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
 	public String getSequenceNumber() {
-		return this.sequenceNumber;
+		return sequenceNumber;
 	}
 
 	public void setSequenceNumber(String sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 
-	public String getPartyaCode() {
-		return this.partyaCode;
+	public String getContractNumber() {
+		return contractNumber;
 	}
 
-	public void setPartyaCode(String partyaCode) {
-		this.partyaCode = partyaCode;
+	public void setContractNumber(String contractNumber) {
+		this.contractNumber = contractNumber;
 	}
 
-	public String getPartyaName() {
-		return this.partyaName;
+	public String getContractManager() {
+		return contractManager;
 	}
 
-	public void setPartyaName(String partyaName) {
-		this.partyaName = partyaName;
+	public void setContractManager(String contractManager) {
+		this.contractManager = contractManager;
 	}
 
-	public String getPartyaMail() {
-		return this.partyaMail;
+	public String getCustomerCode() {
+		return customerCode;
 	}
 
-	public void setPartyaMail(String partyaMail) {
-		this.partyaMail = partyaMail;
+	public void setCustomerCode(String customerCode) {
+		this.customerCode = customerCode;
 	}
 
-	public BigDecimal getAmountOnContract() {
-		return this.amountOnContract;
+	public String getCustomerName() {
+		return customerName;
 	}
 
-	public void setAmountOnContract(BigDecimal amountOnContract) {
-		this.amountOnContract = amountOnContract;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
-	public Short getDeliveryDaysAfterPrepay() {
-		return this.deliveryDaysAfterPrepay;
+	public String getCustomerEmail() {
+		return customerEmail;
 	}
 
-	public void setDeliveryDaysAfterPrepay(Short deliveryDaysAfterPrepay) {
-		this.deliveryDaysAfterPrepay = deliveryDaysAfterPrepay;
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public Double getContractRmbValue() {
+		return contractRmbValue;
+	}
+
+	public void setContractRmbValue(Double contractRmbValue) {
+		this.contractRmbValue = contractRmbValue;
+	}
+
+	public Short getDeliveryDays() {
+		return deliveryDays;
+	}
+
+	public void setDeliveryDays(Short deliveryDays) {
+		this.deliveryDays = deliveryDays;
 	}
 
 	public String getClientName() {
-		return this.clientName;
+		return clientName;
 	}
 
 	public void setClientName(String clientName) {
@@ -230,7 +228,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getInstallLocation() {
-		return this.installLocation;
+		return installLocation;
 	}
 
 	public void setInstallLocation(String installLocation) {
@@ -238,7 +236,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getQualityStand() {
-		return this.qualityStand;
+		return qualityStand;
 	}
 
 	public void setQualityStand(String qualityStand) {
@@ -246,7 +244,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getSettlement() {
-		return this.settlement;
+		return settlement;
 	}
 
 	public void setSettlement(String settlement) {
@@ -262,7 +260,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getInvoiceAddress() {
-		return this.invoiceAddress;
+		return invoiceAddress;
 	}
 
 	public void setInvoiceAddress(String invoiceAddress) {
@@ -270,7 +268,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getBroker() {
-		return this.broker;
+		return broker;
 	}
 
 	public void setBroker(String broker) {
@@ -278,7 +276,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getInvoiceReceiver() {
-		return this.invoiceReceiver;
+		return invoiceReceiver;
 	}
 
 	public void setInvoiceReceiver(String invoiceReceiver) {
@@ -286,7 +284,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getInvoiceTel() {
-		return this.invoiceTel;
+		return invoiceTel;
 	}
 
 	public void setInvoiceTel(String invoiceTel) {
@@ -294,7 +292,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getInvoicePostCode() {
-		return this.invoicePostCode;
+		return invoicePostCode;
 	}
 
 	public void setInvoicePostCode(String invoicePostCode) {
@@ -302,7 +300,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getCompanyTel() {
-		return this.companyTel;
+		return companyTel;
 	}
 
 	public void setCompanyTel(String companyTel) {
@@ -310,7 +308,7 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getBankName() {
-		return this.bankName;
+		return bankName;
 	}
 
 	public void setBankName(String bankName) {
@@ -318,27 +316,11 @@ public class ContractDto implements Serializable {
 	}
 
 	public String getAccountNumber() {
-		return this.accountNumber;
+		return accountNumber;
 	}
 
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
-	}
-
-	public String getReceiveTermsCode() {
-		return this.receiveTermsCode;
-	}
-
-	public void setReceiveTermsCode(String receiveTermsCode) {
-		this.receiveTermsCode = receiveTermsCode;
-	}
-
-	public String getReceiveTermsName() {
-		return this.receiveTermsName;
-	}
-
-	public void setReceiveTermsName(String receiveTermsName) {
-		this.receiveTermsName = receiveTermsName;
 	}
 
 	public String getOrderVersionId() {
@@ -349,6 +331,22 @@ public class ContractDto implements Serializable {
 		this.orderVersionId = orderVersionId;
 	}
 
+	public String getReceiveTermsCode() {
+		return receiveTermsCode;
+	}
+
+	public void setReceiveTermsCode(String receiveTermsCode) {
+		this.receiveTermsCode = receiveTermsCode;
+	}
+
+	public String getReceiveTermsName() {
+		return receiveTermsName;
+	}
+
+	public void setReceiveTermsName(String receiveTermsName) {
+		this.receiveTermsName = receiveTermsName;
+	}
+
 	public String getAcceptanceCriteriaCode() {
 		return acceptanceCriteriaCode;
 	}
@@ -357,140 +355,84 @@ public class ContractDto implements Serializable {
 		this.acceptanceCriteriaCode = acceptanceCriteriaCode;
 	}
 
-//	public String getMail() {
-//		return this.mail;
-//	}
-//
-//	public void setMail(String mail) {
-//		this.mail = mail;
-//	}
-
-	public String getContractor1Id() {
-		return this.contractor1Id;
+	public String getContactor1Id() {
+		return contactor1Id;
 	}
 
-	public void setContractor1Id(String contractor1Id) {
-		this.contractor1Id = contractor1Id;
+	public void setContactor1Id(String contactor1Id) {
+		this.contactor1Id = contactor1Id;
 	}
 
-	public String getContractor1Tel() {
-		return this.contractor1Tel;
+	public String getContactor1Tel() {
+		return contactor1Tel;
 	}
 
-	public void setContractor1Tel(String contractor1Tel) {
-		this.contractor1Tel = contractor1Tel;
+	public void setContactor1Tel(String contactor1Tel) {
+		this.contactor1Tel = contactor1Tel;
 	}
 
-	public String getContractor2Id() {
-		return this.contractor2Id;
+	public String getContactor2Id() {
+		return contactor2Id;
 	}
 
-	public void setContractor2Id(String contractor2Id) {
-		this.contractor2Id = contractor2Id;
+	public void setContactor2Id(String contactor2Id) {
+		this.contactor2Id = contactor2Id;
 	}
 
-	public String getContractor2Tel() {
-		return this.contractor2Tel;
+	public String getContactor2Tel() {
+		return contactor2Tel;
 	}
 
-	public void setContractor2Tel(String contractor2Tel) {
-		this.contractor2Tel = contractor2Tel;
+	public void setContactor2Tel(String contactor2Tel) {
+		this.contactor2Tel = contactor2Tel;
 	}
 
-	public String getContractor3Id() {
-		return this.contractor3Id;
+	public String getContactor3Id() {
+		return contactor3Id;
 	}
 
-	public void setContractor3Id(String contractor3Id) {
-		this.contractor3Id = contractor3Id;
+	public void setContactor3Id(String contactor3Id) {
+		this.contactor3Id = contactor3Id;
 	}
 
-	public String getContractor3Tel() {
-		return this.contractor3Tel;
+	public String getContactor3Tel() {
+		return contactor3Tel;
 	}
 
-	public void setContractor3Tel(String contractor3Tel) {
-		this.contractor3Tel = contractor3Tel;
+	public void setContactor3Tel(String contactor3Tel) {
+		this.contactor3Tel = contactor3Tel;
 	}
 
-	public Date getProductionTime() {
-		return this.productionTime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setProductionTime(Date productionTime) {
-		this.productionTime = productionTime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public Date getSendTime() {
-		return this.sendTime;
+		return sendTime;
 	}
 
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
 	}
 
-	public Integer getStatus() {
-		return this.status;
+	public Date getSignTime() {
+		return signTime;
 	}
 
-	public void setStatus(Integer status) {
+	public void setSignTime(Date signTime) {
+		this.signTime = signTime;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public String getVersionId() {
-		return versionId;
-	}
-
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getContractNumber() {
-		return contractNumber;
-	}
-
-	public void setContractNumber(String contractNumber) {
-		this.contractNumber = contractNumber;
-	}
-
-	public String getOpteratorDomainId() {
-		return opteratorDomainId;
-	}
-
-	public void setOpteratorDomainId(String opteratorDomainId) {
-		this.opteratorDomainId = opteratorDomainId;
-	}
-
-	public String getContractorCode() {
-		return contractorCode;
-	}
-
-	public void setContractorCode(String contractorCode) {
-		this.contractorCode = contractorCode;
-	}
-
-	public String getContractorName() {
-		return contractorName;
-	}
-
-	public void setContractorName(String contractorName) {
-		this.contractorName = contractorName;
 	}
 
 	public String getContractorClassCode() {
@@ -509,77 +451,21 @@ public class ContractDto implements Serializable {
 		this.contractorClassName = contractorClassName;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	public String getFileHashcode() {
+		return fileHashcode;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setFileHashcode(String fileHashcode) {
+		this.fileHashcode = fileHashcode;
 	}
 
-	public String getFileHashCode() {
-		return fileHashCode;
+	public String getSignContractid() {
+		return signContractid;
 	}
 
-	public void setFileHashCode(String fileHashCode) {
-		this.fileHashCode = fileHashCode;
+	public void setSignContractid(String signContractid) {
+		this.signContractid = signContractid;
 	}
 
-	public String getSignContractId() {
-		return signContractId;
-	}
-
-	public void setSignContractId(String signContractId) {
-		this.signContractId = signContractId;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final ContractDto other = (ContractDto) obj;
-		return (this.id == null ? other.id == null : this.id.equals(other.id));
-	}
-
-	public String toString() {
-		final String tab = "  ";
-		String str = "";
-		str = "ContractView ( " + "id = " + this.id + tab + "sequenceNumber = " + this.sequenceNumber + tab
-				+ "partyaCode = " + this.partyaCode + tab + "partyaName = " + this.partyaName + tab + "partyaMail = "
-				+ this.partyaMail + tab + "amountOnContract = " + this.amountOnContract + tab
-				+ "deliveryDaysAfterPrepay = " + this.deliveryDaysAfterPrepay + tab + "clientName = " + this.clientName
-				+ tab + "installLocation = " + this.installLocation + tab + "qualityStand = " + this.qualityStand + tab
-				+ "settlement = " + this.settlement + tab + "partyaAddress = " + this.partyaAddress + tab
-				+ "invoiceAddress = " + this.invoiceAddress + tab + "broker = " + this.broker + tab
-				+ "invoiceReceiver = " + this.invoiceReceiver + tab + "invoiceTel = " + this.invoiceTel + tab
-				+ "invoicePostCode = " + this.invoicePostCode + tab + "companyTel = " + this.companyTel + tab
-				+ "bankName = " + this.bankName + tab + "accountNumber = " + this.accountNumber + tab
-				+ "kOrderVersionId = " + this.orderVersionId + tab + "receiveTermsCode = " + this.receiveTermsCode + tab
-				+ "receiveTermsName = " + this.receiveTermsName + tab + "kAcceptanceCriteriaCode = "
-				+ this.acceptanceCriteriaCode + tab
-//	        + "mail = " + this.mail + tab
-				+ "contractor1Id = " + this.contractor1Id + tab + "contractor1Tel = " + this.contractor1Tel + tab
-				+ "contractor2Id = " + this.contractor2Id + tab + "contractor2Tel = " + this.contractor2Tel + tab
-				+ "contractor3Id = " + this.contractor3Id + tab + "contractor3Tel = " + this.contractor3Tel + tab
-				+ "productionTime = " + this.productionTime + tab + "sendTime = " + this.sendTime + tab + "status = "
-				+ this.status + tab + " )";
-
-		return str;
-	}
 
 }

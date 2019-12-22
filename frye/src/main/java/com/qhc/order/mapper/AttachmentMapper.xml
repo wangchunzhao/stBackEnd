@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.AttachmentMapper" >
+	<resultMap id="AttachmentBaseMap" type="com.qhc.order.entity.Attachment" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_info_id" property="orderInfoId" jdbcType="INTEGER" />
+		<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+		<result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="AttachmentMap" type="com.qhc.order.entity.Attachment" extends="AttachmentBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.Attachment">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_attachment ( id, order_info_id, file_name, 
+			file_url )
+		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{fileName, jdbcType=VARCHAR}, 
+			#{fileUrl, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.Attachment" >
+		update k_attachment
+		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
+			file_name = #{fileName, jdbcType=VARCHAR}, 
+			file_url = #{fileUrl, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_attachment
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_attachment.id, k_attachment.order_info_id, k_attachment.file_name, k_attachment.file_url
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="AttachmentMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_attachment 
+		where k_attachment.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_attachment.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND k_attachment.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="fileName != null and fileName != ''" >
+				AND k_attachment.file_name = #{fileName, jdbcType=VARCHAR}
+			</if>
+			<if test="fileUrl != null and fileUrl != ''" >
+				AND k_attachment.file_url = #{fileUrl, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_attachment
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="AttachmentMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_attachment
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByOrderInfoId" resultMap="AttachmentMap" parameterType="Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_attachment
+		where order_info_id = #{value}
+	</select>
+</mapper>

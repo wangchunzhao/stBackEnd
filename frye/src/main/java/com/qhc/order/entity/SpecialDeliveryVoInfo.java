@@ -14,8 +14,8 @@ import javax.persistence.Transient;
  * @author lizuoshan
  *
  */
-@Entity
-@Table(name = "k_speical_order_vo_view")
+//@Entity
+//@Table(name = "k_speical_order_vo_view")
 public class SpecialDeliveryVoInfo implements Serializable{
  
 	@Id

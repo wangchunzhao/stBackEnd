@@ -10,14 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.qhc.order.dao.SpecialDeliveryVoInfoRepository;
 import com.qhc.order.entity.SpecialDeliveryVoInfo;
 
 @Service
 public class SpecialDeliveryVoInfoService {
 	
-	@Autowired
-	private SpecialDeliveryVoInfoRepository specialDeliveryVoInfoRepository;
+//	@Autowired
+//	private SpecialDeliveryVoInfoRepository specialDeliveryVoInfoRepository;
 	
 	
 	public Page<SpecialDeliveryVoInfo> getInfoByConditions(SpecialDeliveryVoInfo sdv, Pageable pageable) {
@@ -88,7 +87,8 @@ public class SpecialDeliveryVoInfoService {
 			}
 		};
 		
-		return this.specialDeliveryVoInfoRepository.findAll(specification, pageable);
+//		return this.specialDeliveryVoInfoRepository.findAll(specification, pageable);
+		return null;
 	}
 
 	

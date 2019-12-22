@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.NotifyInforMapper" >
+	<resultMap id="NotifyInforBaseMap" type="com.qhc.system.entity.NotifyInfor" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="hasSend" property="hassend" jdbcType="INTEGER" />
+		<result column="msg_to" property="msgTo" jdbcType="VARCHAR" />
+		<result column="msg_from" property="msgFrom" jdbcType="VARCHAR" />
+		<result column="message" property="message" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="NotifyInforMap" type="com.qhc.system.entity.NotifyInfor" extends="NotifyInforBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.NotifyInfor">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into b_notify_infor ( id, hasSend, msg_to, 
+			msg_from, message )
+		values ( #{id, jdbcType=INTEGER}, #{hassend, jdbcType=INTEGER}, #{msgTo, jdbcType=VARCHAR}, 
+			#{msgFrom, jdbcType=VARCHAR}, #{message, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.NotifyInfor" >
+		update b_notify_infor
+		set hasSend = #{hassend, jdbcType=INTEGER}, 
+			msg_to = #{msgTo, jdbcType=VARCHAR}, 
+			msg_from = #{msgFrom, jdbcType=VARCHAR}, 
+			message = #{message, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from b_notify_infor
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_notify_infor.id, b_notify_infor.hasSend, b_notify_infor.msg_to, b_notify_infor.msg_from, b_notify_infor.message
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="NotifyInforMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from b_notify_infor 
+		where b_notify_infor.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND b_notify_infor.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="hassend != null" >
+				AND b_notify_infor.hasSend = #{hassend, jdbcType=INTEGER}
+			</if>
+			<if test="msgTo != null and msgTo != ''" >
+				AND b_notify_infor.msg_to = #{msgTo, jdbcType=VARCHAR}
+			</if>
+			<if test="msgFrom != null and msgFrom != ''" >
+				AND b_notify_infor.msg_from = #{msgFrom, jdbcType=VARCHAR}
+			</if>
+			<if test="message != null and message != ''" >
+				AND b_notify_infor.message = #{message, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_notify_infor
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="NotifyInforMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_notify_infor
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

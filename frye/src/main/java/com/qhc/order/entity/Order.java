@@ -1,189 +1,4 @@
-package com.qhc.order.entity;
-
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@Entity
-@Table(name = "k_orders")
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "fieldHandler" })
-@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-public class Order implements Serializable {
-	private final static int FACTOR = 43;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8162013779997326172L;
-
-	@Id
-	@NotNull
-	@Column(name = "id", columnDefinition = "char", length = 32)
-	@GeneratedValue(generator = "jpa-uuid")
-	public String id;
-
-	@NotNull
-	@Column(name = "sequence_number", columnDefinition = "char")
-	public String sequenceNumber;
-
-	@NotNull
-	@Column(name = "order_type_code", columnDefinition = "char")
-	public String orderTypeCode;
-
-	@NotNull
-	@Column(name = "create_time", columnDefinition = "datetime")
-	@CreatedDate
-	public Date createTime;
-
-	@NotNull
-	@Column(name = "owner_domain_id")
-	public String ownerDomainId;
-
-	@NotNull
-	@Column(name = "owner_name", columnDefinition = "TEXT")
-	private String ownerName;
-
-	@Column(name = "sales_tel")
-	private String salesTel;
-
-	@NotNull
-	@Column(name = "contractor_code")
-	private String contractorCode;
-
-	@NotNull
-	@Column(name = "contractor_name", columnDefinition = "TEXT")
-	private String contractorName;
-
-	@NotNull
-	@Column(name = "contractor_class_code", columnDefinition = "char")
-	private String contractorClassCode;
-
-	@NotNull
-	@Column(name = "contractor_class_name", columnDefinition = "TEXT")
-	private String contractorClassName;
-
-	@Column(name = "office_code", columnDefinition = "char")
-	private String officeCode;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getSequenceNumber() {
-		return sequenceNumber;
-	}
-
-	public void setSequenceNumber(String sequenceNumber) {
-		this.sequenceNumber = sequenceNumber;
-	}
-
-	public String getOrderTypeCode() {
-		return orderTypeCode;
-	}
-
-	public void setOrderTypeCode(String orderTypeCode) {
-		this.orderTypeCode = orderTypeCode;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getOwnerDomainId() {
-		return ownerDomainId;
-	}
-
-	public void setOwnerDomainId(String ownerDomainId) {
-		this.ownerDomainId = ownerDomainId;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-
-	public String getSalesTel() {
-		return salesTel;
-	}
-
-	public void setSalesTel(String salesTel) {
-		this.salesTel = salesTel;
-	}
-
-	public String getContractorCode() {
-		return contractorCode;
-	}
-
-	public void setContractorCode(String contractorCode) {
-		this.contractorCode = contractorCode;
-	}
-
-	public String getContractorName() {
-		return contractorName;
-	}
-
-	public void setContractorName(String contractorName) {
-		this.contractorName = contractorName;
-	}
-
-	public String getContractorClassCode() {
-		return contractorClassCode;
-	}
-
-	public void setContractorClassCode(String contractorClassCode) {
-		this.contractorClassCode = contractorClassCode;
-	}
-
-	public String getContractorClassName() {
-		return contractorClassName;
-	}
-
-	public void setContractorClassName(String contractorClassName) {
-		this.contractorClassName = contractorClassName;
-	}
-
-	public String getOfficeCode() {
-		return officeCode;
-	}
-
-	public void setOfficeCode(String officeCode) {
-		this.officeCode = officeCode;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.getSequenceNumber().hashCode() * FACTOR;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o.getClass().equals(this.getClass())) {
-			Order obj = (Order) o;
-			if (obj.getSequenceNumber().equals(this.getSequenceNumber())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-}
+package com.qhc.order.entity;import java.io.Serializable;import java.util.Date;/** *  * Function: Data transfer object. <br>  * * @author walker */public class Order		implements Serializable {	private static final long serialVersionUID = -5662560228511574775L;		/* Id */	private Integer id = null;	/* 订单类型
+            ZH0D	经销商订单
+            ZH0M	备货订单
+            ZH0T	大客户订单 */	private String orderType = null;	/* 序列号 */	private String sequenceNumber = null;	/* 签约单位/ 客户 */	private String customerCode = null;	/* 性质分类，经销商/直签 */	private String customerClazz = null;	/* 客户经理，如果是创建人就不需要 */	private String salesCode = null;	public Order(){	}	public Integer getId() {		return this.id;	}	public void setId(Integer id) {		this.id = id;	}	 	public String getOrderType() {		return this.orderType;	}	public void setOrderType(String orderType) {		this.orderType = orderType;	}	 	public String getSequenceNumber() {		return this.sequenceNumber;	}	public void setSequenceNumber(String sequenceNumber) {		this.sequenceNumber = sequenceNumber;	}	 	public String getCustomerCode() {		return this.customerCode;	}	public void setCustomerCode(String customerCode) {		this.customerCode = customerCode;	}	 	public String getCustomerClazz() {		return this.customerClazz;	}	public void setCustomerClazz(String customerClazz) {		this.customerClazz = customerClazz;	}	 	public String getSalesCode() {		return this.salesCode;	}	public void setSalesCode(String salesCode) {		this.salesCode = salesCode;	}	 	@Override	public int hashCode() {		final int prime = 31;		int result = 1;		result = prime * result + ((id == null) ? 0 : id.hashCode());		return result;	}	@Override	public boolean equals(Object obj) {		if (this == obj) {			return true;		}		if (obj == null) {			return false;		}		if (getClass() != obj.getClass()) {			return false;		}		final Order other = (Order) obj;		return (this.id == null ? other.id == null : this.id.equals(other.id));	}		public String toString() {	    final String tab = "  ";	    String str = "";	    str = "Order ( "	        + "id = " + this.id + tab	        + "orderType = " + this.orderType + tab	        + "sequenceNumber = " + this.sequenceNumber + tab	        + "customerCode = " + this.customerCode + tab	        + "customerClazz = " + this.customerClazz + tab	        + "salesCode = " + this.salesCode + tab	        + " )";		    return str;	}}

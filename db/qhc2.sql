@@ -45,21 +45,21 @@ drop table if exists k_configure_material;
 
 drop table if exists k_contract;
 
-drop table if exists k_delievery_address;
+drop table if exists k_delivery_address;
 
 drop table if exists k_engining_cost;
 
 drop table if exists k_engining_term;
 
-drop table if exists k_item_b2c;
+drop table if exists k_item;
 
-drop table if exists k_item_detail;
+drop table if exists k_item_b2c;
 
 drop table if exists k_order;
 
 drop table if exists k_order_info;
 
-drop table if exists k_speical_order_application;
+drop table if exists k_special_order_application;
 
 drop table if exists sap_characteristic;
 
@@ -129,18 +129,18 @@ create table b_area
    code                 varchar(32) not null,
    name                 varchar(64) not null,
    city_code            varchar(32) not null,
-   price                decimal(13,2) not null comment '供应商<20m³单价',
-   price1               decimal(13,2) comment '供应商<20m³送货费',
-   price2               decimal(13,2) comment '供应商>20<50m³单价',
-   price3               decimal(13,2) comment '供应商>20<50m³送货费',
-   price4               decimal(13,2) comment '供应商>=50m³单价',
-   price5               decimal(13,2) comment '供应商>50m³送货费',
-   price6               decimal(13,2) comment '客户<=20m³单价',
-   price7               decimal(13,2) comment '客户<=20m³送货费',
-   price8               decimal(13,2) comment '客户>20<50m³单价',
-   price9               decimal(13,2) comment '客户>20<50m³送货费',
-   price10              decimal(13,2) comment '客户>=50m³单价',
-   price11              decimal(13,2) comment '客户>=50m³送货费',
+   price                decimal(13,2) not null comment '供应商<20m3单价',
+   price1               decimal(13,2) comment '供应商<20m3送货费',
+   price2               decimal(13,2) comment '供应商>20<50m3单价',
+   price3               decimal(13,2) comment '供应商>20<50m3送货费',
+   price4               decimal(13,2) comment '供应商>=50m3单价',
+   price5               decimal(13,2) comment '供应商>50m3送货费',
+   price6               decimal(13,2) comment '客户<=20m3单价',
+   price7               decimal(13,2) comment '客户<=20m3送货费',
+   price8               decimal(13,2) comment '客户>20<50m3单价',
+   price9               decimal(13,2) comment '客户>20<50m3送货费',
+   price10              decimal(13,2) comment '客户>=50m3单价',
+   price11              decimal(13,2) comment '客户>=50m3送货费',
    primary key (code)
 );
 
@@ -167,7 +167,7 @@ create table b_material_group_order
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key id_unique (code)
+   key id_UNIQUE (code)
 );
 
 alter table b_material_group_order comment '物料分组，销售工具的物料分组';
@@ -178,12 +178,12 @@ alter table b_material_group_order comment '物料分组，销售工具的物料
 create table b_notify_infor
 (
    id                   integer unsigned not null,
-   hassend              integer unsigned zerofill not null,
+   hasSend              integer unsigned zerofill not null,
    msg_to               varchar(64) not null,
    msg_from             varchar(64) not null,
    message              varchar(64) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 /*==============================================================*/
@@ -263,9 +263,10 @@ create table b_user
    create_time          datetime not null comment '创建时间',
    updater              varchar(45) not null comment '修改人账号',
    update_time          datetime not null comment '修改时间',
+   office_code          varchar(32) comment '销售办公室',
    tel                  varchar(16),
    primary key (id),
-   key user_mail_unique (user_mail)
+   key user_mail_UNIQUE (user_mail)
 );
 
 /*==============================================================*/
@@ -292,7 +293,7 @@ create table k_attached_info
    opt_time             datetime not null,
    item_detail_id       varchar(32) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_attached_info comment 'sap返回的相关信息';
@@ -303,11 +304,11 @@ alter table k_attached_info comment 'sap返回的相关信息';
 create table k_attachment
 (
    id                   integer unsigned not null auto_increment,
+   order_info_id        integer not null,
    file_name            varchar(64) not null,
    file_url             varchar(128),
-   order_info_id        varchar(32) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_attachment comment '附件文件名称';
@@ -318,14 +319,14 @@ alter table k_attachment comment '附件文件名称';
 create table k_billing_plan
 (
    id                   integer unsigned not null auto_increment,
-   code                 varchar(4) not null,
+   order_info_id        integer not null,
+   code                 varchar(10) not null,
    name                 varchar(64),
    amount               decimal(13,2),
    pay_date             date,
    reason               varchar(64),
-   order_info_id        varchar(32) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_billing_plan comment '付款条件或billing plan';
@@ -336,12 +337,12 @@ alter table k_billing_plan comment '付款条件或billing plan';
 create table k_bpm_dicision
 (
    id                   integer unsigned not null auto_increment,
-   order_info_id        varchar(32) not null,
-   approved_main_discount double(3,3),
-   main_diccount        double(3,3) not null,
-   approved_body_discount double(3,3),
-   body_discount        double(3,3) not null,
+   order_info_id        integer not null,
    is_passed            integer not null,
+   body_discount        double(4,2) not null comment '申请柜体折扣',
+   approved_body_discount double(4,2) comment '批准柜体折扣',
+   main_diccount        double(4,2) not null comment '申请机组折扣',
+   approved_main_discount double(4,2) comment '批准机组折扣',
    primary key (id)
 );
 
@@ -353,10 +354,10 @@ alter table k_bpm_dicision comment 'BPM审批结果';
 create table k_characteristics
 (
    id                   integer unsigned not null auto_increment,
+   item_detail_id       integer not null,
    key_code             varchar(45) not null comment '选定的特征代码',
    value_code           varchar(45) not null comment '选定的特征值的代码',
    is_configurable      integer not null comment '可配置',
-   item_detail_id       varchar(32) not null,
    primary key (id),
    key character_unique (key_code)
 );
@@ -373,7 +374,7 @@ create table k_configure_material
    price                decimal(13,2) not null,
    item_detail_id       varchar(32) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 /*==============================================================*/
@@ -382,14 +383,14 @@ create table k_configure_material
 create table k_contract
 (
    id                   integer unsigned not null auto_increment,
-   order_info_id        varchar(32) not null,
-   delivery_days_after_prepay integer comment '收到预付款后发货时间',
+   order_info_id        integer not null,
+   delivery_days        integer comment '收到预付款后发货时间',
    client_name          varchar(64) not null comment '终端用户店名',
    install_location     varchar(64) not null comment '安装地点',
    acceptance_criteria_code varchar(4) not null comment '验收标准
             1001	需方负责安装调试
             1002	供方负责安装调试',
-   party_a_mail         varchar(64) comment '甲方客户mail',
+   customer_email       varchar(64) comment '签约单位邮箱',
    invoice_address      varchar(256) comment '发票地址',
    invoice_post_code    varchar(6) comment '邮政编码',
    invoice_receiver     varchar(64) comment '发票接收人',
@@ -398,15 +399,21 @@ create table k_contract
    company_tel          varchar(64) comment '公司电话',
    bank_name            varchar(64) comment '银行名称',
    account_number       varchar(64) comment '银行账号',
-   party_a_address      varchar(64) comment '单位地址',
-   comany_post_code     varchar(6) comment '单位邮政编码',
+   company_address      varchar(64) comment '单位地址',
+   company_post_code    varchar(6) comment '单位邮政编码',
+   status               varchar(10) comment '合同状态
+            01 已制作
+            02 已发送
+            03 已发送
+            04 已上传
+            05 客户已签署
+            06 已签署',
    creater              varchar(32) comment '合同制作人',
    create_time          datetime not null comment '合同制作时间',
    sender               varchar(32) comment '合同发送人',
    send_time            datetime comment '合同发送时间',
    signer               varchar(32) comment '合同签署人',
    sign_time            datetime comment '合同签署时间',
-   contract_status      integer comment '合同状态：1 未发送 2 已发送',
    file_hashcode        varchar(256) comment '合同文档Hash值',
    sign_contractid      varchar(64) comment '电子签约中合同Id，存放上上签中的contractId',
    primary key (id)
@@ -415,20 +422,21 @@ create table k_contract
 alter table k_contract comment '合同';
 
 /*==============================================================*/
-/* Table: k_delievery_address                                   */
+/* Table: k_delivery_address                                    */
 /*==============================================================*/
-create table k_delievery_address
+create table k_delivery_address
 (
-   id                   varchar(32) not null,
-   province_code        varchar(6),
-   city_code            varchar(6),
-   district_code        varchar(6),
-   address              varchar(128) not null,
-   order_info_id        varchar(32) not null,
+   id                   integer not null auto_increment,
+   order_info_id        integer not null comment '订单详情id',
+   seq                  integer comment '序号，每个订单详情从1开始，每增加一条取本订单的最大值加一',
+   province_code        varchar(32) comment '省',
+   city_code            varchar(32) comment '市',
+   district_code        varchar(32) comment '区',
+   address              varchar(128) not null comment '地址',
    primary key (id)
 );
 
-alter table k_delievery_address comment '送达地址';
+alter table k_delivery_address comment '送达地址';
 
 /*==============================================================*/
 /* Table: k_engining_cost                                       */
@@ -442,7 +450,7 @@ create table k_engining_cost
    order_info_id        varchar(32) not null comment '订单详情ID',
    engining_term        varchar(18) not null comment '费用类型',
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_engining_cost comment '工程成本';
@@ -460,6 +468,58 @@ create table k_engining_term
 alter table k_engining_term comment '工程成本费用类型';
 
 /*==============================================================*/
+/* Table: k_item                                                */
+/*==============================================================*/
+create table k_item
+(
+   id                   integer not null auto_increment,
+   order_info_id        integer not null,
+   row_num              integer not null comment '行号',
+   material_code        varchar(45) not null comment '物料代码',
+   quantity             double(13,2) not null comment '数量',
+   item_category        varchar(45) not null comment '行项目类别',
+   item_requirement_plan varchar(45) not null comment '需求计划',
+   b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
+   delivery_address_seq integer comment '发货地址序号',
+   delivery_address_id  integer comment '发货地址ID',
+   standard_price       decimal(13,2) comment '移动平均价，即成本价格',
+   retail_price         decimal(13,2) comment '零售价格',
+   actural_price        decimal(13,2) comment '产品实卖价',
+   transcation_price    decimal(13,2) comment '产品转移价',
+   actural_prica_of_optional decimal(13,2) comment '可选项实卖价',
+   transcation_prica_of_optional decimal(13,2) comment '可选项转移价',
+   discount             double(5,2) comment '折扣',
+   produce_date         date comment '生产开始时间',
+   on_store_date        date comment '入库时间',
+   delivery_date        date comment '最早交货时间',
+   shipp_date           date comment '要求发货时间',
+   period               integer unsigned comment '生产/采购周期',
+   b2c_comments         varchar(64) comment 'B2C备注',
+   special_comments     varchar(64) comment '特殊备注',
+   color_comments       varchar(64) comment '颜色备注',
+   volume_cube          decimal(13,2) comment '体积，待定',
+   freight              decimal(13,2) comment '运费，待定',
+   is_virtual           integer not null default 0 comment '工程虚拟物料
+            0:由销售录入的行项目
+            1: 非销售部门录入的行项目',
+   config_comments      char(10) comment '配置表备注(配置表页面)，待定',
+   mosaic_image         varchar(64) comment '拼接图备注，待定',
+   attached_image       varchar(256) comment '拼接图附件，待定',
+   request_brand        varchar(64) comment '，待定',
+   request_package      varchar(64) comment '，待定',
+   request_nameplate    varchar(64) comment '，待定',
+   request_circult      varchar(64) comment '，待定',
+   config_transfer_price decimal(13,2) comment '，待定',
+   config_retail_price  decimal(13,2) comment '，待定',
+   is_configurable      integer not null comment '是否是可配置物料',
+   clazz_code           varchar(45) comment '物料分类代码',
+   comments             varchar(64) comment '备注，位于配置页面',
+   primary key (id)
+);
+
+alter table k_item comment '订单行项目表，每行记录代表一个行项目';
+
+/*==============================================================*/
 /* Table: k_item_b2c                                            */
 /*==============================================================*/
 create table k_item_b2c
@@ -470,87 +530,33 @@ create table k_item_b2c
    operator             varchar(64) not null,
    item_detail_id       varchar(32) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_item_b2c comment 'B2C人员填写的评估成本';
-
-/*==============================================================*/
-/* Table: k_item_detail                                         */
-/*==============================================================*/
-create table k_item_detail
-(
-   id                   varchar(32) not null,
-   order_info_id        varchar(32),
-   row_num              integer not null comment '行号',
-   material_code        varchar(45) not null comment '物料代码',
-   is_virtual           integer not null default 0 comment '工程虚拟物料
-            0:由销售录入的行项目
-            1: 非销售部门录入的行项目',
-   purchased            integer not null comment '物料属性：1. 采购 0：生产',
-   group_code           varchar(45) not null comment '物料类型代码
-            sap_material_group',
-   item_category        varchar(45) not null comment '行项目类别',
-   item_requirement_plan varchar(45) not null comment '需求计划',
-   unit_code            varchar(3) comment '计量单位代码',
-   quantity             double(13,2) not null comment '数量',
-   standard_price       decimal(13,2) comment '移动平均价，即成本价格',
-   retail_price         decimal(13,2) comment '零售价格',
-   actural_price        decimal(13,2) comment '产品实卖价',
-   transcation_price    decimal(13,2) comment '产品转移价',
-   actural_prica_of_optional decimal(13,2) comment '可选项实卖价',
-   transcation_prica_of_optional decimal(13,2) comment '可选项转移价',
-   b2c_price_estimated  char(10) comment 'B2C评估价',
-   b2c_cost_of_estimation decimal(13,2) comment 'bc2预估成本',
-   b2c_comments         varchar(64) comment 'B2C备注',
-   produce_date         char(10) comment '生产开始时间',
-   on_store_date        char(10) comment '入库时间',
-   discount             double(3,3) comment '折扣',
-   volume_cube          decimal(13,2) comment '体积',
-   freight              decimal(13,2) comment '运费',
-   delievery_date       date comment '发货日期',
-   special_comments     varchar(64) comment '特殊备注',
-   config_comments      char(10) comment '配置表备注(配置表页面)',
-   mosaic_image         varchar(64) comment '拼接图备注',
-   attached_image       varchar(256) comment '拼接图附件',
-   request_brand        varchar(64),
-   request_package      varchar(64),
-   request_nameplate    varchar(64),
-   request_circult      varchar(64),
-   color_comments       varchar(64) comment '颜色备注',
-   period               integer unsigned comment '生产/采购周期',
-   config_transfer_price decimal(13,2),
-   config_retail_price  decimal(13,2),
-   is_configurable      integer not null comment '是否是可配置物料',
-   clazz_code           varchar(45) comment '物料分类代码',
-   province_code        varchar(45) comment '省',
-   city_code            varchar(45) comment '市',
-   district_code        varchar(45) comment '区',
-   address              varchar(64) comment '运输目的地，格式为{省 code:名字,市code:名字，区code:名字,address:名字}',
-   ship_date            date comment '要求发货时间',
-   comments             varchar(64) comment '备注，位于配置页面',
-   primary key (id)
-);
-
-alter table k_item_detail comment '订单行项目表，每行记录代表一个行项目';
 
 /*==============================================================*/
 /* Table: k_order                                               */
 /*==============================================================*/
 create table k_order
 (
-   id                   varchar(32) not null,
+   id                   integer not null auto_increment,
    order_type           varchar(4) not null comment '订单类型
             ZH0D	经销商订单
             ZH0M	备货订单
             ZH0T	大客户订单',
    sequence_number      varchar(18) not null comment '序列号',
-   contracter_code      varchar(10) not null comment '签约单位/ 客户',
-   office_code          varchar(4) comment '销售员所属区域',
-   create_time          datetime not null comment '创建时间',
-   sales_code           varchar(128) not null comment '创建人（销售经理）',
+   customer_code        varchar(10) not null comment '签约单位/ 客户',
+   customer_clazz       varchar(10) comment '性质分类，经销商/直签',
+   sales_code           varchar(32) not null comment '客户经理，如果是创建人就不需要',
+   st_order_type        varchar(10) comment '销售工具订单类型
+            1 经销商标准折扣下单
+            2 经销商非标准折扣下单
+            3 直签客户投标报价
+            4 直签客户下定单
+            5 备货 ',
    primary key (id),
-   key sequence_number_unique (sequence_number)
+   key sequence_number_UNIQUE (sequence_number)
 );
 
 alter table k_order comment '订单';
@@ -560,8 +566,8 @@ alter table k_order comment '订单';
 /*==============================================================*/
 create table k_order_info
 (
-   id                   varchar(32) not null,
-   order_id             varchar(32),
+   id                   integer not null auto_increment,
+   order_id             integer not null,
    version              varchar(45) not null comment '版本名称',
    version_num          integer comment '版本序号，每次累加1',
    status               varchar(4) not null comment '订单状态
@@ -579,55 +585,58 @@ create table k_order_info
             11   BPM驳回',
    is_active            integer comment '最新版本，新的版本生成后旧的版本变为0， 新的版本为1
             0 非最新，1 最新',
-   customer_name        varchar(64) not null comment '店名 customer name',
+   terminal_type        varchar(10) comment '终端客户性质，是否是大客户的客户性质，即客户级别（sap_industry_code），大客户由客户信息带出，经销商选择',
+   shop_name            varchar(64) not null comment '店名 shop name',
    record_code          varchar(45) comment '项目报备编号',
-   is_reformed          integer comment '是否是改造店',
-   is_convenient_store  integer comment '是否是便利店',
-   is_new               integer comment '是不是新店',
    sales_tel            varchar(45) comment '客户（销售）经理电话',
-   terminal_type        varchar(10) comment '终端客户性质',
-   contract_number      varchar(45) not null comment '合同号',
+   is_convenient_store  integer comment '是否是便利店',
+   is_reformed          integer comment '是否是改造店',
+   is_new               integer comment '是不是新店',
+   contract_number      varchar(45) not null comment '合同号，结算号',
+   sale_type            varchar(2) comment '销售类型',
+   tax_rate             double comment '税率',
+   incoterm             varchar(45) comment '国际贸易条件code',
+   incoterm_contect     varchar(64) comment '国际贸易条件内容',
+   contract_value       decimal(13,2) comment '原合同金额',
+   contract_rmb_value   decimal(13,2) comment '合同人民币金额',
+   currency             varchar(3) comment '外币code',
+   currency_exchange    double(10,5) comment '汇率',
+   items_amount         decimal(13,2) comment '购销明细金额合计',
    contract_manager     varchar(45) not null comment '支持经理，合同管理员',
-   body_discount        double(3,3) comment '柜体折扣',
-   main_discount        double(3,3) comment '机组折扣',
-   merge_discount       double(3,3) comment '合并折扣',
-   standard_discount    double(3,3) comment '标准折扣',
-   is_special           integer comment '是否特批折扣/非标折扣',
-   is_b2c               integer comment '是否有B2C',
-   install_code         varchar(4) comment '安装code',
-   confirm_type_code    varchar(4) comment '接货方式名称code',
+   office_code          varchar(45) comment '表单里的大区code',
+   group_code           varchar(45) comment '中心code',
+   warranty             integer comment '保修年限',
+   install_type         varchar(10) comment '安装code',
+   receive_type         varchar(10) comment '收货方式 code',
+   transfer_type        varchar(45) comment '运输类型代码code',
+   freight              decimal(13,2) comment '运费合计',
    contactor1_id        varchar(18) comment '第一联系人身份证',
    contactor1_tel       varchar(16) comment '第一联系人电话',
    contactor2_id        varchar(18) comment '第二联系人身份证',
    contactor2_tel       varchar(16) comment '第二联系人电话',
    contactor3_id        varchar(18) comment '第三联系人身份证',
    contactor3_tel       varchar(16) comment '第三联系人电话',
-   transfer_type_code   varchar(45) comment '运输类型代码',
-   freight              decimal(13,2) comment '运费合计',
-   warrenty             integer comment '保修年限',
-   currency             varchar(3) comment '外币code',
-   exchange             double(10,5) comment '汇率',
-   contract_value       decimal(13,2) comment '原合同金额',
-   contract_rmb_value   decimal(13,2) comment '合同人民币金额',
-   items_amount         decimal(13,2) comment '购销明细金额合计',
-   sale_type            varchar(2) comment '销售类型',
-   tax_rate             double comment '税率',
-   incoterm             varchar(45) comment '国际贸易条件code',
-   incoterm_contect     varchar(64) comment '国际贸易条件内容',
-   office_code          varchar(45) comment '表单里的大区code',
-   group_code           varchar(45) comment '中心code',
+   body_discount        double(4,2) comment '柜体折扣',
+   approved_body_discount double(4,2) comment '批准的柜体折扣',
+   main_discount        double(4,2) comment '机组折扣',
+   approved_main_discount double(4,2) comment '批准的机组折扣',
+   discount             double(4,2) comment '合并折扣',
+   is_longterm          integer comment '是否为长期折扣',
+   is_special           integer default 0 comment '是否特批折扣/非标折扣，1 非标折扣， 0',
+   payment_type         varchar(512) comment '结算方式，经销商',
    is_term1             integer comment '柜体控制阀门件是否甲供',
    is_term2             integer comment '分体柜是否远程监控',
    is_term3             integer comment '立体柜是否在地下室',
-   earliest_delivery_date date comment '要求发货时间,最早交付时间',
-   earliest_product_date date comment '工厂最早交货时间,最早生产时间',
    install_fee          decimal(13,2) not null comment '工程安装费',
    material_fee         decimal(13,2) not null comment '工程材料费',
    electrical_fee       decimal(13,2) comment '工程电气费',
    refrigeratory_fee    decimal(13,2) comment '工程冷库费',
    maintenance_fee      decimal(13,2) comment '工程维保费',
-   comments             varchar(64) comment '备注 Remark',
+   earliest_delivery_date date comment '要求发货时间,最早交付时间',
+   earliest_product_date date comment '工厂最早交货时间,最早生产时间',
+   is_b2c               integer comment '是否有B2C备注',
    gross_profit_margin  text comment '毛利率，每次修改保存时自动计算订单毛利率并保存到此字段',
+   comments             varchar(64) comment '备注 Remark',
    submit_time          datetime comment '最后一次提交时间，会有被驳回然后提交的时间',
    bpm_submit_time      datetime comment '提交bpm审批的时间，会有被驳回然后提交的时间',
    creater              char(10) comment '创建人',
@@ -635,18 +644,18 @@ create table k_order_info
    updater              varchar(128) not null comment '最后操作人',
    update_time          datetime not null comment '最后操作时间',
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table k_order_info comment '订单详情';
 
 /*==============================================================*/
-/* Table: k_speical_order_application                           */
+/* Table: k_special_order_application                           */
 /*==============================================================*/
-create table k_speical_order_application
+create table k_special_order_application
 (
    id                   integer unsigned not null auto_increment,
-   order_info_id        varchar(32),
+   order_info_id        integer not null,
    applyer              varchar(128) not null,
    approver             varchar(128),
    apply_time           datetime not null,
@@ -663,7 +672,7 @@ create table k_speical_order_application
    primary key (id)
 );
 
-alter table k_speical_order_application comment '特批发货';
+alter table k_special_order_application comment '特批发货';
 
 /*==============================================================*/
 /* Table: sap_characteristic                                    */
@@ -672,9 +681,9 @@ create table sap_characteristic
 (
    code                 varchar(30) not null,
    name                 varchar(64) not null,
-   is_optional          integer not null,
+   is_optional          BIT(1) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_characteristic comment 'SAP物料特征';
@@ -689,7 +698,7 @@ create table sap_characteristic_value
    code                 varchar(30) not null,
    sap_characteristic_code varchar(30) not null,
    primary key (id),
-   key id_unique (id)
+   key id_UNIQUE (id)
 );
 
 alter table sap_characteristic_value comment 'SAP物料特征值';
@@ -701,9 +710,9 @@ create table sap_clazz
 (
    code                 varchar(18) not null,
    name                 varchar(64) not null,
-   is_reserved          integer not null comment '保留字段，非可配置类',
+   is_reserved          BIT(1) not null comment '保留字段，非可配置类',
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_clazz comment '特征分组';
@@ -727,7 +736,7 @@ create table sap_color_characteristic
    name                 varchar(64) not null,
    sap_materials_code   varchar(18) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 /*==============================================================*/
@@ -752,9 +761,9 @@ create table sap_currency
    code                 varchar(3) not null,
    name                 varchar(64) not null,
    rate                 double(10,5) not null,
-   is_reserved          integer not null default 0,
+   is_reserved          BIT(1) not null default 0,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_currency comment 'SAP货币
@@ -768,7 +777,7 @@ create table sap_currency_sale_type
    sap_sales_type_code  varchar(2) not null,
    sap_currency_code    varchar(3) not null,
    primary key (sap_currency_code, sap_sales_type_code),
-   key sap_sales_type_code_currency_code_unique (sap_sales_type_code, sap_currency_code)
+   key sap_sales_type_code_currency_code_UNIQUE (sap_sales_type_code, sap_currency_code)
 );
 
 alter table sap_currency_sale_type comment 'SAP货币销售类型对应关系';
@@ -785,7 +794,7 @@ create table sap_customer
    sap_customer_class_code varchar(2) not null comment '客户类型',
    sap_industry_code_code varchar(10) not null comment '客户级别',
    primary key (code),
-   key number_unique (code)
+   key number_UNIQUE (code)
 );
 
 alter table sap_customer comment '客户';
@@ -799,7 +808,7 @@ create table sap_customer_class
             02:经销商',
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_customer_class comment 'SAP客户类型
@@ -815,7 +824,7 @@ create table sap_incoterms
    name                 varchar(64) not null,
    sap_sales_type_code  varchar(2) not null comment '销售类型',
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_incoterms comment '国际条款';
@@ -827,9 +836,9 @@ create table sap_industry
 (
    code                 varchar(4) not null,
    name                 varchar(64) not null,
-   is_reserved          integer not null default 0,
+   is_reserved          BIT(1) not null default 0,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_industry comment '大客户，行业，隶属关系';
@@ -842,7 +851,7 @@ create table sap_industry_and_customer
    sap_customer_code    varchar(16) not null,
    sap_industry_code    varchar(4) not null,
    primary key (sap_industry_code, sap_customer_code),
-   key sap_customer_code_and_industry_code_unique (sap_customer_code, sap_industry_code)
+   key sap_customer_code_and_industry_code_UNIQUE (sap_customer_code, sap_industry_code)
 );
 
 alter table sap_industry_and_customer comment '客户隶属关系';
@@ -854,9 +863,9 @@ create table sap_industry_code
 (
    code                 varchar(10) not null comment 'terminal shop level: incustry code',
    name                 varchar(64) not null,
-   is_fordealer         integer not null comment '适用经销商',
+   is_fordealer         BIT(1) not null comment '适用经销商',
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_industry_code comment '客户级别
@@ -870,7 +879,7 @@ create table sap_installation_terms
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_installation_terms comment '安装方式
@@ -886,7 +895,7 @@ create table sap_last_updated
    name                 varchar(64) not null,
    update_date          datetime not null default '2000-01-01 00:00:00',
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 /*==============================================================*/
@@ -910,9 +919,9 @@ create table sap_material_groups
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    b_material_group_order_code varchar(4) not null comment '销售工具的分组',
-   isenable             integer not null default 1,
+   isenable             BIT(1) not null default 1,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_material_groups comment 'SAP物料分组';
@@ -924,8 +933,8 @@ create table sap_materials
 (
    code                 varchar(18) not null comment 'code',
    description          varchar(64) not null comment '描述',
-   is_configurable      integer not null comment '可配置',
-   is_purchased         integer not null comment '物料属性，采购',
+   is_configurable      BIT(1) not null comment '可配置',
+   is_purchased         BIT(1) not null comment '物料属性，采购',
    stand_price          decimal(13,2) not null comment '标准价格moving_average_price',
    opt_time             datetime not null comment '操作时间',
    material_size        double(13,3) not null comment '物料体积',
@@ -933,7 +942,7 @@ create table sap_materials
    sap_material_groups_code varchar(4) not null comment '物料分组',
    sap_clazz_code       varchar(18) not null comment '特征分组',
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_materials comment 'SAP物料信息';
@@ -960,7 +969,7 @@ create table sap_order_type
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_order_type comment 'SAP订单类型
@@ -991,9 +1000,9 @@ create table sap_payment_term_bidding_plan
 (
    code                 varchar(4) not null,
    name                 varchar(64) not null,
-   is_payment_term      integer not null,
+   is_payment_term      BIT(1) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 /*==============================================================*/
@@ -1004,7 +1013,7 @@ create table sap_price_type
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_price_type comment 'SAP价格类型
@@ -1021,7 +1030,7 @@ create table sap_receive_terms
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_receive_terms comment '01	盖章接货
@@ -1037,7 +1046,7 @@ create table sap_sales_group
    name                 varchar(64) not null,
    sap_sales_office_code varchar(4) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_sales_group comment '中心，SAP中心';
@@ -1051,7 +1060,7 @@ create table sap_sales_office
    name                 varchar(64) not null,
    sap_sales_type_code  varchar(2) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_sales_office comment '大区，SAP区域
@@ -1067,7 +1076,7 @@ create table sap_sales_type
    code                 varchar(2) not null,
    name                 varchar(32) not null,
    primary key (code),
-   key idsap_sales_type_unique (code)
+   key idsap_sales_type_UNIQUE (code)
 );
 
 alter table sap_sales_type comment 'SAP销售类型
@@ -1083,7 +1092,7 @@ create table sap_shipping_type
    code                 varchar(2) not null,
    name                 varchar(32) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_shipping_type comment '01	自提
@@ -1097,7 +1106,7 @@ create table sap_unit_of_measurement
    code                 varchar(3) not null,
    name                 varchar(64) not null,
    primary key (code),
-   key code_unique (code)
+   key code_UNIQUE (code)
 );
 
 alter table sap_unit_of_measurement comment 'SAP计量单位

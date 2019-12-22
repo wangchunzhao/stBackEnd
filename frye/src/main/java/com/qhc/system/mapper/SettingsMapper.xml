@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.SettingsMapper" >
+	<resultMap id="SettingsBaseMap" type="com.qhc.system.entity.Settings" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="s_value" property="sValue" jdbcType="VARCHAR" />
+		<result column="enable_date" property="enableDate" jdbcType="DATE" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="opt_time" property="optTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="SettingsMap" type="com.qhc.system.entity.Settings" extends="SettingsBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.Settings">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into b_settings ( id, code, s_value, 
+			enable_date, comment, operater, 
+			opt_time )
+		values ( #{id, jdbcType=INTEGER}, #{code, jdbcType=VARCHAR}, #{sValue, jdbcType=VARCHAR}, 
+			#{enableDate, jdbcType=DATE}, #{comment, jdbcType=VARCHAR}, #{operater, jdbcType=VARCHAR}, 
+			#{optTime, jdbcType=TIMESTAMP} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.Settings" >
+		update b_settings
+		set code = #{code, jdbcType=VARCHAR}, 
+			s_value = #{sValue, jdbcType=VARCHAR}, 
+			enable_date = #{enableDate, jdbcType=DATE}, 
+			comment = #{comment, jdbcType=VARCHAR}, 
+			operater = #{operater, jdbcType=VARCHAR}, 
+			opt_time = #{optTime, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from b_settings
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_settings.id, b_settings.code, b_settings.s_value, b_settings.enable_date, b_settings.comment, 
+		b_settings.operater, b_settings.opt_time
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="SettingsMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from b_settings 
+		where b_settings.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND b_settings.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="code != null and code != ''" >
+				AND b_settings.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<if test="sValue != null and sValue != ''" >
+				AND b_settings.s_value = #{sValue, jdbcType=VARCHAR}
+			</if>
+			<if test="enableDate != null" >
+				AND b_settings.enable_date = #{enableDate, jdbcType=DATE}
+			</if>
+			<if test="comment != null and comment != ''" >
+				AND b_settings.comment = #{comment, jdbcType=VARCHAR}
+			</if>
+			<if test="operater != null and operater != ''" >
+				AND b_settings.operater = #{operater, jdbcType=VARCHAR}
+			</if>
+			<if test="optTime != null" >
+				AND b_settings.opt_time = #{optTime, jdbcType=TIMESTAMP}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_settings
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="SettingsMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_settings
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

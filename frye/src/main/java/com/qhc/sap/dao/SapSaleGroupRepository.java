@@ -6,11 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.qhc.order.entity.OrderInfo;
+import com.qhc.sap.entity.SapSalesGroup;
 @Repository
-public interface SapSaleGroupRepository extends JpaRepository<OrderInfo, Integer> ,JpaSpecificationExecutor<OrderInfo>{
-	
-	
-	@Query(value="select * from k_order_info where id =(select k_order_info_id from k_parent_order_version where k_order_version_id =(SELECT id from k_order_version where k_orders_id=?1 and k_order_version_id=?2))" ,nativeQuery=true)
-	OrderInfo findKOrderInfoByOrdersIdAndVersionId(String orderId,String sequenceNumber);
+public interface SapSaleGroupRepository extends JpaRepository<SapSalesGroup, String> ,JpaSpecificationExecutor<SapSalesGroup>{
 
 }

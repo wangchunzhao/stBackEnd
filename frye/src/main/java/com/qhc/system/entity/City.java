@@ -16,8 +16,8 @@ public class City {
 	@Column(name="name",columnDefinition="TEXT")
 	public String name;
 	
-	@Column(name="b_province_code",columnDefinition="TEXT")
-	public String bProvinceCode;
+	@Column(name="province_code",columnDefinition="TEXT")
+	public String provinceCode;
 
 	public String getCode() {
 		return code;
@@ -35,19 +35,19 @@ public class City {
 		this.name = name;
 	}
 
-	public String getbProvinceCode() {
-		return bProvinceCode;
+	public String getProvinceCode() {
+		return provinceCode;
 	}
 
-	public void setbProvinceCode(String bProvinceCode) {
-		this.bProvinceCode = bProvinceCode;
+	public void setProvinceCode(String bProvinceCode) {
+		this.provinceCode = bProvinceCode;
 	}
 
 	public City(String code, String name, String bProvinceCode) {
 		super();
 		this.code = code;
 		this.name = name;
-		this.bProvinceCode = bProvinceCode;
+		this.provinceCode = bProvinceCode;
 	}
 
 	public City() {

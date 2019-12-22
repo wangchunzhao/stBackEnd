@@ -1,45 +1,1 @@
-package com.qhc.order.entity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "b_material_group_order")
-public class MaterialGroupOrder {
-	
-	@Id
-	@Column(name="code",columnDefinition="CHAR")
-	public String code;
-	
-	@Column(name="name",columnDefinition="TEXT")
-	public String name;
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public MaterialGroupOrder(String code, String name) {
-		super();
-		this.code = code;
-		this.name = name;
-	}
-
-	public MaterialGroupOrder() {
-		super();
-	}
-
-}
+package com.qhc.order.entity;import java.io.Serializable;import java.util.Date;/** *  * Function: Data transfer object. <br>  * * @author walker */public class MaterialGroupOrder		implements Serializable {	private static final long serialVersionUID = 3549332152701501990L;		/* Code */	private String code = null;	/* Name */	private String name = null;	public MaterialGroupOrder(){	}	public String getCode() {		return this.code;	}	public void setCode(String code) {		this.code = code;	}	 	public String getName() {		return this.name;	}	public void setName(String name) {		this.name = name;	}	 	@Override	public int hashCode() {		final int prime = 31;		int result = 1;		result = prime * result + ((code == null) ? 0 : code.hashCode());		return result;	}	@Override	public boolean equals(Object obj) {		if (this == obj) {			return true;		}		if (obj == null) {			return false;		}		if (getClass() != obj.getClass()) {			return false;		}		final MaterialGroupOrder other = (MaterialGroupOrder) obj;		return (this.code == null ? other.code == null : this.code.equals(other.code));	}		public String toString() {	    final String tab = "  ";	    String str = "";	    str = "MaterialGroupOrder ( "	        + "code = " + this.code + tab	        + "name = " + this.name + tab	        + " )";		    return str;	}}

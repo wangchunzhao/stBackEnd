@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.CharacteristicsMapper" >
+	<resultMap id="CharacteristicsBaseMap" type="com.qhc.order.entity.Characteristics" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="item_detail_id" property="itemDetailId" jdbcType="INTEGER" />
+		<result column="key_code" property="keyCode" jdbcType="VARCHAR" />
+		<result column="value_code" property="valueCode" jdbcType="VARCHAR" />
+		<result column="is_configurable" property="isConfigurable" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="CharacteristicsMap" type="com.qhc.order.entity.Characteristics" extends="CharacteristicsBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.Characteristics">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_characteristics ( id, item_detail_id, key_code, 
+			value_code, is_configurable )
+		values ( #{id, jdbcType=INTEGER}, #{itemDetailId, jdbcType=INTEGER}, #{keyCode, jdbcType=VARCHAR}, 
+			#{valueCode, jdbcType=VARCHAR}, #{isConfigurable, jdbcType=INTEGER} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.Characteristics" >
+		update k_characteristics
+		set item_detail_id = #{itemDetailId, jdbcType=INTEGER}, 
+			key_code = #{keyCode, jdbcType=VARCHAR}, 
+			value_code = #{valueCode, jdbcType=VARCHAR}, 
+			is_configurable = #{isConfigurable, jdbcType=INTEGER}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_characteristics
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_characteristics.id, k_characteristics.item_detail_id, k_characteristics.key_code, k_characteristics.value_code, k_characteristics.is_configurable
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="CharacteristicsMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_characteristics 
+		where k_characteristics.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_characteristics.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="itemDetailId != null" >
+				AND k_characteristics.item_detail_id = #{itemDetailId, jdbcType=INTEGER}
+			</if>
+			<if test="keyCode != null and keyCode != ''" >
+				AND k_characteristics.key_code = #{keyCode, jdbcType=VARCHAR}
+			</if>
+			<if test="valueCode != null and valueCode != ''" >
+				AND k_characteristics.value_code = #{valueCode, jdbcType=VARCHAR}
+			</if>
+			<if test="isConfigurable != null" >
+				AND k_characteristics.is_configurable = #{isConfigurable, jdbcType=INTEGER}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_characteristics
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="CharacteristicsMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_characteristics
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByItemId" resultMap="CharacteristicsMap" parameterType="Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_characteristics
+		where item_detail_id = #{value}
+	</select>
+</mapper>
