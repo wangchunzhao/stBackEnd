@@ -406,6 +406,7 @@ public class OrderService {
 		lversion.setOrderInfoId(orderInforId);
 		if (lversion.getCreateTime() == null)
 			lversion.setCreateTime(new Date());
+		lversion.setOptTime(new Date());
 		//
 		OrderVersion extVersion = orderVersionRepo.findByOrder(orderId, orderInforId);
 		if (extVersion != null)
