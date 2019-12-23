@@ -71,9 +71,9 @@ public class RoleService {
 		for (Role role : list) {
 			RoleDto roleDto = new RoleDto();
 			roles.add(roleDto);
-			
+
 			try {
-				BeanUtils.copyProperties(role, roleDto);
+				BeanUtils.copyProperties(roleDto, role);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
