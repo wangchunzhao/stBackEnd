@@ -88,3 +88,13 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+task mapperXmlCopy(type: Copy) {
+	copy {
+		from("src/main/java") {
+			include ("**/*Mapper.xml")
+		}
+		into("${buildDir}/classes/java/main")
+	}
+	print "Copy Success\n"
+}
