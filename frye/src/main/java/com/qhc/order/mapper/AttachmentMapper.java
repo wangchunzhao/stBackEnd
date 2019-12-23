@@ -70,4 +70,6 @@ public interface AttachmentMapper {
 	
 	public List<Attachment> findByOrderInfo(Integer orderInfoId);
 
+	void deleteByOrderInfoId(Integer orderInforId);
+
 } 

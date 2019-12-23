@@ -2,6 +2,11 @@ package com.qhc.order.domain;
 
 public class DeliveryAddressDto {
 
+	private Integer id = null;
+	/* 订单详情id */
+	private Integer orderInfoId = null;
+	/* 序号，每个订单详情从1开始，每增加一条取本订单的最大值加一 */
+	private Integer seq = null;
 	private String provinceCode;// 省代码
 	private String provinceName;// 省名称
 	private String cityCode;// 市代码
@@ -9,6 +14,30 @@ public class DeliveryAddressDto {
 	private String distinctCode;// 区代码
 	private String distinctName;// 区名称
 	private String address; // 收货地址
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getOrderInfoId() {
+		return orderInfoId;
+	}
+
+	public void setOrderInfoId(Integer orderInfoId) {
+		this.orderInfoId = orderInfoId;
+	}
+
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
+	}
 
 	public String getProvinceCode() {
 		return provinceCode;

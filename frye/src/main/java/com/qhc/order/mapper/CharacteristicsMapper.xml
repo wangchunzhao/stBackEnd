@@ -111,4 +111,9 @@
 		from k_characteristics
 		where item_detail_id = #{value}
 	</select>
+	
+	<delete id="deleteByOrderInfoId" parameterType="Integer" >
+		delete from k_characteristics
+		where exists (select 1 from k_item where id = k_characteristics.item_detail_id and k_item.order_info_id = #{value} )
+	</delete>
 </mapper>

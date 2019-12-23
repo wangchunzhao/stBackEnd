@@ -106,4 +106,10 @@
 		from k_attachment
 		where order_info_id = #{value}
 	</select>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteByOrderInfoId" parameterType="java.lang.Integer" >
+		delete from k_attachment
+		where order_info_id = #{value}
+	</delete>
 </mapper>

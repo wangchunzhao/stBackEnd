@@ -14,6 +14,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -42,6 +43,7 @@ import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.BpmDicision;
 import com.qhc.order.entity.Characteristics;
 import com.qhc.order.entity.DeliveryAddress;
+import com.qhc.order.entity.Item;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.mapper.AttachmentMapper;
@@ -72,10 +74,20 @@ import com.qhc.system.entity.Area;
 import com.qhc.system.entity.City;
 import com.qhc.system.entity.Province;
 import com.qhc.system.entity.Settings;
+import com.qhc.utils.HttpUtil;
 
 @Service
 public class OrderService {
 	private static Logger logger = LoggerFactory.getLogger(OrderService.class);
+	
+	@Value("${sap.paymentplan.addr}")
+	String paymentplanUrlStr;
+
+	@Value("${sap.sapCreateOrder.addr}")
+	private String orderCreationUrl;
+	
+	@Value("${sap.sapChangeOrder.addr}")
+	private String orderChangeUrl;
 
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
@@ -148,10 +160,12 @@ public class OrderService {
 	public OrderDto save(String user, OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
 		
+		// calculate gross profit margin
 		List<MaterialGroups> margin = calcGrossProfit(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 		
 		BeanUtils.copyProperties(orderInfo, orderDto);
+		
 		if (orderDto.getId() == null) {
 			if (orderDto.getOrderId() == null) {
 				Order order = new Order();
@@ -164,18 +178,120 @@ public class OrderService {
 			orderInfo.setCreater(user);
 			orderInfo.setUpdater(user);
 			orderInfoMapper.insert(orderInfo);
+			
+			orderInfo.setId(orderInfo.getId());
 		} else {
 			orderInfo.setUpdater(user);
 			orderInfoMapper.update(orderInfo);
 		}
+		orderDto.setId(orderInfo.getId());
 
-//		saveAttachments();
-//		saveBillingPlans();
-//		saveDeliveryAddresses();
+		saveAttachments(orderDto);
+		saveBillingPlans(orderDto);
+		saveDeliveryAddresses(orderDto);
 
-//		saveItems();
+		saveItems(orderDto);
+		
+		orderDto = this.findOrder(orderInfo.getId());
 
 		return orderDto;
+	}
+	
+	/**
+	 * 订单变更，BPM审批通过后的订单修改，产生新的版本
+	 * 
+	 * @param user
+	 * @param orderInfoId
+	 * @return
+	 * @throws Exception 
+	 */
+	public OrderDto upgrade(String user, Integer orderInfoId) throws Exception {
+		OrderDto order = this.findOrder(orderInfoId);
+		
+		order.setId(null);
+		// TODO new version
+		order.setVersion("" + System.currentTimeMillis());
+		order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
+		order.setSubmitBpmTime(null);
+		order.setSubmitTime(null);
+		
+		order = this.save(user, order);
+		
+		return order;
+	}
+
+	/**
+	 * 保存订单附件信息
+	 * 
+	 * @param order
+	 */
+	private void saveAttachments(OrderDto orderDto) {
+		Integer orderInfoId = orderDto.getId();
+		attachmentMapper.deleteByOrderInfoId(orderInfoId);
+		List<Attachment> attachments = orderDto.getAttachments();
+		for (Attachment attachment : attachments) {
+			attachment.setId(null);
+			attachment.setOrderInfoId(orderInfoId);
+			
+			attachmentMapper.insert(attachment);
+		}
+	}
+
+	private void saveBillingPlans(OrderDto orderDto) {
+		Integer orderInfoId = orderDto.getId();
+		billingPlanMapper.deleteByOrderInfoId(orderInfoId);
+		List<BillingPlan> payments = orderDto.getPayments();
+		for (BillingPlan billingPlan : payments) {
+			billingPlan.setId(null);
+			billingPlan.setOrderInfoId(orderInfoId);
+			
+			billingPlanMapper.insert(billingPlan);
+		}
+	}
+
+	private void saveDeliveryAddresses(OrderDto orderDto) {
+		Integer orderInfoId = orderDto.getId();
+		deliveryAddressMapper.deleteByOrderInfoId(orderInfoId);
+		List<BillingPlan> payments = orderDto.getPayments();
+		for (BillingPlan billingPlan : payments) {
+			billingPlan.setId(null);
+			billingPlan.setOrderInfoId(orderInfoId);
+			
+			billingPlanMapper.insert(billingPlan);
+		}
+	}
+
+	private void saveItems(OrderDto orderDto) throws Exception {
+		Integer orderInfoId = orderDto.getId();
+		deleteItems(orderInfoId);
+		List<ItemDto> items = orderDto.getItems();
+		for (ItemDto itemDto : items) {
+			Item item = new Item();
+			
+			BeanUtils.copyProperties(item, orderDto);
+			item.setOrderInfoId(orderInfoId);
+			item.setId(null);
+			
+			itemMapper.insert(item);
+			
+			List<CharacteristicDto> configs = itemDto.getConfigs();
+			for (CharacteristicDto dto : configs) {
+				Characteristics c = new Characteristics();
+				
+				BeanUtils.copyProperties(c, dto);
+				c.setId(null);
+				
+				characteristicsMapper.insert(c);
+			}
+		} 
+	}
+	
+	private void deleteItems(Integer orderInfoId) {
+		// delete k_characteristics
+		this.characteristicsMapper.deleteByOrderInfoId(orderInfoId);
+		
+		// delete order item
+		itemMapper.deleteByOrderInfoId(orderInfoId);
 	}
 
 	/**
@@ -187,7 +303,7 @@ public class OrderService {
 	public void submit(String user, OrderDto order) throws Exception {
 		String status = order.getStatus();
 		switch (status) {
-			case OrderDto.ORDER_STATUS_STRAFT: 
+			case OrderDto.ORDER_STATUS_DRAFT: 
 			case OrderDto.ORDER_STATUS_REJECT: 
 				if (order.getIsB2c() == 1) {
 					order.setStatus(OrderDto.ORDER_STATUS_B2C);
@@ -221,22 +337,6 @@ public class OrderService {
 	 */
 	public List<SalesType> getSalesTypes() {
 		return salesTypeRepo.findAll();
-	}
-
-	/**
-	 * 
-	 * @param paymentPlan
-	 */
-	public void savePaymentPlan(List<PaymentPlan> paymentPlan) {
-		Set<PaymentTerm> incos = new HashSet<PaymentTerm>();
-		for (PaymentPlan inco : paymentPlan) {
-			PaymentTerm temp = new PaymentTerm();
-			temp.setCode(inco.getCode());
-			temp.setName(inco.getName());
-			temp.setIsPaymentTerm(inco.getPaymentTerm());
-			incos.add(temp);
-		}
-		paymentRepo.saveAll(incos);
 	}
 
 	public List<MaterialGroups> calcGrossProfit(String sequenceNumber, String version) throws Exception {
@@ -497,13 +597,29 @@ public class OrderService {
 	 * @param version
 	 * @return
 	 */
-	public String orderCreationForSAP(String sequenceNumber, String version) {
+	public String sendToSap(String sequenceNumber, String version) {
 		try {
 			// 1. 根据sequenceNumber组装数据
 			SapOrder sapOrder = assembleSapOrder(sequenceNumber, version);
 
 			// 2. 调用bayernService同步SAP
-			bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
+//			bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
+		    // 获取流水号: sequenceNumber
+			//1.ͬ同步SAP开单 没有数据 先注释
+			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
+			logger.info("Order Data: {}", sapStr);
+			String res = null;
+			try {
+				//没有数据先注释
+				res = HttpUtil.postbody(orderCreationUrl, sapStr);
+			} catch (Exception e) {
+				logger.error("ͬ同步SAP异常==>",e);
+				throw new RuntimeException("ͬ同步SAP异常");
+			}
+			
+			//2. 处理返回结果
+			logger.info("SAP返回结果==>"+res);
+//		  	logger.info("SAP同步开单结果==>"+sapRes);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "推送订单到SAP失败，错误信息：" + e.getMessage();
@@ -728,7 +844,7 @@ public class OrderService {
 
 		if (orderViews.size() > 0) {
 			order = orderViews.get(0);
-			assembleItems(order);
+			assembleOrderDetail(order);
 		}
 
 		return order;
@@ -753,7 +869,7 @@ public class OrderService {
 
 		if (orderViews.size() > 0) {
 			order = orderViews.get(0);
-			assembleItems(order);
+			assembleOrderDetail(order);
 		}
 
 		return order;
@@ -773,7 +889,7 @@ public class OrderService {
 		List<OrderDto> orders = page.getList();
 		if (includeDetail) {
 			for (OrderDto order : orders) {
-				assembleItems(order);
+				assembleOrderDetail(order);
 			}
 		}
 
@@ -789,7 +905,8 @@ public class OrderService {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	private void assembleOrderDetail(OrderDto order, Integer orderId, Integer orderInfoId) throws Exception {
+	private void assembleOrderDetail(OrderDto order) throws Exception {
+		Integer orderInfoId = order.getId();
 		// Attached File
 		order.setAttachments(new ArrayList<Attachment>());
 		List<Attachment> attachments = attachmentMapper.findByOrderInfo(orderInfoId);
@@ -800,8 +917,8 @@ public class OrderService {
 		List<DeliveryAddressDto> addresses = new ArrayList<DeliveryAddressDto>(addressList.size());
 		for (DeliveryAddress deliveryAddress : addressList) {
 			DeliveryAddressDto address = new DeliveryAddressDto();
+			BeanUtils.copyProperties(address, deliveryAddress);
 			addresses.add(address);
-			BeanUtils.copyProperties(deliveryAddress, address);
 		}
 		order.setDeliveryAddress(addresses);
 
@@ -815,42 +932,31 @@ public class OrderService {
 
 	private void assembleItems(OrderDto order) throws Exception {
 		Integer orderInfoId = order.getId();
-		List<ItemDto> detailsList = itemMapper.findByOrderInfoId(orderInfoId);
-		// 新的AbsOrder
-		List<ItemDto> items = new ArrayList<ItemDto>(detailsList.size());
+		List<ItemDto> items = itemMapper.findByOrderInfoId(orderInfoId);
 		order.setItems(items);
-		for (ItemDto itemDetail : detailsList) {
+		Map<String, String> unitMap = this.constService.findMeasurementUnits();
+		Map<String, String> cityMap = new HashMap(); // this.constService..findMeasurementUnits();
+		for (ItemDto itemDetail : items) {
 			Integer itemId = itemDetail.getId();
 			ItemDto item = new ItemDto();
 			BeanUtils.copyProperties(item, itemDetail);
-
-			// 产品实卖价 = 实卖金额 / 数量
-//			BigDecimal saleAmount = itemDetail.getAmount();
-//			BigDecimal quantity = BigDecimal.valueOf(itemDetail.getQuantity());
-//			item.setActuralPricaOfOptional(toDouble(itemDetails.geto));
-//			item.setTranscationPriceOfOptional(toDouble(transcationPriceOfOptional));
-//			item.setPeriod(itemDetails.getp);
-
-			items.add(item);
+			
+			item.setUnitName(unitMap.get(item.getUnitCode()));
+			// TODO
+//			item.setProvinceName(provinceName);
+//			item.setCityName(cityMap.get(item.getCityCode()));
+//			item.setDistrictName(districtName);
+//			item.setMaterialgroupName(materialgroupName);
 
 			// characteristics
 			List<Characteristics> characs = characteristicsMapper.findByItemId(itemId);
 			List<CharacteristicDto> configs = new ArrayList<CharacteristicDto>();
 			for (Characteristics charac : characs) {
-				if (toString(charac.getIsConfigurable()).equals("1")) {
-					item.setIsConfigurable(1);
-				}
-
 				CharacteristicDto c = new CharacteristicDto();
-				c.setConfigCode(charac.getKeyCode());
-				c.setConfigValueCode(charac.getValueCode());
-				c.setOptional(toString(charac.getIsConfigurable()).equals("1"));
-
+				BeanUtils.copyProperties(c, charac);
 				configs.add(c);
 			}
 			item.setConfigs(configs);
-			// TODO configure material
-			// TODO attached info
 		}
 	}
 

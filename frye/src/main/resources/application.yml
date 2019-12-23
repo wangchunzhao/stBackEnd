@@ -1,0 +1,37 @@
+spring:
+   profiles:
+      active: dev
+
+server: 
+   servlet: 
+      context-path: /frye
+
+spring: 
+   jpa: 
+      hibernate: 
+         ddl-auto: validate
+         naming: 
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      show-sql: true
+
+# logging config
+logging: 
+   config: classpath:logback-spring.xml
+   path: .\logs
+
+spring: 
+   devtools: 
+      restart: 
+         enabled: true
+   jackson: 
+      date-format: yyyy-MM-dd HH:mm:ss
+      defaultPropertyInclusion: NON_EMPTY
+      time-zone: GMT+8
+      serialization: 
+         fail-on-empty-beans: false
+
+pagehelper: 
+   helperDialect: mysql
+   reasonable: true
+   supportMethodsArguments: true
+   params: count=countSql

@@ -180,7 +180,7 @@ public class OrderController {
 	@ResponseStatus(HttpStatus.OK)
 	public String orderCreationForSAP(@RequestParam String sequenceNumber, @RequestParam String version)
 			throws Exception {
-		return orderService.orderCreationForSAP(sequenceNumber, version);
+		return orderService.sendToSap(sequenceNumber, version);
 	}
 
 	/**

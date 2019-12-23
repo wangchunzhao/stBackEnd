@@ -117,115 +117,156 @@
 		where k_contract.id = #{value, jdbcType=INTEGER}
 	</select>
 	
-	<sql id="Where_By_Params" >
-		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="id != null" >
-				AND k_contract.id = #{id, jdbcType=INTEGER}
-			</if>
-			<if test="orderInfoId != null" >
-				AND k_contract.order_info_id = #{orderInfoId, jdbcType=INTEGER}
-			</if>
-			<if test="deliveryDays != null" >
-				AND k_contract.delivery_days = #{deliveryDays, jdbcType=INTEGER}
-			</if>
-			<if test="clientName != null and clientName != ''" >
-				AND k_contract.client_name = #{clientName, jdbcType=VARCHAR}
-			</if>
-			<if test="installLocation != null and installLocation != ''" >
-				AND k_contract.install_location = #{installLocation, jdbcType=VARCHAR}
-			</if>
-			<if test="acceptanceCriteriaCode != null and acceptanceCriteriaCode != ''" >
-				AND k_contract.acceptance_criteria_code = #{acceptanceCriteriaCode, jdbcType=VARCHAR}
-			</if>
-			<if test="customerEmail != null and customerEmail != ''" >
-				AND k_contract.customer_email = #{customerEmail, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceAddress != null and invoiceAddress != ''" >
-				AND k_contract.invoice_address = #{invoiceAddress, jdbcType=VARCHAR}
-			</if>
-			<if test="invoicePostCode != null and invoicePostCode != ''" >
-				AND k_contract.invoice_post_code = #{invoicePostCode, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceReceiver != null and invoiceReceiver != ''" >
-				AND k_contract.invoice_receiver = #{invoiceReceiver, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceTel != null and invoiceTel != ''" >
-				AND k_contract.invoice_tel = #{invoiceTel, jdbcType=VARCHAR}
-			</if>
-			<if test="broker != null and broker != ''" >
-				AND k_contract.broker = #{broker, jdbcType=VARCHAR}
-			</if>
-			<if test="companyTel != null and companyTel != ''" >
-				AND k_contract.company_tel = #{companyTel, jdbcType=VARCHAR}
-			</if>
-			<if test="bankName != null and bankName != ''" >
-				AND k_contract.bank_name = #{bankName, jdbcType=VARCHAR}
-			</if>
-			<if test="accountNumber != null and accountNumber != ''" >
-				AND k_contract.account_number = #{accountNumber, jdbcType=VARCHAR}
-			</if>
-			<if test="companyAddress != null and companyAddress != ''" >
-				AND k_contract.company_address = #{companyAddress, jdbcType=VARCHAR}
-			</if>
-			<if test="companyPostCode != null and companyPostCode != ''" >
-				AND k_contract.company_post_code = #{companyPostCode, jdbcType=VARCHAR}
-			</if>
-			<if test="status != null" >
-				AND k_contract.status = #{status, jdbcType=INTEGER}
-			</if>
-			<if test="creater != null and creater != ''" >
-				AND k_contract.creater = #{creater, jdbcType=VARCHAR}
-			</if>
-			<if test="createTime != null" >
-				AND k_contract.create_time = #{createTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="sender != null and sender != ''" >
-				AND k_contract.sender = #{sender, jdbcType=VARCHAR}
-			</if>
-			<if test="sendTime != null" >
-				AND k_contract.send_time = #{sendTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="signer != null and signer != ''" >
-				AND k_contract.signer = #{signer, jdbcType=VARCHAR}
-			</if>
-			<if test="signTime != null" >
-				AND k_contract.sign_time = #{signTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="fileHashcode != null and fileHashcode != ''" >
-				AND k_contract.file_hashcode = #{fileHashcode, jdbcType=VARCHAR}
-			</if>
-			<if test="signContractid != null and signContractid != ''" >
-				AND k_contract.sign_contractid = #{signContractid, jdbcType=VARCHAR}
-			</if>
-			
-			<include refid="Where_Clause" />
-		</trim>
-	</sql>
-	
-	<sql id="Where_Clause">
-		
-	</sql>
-	
 	<!-- 按参数统计 -->
 	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
 		select count(1) 
-		from k_contract
-		<include refid="Where_By_Params" />
+		from k_contract c
+		left join k_order_info oi on oi.id = c.order_info_id
+		left join k_order o on o.id = oi.order_id
+		left join sap_customer sc on sc.code = o.customer_code
 	</select>
 	
 	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="ContractMap" parameterType="Map" >
+	<select id="findByParams" resultType="com.qhc.order.domain.ContractDto" parameterType="Map" >
 		select 
-		<include refid="Column_List" />
-		from k_contract
+			c.id, 
+			c.order_info_id, 
+			c.delivery_days, 
+			c.client_name, 
+			c.install_location, 
+			c.acceptance_criteria_code, 
+			c.customer_email, 
+			c.invoice_address, 
+			c.invoice_post_code, 
+			c.invoice_receiver, 
+			c.invoice_tel, 
+			c.broker, 
+			c.company_tel, 
+			c.bank_name, 
+			c.account_number, 
+			c.company_address, 
+			c.company_post_code, 
+			c.status, 
+			c.creater, 
+			c.create_time, 
+			c.sender, 
+			c.send_time, 
+			c.signer, 
+			c.sign_time, 
+			c.file_hashcode, 
+			c.sign_contractid,
+			oi.version,
+			o.sequence_number,
+			oi.contract_number,
+			oi.contract_manager,
+			o.customer_code,
+			sc.name as customer_name,
+			oi.contract_rmb_value,
+			oi.payment_type,
+			oi.receive_type,
+			oi.contactor1_id,
+			oi.contactor1_tel,
+			oi.contactor2_id,
+			oi.contactor2_tel,
+			oi.contactor3_id,
+			oi.contactor3_tel,
+			o.customer_clazz
+		from k_contract c
+		left join k_order_info oi on oi.id = c.order_info_id
+		left join k_order o on o.id = oi.order_id
+		left join sap_customer sc on sc.code = o.customer_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
 				order by ${orderByClause}
 			</when>
 			<otherwise>
-				order by id
+				order by create_time
 			</otherwise>
 		</choose>
 	</select>
+	
+	<sql id="Where_By_Params">
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND c.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND c.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="deliveryDays != null" >
+				AND c.delivery_days = #{deliveryDays, jdbcType=INTEGER}
+			</if>
+			<if test="clientName != null and clientName != ''" >
+				AND c.client_name = #{clientName, jdbcType=VARCHAR}
+			</if>
+			<if test="installLocation != null and installLocation != ''" >
+				AND c.install_location = #{installLocation, jdbcType=VARCHAR}
+			</if>
+			<if test="acceptanceCriteriaCode != null and acceptanceCriteriaCode != ''" >
+				AND c.acceptance_criteria_code = #{acceptanceCriteriaCode, jdbcType=VARCHAR}
+			</if>
+			<if test="customerEmail != null and customerEmail != ''" >
+				AND c.customer_email = #{customerEmail, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceAddress != null and invoiceAddress != ''" >
+				AND c.invoice_address = #{invoiceAddress, jdbcType=VARCHAR}
+			</if>
+			<if test="invoicePostCode != null and invoicePostCode != ''" >
+				AND c.invoice_post_code = #{invoicePostCode, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceReceiver != null and invoiceReceiver != ''" >
+				AND c.invoice_receiver = #{invoiceReceiver, jdbcType=VARCHAR}
+			</if>
+			<if test="invoiceTel != null and invoiceTel != ''" >
+				AND c.invoice_tel = #{invoiceTel, jdbcType=VARCHAR}
+			</if>
+			<if test="broker != null and broker != ''" >
+				AND c.broker = #{broker, jdbcType=VARCHAR}
+			</if>
+			<if test="companyTel != null and companyTel != ''" >
+				AND c.company_tel = #{companyTel, jdbcType=VARCHAR}
+			</if>
+			<if test="bankName != null and bankName != ''" >
+				AND c.bank_name = #{bankName, jdbcType=VARCHAR}
+			</if>
+			<if test="accountNumber != null and accountNumber != ''" >
+				AND c.account_number = #{accountNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="companyAddress != null and companyAddress != ''" >
+				AND c.company_address = #{companyAddress, jdbcType=VARCHAR}
+			</if>
+			<if test="companyPostCode != null and companyPostCode != ''" >
+				AND c.company_post_code = #{companyPostCode, jdbcType=VARCHAR}
+			</if>
+			<if test="status != null" >
+				AND c.status = #{status, jdbcType=INTEGER}
+			</if>
+			<if test="creater != null and creater != ''" >
+				AND c.creater = #{creater, jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null" >
+				AND c.create_time = #{createTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="sender != null and sender != ''" >
+				AND c.sender = #{sender, jdbcType=VARCHAR}
+			</if>
+			<if test="sendTime != null" >
+				AND c.send_time = #{sendTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="signer != null and signer != ''" >
+				AND c.signer = #{signer, jdbcType=VARCHAR}
+			</if>
+			<if test="signTime != null" >
+				AND c.sign_time = #{signTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="fileHashcode != null and fileHashcode != ''" >
+				AND c.file_hashcode = #{fileHashcode, jdbcType=VARCHAR}
+			</if>
+			<if test="signContractid != null and signContractid != ''" >
+				AND c.sign_contractid = #{signContractid, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+	
 </mapper>

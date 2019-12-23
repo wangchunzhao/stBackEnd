@@ -3,7 +3,7 @@ package com.qhc.order.mapper;
 import java.util.List;
 import java.util.Map;
 
-
+import com.qhc.order.domain.ContractDto;
 import com.qhc.order.entity.Contract;
 
 /**
@@ -39,7 +39,7 @@ public interface ContractMapper {
    * @param params 查询参数
    * @return Contract列表
    */
-	List<Contract> findByParams(Map<String, Object> params);
+	List<ContractDto> findByParams(Map<String, Object> params);
 
   /**
    * 

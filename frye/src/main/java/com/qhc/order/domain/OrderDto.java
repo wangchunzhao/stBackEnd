@@ -16,7 +16,7 @@ import com.qhc.order.entity.BillingPlan;
  */
 public class OrderDto {
 	// 订单STATUS
-	public final static String ORDER_STATUS_STRAFT = "00"; //草稿
+	public final static String ORDER_STATUS_DRAFT = "00"; //草稿
 	public final static String ORDER_STATUS_B2C = "01"; // 待B2C审批
 	public final static String ORDER_STATUS_ENGINER = "02"; // 待工程人员审批
 	public final static String ORDER_STATUS_MANAGER = "03"; // 待支持经理审批

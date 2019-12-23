@@ -69,4 +69,6 @@ public interface DeliveryAddressMapper {
 
 	List<DeliveryAddress> findByOrderInfoId(Integer orderInfoId);
 
+	void deleteByOrderInfoId(Integer orderInfoId);
+
 }

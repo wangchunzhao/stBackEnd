@@ -157,149 +157,18 @@
 		where k_item.id = #{value, jdbcType=INTEGER}
 	</select>
 	
-	<sql id="Where_By_Params" >
-		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="id != null" >
-				AND k_item.id = #{id, jdbcType=INTEGER}
-			</if>
-			<if test="orderInfoId != null" >
-				AND k_item.order_info_id = #{orderInfoId, jdbcType=INTEGER}
-			</if>
-			<if test="rowNum != null" >
-				AND k_item.row_num = #{rowNum, jdbcType=INTEGER}
-			</if>
-			<if test="materialCode != null and materialCode != ''" >
-				AND k_item.material_code = #{materialCode, jdbcType=VARCHAR}
-			</if>
-			<if test="quantity != null" >
-				AND k_item.quantity = #{quantity, jdbcType=DOUBLE}
-			</if>
-			<if test="itemCategory != null and itemCategory != ''" >
-				AND k_item.item_category = #{itemCategory, jdbcType=VARCHAR}
-			</if>
-			<if test="itemRequirementPlan != null and itemRequirementPlan != ''" >
-				AND k_item.item_requirement_plan = #{itemRequirementPlan, jdbcType=VARCHAR}
-			</if>
-			<if test="b2cEstimatedPrice != null" >
-				AND k_item.b2c_estimated_price = #{b2cEstimatedPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="deliveryAddressSeq != null" >
-				AND k_item.delivery_address_seq = #{deliveryAddressSeq, jdbcType=INTEGER}
-			</if>
-			<if test="deliveryAddressId != null" >
-				AND k_item.delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}
-			</if>
-			<if test="standardPrice != null" >
-				AND k_item.standard_price = #{standardPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="retailPrice != null" >
-				AND k_item.retail_price = #{retailPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="acturalPrice != null" >
-				AND k_item.actural_price = #{acturalPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="transcationPrice != null" >
-				AND k_item.transcation_price = #{transcationPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="acturalPricaOfOptional != null" >
-				AND k_item.actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}
-			</if>
-			<if test="transcationPricaOfOptional != null" >
-				AND k_item.transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}
-			</if>
-			<if test="discount != null" >
-				AND k_item.discount = #{discount, jdbcType=DOUBLE}
-			</if>
-			<if test="produceDate != null" >
-				AND k_item.produce_date = #{produceDate, jdbcType=DATE}
-			</if>
-			<if test="onStoreDate != null" >
-				AND k_item.on_store_date = #{onStoreDate, jdbcType=DATE}
-			</if>
-			<if test="deliveryDate != null" >
-				AND k_item.delivery_date = #{deliveryDate, jdbcType=DATE}
-			</if>
-			<if test="shippDate != null" >
-				AND k_item.shipp_date = #{shippDate, jdbcType=DATE}
-			</if>
-			<if test="period != null" >
-				AND k_item.period = #{period, jdbcType=INTEGER}
-			</if>
-			<if test="b2cComments != null and b2cComments != ''" >
-				AND k_item.b2c_comments = #{b2cComments, jdbcType=VARCHAR}
-			</if>
-			<if test="specialComments != null and specialComments != ''" >
-				AND k_item.special_comments = #{specialComments, jdbcType=VARCHAR}
-			</if>
-			<if test="colorComments != null and colorComments != ''" >
-				AND k_item.color_comments = #{colorComments, jdbcType=VARCHAR}
-			</if>
-			<if test="volumeCube != null" >
-				AND k_item.volume_cube = #{volumeCube, jdbcType=DECIMAL}
-			</if>
-			<if test="freight != null" >
-				AND k_item.freight = #{freight, jdbcType=DECIMAL}
-			</if>
-			<if test="isVirtual != null" >
-				AND k_item.is_virtual = #{isVirtual, jdbcType=INTEGER}
-			</if>
-			<if test="configComments != null and configComments != ''" >
-				AND k_item.config_comments = #{configComments, jdbcType=CHAR}
-			</if>
-			<if test="mosaicImage != null and mosaicImage != ''" >
-				AND k_item.mosaic_image = #{mosaicImage, jdbcType=VARCHAR}
-			</if>
-			<if test="attachedImage != null and attachedImage != ''" >
-				AND k_item.attached_image = #{attachedImage, jdbcType=VARCHAR}
-			</if>
-			<if test="requestBrand != null and requestBrand != ''" >
-				AND k_item.request_brand = #{requestBrand, jdbcType=VARCHAR}
-			</if>
-			<if test="requestPackage != null and requestPackage != ''" >
-				AND k_item.request_package = #{requestPackage, jdbcType=VARCHAR}
-			</if>
-			<if test="requestNameplate != null and requestNameplate != ''" >
-				AND k_item.request_nameplate = #{requestNameplate, jdbcType=VARCHAR}
-			</if>
-			<if test="requestCircult != null and requestCircult != ''" >
-				AND k_item.request_circult = #{requestCircult, jdbcType=VARCHAR}
-			</if>
-			<if test="configTransferPrice != null" >
-				AND k_item.config_transfer_price = #{configTransferPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="configRetailPrice != null" >
-				AND k_item.config_retail_price = #{configRetailPrice, jdbcType=DECIMAL}
-			</if>
-			<if test="isConfigurable != null" >
-				AND k_item.is_configurable = #{isConfigurable, jdbcType=INTEGER}
-			</if>
-			<if test="clazzCode != null and clazzCode != ''" >
-				AND k_item.clazz_code = #{clazzCode, jdbcType=VARCHAR}
-			</if>
-			<if test="comments != null and comments != ''" >
-				AND k_item.comments = #{comments, jdbcType=VARCHAR}
-			</if>
-			
-			<include refid="Where_Clause" />
-		</trim>
-	</sql>
-	
-	<sql id="Where_Clause">
-		
-	</sql>
-	
-	<!-- 按参数统计 -->
-	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
-		select count(1) 
-		from k_item
-		<include refid="Where_By_Params" />
-	</select>
-	
 	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="ItemMap" parameterType="Map" >
+	<select id="findByParams" resultType="com.qhc.order.domain.ItemDto" parameterType="Map" >
 		select 
-		<include refid="Column_List" />
-		from k_item
+			i.*,
+			d.province_code, 
+			d.city_code, 
+			d.district_code, 
+			d.address,
+			m.name as material_name
+		from k_item i
+		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
+		left join sap_material m on m.code = i.material_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -311,10 +180,147 @@
 		</choose>
 	</select>
 	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_item i
+		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
+		left join sap_material m on m.code = i.material_code
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND i.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND i.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="rowNum != null" >
+				AND i.row_num = #{rowNum, jdbcType=INTEGER}
+			</if>
+			<if test="materialCode != null and materialCode != ''" >
+				AND i.material_code = #{materialCode, jdbcType=VARCHAR}
+			</if>
+			<if test="quantity != null" >
+				AND i.quantity = #{quantity, jdbcType=DOUBLE}
+			</if>
+			<if test="itemCategory != null and itemCategory != ''" >
+				AND i.item_category = #{itemCategory, jdbcType=VARCHAR}
+			</if>
+			<if test="itemRequirementPlan != null and itemRequirementPlan != ''" >
+				AND i.item_requirement_plan = #{itemRequirementPlan, jdbcType=VARCHAR}
+			</if>
+			<if test="b2cEstimatedPrice != null" >
+				AND i.b2c_estimated_price = #{b2cEstimatedPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="deliveryAddressSeq != null" >
+				AND i.delivery_address_seq = #{deliveryAddressSeq, jdbcType=INTEGER}
+			</if>
+			<if test="deliveryAddressId != null" >
+				AND i.delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}
+			</if>
+			<if test="standardPrice != null" >
+				AND i.standard_price = #{standardPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="retailPrice != null" >
+				AND i.retail_price = #{retailPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="acturalPrice != null" >
+				AND i.actural_price = #{acturalPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="transcationPrice != null" >
+				AND i.transcation_price = #{transcationPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="acturalPricaOfOptional != null" >
+				AND i.actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}
+			</if>
+			<if test="transcationPricaOfOptional != null" >
+				AND i.transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}
+			</if>
+			<if test="discount != null" >
+				AND i.discount = #{discount, jdbcType=DOUBLE}
+			</if>
+			<if test="produceDate != null" >
+				AND i.produce_date = #{produceDate, jdbcType=DATE}
+			</if>
+			<if test="onStoreDate != null" >
+				AND i.on_store_date = #{onStoreDate, jdbcType=DATE}
+			</if>
+			<if test="deliveryDate != null" >
+				AND i.delivery_date = #{deliveryDate, jdbcType=DATE}
+			</if>
+			<if test="shippDate != null" >
+				AND i.shipp_date = #{shippDate, jdbcType=DATE}
+			</if>
+			<if test="period != null" >
+				AND i.period = #{period, jdbcType=INTEGER}
+			</if>
+			<if test="b2cComments != null and b2cComments != ''" >
+				AND i.b2c_comments = #{b2cComments, jdbcType=VARCHAR}
+			</if>
+			<if test="specialComments != null and specialComments != ''" >
+				AND i.special_comments = #{specialComments, jdbcType=VARCHAR}
+			</if>
+			<if test="colorComments != null and colorComments != ''" >
+				AND i.color_comments = #{colorComments, jdbcType=VARCHAR}
+			</if>
+			<if test="isVirtual != null" >
+				AND i.is_virtual = #{isVirtual, jdbcType=INTEGER}
+			</if>
+			<if test="configComments != null and configComments != ''" >
+				AND i.config_comments = #{configComments, jdbcType=CHAR}
+			</if>
+			<if test="mosaicImage != null and mosaicImage != ''" >
+				AND i.mosaic_image = #{mosaicImage, jdbcType=VARCHAR}
+			</if>
+			<if test="attachedImage != null and attachedImage != ''" >
+				AND i.attached_image = #{attachedImage, jdbcType=VARCHAR}
+			</if>
+			<if test="requestBrand != null and requestBrand != ''" >
+				AND i.request_brand = #{requestBrand, jdbcType=VARCHAR}
+			</if>
+			<if test="requestPackage != null and requestPackage != ''" >
+				AND i.request_package = #{requestPackage, jdbcType=VARCHAR}
+			</if>
+			<if test="requestNameplate != null and requestNameplate != ''" >
+				AND i.request_nameplate = #{requestNameplate, jdbcType=VARCHAR}
+			</if>
+			<if test="requestCircult != null and requestCircult != ''" >
+				AND i.request_circult = #{requestCircult, jdbcType=VARCHAR}
+			</if>
+			<if test="configTransferPrice != null" >
+				AND i.config_transfer_price = #{configTransferPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="configRetailPrice != null" >
+				AND i.config_retail_price = #{configRetailPrice, jdbcType=DECIMAL}
+			</if>
+			<if test="isConfigurable != null" >
+				AND i.is_configurable = #{isConfigurable, jdbcType=INTEGER}
+			</if>
+			<if test="clazzCode != null and clazzCode != ''" >
+				AND i.clazz_code = #{clazzCode, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+	
 	<select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
 		select 
-		<include refid="Column_List" />
-		from k_item
+			i.*,
+			d.province_code, 
+			d.city_code, 
+			d.district_code, 
+			d.address,
+			m.name as material_name
+		from k_item i
+		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
+		left join sap_material m on m.code = i.material_code
 		where order_info_id = #{value}
 	</select>
+	
+	<delete id="deleteByOrderInfoId" parameterType="Integer" >
+		delete from k_item
+		where order_info_id = #{value}
+	</delete>
 </mapper>

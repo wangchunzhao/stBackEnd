@@ -3,36 +3,66 @@
  */
 package com.qhc.order.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * @author wang@dxc.com
  *
  */
 public class CharacteristicDto {
-	private Boolean optional;//可选、必选
-	@JsonProperty(value = "code")
-	private String configCode;//配置项
-	private String configValueCode;//配置值
-	public Boolean getOptional() {
-		return optional;
-	}
-	public void setOptional(Boolean optional) {
-		this.optional = optional;
-	}
-	public String getConfigCode() {
-		return configCode;
-	}
-	public void setConfigCode(String configCode) {
-		this.configCode = configCode;
-	}
-	public String getConfigValueCode() {
-		return configValueCode;
-	}
-	public void setConfigValueCode(String configValueCode) {
-		this.configValueCode = configValueCode;
-	}
 	
+	/* Id */
+	private Integer id = null;
+
+	/* ItemDetailId */
+	private Integer itemDetailId = null;
+
+	/* 选定的特征代码 */
+	private String keyCode = null;
+
+	/* 选定的特征值的代码 */
+	private String valueCode = null;
+
+	/* 可配置 */
+	private Integer isConfigurable = null;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getItemDetailId() {
+		return itemDetailId;
+	}
+
+	public void setItemDetailId(Integer itemDetailId) {
+		this.itemDetailId = itemDetailId;
+	}
+
+	public String getKeyCode() {
+		return keyCode;
+	}
+
+	public void setKeyCode(String keyCode) {
+		this.keyCode = keyCode;
+	}
+
+	public String getValueCode() {
+		return valueCode;
+	}
+
+	public void setValueCode(String valueCode) {
+		this.valueCode = valueCode;
+	}
+
+	public Integer getIsConfigurable() {
+		return isConfigurable;
+	}
+
+	public void setIsConfigurable(Integer isConfigurable) {
+		this.isConfigurable = isConfigurable;
+	}
 	
 }
 
