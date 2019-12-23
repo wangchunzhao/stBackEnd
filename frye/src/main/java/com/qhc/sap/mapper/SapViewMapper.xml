@@ -64,4 +64,39 @@
 			</if>
 		</trim>
 	</select>
+	
+	<!-- 查询物料特征默认值 -->
+	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" parameterType="Map" >
+		SELECT 
+	        sap_customer.code, 
+	        sap_customer.change_date, 
+	        sap_customer.name, 
+	        sap_customer.address, 
+	        sap_customer.sap_customer_class_code as clazz_code, 
+	        sap_customer.sap_industry_code_code as industry_code_code
+	    FROM sap_customer
+	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND sap_customer.code like #{material, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 查询物料特征默认值 -->
+	<select id="findMaterial" resultType="com.qhc.sap.domain.MaterialDto" parameterType="Map" >
+		SELECT 
+	        v.id,
+	        v.code,
+	        v.name,
+	        m.sap_materials_code,
+	        m.sap_characteristic_code AS key_code
+	    FROM sap_material_default_characteristic m
+	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND m.sap_materials_code = #{material, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
 </mapper>
