@@ -23,17 +23,20 @@ public class CustomerDto implements InterEntityToEntity,Serializable {
 	public final static String CODE_CUSTOMER = "59870645008146f9938f7e8818031778";
 	public final static String NAME_CUSTOMER = "Customer master date";
 
-	private String code;
-	private String name;
+	private String code; // 客户编码，专用号
+	private String name; // 客户名称，规格型号
 	private Date changedDate;
-	private String address;
+	private String address; // 地址
 	//private String groupCode;
-	private String clazzCode;
+	private String clazzCode; // 客户分类
 	private String clazzName;
 	private String levelCode;
-	private String affiliationCode;
+	private String affiliationCode; 
 	private String affiliationName;
-	private String industryCodeCode;
+	private String industryCodeCode; // 客户级别
+	private String industryCodeName;
+	private String industryCode; // 大客户，隶属关系
+	private String industryName;
 	
 	public CustomerDto() {
 		
@@ -114,6 +117,24 @@ public class CustomerDto implements InterEntityToEntity,Serializable {
 	}
 	public void setIndustryCodeCode(String industryCodeCode) {
 		this.industryCodeCode = industryCodeCode;
+	}
+	public String getIndustryCodeName() {
+		return industryCodeName;
+	}
+	public void setIndustryCodeName(String industryCodeName) {
+		this.industryCodeName = industryCodeName;
+	}
+	public String getIndustryCode() {
+		return industryCode;
+	}
+	public void setIndustryCode(String industryCode) {
+		this.industryCode = industryCode;
+	}
+	public String getIndustryName() {
+		return industryName;
+	}
+	public void setIndustryName(String industryName) {
+		this.industryName = industryName;
 	}
 	@Override
 	public List<Object> toEntity() {

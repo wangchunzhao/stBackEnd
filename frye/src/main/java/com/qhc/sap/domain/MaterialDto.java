@@ -23,28 +23,33 @@ public class MaterialDto implements Serializable{
 	private String description;//物料名称，规格型号
 	private boolean isConfigurable;//是否为可配置物料
 	private boolean isPurchased;//属性
+	private String unitCode;//计量单位代码
 	private String unitName;//计量单位名称
+	
 	private double acturalPrice;//产品实卖价
 	private double transcationPrice;//转移价
 	private double acturalPricaOfOptional;//可选项实卖价
 	private double transcationPriceOfOptional;//可选项转移价
-	private double B2CPriceEstimated;//B2C评估价
-	private double B2CCostOfEstimated;//B2C评估成本
+	private double b2cPriceEstimated;//B2C评估价
+	private double b2cCostOfEstimated;//B2C评估成本
 	private double retailPrice;//市场零售价
 	private double discount;//折扣
+	
 	private int period;//生产、采购周期
 	private Date deliveryDate;//最早交货时间
 
 	private Date produceDate;//生产开始时间
 	private Date onStoreDate;//入库时间
 	private double standardPrice;//标准价
-	private String groupCode;//物料分组
-	private String groupName;//类型名称
+	private String groupCode;//物料分组code
+	private String groupName;//物料分组名称
+	private String stGroupCode;//销售工具物料分组code
+	private String stGroupName;//销售工具物料分组名称
 	private String clazzCode;//物料分类代码
+	private String clazzName;//物料分类
 	
 	//need by bayern
 	private Date optTime;
-	private String unitCode;//计量单位代码
 	private double materialSize;
 	
 	public String getCode() {
@@ -102,16 +107,16 @@ public class MaterialDto implements Serializable{
 		this.transcationPriceOfOptional = transcationPriceOfOptional;
 	}
 	public double getB2CPriceEstimated() {
-		return B2CPriceEstimated;
+		return b2cPriceEstimated;
 	}
 	public void setB2CPriceEstimated(double b2cPriceEstimated) {
-		B2CPriceEstimated = b2cPriceEstimated;
+		b2cPriceEstimated = b2cPriceEstimated;
 	}
 	public double getB2CCostOfEstimated() {
-		return B2CCostOfEstimated;
+		return b2cCostOfEstimated;
 	}
 	public void setB2CCostOfEstimated(double b2cCostOfEstimated) {
-		B2CCostOfEstimated = b2cCostOfEstimated;
+		b2cCostOfEstimated = b2cCostOfEstimated;
 	}
 	public double getRetailPrice() {
 		return retailPrice;

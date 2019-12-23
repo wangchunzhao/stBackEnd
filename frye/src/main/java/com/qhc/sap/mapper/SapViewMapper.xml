@@ -2,29 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qhc.sap.mapper.SapViewMapper" >
 	<!-- 查询物料信息 -->
-	<select id="findMaterialInfoByMaterialId" resultType="com.qhc.sap.entity.MaterialView" parameterType="Map" >
+	<select id="findMaterialInfo" resultType="com.qhc.sap.domain.MaterialDto" parameterType="Map" >
 		SELECT 
-	        t.code AS price_type_code,
-	        t.name AS price_type_name,
-	        p.price,
-	        m.code,
-	        m.description,
-	        m.is_configurable,
-	        m.is_purchased,
-	        m.stand_price,
-	        m.sap_unit_of_measurement_code,
-	        unit.name AS unit_name,
-	        m.sap_material_groups_code,
-	        g.name AS group_name,
-			m.sap_clazz_code
+	        m.code, 
+			m.description, 
+			m.is_configurable, 
+			m.is_purchased, 
+			m.stand_price as standard_price, 
+			m.opt_time, 
+			m.material_size, 
+			m.sap_unit_of_measurement_code as unit_code,
+			u.name as unit_name, 
+			m.sap_material_groups_code as group_code,
+			mg.name as group_name,
+			m.sap_clazz_code as clazz_code,
+			c.name as clazz_name,
+			mgo.code as st_group_code,
+			mgo.name as st_group_name<!-- ,
+			p.retail_price,
+			p.annual_price,
+			p.transcation_price -->
 	    FROM sap_materials m
-	    LEFT JOIN sap_material_groups g ON m.sap_material_groups_code = g.code
-	    LEFT JOIN sap_unit_of_measurement unit ON unit.code = m.sap_unit_of_measurement_code
-	    RIGHT JOIN sap_materials_price p ON p.sap_materials_code = m.code
-	    LEFT JOIN sap_price_type t ON t.code = p.sap_price_type_code
+	    LEFT JOIN sap_clazz c ON c.code = m.sap_clazz_code
+	    LEFT JOIN sap_unit_of_measurement u ON u.code = m.sap_unit_of_measurement_code
+	    LEFT JOIN sap_material_groups mg ON mg.code = m.sap_material_groups_code
+	    LEFT JOIN b_material_group_order mgo ON mgo.code = mg.b_material_group_order_code
+	    <!-- LEFT JOIN (select sap_materials_code, sap_industry_code, 
+				sum(case when sap_price_type_code='ZH01' then price else 0 end) as retail_price, 
+				sum(case when sap_price_type_code='ZH02' then price else 0 end) as annual_price, 
+				sum(case when sap_price_type_code='ZH06' then price else 0 end) as transcation_price
+				from sap_materials_price
+				group by sap_materials_code, sap_industry_code ) p ON p.sap_materials_code = m.code -->
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			<if test="code != null and code != ''" >
 				AND m.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<!-- <if test="industryCode != null and industryCode != ''" >
+				AND m.code = #{code, jdbcType=VARCHAR}
+			</if> -->
+			<if test="name != null and name != ''" >
+				AND ( UPPER(m.description) like '%${name}%' or UPPER(m.code) like '%${name}%' )
 			</if>
 		</trim>
 	</select>
@@ -68,34 +85,27 @@
 	<!-- 查询物料特征默认值 -->
 	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" parameterType="Map" >
 		SELECT 
-	        sap_customer.code, 
-	        sap_customer.change_date, 
-	        sap_customer.name, 
-	        sap_customer.address, 
-	        sap_customer.sap_customer_class_code as clazz_code, 
-	        sap_customer.sap_industry_code_code as industry_code_code
-	    FROM sap_customer
-	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
+	        c.code, 
+	        c.change_date, 
+	        c.name, 
+	        c.address, 
+	        c.sap_customer_class_code as clazz_code, 
+	        cc.name as clazz_name, 
+	        c.sap_industry_code_code as industry_code_code,
+	        ic.name as industry_code_name,
+	        i.code as industry_code,
+	        i.name as industry_name
+	    FROM sap_customer c
+	    LEFT JOIN sap_industry_code ic ON ic.code = c.sap_industry_code_code
+	    LEFT JOIN sap_customer_class cc on cc.code = c.sap_customer_class_code
+	    LEFT JOIN sap_industry_and_customer iac on iac.sap_customer_code = c.code
+	    LEFT JOIN sap_industry i on i.code = iac.sap_industry_code
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="code != null and code != ''" >
-				AND sap_customer.code like #{material, jdbcType=VARCHAR}
+			<if test="clazzCode != null and clazzCode != ''" >
+				AND c.sap_customer_class_code = #{clazzCode, jdbcType=VARCHAR}
 			</if>
-		</trim>
-	</select>
-	
-	<!-- 查询物料特征默认值 -->
-	<select id="findMaterial" resultType="com.qhc.sap.domain.MaterialDto" parameterType="Map" >
-		SELECT 
-	        v.id,
-	        v.code,
-	        v.name,
-	        m.sap_materials_code,
-	        m.sap_characteristic_code AS key_code
-	    FROM sap_material_default_characteristic m
-	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
-		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="code != null and code != ''" >
-				AND m.sap_materials_code = #{material, jdbcType=VARCHAR}
+			<if test="name != null and name != ''" >
+				AND c.name like '%${name, jdbcType=VARCHAR}%'
 			</if>
 		</trim>
 	</select>

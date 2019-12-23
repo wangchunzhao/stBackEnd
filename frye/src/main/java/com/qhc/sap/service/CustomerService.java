@@ -17,6 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.qhc.order.service.ConstantService;
 import com.qhc.sap.dao.CustomerAffiliationRepository;
 import com.qhc.sap.dao.CustomerIndustryRepository;
@@ -28,6 +30,7 @@ import com.qhc.sap.entity.Customer;
 import com.qhc.sap.entity.IndustryCode;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
+import com.qhc.sap.mapper.SapViewMapper;
 
 /**
  * @author wang@dxc.com
@@ -39,6 +42,9 @@ public class CustomerService {
 	public final static int QUANTITY_PAGE= 10;
 	
 	public final static long DEFAULT_DATE = 1008005271098L;
+	
+	@Autowired
+	SapViewMapper sapViewMapper; 
 	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdate;
@@ -70,28 +76,32 @@ public class CustomerService {
 	 * @param name
 	 * @return
 	 */
-	public Page<Customer> searchCustomers(String clazzCode,String name,int pageNo) {
+	public PageInfo<CustomerDto> searchCustomers(String clazzCode,String name,int pageNo) {
+		PageHelper.startPage(pageNo, 50);
+		List<CustomerDto> list = sapViewMapper.findCustomer(clazzCode, name);
 		
-		if( pageNo >0){
-			pageNo = pageNo-1;
-		}
-		Page<Customer> dcuList= null;
+		return new PageInfo(list);
 		
-		if(clazzCode==null || clazzCode.isEmpty()) {
-			
-			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,QUANTITY_PAGE));
-		}else {
-			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,QUANTITY_PAGE));
-		}
-		for(Customer dc:dcuList) {		
-			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
-			
-			IndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
-			String industryCodeName = industryCode == null ? null : industryCode.getName();
-			dc.setIndustryCodeName(industryCodeName);
-		}
-		
-		return dcuList;
+//		if( pageNo >0){
+//			pageNo = pageNo-1;
+//		}
+//		Page<Customer> dcuList= null;
+//		
+//		if(clazzCode==null || clazzCode.isEmpty()) {
+//			
+//			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,QUANTITY_PAGE));
+//		}else {
+//			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,QUANTITY_PAGE));
+//		}
+//		for(Customer dc:dcuList) {		
+//			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
+//			
+//			IndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
+//			String industryCodeName = industryCode == null ? null : industryCode.getName();
+//			dc.setIndustryCodeName(industryCodeName);
+//		}
+//		
+//		return dcuList;
 	}
 
 	

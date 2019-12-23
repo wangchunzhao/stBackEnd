@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.MaterialRepository;
+import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomExplosion;
@@ -24,12 +25,14 @@ import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.CharacteristicConfiguration;
 import com.qhc.sap.entity.CharacteristicDefault;
 import com.qhc.sap.entity.Material;
+import com.qhc.sap.entity.MaterialPrice;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.MaterialView;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
 import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.domain.PageHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageInfo;
 import com.qhc.exception.NotExistException;
 import com.qhc.exception.NotMatchException;
 import com.qhc.order.service.BayernService;
@@ -57,6 +60,9 @@ public class MaterialService {
 
 	@Autowired
 	private MaterialRepository materialRepo;
+	
+	@Autowired
+	private PriceRepository priceRepository;
 	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdatedRepo;
@@ -113,56 +119,56 @@ public class MaterialService {
 	 * @param pageNo
 	 * @return
 	 */
-	public PageHelper<Material> findMaterialsByName(String name,int pageNo){
-		if( pageNo >0){
-			pageNo = pageNo-1;
+	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo){
+		com.github.pagehelper.PageHelper.startPage(pageNo, 50);
+		
+		List<MaterialDto> list = sapViewMapper.findMaterialInfo(null, name);
+		
+		for (MaterialDto materialDto : list) {
+			fillMaterialPrice(materialDto, industryCode);
 		}
-		Page<Material> dms = materialRepo.findAllByName(name.toUpperCase(),PageRequest.of(pageNo,CustomerService.QUANTITY_PAGE));
-		PageHelper<Material> ph = new PageHelper<Material>(dms);
-		return ph;
+		
+		return new PageInfo(list);
 	}
 	/**
 	 * 
 	 * @param code id of material
+	 * @param code id of customer industry
 	 * @return corresponded material information
 	 */
-	public MaterialDto getMaterialsById(String code){
-		MaterialDto m = new MaterialDto();;
-		List<MaterialView> dmo = sapViewMapper.findMaterialInfoByMaterialId(code);
-		for(MaterialView mp:dmo) {
-			
-			m.setCode(mp.getCode());
-			m.setDescription(mp.getDescription());
-			m.setConfigurable(mp.isConfigurable());
-			m.setPurchased(mp.isPurchased());
-			m.setStandardPrice(mp.getStandPrice());
-			m.setGroupCode(mp.getGroupCode());
-			m.setClazzCode(mp.getClazzCode());
-			m.setGroupName(mp.getGroupName());
-			m.setUnitCode(mp.getUnitCode());
-			m.setUnitName(mp.getUnitName());
-
-			//
-			String priceTypeCode = mp.getPriceTypeCode();
+	public MaterialDto getMaterialsById(String code, String industryCode){
+		MaterialDto m = null;
+		List<MaterialDto> list = sapViewMapper.findMaterialInfo(code, null);
+		if (list.size() > 0) {
+			m = list.get(0);
+		} else {
+			return null;
+		}
+		
+		fillMaterialPrice(m, industryCode);
+		
+		return m;
+	}
+	private void fillMaterialPrice(MaterialDto m, String industryCode) {
+		if (industryCode == null) {
+			return;
+		}
+		String code = m.getCode();
+		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
+		for (MaterialPrice materialPrice : prices) {
+			String priceTypeCode = materialPrice.getType();
 			switch(priceTypeCode) {
 				case MATERIAL_PRICE_TYPE_RETAIL_PRICE:
-					m.setRetailPrice(mp.getPrice());
+					m.setRetailPrice(materialPrice.getPrice());
 					break;
 				case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
-					m.setActuralPrice(mp.getPrice());
+//					m.setanActuralPrice(materialPrice.getPrice());
 					break;
 				case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
-					m.setTranscationPrice(mp.getPrice());
+					m.setTranscationPrice(materialPrice.getPrice());
 					break;
-
 			}
 		}
-		return m;
-//		if((m.getStandardPrice()<=0)||(m.getRetailPrice()<=0)||(m.getTranscationPrice()<=0)) {
-//			return null;
-//		}else {
-//			return m;
-//		}
 	}
 	/**
 	 * 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.qhc.order.service.ConstantService;
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.entity.Customer;
@@ -64,15 +65,15 @@ public class CustomerController {
 	@ApiOperation(value = "根据名称查询客户信息")
 	@GetMapping(value = "customer/{clazzCode},{name},{pageNo}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<Customer> findCustomers(@PathVariable String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
+	public PageHelper<CustomerDto> findCustomers(@PathVariable String name,@PathVariable String clazzCode,@PathVariable int pageNo) throws Exception {
 		if(clazzCode.equals("null")) {
 			clazzCode =null;
 		}
 		if(name.equals("null")) {
 			name = null;
 		}
-		Page<Customer> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
-		PageHelper<Customer> ph = new PageHelper<Customer>(dcs);
+		PageInfo<CustomerDto> dcs=customerService.searchCustomers(clazzCode,name,pageNo);
+		PageHelper<CustomerDto> ph = new PageHelper<CustomerDto>(dcs);
 		return ph;
 	}
 	

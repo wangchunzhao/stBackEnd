@@ -3,7 +3,6 @@
  */
 package com.qhc.sap.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,16 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.service.BayernService;
+import com.github.pagehelper.PageInfo;
 import com.qhc.order.service.ConstantService;
-import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomExplosion;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
 import com.qhc.sap.domain.MaterialDto;
-import com.qhc.sap.entity.Material;
 import com.qhc.sap.service.CharacteristicService;
 import com.qhc.sap.service.CustomerService;
 import com.qhc.sap.service.MaterialService;
@@ -87,29 +84,12 @@ public class MaterialController {
 	@ResponseStatus(HttpStatus.OK)
 	public PageHelper<MaterialDto> findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
 			throws Exception {
-		Map<String, String> measurements = constantService.findMeasurementUnits();
-		if (pars.containsKey(MATERIAL_NAME) && pars.containsKey(MATERIAL_PAGENO)) {
-			PageHelper<MaterialDto> ms = new PageHelper<MaterialDto>();
-			PageHelper<Material> dms = materialSer.findMaterialsByName(pars.get(MATERIAL_NAME),
-					Integer.parseInt(pars.get(MATERIAL_PAGENO)));
-			List<MaterialDto> ml = new ArrayList<MaterialDto>();
-			List<Material> dml = dms.getRows();
-			for (Material dm : dml) {
-				MaterialDto temp = new MaterialDto();
-				temp.setCode(dm.getCode());
-				temp.setDescription(dm.getDescription());
-				temp.setConfigurable(dm.isConfigurable());
-				temp.setPurchased(dm.isPurchased());
-				temp.setStandardPrice(dm.getPrice());
-				temp.setUnitCode(dm.getUnit());
-				temp.setUnitName(measurements.get(dm.getUnit()));
-				ml.add(temp);
-			}
-			ms.setRows(ml);
-			ms.setTotal(dms.getTotal());
-			return ms;
-		}
-		return null;
+		String name = pars.get("name");
+		String industryCode = pars.get("industryCode");
+		Integer pageNo = Integer.parseInt(pars.get(MATERIAL_PAGENO));
+		PageInfo<MaterialDto> page = materialSer.findMaterialsByName(name, industryCode, pageNo);
+		
+		return new PageHelper<MaterialDto>(page);
 	}
 
 	@ApiOperation(value = "通过code查找具体增物料信息")
@@ -119,7 +99,7 @@ public class MaterialController {
 		if (code.equals("null")) {
 			code = null;
 		}
-		MaterialDto m = materialSer.getMaterialsById(code);
+		MaterialDto m = materialSer.getMaterialsById(code, null);
 		return m;
 	}
 
@@ -144,7 +124,7 @@ public class MaterialController {
 		characteristicSer.saveCharacteristicDefault(defaultChavalue);
 	}
 	
-	@ApiOperation(value = "根据物料分类代码查找haracteristic和value列表及default value")
+	@ApiOperation(value = "根据物料分类代码查找characteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode)  throws Exception{

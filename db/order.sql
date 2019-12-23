@@ -431,7 +431,7 @@ create table k_item
    is_virtual           integer not null default 0 comment '工程虚拟物料
             0:由销售录入的行项目
             1: 非销售部门录入的行项目',
-   config_comments      char(10) comment '配置表备注(配置表页面)，待定',
+   config_comments      varchar(256) comment '配置表备注(配置表页面)，待定',
    mosaic_image         varchar(64) comment '拼接图备注，待定',
    attached_image       varchar(256) comment '拼接图附件，待定',
    request_brand        varchar(64) comment '，待定',
@@ -568,9 +568,9 @@ create table k_order_info
    comments             varchar(64) comment '备注 Remark',
    submit_time          datetime comment '最后一次提交时间，会有被驳回然后提交的时间',
    bpm_submit_time      datetime comment '提交bpm审批的时间，会有被驳回然后提交的时间',
-   creater              char(10) comment '创建人',
+   creater              varchar(32) comment '创建人',
    create_time          datetime not null comment '创建时间',
-   updater              varchar(128) not null comment '最后操作人',
+   updater              varchar(32) not null comment '最后操作人',
    update_time          datetime not null comment '最后操作时间',
    primary key (id),
    key id_UNIQUE (id)

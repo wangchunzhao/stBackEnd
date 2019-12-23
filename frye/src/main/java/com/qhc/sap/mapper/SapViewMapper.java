@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.springframework.data.repository.query.Param;
 
+import com.qhc.sap.domain.CustomerDto;
+import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.CharacteristicConfiguration;
 import com.qhc.sap.entity.DefaultCharacterView;
-import com.qhc.sap.entity.Industry;
-import com.qhc.sap.entity.MaterialView;
 
 /**
  * 
@@ -23,7 +23,7 @@ public interface SapViewMapper {
 	 * @param code
 	 * @return
 	 */
-	public List<MaterialView> findMaterialInfoByMaterialId(String code);
+	public List<MaterialDto> findMaterialInfo(@Param("code")String code, @Param("name")String name);
 	
 	/**
 	 * 查询物料特征信息
@@ -39,4 +39,13 @@ public interface SapViewMapper {
 	 * @return
 	 */
 	public List<DefaultCharacterView> findDefaultCharacterValueByMaterial(@Param("material")String materialCode);
+	
+	/**
+	 * 查询客户信息
+	 * 
+	 * @param clazzCode
+	 * @param name
+	 * @return
+	 */
+	public List<CustomerDto> findCustomer(@Param("clazzCode")String clazzCode, @Param("name")String name);
 } 

@@ -502,7 +502,7 @@ create table k_item
    is_virtual           integer not null default 0 comment '工程虚拟物料
             0:由销售录入的行项目
             1: 非销售部门录入的行项目',
-   config_comments      char(10) comment '配置表备注(配置表页面)，待定',
+   config_comments      varchar(256) comment '配置表备注(配置表页面)，待定',
    mosaic_image         varchar(64) comment '拼接图备注，待定',
    attached_image       varchar(256) comment '拼接图附件，待定',
    request_brand        varchar(64) comment '，待定',
@@ -639,9 +639,9 @@ create table k_order_info
    comments             varchar(64) comment '备注 Remark',
    submit_time          datetime comment '最后一次提交时间，会有被驳回然后提交的时间',
    bpm_submit_time      datetime comment '提交bpm审批的时间，会有被驳回然后提交的时间',
-   creater              char(10) comment '创建人',
+   creater              varchar(32) comment '创建人',
    create_time          datetime not null comment '创建时间',
-   updater              varchar(128) not null comment '最后操作人',
+   updater              varchar(32) not null comment '最后操作人',
    update_time          datetime not null comment '最后操作时间',
    primary key (id),
    key id_UNIQUE (id)
@@ -681,7 +681,7 @@ create table sap_characteristic
 (
    code                 varchar(30) not null,
    name                 varchar(64) not null,
-   is_optional          BIT(1) not null,
+   is_optional          TINYINT(1) not null,
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -710,7 +710,7 @@ create table sap_clazz
 (
    code                 varchar(18) not null,
    name                 varchar(64) not null,
-   is_reserved          BIT(1) not null comment '保留字段，非可配置类',
+   is_reserved          TINYINT(1) not null comment '保留字段，非可配置类',
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -761,7 +761,7 @@ create table sap_currency
    code                 varchar(3) not null,
    name                 varchar(64) not null,
    rate                 double(10,5) not null,
-   is_reserved          BIT(1) not null default 0,
+   is_reserved          TINYINT(1) not null default 0,
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -836,7 +836,7 @@ create table sap_industry
 (
    code                 varchar(4) not null,
    name                 varchar(64) not null,
-   is_reserved          BIT(1) not null default 0,
+   is_reserved          TINYINT(1) not null default 0,
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -863,7 +863,7 @@ create table sap_industry_code
 (
    code                 varchar(10) not null comment 'terminal shop level: incustry code',
    name                 varchar(64) not null,
-   is_fordealer         BIT(1) not null comment '适用经销商',
+   is_fordealer         TINYINT(1) not null comment '适用经销商',
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -919,7 +919,7 @@ create table sap_material_groups
    code                 varchar(4) not null,
    name                 varchar(64) not null,
    b_material_group_order_code varchar(4) not null comment '销售工具的分组',
-   isenable             BIT(1) not null default 1,
+   isenable             TINYINT(1) not null default 1,
    primary key (code),
    key code_UNIQUE (code)
 );
@@ -933,8 +933,8 @@ create table sap_materials
 (
    code                 varchar(18) not null comment 'code',
    description          varchar(64) not null comment '描述',
-   is_configurable      BIT(1) not null comment '可配置',
-   is_purchased         BIT(1) not null comment '物料属性，采购',
+   is_configurable      TINYINT(1) not null comment '可配置',
+   is_purchased         TINYINT(1) not null comment '物料属性，采购',
    stand_price          decimal(13,2) not null comment '标准价格moving_average_price',
    opt_time             datetime not null comment '操作时间',
    material_size        double(13,3) not null comment '物料体积',
@@ -1000,7 +1000,7 @@ create table sap_payment_term_bidding_plan
 (
    code                 varchar(4) not null,
    name                 varchar(64) not null,
-   is_payment_term      BIT(1) not null,
+   is_payment_term      TINYINT(1) not null,
    primary key (code),
    key code_UNIQUE (code)
 );
