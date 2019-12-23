@@ -162,7 +162,7 @@ public class MaterialService {
 					m.setRetailPrice(materialPrice.getPrice());
 					break;
 				case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
-//					m.setanActuralPrice(materialPrice.getPrice());
+					m.setAnnualPrice(materialPrice.getPrice());
 					break;
 				case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
 					m.setTranscationPrice(materialPrice.getPrice());

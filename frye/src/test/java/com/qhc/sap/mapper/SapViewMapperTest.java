@@ -14,7 +14,7 @@ class SapViewMapperTest {
 
 	@Test
 	void testFindMaterialInfoByMaterialId() {
-		mapper.findMaterialInfoByMaterialId("");
+		mapper.findMaterialInfo("000000000004077722", "金");
 	}
 
 	@Test
@@ -25,6 +25,11 @@ class SapViewMapperTest {
 	@Test
 	void testFindDefaultCharacterValueByMaterial() {
 		mapper.findDefaultCharacterValueByMaterial("");
+	}
+
+	@Test
+	void testFindCustomer() {
+		mapper.findCustomer("0000001004", "01");
 	}
 
 }

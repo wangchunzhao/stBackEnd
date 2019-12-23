@@ -59,9 +59,6 @@ public class MaterialController {
 	@Autowired
 	private CharacteristicService characteristicSer;
 
-	@Autowired
-	private ConstantService constantService;
-
 	@ApiOperation(value = "查询物料lastUpdateDate")
 	@GetMapping(value = "material/lastUpdateDate")
 	@ResponseStatus(HttpStatus.OK)
@@ -93,13 +90,13 @@ public class MaterialController {
 	}
 
 	@ApiOperation(value = "通过code查找具体增物料信息")
-	@GetMapping(value = "material/{code}", produces = "application/json;charset=UTF-8")
+	@GetMapping(value = "material/{code}/{industryCode}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public MaterialDto getMaterialById(@PathVariable(required = true) String code) throws Exception {
+	public MaterialDto getMaterialById(@PathVariable(required = true) String code, @PathVariable(required = false) String industryCode) throws Exception {
 		if (code.equals("null")) {
 			code = null;
 		}
-		MaterialDto m = materialSer.getMaterialsById(code, null);
+		MaterialDto m = materialSer.getMaterialsById(code, industryCode);
 		return m;
 	}
 

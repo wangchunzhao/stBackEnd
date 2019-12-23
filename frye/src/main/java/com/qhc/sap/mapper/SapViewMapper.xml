@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qhc.sap.mapper.SapViewMapper" >
 	<!-- 查询物料信息 -->
-	<select id="findMaterialInfo" resultType="com.qhc.sap.domain.MaterialDto" parameterType="Map" >
+	<select id="findMaterialInfo" resultType="com.qhc.sap.domain.MaterialDto" >
 		SELECT 
 	        m.code, 
 			m.description, 
@@ -59,7 +59,7 @@
         LEFT JOIN `sap_characteristic` `c` ON `c`.`code` = `v`.`sap_characteristic_code`
     	LEFT JOIN `sap_clazz_and_character` `l` ON `l`.`sap_characteristic_code` = `c`.`code`
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="code != null and code != ''" >
+			<if test="clazzCode != null and clazzCode != ''" >
 				AND l.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
 			</if>
 		</trim>
@@ -76,14 +76,14 @@
 	    FROM sap_material_default_characteristic m
 	    LEFT JOIN sap_characteristic_value v ON m.sap_characteristic_value_id = v.id
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="code != null and code != ''" >
+			<if test="material != null and material != ''" >
 				AND m.sap_materials_code = #{material, jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</select>
 	
 	<!-- 查询物料特征默认值 -->
-	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" parameterType="Map" >
+	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" >
 		SELECT 
 	        c.code, 
 	        c.change_date, 
@@ -102,10 +102,10 @@
 	    LEFT JOIN sap_industry i on i.code = iac.sap_industry_code
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			<if test="clazzCode != null and clazzCode != ''" >
-				AND c.sap_customer_class_code = #{clazzCode, jdbcType=VARCHAR}
+				AND c.sap_customer_class_code = #{clazzCode}
 			</if>
 			<if test="name != null and name != ''" >
-				AND c.name like '%${name, jdbcType=VARCHAR}%'
+				AND c.name like '%${name}%'
 			</if>
 		</trim>
 	</select>
