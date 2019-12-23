@@ -116,11 +116,26 @@ public class OrderController {
 	}
 
 	@ApiOperation(value = "提交", notes = "提交")
-	@PostMapping(value = "order/{user}/submit")
+	@PostMapping(value = "order/submit/{user}")
 	public Result submit(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {
 		Result result = null;
 		try {
 			orderService.submit(user, order);
+			result = Result.ok("");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+
+		return result;
+	}
+
+	@ApiOperation(value = "变更", notes = "变更")
+	@PostMapping(value = "order/{orderInfoId}/upgrade/{user}")
+	public Result upgrade(@PathVariable("user") String user, @RequestBody(required = true) Integer orderInfoId) {
+		Result result = null;
+		try {
+			orderService.upgrade(user, orderInfoId);
 			result = Result.ok("");
 		} catch (Exception e) {
 			e.printStackTrace();

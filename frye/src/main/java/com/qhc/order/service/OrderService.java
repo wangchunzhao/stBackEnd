@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -167,16 +168,26 @@ public class OrderService {
 		BeanUtils.copyProperties(orderInfo, orderDto);
 		
 		if (orderDto.getId() == null) {
+			// new version
+			String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
+			orderInfo.setVersion(version);
+			orderInfo.setStatus(OrderDto.ORDER_STATUS_DRAFT);
+			orderInfo.setVersionNum(1);
+			orderInfo.setCreater(user);
+			orderInfo.setUpdater(user);
+			
 			if (orderDto.getOrderId() == null) {
 				Order order = new Order();
 				BeanUtils.copyProperties(order, orderDto);
+				
+				String sequenceNumber = "QHC" + version;
+				order.setSequenceNumber(sequenceNumber);
+				
 				orderMapper.insert(order);
 
 				orderInfo.setOrderId(order.getId());
 			}
 
-			orderInfo.setCreater(user);
-			orderInfo.setUpdater(user);
 			orderInfoMapper.insert(orderInfo);
 			
 			orderInfo.setId(orderInfo.getId());
@@ -209,11 +220,17 @@ public class OrderService {
 		OrderDto order = this.findOrder(orderInfoId);
 		
 		order.setId(null);
-		// TODO new version
-		order.setVersion("" + System.currentTimeMillis());
+		// new version
+		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
+		order.setVersion(version);
 		order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
 		order.setSubmitBpmTime(null);
 		order.setSubmitTime(null);
+		order.setIsActive(1);
+		order.setVersionNum(order.getVersionNum() + 1);
+		
+		// 将其他版本的active设置为0
+		orderInfoMapper.inactive(order.getSequenceNumber());
 		
 		order = this.save(user, order);
 		

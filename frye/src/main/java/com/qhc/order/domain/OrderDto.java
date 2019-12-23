@@ -51,9 +51,23 @@ public class OrderDto {
 	private String updaterName; // 修改人姓名
 	
 	private String version;//版本
+	/* 版本序号，每次累加1 */
+	private Integer versionNum = null;
+	/* 最新版本，新的版本生成后旧的版本变为0， 新的版本为1
+            0 非最新，1 最新 */
+	private Integer isActive = null;
 	private String status; // 状态
 	private List<String> versions; // 历史版本
 	private String userOfficeCode;//用户所在销售办公室，创建人用户信息中带出
+	/**
+	 * 销售工具订单类型
+		1 经销商标准折扣下单
+		2 经销商非标准折扣下单
+		3 直签客户投标报价
+		4 直签客户下定单
+		5 备货 
+	 */
+	private String stOrderType; // 销售工具的订单类型
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
@@ -255,6 +269,22 @@ public class OrderDto {
 		this.version = version;
 	}
 
+	public Integer getVersionNum() {
+		return versionNum;
+	}
+
+	public void setVersionNum(Integer versionNum) {
+		this.versionNum = versionNum;
+	}
+
+	public Integer getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Integer isActive) {
+		this.isActive = isActive;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -277,6 +307,14 @@ public class OrderDto {
 
 	public void setUserOfficeCode(String userOfficeCode) {
 		this.userOfficeCode = userOfficeCode;
+	}
+
+	public String getStOrderType() {
+		return stOrderType;
+	}
+
+	public void setStOrderType(String stOrderType) {
+		this.stOrderType = stOrderType;
 	}
 
 	public Date getSubmitTime() {
