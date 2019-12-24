@@ -76,32 +76,10 @@ public class CustomerService {
 	 * @param name
 	 * @return
 	 */
-	public PageInfo<CustomerDto> searchCustomers(String clazzCode,String name,int pageNo) {
-		PageHelper.startPage(pageNo, 50);
-		List<CustomerDto> list = sapViewMapper.findCustomer(clazzCode, name);
-		
+	public PageInfo<CustomerDto> searchCustomers(String clazzCode,String name,int pageNo,int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		List<CustomerDto> list = sapViewMapper.findCustomer(clazzCode, name);	
 		return new PageInfo(list);
-		
-//		if( pageNo >0){
-//			pageNo = pageNo-1;
-//		}
-//		Page<Customer> dcuList= null;
-//		
-//		if(clazzCode==null || clazzCode.isEmpty()) {
-//			
-//			dcuList = customerRepo.findByName(name,PageRequest.of(pageNo,QUANTITY_PAGE));
-//		}else {
-//			dcuList = customerRepo.findByCodeAndName(name,clazzCode,PageRequest.of(pageNo,QUANTITY_PAGE));
-//		}
-//		for(Customer dc:dcuList) {		
-//			dc.setClazzName(constService.findCustomerClazzByCode(dc.getClazzCode()));
-//			
-//			IndustryCode industryCode = constService.findIndustryCodeByCode(dc.getIndustryCodeCode());
-//			String industryCodeName = industryCode == null ? null : industryCode.getName();
-//			dc.setIndustryCodeName(industryCodeName);
-//		}
-//		
-//		return dcuList;
 	}
 
 	

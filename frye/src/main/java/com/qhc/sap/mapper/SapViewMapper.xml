@@ -86,15 +86,15 @@
 	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" >
 		SELECT 
 	        c.code, 
-	        c.change_date, 
+	        c.change_date as changeDate, 
 	        c.name, 
 	        c.address, 
-	        c.sap_customer_class_code as clazz_code, 
-	        cc.name as clazz_name, 
-	        c.sap_industry_code_code as industry_code_code,
-	        ic.name as industry_code_name,
-	        i.code as industry_code,
-	        i.name as industry_name
+	        c.sap_customer_class_code as clazzCode, 
+	        cc.name as clazzName, 
+	        c.sap_industry_code_code as industryCodeCode,
+	        ic.name as industryCodeName,
+	        i.code as industryCode,
+	        i.name as industryName
 	    FROM sap_customer c
 	    LEFT JOIN sap_industry_code ic ON ic.code = c.sap_industry_code_code
 	    LEFT JOIN sap_customer_class cc on cc.code = c.sap_customer_class_code
