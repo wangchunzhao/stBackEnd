@@ -58,7 +58,7 @@ public class UserService {
 		User user = new User();
 		try {
 			BeanUtils.copyProperties(user, userDto);
-			if (user.getId() == null) {
+			if (user.getId() == null || user.getId() == 0) {
 				userMapper.insert(user);
 			} else {
 				userMapper.update(user);
