@@ -303,4 +303,13 @@ public class ContractService {
 
 		return false;
 	}
+
+	/**
+	 * 值更新合同状态及与状态变化相关的字段
+	 * 
+	 * @param contract
+	 */
+	public void updateStatus(Contract contract) {
+		contractMapper.updateStatus(contract);
+	}
 }

@@ -41,21 +41,6 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-	@ApiOperation(value = "根据id查询订单", notes = "根据id查询订单")
-	@GetMapping(value = "order/{id}")
-	public Result findByKOrderVersionId(@PathVariable Integer id) throws Exception {
-		Result result = null;
-		try {
-			OrderDto order = orderService.findOrder(id);
-			result = Result.ok(order);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = Result.error(e.getMessage());
-		}
-
-		return result;
-	}
-
 	/**
 	 * 查询订单
 	 * 
@@ -64,12 +49,12 @@ public class OrderController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "查询订单详情", notes = "查询订单详情")
-	@GetMapping(value = "order/detail")
+	@GetMapping(value = "order/{orderInfoId}")
 	@ResponseStatus(HttpStatus.OK)
-	public Result getOrder(@RequestParam String sequenceNumber, @RequestParam String version) {
+	public Result getOrder(@PathVariable("orderInfoId") Integer orderInfoId) {
 		Result result = null;
 		try {
-			OrderDto order = orderService.findOrder(sequenceNumber, version);
+			OrderDto order = orderService.findOrder(orderInfoId);
 			result = Result.ok(order);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,7 +131,7 @@ public class OrderController {
 	}
 
 	@ApiOperation(value = "提交到BPM", notes = "提交到BPM")
-	@PostMapping(value = "order/{user}/submitbpm")
+	@PostMapping(value = "order/submitbpm/{user}")
 	public Result submitBpm(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {
 		Result result = null;
 		try {
@@ -191,11 +176,11 @@ public class OrderController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
-	@PostMapping(value = "order/sap")
+	@PostMapping(value = "order/sap/{orderInfoId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String orderCreationForSAP(@RequestParam String sequenceNumber, @RequestParam String version)
+	public String orderCreationForSAP(@PathVariable("orderInfoId") Integer orderInfoId)
 			throws Exception {
-		return orderService.sendToSap(sequenceNumber, version);
+		return orderService.sendToSap(orderInfoId);
 	}
 
 	/**

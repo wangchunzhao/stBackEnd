@@ -614,10 +614,11 @@ public class OrderService {
 	 * @param version
 	 * @return
 	 */
-	public String sendToSap(String sequenceNumber, String version) {
+	public String sendToSap(Integer orderInfoId) {
 		try {
+			OrderDto order = this.findOrder(orderInfoId);
 			// 1. 根据sequenceNumber组装数据
-			SapOrder sapOrder = assembleSapOrder(sequenceNumber, version);
+			SapOrder sapOrder = assembleSapOrder(order);
 
 			// 2. 调用bayernService同步SAP
 //			bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
@@ -652,14 +653,9 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @return //
 	 */
-	private SapOrder assembleSapOrder(String sequenceNumber, String version) {
-		OrderQuery query = new OrderQuery();
-		query.setLast(true);
-		query.setSequenceNumber(sequenceNumber);
-		query.setVersion(version);
-		OrderDto orderView = orderInfoMapper.findOrderViewByParams(query).get(0);
-		Integer orderInfoId = orderView.getId();
-		String orderType = orderView.getOrderType();
+	private SapOrder assembleSapOrder(OrderDto order) {
+		Integer orderInfoId = order.getId();
+		String orderType = order.getOrderType();
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -669,40 +665,40 @@ public class OrderService {
 		List<SapOrderPlan> sapPlans = new ArrayList<SapOrderPlan>();
 
 		// Header input
-		header.setAuart(toString(orderView.getOrderType())); // Sales order type/订单类型
+		header.setAuart(toString(order.getOrderType())); // Sales order type/订单类型
 		header.setVkorg("0841"); // Sales org./销售组织 -- Fixed value/固定为 0841
-		header.setVtweg(orderView.getCustomerClazz()); // DC/分销渠道 -- 客户
-		header.setName2(orderView.getCustomerName()); // Store name/店名
-		header.setSpart(orderView.getSaleType()); // Division/产品组
-		header.setVkbur(toString(orderView.getOfficeCode())); // Sales office/销售办公室 -- 大区
-		header.setVkgrp(toString(orderView.getGroupCode())); // Sales group/销售组 -- 中心
-		header.setVbeln(toString(orderView.getContractNumber())); // SO number/销售订单编号 -- 合同号
-		header.setKvgr1(toString(orderView.getIsConvenientStore())); // Customer grp.1/客户组1 -- 是否便利店
-		header.setKvgr2(toString(orderView.getIsNew())); // Customer grp.2/客户组2 -- 是否新客户
-		header.setKvgr3(toString(orderView.getIsReformed())); // Customer grp.3/客户组3 -- 是否改造店
-		header.setBstzd(toString(orderView.getWarranty())); // Additional/附加的 -- 保修年限
-		header.setBstkdE(toString(orderView.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
-		header.setVsart(toString(orderView.getTransferType())); // Shipping type/装运类型 -- 运输类型
+		header.setVtweg(order.getCustomerClazz()); // DC/分销渠道 -- 客户
+		header.setName2(order.getCustomerName()); // Store name/店名
+		header.setSpart(order.getSaleType()); // Division/产品组
+		header.setVkbur(toString(order.getOfficeCode())); // Sales office/销售办公室 -- 大区
+		header.setVkgrp(toString(order.getGroupCode())); // Sales group/销售组 -- 中心
+		header.setVbeln(toString(order.getContractNumber())); // SO number/销售订单编号 -- 合同号
+		header.setKvgr1(toString(order.getIsConvenientStore())); // Customer grp.1/客户组1 -- 是否便利店
+		header.setKvgr2(toString(order.getIsNew())); // Customer grp.2/客户组2 -- 是否新客户
+		header.setKvgr3(toString(order.getIsReformed())); // Customer grp.3/客户组3 -- 是否改造店
+		header.setBstzd(toString(order.getWarranty())); // Additional/附加的 -- 保修年限
+		header.setBstkdE(toString(order.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
+		header.setVsart(toString(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
 //		header.setZterm();	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
-		header.setKunnr(toString(orderView.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
-		header.setWaerk(toString(orderView.getCurrency())); // Currency/币别 -- 币别
-		header.setInco1(toString(orderView.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
-		header.setInco1(toString(orderView.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
+		header.setKunnr(toString(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
+		header.setWaerk(toString(order.getCurrency())); // Currency/币别 -- 币别
+		header.setInco1(toString(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
+		header.setInco1(toString(order.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
-		header.setVbbkz120(String.valueOf(orderView.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
-		header.setVbbkz121(orderView.getSalesCode()); // Sale rep./签约人 -- 客户经理
-		header.setVbbkz109(orderView.getContractManager()); // Order clerk/合同管理员 -- 合同管理员
-		String contactorInfo = toString(orderView.getContactor1Id()) + "/" + toString(orderView.getContactor1Tel())
-				+ toString(orderView.getContactor2Id()) + "/" + toString(orderView.getContactor2Tel())
-				+ toString(orderView.getContactor3Id()) + "/" + toString(orderView.getContactor3Tel());
+		header.setVbbkz120(String.valueOf(order.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
+		header.setVbbkz121(order.getSalesCode()); // Sale rep./签约人 -- 客户经理
+		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 合同管理员
+		String contactorInfo = toString(order.getContactor1Id()) + "/" + toString(order.getContactor1Tel())
+				+ toString(order.getContactor2Id()) + "/" + toString(order.getContactor2Tel())
+				+ toString(order.getContactor3Id()) + "/" + toString(order.getContactor3Tel());
 		header.setVbbkz108(contactorInfo); // Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
-		String vbbkz122 = toString(orderView.getIsTerm1()) + "/" + toString(orderView.getIsTerm2())
-				+ toString(orderView.getIsTerm3());
+		String vbbkz122 = toString(order.getIsTerm1()) + "/" + toString(order.getIsTerm2())
+				+ toString(order.getIsTerm3());
 		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
-		header.setVbbkz106(orderView.getReceiveType()); // Receiving method /收货方式 -- 收货方式
+		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
 
 //		ItemService itemService;
-		List<ItemDto> items = itemMapper.findByOrderInfoId(orderView.getId());
+		List<ItemDto> items = itemMapper.findByOrderInfoId(order.getId());
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
 			SapOrderItem sapItem = new SapOrderItem();

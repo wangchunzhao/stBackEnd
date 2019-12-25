@@ -54,7 +54,7 @@
 			#{invoiceReceiver, jdbcType=VARCHAR}, #{invoiceTel, jdbcType=VARCHAR}, #{broker, jdbcType=VARCHAR}, 
 			#{companyTel, jdbcType=VARCHAR}, #{bankName, jdbcType=VARCHAR}, #{accountNumber, jdbcType=VARCHAR}, 
 			#{companyAddress, jdbcType=VARCHAR}, #{companyPostCode, jdbcType=VARCHAR}, #{status, jdbcType=INTEGER}, 
-			#{creater, jdbcType=VARCHAR}, #{createTime, jdbcType=TIMESTAMP}, #{sender, jdbcType=VARCHAR}, 
+			#{creater, jdbcType=VARCHAR}, now(), #{sender, jdbcType=VARCHAR}, 
 			#{sendTime, jdbcType=TIMESTAMP}, #{signer, jdbcType=VARCHAR}, #{signTime, jdbcType=TIMESTAMP}, 
 			#{fileHashcode, jdbcType=VARCHAR}, #{signContractid, jdbcType=VARCHAR} )
 	</insert>
@@ -79,8 +79,8 @@
 			company_address = #{companyAddress, jdbcType=VARCHAR}, 
 			company_post_code = #{companyPostCode, jdbcType=VARCHAR}, 
 			status = #{status, jdbcType=INTEGER}, 
-			creater = #{creater, jdbcType=VARCHAR}, 
-			create_time = #{createTime, jdbcType=TIMESTAMP}, 
+			<!-- creater = #{creater, jdbcType=VARCHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP},  -->
 			sender = #{sender, jdbcType=VARCHAR}, 
 			send_time = #{sendTime, jdbcType=TIMESTAMP}, 
 			signer = #{signer, jdbcType=VARCHAR}, 
@@ -268,5 +268,26 @@
 			</if>
 		</trim>
 	</sql>
+	
+	<!-- 修改 -->
+	<update id="updateStatus" parameterType="com.qhc.order.entity.Contract" >
+		update k_contract
+		set status = #{status, jdbcType=INTEGER}, 
+		<if test="sender != null and sender != ''" >
+			sender = #{sender, jdbcType=VARCHAR}, 
+			send_time = now(), 
+		</if>
+		<if test="signer != null and signer != ''" >
+			signer = #{signer, jdbcType=VARCHAR}, 
+			sign_time = now(), 
+		</if>
+		<if test="file_hashcode != null and file_hashcode != ''" >
+			file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
+		</if>
+		<if test="file_hashcode != null and file_hashcode != ''" >
+			sign_contractid = #{signContractid, jdbcType=VARCHAR}
+		</if>
+		where id = #{id, jdbcType=INTEGER}
+	</update>
 	
 </mapper>

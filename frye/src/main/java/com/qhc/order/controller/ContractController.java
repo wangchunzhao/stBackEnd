@@ -141,10 +141,11 @@ public class ContractController {
 	public Result<?> updateContractFileHashcode(@PathVariable("id") Integer contractId, @PathVariable("hashcode") String hashcode) {
 		Result<?> result = null;
 		try {
-			Contract c = contractService.findOne(contractId);
+			Contract c = new Contract();
+			c.setId(contractId);
 			c.setFileHashcode(hashcode);
 			c.setStatus("03");
-			contractService.save(c);
+			contractService.updateStatus(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "更新合同PDF文档hashcode信息，合同ID=" + contractId + "， FileHashCode=" + hashcode;

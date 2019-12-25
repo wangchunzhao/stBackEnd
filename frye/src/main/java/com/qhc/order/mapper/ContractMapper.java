@@ -67,5 +67,13 @@ public interface ContractMapper {
    * @return
    */
 	int deleteById(Integer id);
+	
+	/**
+	 * 修改合同状态
+	 * 
+	 * @param contract
+	 * @return
+	 */
+	int updateStatus(Contract contract);
 
 } 
