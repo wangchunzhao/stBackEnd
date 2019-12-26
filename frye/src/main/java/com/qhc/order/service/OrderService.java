@@ -853,7 +853,6 @@ public class OrderService {
 
 		if (orderViews.size() > 0) {
 			order = orderViews.get(0);
-			assembleOrderDetail(order);
 		}
 
 		return order;
@@ -878,7 +877,6 @@ public class OrderService {
 
 		if (orderViews.size() > 0) {
 			order = orderViews.get(0);
-			assembleOrderDetail(order);
 		}
 
 		return order;
@@ -895,12 +893,6 @@ public class OrderService {
 		boolean includeDetail = orderQuery.isIncludeDetail();
 
 		PageInfo<OrderDto> page = queryOrderView(orderQuery);
-		List<OrderDto> orders = page.getList();
-		if (includeDetail) {
-			for (OrderDto order : orders) {
-				assembleOrderDetail(order);
-			}
-		}
 
 		return page;
 	}
@@ -972,16 +964,23 @@ public class OrderService {
 	 * 
 	 * @param orderQuery
 	 * @return
+	 * @throws Exception 
 	 */
-	private PageInfo<OrderDto> queryOrderView(OrderQuery orderQuery) {
+	private PageInfo<OrderDto> queryOrderView(OrderQuery orderQuery) throws Exception {
+		boolean includeDetail = orderQuery.isIncludeDetail();
 		// 设置分页信息
 		int pageNo = orderQuery.getPageNo() == null ? 0 : orderQuery.getPageNo().intValue();
 		int pageSize = orderQuery.getPageSize() == null ? 10000 : orderQuery.getPageSize();
 
 		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
-		List<OrderDto> list = orderInfoMapper.findOrderViewByParams(orderQuery);
+		List<OrderDto> orders = orderInfoMapper.findOrderViewByParams(orderQuery);
+		if (includeDetail) {
+			for (OrderDto order : orders) {
+				assembleOrderDetail(order);
+			}
+		}
 
-		return new PageInfo<>(list);
+		return new PageInfo<>(orders);
 	}
 
 	/**

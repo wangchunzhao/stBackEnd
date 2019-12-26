@@ -229,9 +229,16 @@ public class MaterialService {
 	 * @return
 	 */
 	public MaterialBom findBomPrice(Map<String, String> pars) {
+		String industryCode = pars.remove("industry");
+		industryCode = industryCode == null ? "unkn" : industryCode;
+		
 		Map<String, List<Bom>> boms = sapService.getBomExplosion(pars);
 		List<Bom> standard = boms.get("standard");
 		List<Bom> optional = boms.get("optional");
+		
+		// 获取物料转移价、零售价、年采价等
+		fillBomPrice(industryCode, optional);
+		fillBomPrice(industryCode, standard);
 		
 		MaterialBom mb = new MaterialBom();
 		mb.setOptional(optional);
@@ -240,5 +247,19 @@ public class MaterialService {
 		mb.calculatePriceGap();
 		
 		return mb;
+	}
+
+	private void fillBomPrice(String industryCode, List<Bom> optional) {
+		for (Bom bom : optional) {
+			if (bom.isMarked()) {
+				MaterialDto m = new MaterialDto();
+				m.setCode(bom.getCode());
+				this.fillMaterialPrice(m, industryCode);
+				
+				bom.setAnnualPrice(m.getAnnualPrice());
+				bom.setTransferPrice(m.getTranscationPrice());
+				bom.setRetailPrice(m.getRetailPrice());
+			}
+		}
 	}
 }
