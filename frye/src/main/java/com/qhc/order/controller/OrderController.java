@@ -1,11 +1,10 @@
-/**
- * 
- */
 package com.qhc.order.controller;
 
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +35,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @Api(value = "Order management in qhc", description = "订单管理")
 public class OrderController {
+	
+	Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired
 	private OrderService orderService;
@@ -158,14 +158,19 @@ public class OrderController {
 	@PutMapping(value = "order/callback")
 	@ResponseBody
 	public boolean bpmCallback(@RequestBody Map data) {
-		String status = String.valueOf(data.get("status"));
-		String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
-		Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
-		Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
+		try {
+			String status = String.valueOf(data.get("status"));
+			String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
+			Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
+			Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
 
-		this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
+			this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
 
-		return true;
+			return true;
+		} catch (Exception e) {
+			logger.error("BPM call back", e);
+			return false;
+		}
 	}
 
 	/**
@@ -176,11 +181,20 @@ public class OrderController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
-	@PostMapping(value = "order/sap/{orderInfoId}")
+	@PostMapping(value = "order/sap/{user}")
 	@ResponseStatus(HttpStatus.OK)
-	public String orderCreationForSAP(@PathVariable("orderInfoId") Integer orderInfoId)
+	public Result sendOrderToSAP(@PathVariable("user") String user, @RequestBody OrderDto order)
 			throws Exception {
-		return orderService.sendToSap(orderInfoId);
+		Result result = null;
+		try {
+			String res = orderService.sendToSap(user, order);
+			result = Result.ok(res);
+		} catch (Exception e) {
+			logger.error("订单下发SAP失败", e);
+			result = Result.error("订单下发SAP失败！");
+		}
+		
+		return result;
 	}
 
 	/**
@@ -193,34 +207,63 @@ public class OrderController {
 	@ApiOperation(value = "根据sequenceNumber查询订单版本历史", notes = "根据sequenceNumber查询订单版本历史")
 	@GetMapping(value = "order/{sequenceNumber}/version")
 	@ResponseStatus(HttpStatus.OK)
-	public List<OrderVersion> orderVersions(@PathVariable String sequenceNumber) throws Exception {
-		return orderService.findOrderVersions(sequenceNumber);
+	public Result orderVersions(@PathVariable String sequenceNumber) throws Exception {
+		Result result = null;
+		try {
+			List<OrderVersion> list = orderService.findOrderVersions(sequenceNumber);
+			result = Result.ok(list);
+		} catch (Exception e) {
+			logger.error("查询订单版本历史失败", e);
+			result = Result.error("查询订单版本历史失败！");
+		}
+		
+		return result;
 	}
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/grossprofit")
-	public List<MaterialGroups> calcGrossProfit(@RequestBody OrderDto order) throws Exception {
-		return orderService.calcGrossProfit(order);
+	public Result calcGrossProfit(@RequestBody OrderDto order) throws Exception {
+		Result result = null;
+		try {
+			List<MaterialGroups> list = orderService.calcGrossProfit(order);
+			result = Result.ok(list);
+		} catch (Exception e) {
+			logger.error("计算毛利失败", e);
+			result = Result.error("计算毛利失败！");
+		}
+		
+		return result;
 	}
 
-	@ApiOperation(value = "计算毛利", notes = "计算毛利")
+	@ApiOperation(value = "查询订单毛利", notes = "查询订单毛利")
 	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
-	public List<MaterialGroups> calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version)
+	public Result calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version)
 			throws Exception {
-		return orderService.calcGrossProfit(sequenceNumber, version);
+		Result result = null;
+		try {
+			List<MaterialGroups> list = orderService.calcGrossProfit(sequenceNumber, version);
+			result = Result.ok(list);
+		} catch (Exception e) {
+			logger.error("查询订单毛利失败", e);
+			result = Result.error("查询订单毛利失败！");
+		}
+		
+		return result;
 	}
 
 	@ApiOperation(value = "订单的公共可选择", notes = "所有订单共享的可选项")
 	@GetMapping(value = "order/option")
-	public OrderOption getOption() throws Exception {
-		OrderOption option = new OrderOption();
+	public Result getOption() throws Exception {
+		Result result = null;
 		try {
-			option = orderService.getOrderOption();
+			OrderOption option = orderService.getOrderOption();
+			result = Result.ok(option);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("订单的公共可选择失败", e);
+			result = Result.error("订单的公共可选择失败！");
 		}
 
-		return option;
+		return result;
 	}
 
 }

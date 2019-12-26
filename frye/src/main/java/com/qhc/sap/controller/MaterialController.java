@@ -112,29 +112,6 @@ public class MaterialController {
 		return m;
 	}
 
-	@ApiOperation(value = "保存或者修改MaterialClazz")
-	@PutMapping(value = "material/materialclass")
-	@ResponseStatus(HttpStatus.OK)
-	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) throws Exception {
-		characteristicSer.saveClass(clazz);
-	}
-
-	@ApiOperation(value = "保存或者修改CharacteristicValue")
-	@PutMapping(value = "material/characteristic")
-	@ResponseStatus(HttpStatus.OK)
-	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValueDto> chaValues)
-			throws Exception {
-		characteristicSer.saveCharacteristicValue(chaValues);
-	}
-
-	@ApiOperation(value = "保存或者修改默认特征")
-	@PutMapping(value = "material/default")
-	@ResponseStatus(HttpStatus.OK)
-	public void putcharacteristicDefault(
-			@RequestBody(required = true) @Valid List<DefaultCharacteristicsDto> defaultChavalue) throws Exception {
-		characteristicSer.saveCharacteristicDefault(defaultChavalue);
-	}
-
 	@ApiOperation(value = "根据物料分类代码查找characteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
@@ -158,6 +135,35 @@ public class MaterialController {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * SAP 同步接口
+	 * @param clazz
+	 * @throws Exception
+	 */
+
+	@ApiOperation(value = "保存或者修改MaterialClazz")
+	@PutMapping(value = "material/materialclass")
+	@ResponseStatus(HttpStatus.OK)
+	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) throws Exception {
+		characteristicSer.saveClass(clazz);
+	}
+
+	@ApiOperation(value = "保存或者修改CharacteristicValue")
+	@PutMapping(value = "material/characteristic")
+	@ResponseStatus(HttpStatus.OK)
+	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValueDto> chaValues)
+			throws Exception {
+		characteristicSer.saveCharacteristicValue(chaValues);
+	}
+
+	@ApiOperation(value = "保存或者修改默认特征")
+	@PutMapping(value = "material/default")
+	@ResponseStatus(HttpStatus.OK)
+	public void putcharacteristicDefault(
+			@RequestBody(required = true) @Valid List<DefaultCharacteristicsDto> defaultChavalue) throws Exception {
+		characteristicSer.saveCharacteristicDefault(defaultChavalue);
 	}
 
 }

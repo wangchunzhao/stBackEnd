@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
@@ -149,8 +150,6 @@ public class OrderService {
 
 	@Autowired
 	private SapViewMapper sapViewMapper;
-
-	private final static String ORDER_CREATION_SAP = "order/create/sapOrder";
 
 	private final static String COST_INSTALLATION = "BG1GDA00000-X";
 	private final static String COST_MATERIALS = "BG1GDB00000-X";
@@ -614,29 +613,14 @@ public class OrderService {
 	 * @param version
 	 * @return
 	 */
-	public String sendToSap(Integer orderInfoId) {
+	public String sendToSap(String user, OrderDto orderDto) {
 		try {
-			OrderDto order = this.findOrder(orderInfoId);
-			// 1. 根据sequenceNumber组装数据
-			SapOrder sapOrder = assembleSapOrder(order);
-
-			// 2. 调用bayernService同步SAP
-//			bayernService.postJason(ORDER_CREATION_SAP, sapOrder);
-		    // 获取流水号: sequenceNumber
-			//1.ͬ同步SAP开单 没有数据 先注释
-			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
-			logger.info("Order Data: {}", sapStr);
-			String res = null;
-			try {
-				//没有数据先注释
-				res = HttpUtil.postbody(orderCreationUrl, sapStr);
-			} catch (Exception e) {
-				logger.error("ͬ同步SAP异常==>",e);
-				throw new RuntimeException("ͬ同步SAP异常");
-			}
+			this.save(user, orderDto);
 			
-			//2. 处理返回结果
-			logger.info("SAP返回结果==>"+res);
+			// 1. 根据sequenceNumber组装数据
+			SapOrder sapOrder = assembleSapOrder(orderDto);
+			
+			sendToSap(sapOrder);
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -645,6 +629,32 @@ public class OrderService {
 
 		return "success";
 
+	}
+
+	/**
+	 * 下发订单到SAP
+	 * 
+	 * @param orderDto
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public String sendToSap(SapOrder sapOrder) {
+		String res = null;
+		try {
+			//1.ͬ同步SAP开单 没有数据 先注释
+			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
+			logger.info("Order Data: {}", sapStr);
+			//没有数据先注释
+			res = HttpUtil.postbody(orderCreationUrl, sapStr);
+		} catch (Exception e) {
+			logger.error("ͬ同步SAP异常==>",e);
+			throw new RuntimeException("ͬ同步SAP异常");
+		}
+		
+		//2. 处理返回结果
+		logger.info("SAP返回结果==>"+res);
+		
+		return res;
 	}
 
 	/**
