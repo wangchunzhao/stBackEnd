@@ -3,6 +3,7 @@ package com.qhc.order.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.entity.DeliveryAddress;
 
 /**
@@ -67,7 +68,7 @@ public interface DeliveryAddressMapper {
 	 */
 	int deleteById(Integer id);
 
-	List<DeliveryAddress> findByOrderInfoId(Integer orderInfoId);
+	List<DeliveryAddressDto> findByOrderInfoId(Integer orderInfoId);
 
 	void deleteByOrderInfoId(Integer orderInfoId);
 

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,6 @@ import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
-import com.qhc.order.domain.PaymentPlan;
 import com.qhc.order.domain.bpm.BpmOrder;
 import com.qhc.order.domain.bpm.OrderHeader;
 import com.qhc.order.domain.bpm.OrderItem;
@@ -44,7 +42,6 @@ import com.qhc.order.entity.Attachment;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.BpmDicision;
 import com.qhc.order.entity.Characteristics;
-import com.qhc.order.entity.DeliveryAddress;
 import com.qhc.order.entity.Item;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
@@ -56,10 +53,7 @@ import com.qhc.order.mapper.DeliveryAddressMapper;
 import com.qhc.order.mapper.ItemMapper;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
-import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.PaymentTermRepository;
-import com.qhc.sap.dao.SalesGroupRepository;
-import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
@@ -67,7 +61,6 @@ import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
-import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
 import com.qhc.system.dao.ProvinceRepository;
@@ -140,22 +133,10 @@ public class OrderService {
 	private ConstantService constService;
 
 	@Autowired
-	private BayernService<SapOrder> bayernService;
-
-	@Autowired
 	private SettingsRepository settingsRepository;
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
-
-	@Autowired
-	private SapViewMapper sapViewMapper;
-
-	private final static String COST_INSTALLATION = "BG1GDA00000-X";
-	private final static String COST_MATERIALS = "BG1GDB00000-X";
-	private final static String COST_ELETRICAL = "BG1R8J00000-X";
-	private final static String COST_COOLROOM = "BG1R8R00000-X";
-	private final static String COST_MAINTANANCE = "BG1R8K00000-X";
 
 	public OrderDto save(String user, OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
@@ -538,12 +519,6 @@ public class OrderService {
 //			}
 //		}
 		//
-		Map<String, Double> taxRate = oo.getTaxRate();
-//		taxRate.put("10", 0.13);
-//		taxRate.put("20", 0.0);
-//		taxRate.put("30", 0.13);
-
-		//
 		Map<String, String> payments = oo.getPaymentType();
 		Map<String, String> bidding = oo.getBiddingPlan();
 		List<PaymentTerm> pts = paymentRepo.findAll();
@@ -591,16 +566,19 @@ public class OrderService {
 		oo.setInstallationTerms(constService.findInstallationTerms());
 
 		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
-		Settings p = settingsRepository.findEnabledInfo("0d5d7ea6b2605e38b4f3dbd394168b3b");
+		Settings p = settingsRepository.findEnabledInfo("std_discount");
 		if (p != null) {
 			oo.setStandardDiscount(p.getsValue());
 		}
 
 		// 税率，Code：1c20b7ffba1a59faa081324eb34844a5
-		p = settingsRepository.findEnabledInfo("1c20b7ffba1a59faa081324eb34844a5");
+		p = settingsRepository.findEnabledInfo("tax_rate");
 		if (p != null) {
+			Map<String, Double> taxRate = new HashMap<String, Double>();
 			taxRate.put("10", Double.valueOf(p.getsValue()));
 			taxRate.put("30", Double.valueOf(p.getsValue()));
+			
+			oo.setTaxRate(taxRate);
 		}
 
 		return oo;
@@ -689,7 +667,7 @@ public class OrderService {
 		header.setBstzd(toString(order.getWarranty())); // Additional/附加的 -- 保修年限
 		header.setBstkdE(toString(order.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
 		header.setVsart(toString(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
-//		header.setZterm();	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
+		header.setZterm(order.getPaymentType());	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
 		header.setKunnr(toString(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
 		header.setWaerk(toString(order.getCurrency())); // Currency/币别 -- 币别
 		header.setInco1(toString(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
@@ -708,7 +686,7 @@ public class OrderService {
 		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
 
 //		ItemService itemService;
-		List<ItemDto> items = itemMapper.findByOrderInfoId(order.getId());
+		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
 			SapOrderItem sapItem = new SapOrderItem();
@@ -718,8 +696,9 @@ public class OrderService {
 			sapItem.setMatnr(item.getMaterialCode());
 			// Target quantity/数量
 			sapItem.setZmeng((int) item.getQuantity());
-			// Req.dlv.date/请求发货日期
-//			item.setEdatu(itemDetail.getDeliveryDate());
+			// Req.dlv.date/请求发货日期 yyyyMMdd
+			String deliveryDate = item.getDeliveryDate() == null ? "" : new SimpleDateFormat("yyyyMMdd").format(item.getDeliveryDate());
+			sapItem.setEdatu(deliveryDate);
 			// Item category/行项目类别 -- 项目类别
 			sapItem.setPstyv(item.getItemCategory());
 			// Item usage/项目用途 -- 项目需求计划
@@ -802,7 +781,6 @@ public class OrderService {
 		}
 
 		// Billing plan
-		// 当订单为经销商订单，billing plan只有一条数据，金额为空或0，不向sap发送billing plan数据，sap order
 		// header的付款条款为billing plan 的 code
 		List<BillingPlan> planList = billingPlanMapper.findByOrderInfoId(orderInfoId);
 		for (BillingPlan kBiddingPlan : planList) {
@@ -810,10 +788,6 @@ public class OrderService {
 				header.setZterm(kBiddingPlan.getCode());
 				break;
 			}
-//			if (kBiddingPlan.getAmount() == null || kBiddingPlan.getAmount().doubleValue() == 0 || orderType.equals(ORDER_TYPE_DEALER)) {
-//				header.setZterm(kBiddingPlan.getCode());
-//				break;
-//			}
 
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
@@ -936,13 +910,7 @@ public class OrderService {
 		order.setAttachments(attachments);
 
 		// 收货地址
-		List<DeliveryAddress> addressList = deliveryAddressMapper.findByOrderInfoId(orderInfoId);
-		List<DeliveryAddressDto> addresses = new ArrayList<DeliveryAddressDto>(addressList.size());
-		for (DeliveryAddress deliveryAddress : addressList) {
-			DeliveryAddressDto address = new DeliveryAddressDto();
-			BeanUtils.copyProperties(address, deliveryAddress);
-			addresses.add(address);
-		}
+		List<DeliveryAddressDto> addresses = deliveryAddressMapper.findByOrderInfoId(orderInfoId);
 		order.setDeliveryAddress(addresses);
 
 		// billing plan
@@ -954,11 +922,12 @@ public class OrderService {
 	}
 
 	private void assembleItems(OrderDto order) throws Exception {
-		Integer orderInfoId = order.getId();
-		List<ItemDto> items = itemMapper.findByOrderInfoId(orderInfoId);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("orderInfoId", order.getId());
+		List<ItemDto> items = itemMapper.findByParams(params);
 		order.setItems(items);
 		Map<String, String> unitMap = this.constService.findMeasurementUnits();
-		Map<String, String> cityMap = new HashMap(); // this.constService..findMeasurementUnits();
+//		Map<String, String> cityMap = this.constService.findMeasurementUnits();
 		for (ItemDto itemDetail : items) {
 			Integer itemId = itemDetail.getId();
 			ItemDto item = new ItemDto();
@@ -966,9 +935,19 @@ public class OrderService {
 			
 			item.setUnitName(unitMap.get(item.getUnitCode()));
 			// TODO
-//			item.setProvinceName(provinceName);
-//			item.setCityName(cityMap.get(item.getCityCode()));
-//			item.setDistrictName(districtName);
+			Integer deliveryAddressSeq = item.getDeliveryAddressSeq();
+			if (deliveryAddressSeq != null) {
+				order.getDeliveryAddress().forEach(e -> {
+					if (e.getSeq() != null && e.getSeq().equals(deliveryAddressSeq)) {
+						item.setProvinceCode(e.getProvinceCode());
+						item.setProvinceName(e.getProvinceName());
+						item.setCityCode(e.getCityCode());
+						item.setCityName(e.getCityName());
+						item.setDistrictCode(e.getDistinctCode());
+						item.setDistrictName(e.getDistinctName());
+					}
+				});
+			}
 //			item.setMaterialgroupName(materialgroupName);
 
 			// characteristics
@@ -1026,17 +1005,16 @@ public class OrderService {
 		bpmOrder.setWtwMargin(bpmWtwMargins);
 
 		// set bpm order
-//		bpmHeader.setAddress(order.geta);
-//		bpmHeader.setApprovalDiscount(order.getApprovedDiscount());
-		bpmHeader.setB2c("0");
-		List<ItemDto> l = order.getItems();
-		for (ItemDto ItemDto : l) {
-			String c = ItemDto.getB2cComments();
-			if (c != null && c.trim().length() > 0) {
-				bpmHeader.setB2c("1");
-				break;
+		List<DeliveryAddressDto> addresses = order.getDeliveryAddress();
+		if (addresses != null && addresses.size() > 0) {
+			StringBuilder strAddress = new StringBuilder(512);
+			for (DeliveryAddressDto deliveryAddressDto : addresses) {
+				strAddress.append(",").append(deliveryAddressDto.getAddress());
 			}
+			bpmHeader.setAddress(strAddress.substring(1));
 		}
+		bpmHeader.setApprovalDiscount(order.getDiscount());
+		bpmHeader.setB2c(String.valueOf(order.getIsB2c()));
 		bpmHeader.setBodyDiscount(order.getBodyDiscount());
 		bpmHeader.setComments(order.getComments());
 		bpmHeader.setContractAmount(order.getContractValue());
@@ -1054,8 +1032,7 @@ public class OrderService {
 		bpmHeader.setMaintenanceFee(order.getMaintenanceFee());
 		bpmHeader.setMargin(sumMargin.getGrossProfitMargin());
 		bpmHeader.setMaterialFee(order.getMaterialFee());
-		// TODO
-//		bpmHeader.setMaterialGroupNames(order.get);
+		
 		bpmHeader.setMergeDiscount(bpmHeader.getDiscount());
 		bpmHeader.setOrderType(order.getOrderType());
 		bpmHeader.setPaymentTypeName(order.getPaymentType());
@@ -1074,40 +1051,45 @@ public class OrderService {
 		bpmHeader.setWtwMargin(sumMargin.getWtwGrossProfitMargin());
 
 		// set bpm order item
-		for (ItemDto ItemDto : items) {
-			OrderItem bpmItem = new OrderItem();
-			bpmItems.add(bpmItem);
-
-			bpmItem.setActuralAmount(ItemDto.getActualPrice() * ItemDto.getQuantity());
-			bpmItem.setActuralAmountOfOptional(ItemDto.getOptionalActualPrica() * ItemDto.getQuantity());
-			bpmItem.setActuralPrice(ItemDto.getActualPrice());
-			bpmItem.setActuralPriceOfOptional(ItemDto.getOptionalActualPrica());
-			bpmItem.setAddress(ItemDto.getAddress());
-			bpmItem.setB2cAmountEstimated(ItemDto.getB2cEstimatedPrice() * ItemDto.getQuantity());
-			bpmItem.setB2cComments(ItemDto.getB2cComments());
-			bpmItem.setB2cCostOfEstimated(ItemDto.getB2cEstimatedCost());
-			bpmItem.setB2cPriceEstimated(ItemDto.getB2cEstimatedPrice());
-			bpmItem.setColorComments(ItemDto.getColorComments());
-			bpmItem.setDeliveryDate(ItemDto.getDeliveryDate());
-			bpmItem.setDiscount(ItemDto.getDiscount());
-			bpmItem.setItemCategoryName(ItemDto.getItemCategory());
-			bpmItem.setItemRequirementPlanName(ItemDto.getItemRequirementPlan());
-			bpmItem.setMaterialCode(ItemDto.getMaterialCode());
-			bpmItem.setMaterialAttribute(ItemDto.getIsPurchased() == 1 ? "采购" : "生产");
-			bpmItem.setMaterialGroupName(ItemDto.getMaterialgroupName());
-			bpmItem.setMaterialName(ItemDto.getMaterialName());
-			bpmItem.setMeasureUnitName(ItemDto.getMaterialName());
-			bpmItem.setOnStoreDate(ItemDto.getOnStoreDate());
-			bpmItem.setPeriod(ItemDto.getPeriod());
-			bpmItem.setProduceDate(ItemDto.getProduceDate());
-			bpmItem.setQuantity(ItemDto.getQuantity());
-			bpmItem.setRetailAmount(ItemDto.getRetailPrice() * ItemDto.getQuantity());
-			bpmItem.setRetailPrice(ItemDto.getRetailPrice());
-			bpmItem.setRowNumber(ItemDto.getRowNum());
-			bpmItem.setShippDate(ItemDto.getShippDate());
-			bpmItem.setSpecialComments(ItemDto.getSpecialComments());
-			bpmItem.setTranscationPriceOfOptional(ItemDto.getOptionalTransationPrice());
-			bpmItem.setTransfterPrice(ItemDto.getTransationPrice());
+		if (items.size() > 0) {
+			StringBuilder strGroupName = new StringBuilder(256);
+			for (ItemDto itemDto : items) {
+				strGroupName.append(",").append(itemDto.getMaterialGroupName());
+				OrderItem bpmItem = new OrderItem();
+				bpmItems.add(bpmItem);
+	
+				bpmItem.setActuralAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+				bpmItem.setActuralAmountOfOptional(itemDto.getOptionalActualPrica() * itemDto.getQuantity());
+				bpmItem.setActuralPrice(itemDto.getActualPrice());
+				bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrica());
+				bpmItem.setAddress(itemDto.getAddress());
+				bpmItem.setB2cAmountEstimated(itemDto.getB2cEstimatedPrice() * itemDto.getQuantity());
+				bpmItem.setB2cComments(itemDto.getB2cComments());
+				bpmItem.setB2cCostOfEstimated(itemDto.getB2cEstimatedCost());
+				bpmItem.setB2cPriceEstimated(itemDto.getB2cEstimatedPrice());
+				bpmItem.setColorComments(itemDto.getColorComments());
+				bpmItem.setDeliveryDate(itemDto.getDeliveryDate());
+				bpmItem.setDiscount(itemDto.getDiscount());
+				bpmItem.setItemCategoryName(itemDto.getItemCategory());
+				bpmItem.setItemRequirementPlanName(itemDto.getItemRequirementPlan());
+				bpmItem.setMaterialCode(itemDto.getMaterialCode());
+				bpmItem.setMaterialAttribute(itemDto.getIsPurchased() == 1 ? "采购" : "生产");
+				bpmItem.setMaterialGroupName(itemDto.getMaterialGroupName());
+				bpmItem.setMaterialName(itemDto.getMaterialName());
+				bpmItem.setMeasureUnitName(itemDto.getMaterialName());
+				bpmItem.setOnStoreDate(itemDto.getOnStoreDate());
+				bpmItem.setPeriod(itemDto.getPeriod());
+				bpmItem.setProduceDate(itemDto.getProduceDate());
+				bpmItem.setQuantity(itemDto.getQuantity());
+				bpmItem.setRetailAmount(itemDto.getRetailPrice() * itemDto.getQuantity());
+				bpmItem.setRetailPrice(itemDto.getRetailPrice());
+				bpmItem.setRowNumber(itemDto.getRowNum());
+				bpmItem.setShippDate(itemDto.getShippDate());
+				bpmItem.setSpecialComments(itemDto.getSpecialComments());
+				bpmItem.setTranscationPriceOfOptional(itemDto.getOptionalTransationPrice());
+				bpmItem.setTransfterPrice(itemDto.getTransationPrice());
+			}
+			bpmHeader.setMaterialGroupNames(strGroupName.substring(1));
 		}
 
 		// set bpm order margins and wtw margins
@@ -1178,18 +1160,10 @@ public class OrderService {
 	}
 
 	private String toString(Object v) {
-		return toString(v, "");
-	}
-
-	private String toString(Object v, String defaultValue) {
 		if (v == null) {
-			return defaultValue;
+			return "";
 		}
 		return v.toString();
-	}
-
-	private double toDouble(Number n) {
-		return n == null ? 0 : n.doubleValue();
 	}
 
 }

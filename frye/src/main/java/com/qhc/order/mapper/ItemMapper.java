@@ -21,7 +21,7 @@ public interface ItemMapper {
 	 * @param id id
 	 * @return Item对象
 	 */
-	Item findById(Integer id);
+//	Item findById(Integer id);
 
 	/**
 	 * 
@@ -68,7 +68,7 @@ public interface ItemMapper {
 	 */
 	List<ItemDto> findByParams(Map<String, Object> params);
 
-	List<ItemDto> findByOrderInfoId(Integer orderInfoId);
+//	List<ItemDto> findByOrderInfoId(Integer orderInfoId);
 
 	void deleteByOrderInfoId(Integer orderInfoId);
 

@@ -118,10 +118,22 @@
 		</choose>
 	</select>
 	
-	<select id="findByOrderInfoId" resultMap="DeliveryAddressMap" parameterType="Integer" >
+	<select id="findByOrderInfoId" resultType="com.qhc.order.domain.DeliveryAddressDto" parameterType="Integer" >
 		select 
-		<include refid="Column_List" />
-		from k_delivery_address
+			a.id, 
+			a.order_info_id, 
+			a.seq, 
+			a.province_code, 
+			a.city_code,
+			a.district_code, 
+			a.address,
+			p.name as province_name,
+			c.name as city_name,
+			d.name as district_name
+		from k_delivery_address a
+		left join b_province p on p.code = a.province_code
+		left join b_city c on c.code = a.city_code
+		left join b_area d on d.code = a.district_code
 		where order_info_id = #{value}
 	</select>
 	

@@ -165,10 +165,16 @@
 			d.city_code, 
 			d.district_code, 
 			d.address,
-			m.name as material_name
+			m.description as material_name,
+			mg.code as material_group_code,
+			mg.name as material_group_name,
+			mgo.code as st_material_group_code,
+			mgo.name as st_material_group_name
 		from k_item i
 		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
-		left join sap_material m on m.code = i.material_code
+		left join sap_materials m on m.code = i.material_code
+		left join sap_material_groups mg on mg.code = m.sap_material_groups_code
+		left join b_material_group_order mgo on mgo.code = mg.b_material_group_order_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -305,7 +311,7 @@
 		</trim>
 	</sql>
 	
-	<select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
+	<!-- <select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
 		select 
 			i.*,
 			d.province_code, 
@@ -317,7 +323,7 @@
 		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
 		left join sap_material m on m.code = i.material_code
 		where order_info_id = #{value}
-	</select>
+	</select> -->
 	
 	<delete id="deleteByOrderInfoId" parameterType="Integer" >
 		delete from k_item

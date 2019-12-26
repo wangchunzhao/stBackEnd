@@ -183,7 +183,7 @@ public class OrderController {
 	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
 	@PostMapping(value = "order/sap/{user}")
 	@ResponseStatus(HttpStatus.OK)
-	public Result sendOrderToSAP(@PathVariable("user") String user, @RequestBody OrderDto order)
+	public Result sendOrderToSap(@PathVariable("user") String user, @RequestBody OrderDto order)
 			throws Exception {
 		Result result = null;
 		try {
