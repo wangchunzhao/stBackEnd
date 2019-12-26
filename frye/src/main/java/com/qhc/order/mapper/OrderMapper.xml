@@ -8,6 +8,8 @@
 		<result column="customer_code" property="customerCode" jdbcType="VARCHAR" />
 		<result column="customer_clazz" property="customerClazz" jdbcType="VARCHAR" />
 		<result column="sales_code" property="salesCode" jdbcType="VARCHAR" />
+		<result column="st_order_type" property="stOrderType" jdbcType="VARCHAR" />
+		<result column="quote_status" property="quoteStatus" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="OrderMap" type="com.qhc.order.entity.Order" extends="OrderBaseMap" >
@@ -20,9 +22,11 @@
 			select LAST_INSERT_ID() 
 		</selectKey>
 		insert into k_order ( id, order_type, sequence_number, 
-			customer_code, customer_clazz, sales_code )
+			customer_code, customer_clazz, sales_code, 
+			st_order_type, quote_status )
 		values ( #{id, jdbcType=INTEGER}, #{orderType, jdbcType=VARCHAR}, #{sequenceNumber, jdbcType=VARCHAR}, 
-			#{customerCode, jdbcType=VARCHAR}, #{customerClazz, jdbcType=VARCHAR}, #{salesCode, jdbcType=VARCHAR} )
+			#{customerCode, jdbcType=VARCHAR}, #{customerClazz, jdbcType=VARCHAR}, #{salesCode, jdbcType=VARCHAR}, 
+			#{stOrderType, jdbcType=VARCHAR}, #{quoteStatus, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -32,7 +36,9 @@
 			sequence_number = #{sequenceNumber, jdbcType=VARCHAR}, 
 			customer_code = #{customerCode, jdbcType=VARCHAR}, 
 			customer_clazz = #{customerClazz, jdbcType=VARCHAR}, 
-			sales_code = #{salesCode, jdbcType=VARCHAR}
+			sales_code = #{salesCode, jdbcType=VARCHAR}, 
+			st_order_type = #{stOrderType, jdbcType=VARCHAR}, 
+			quote_status = #{quoteStatus, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
@@ -44,7 +50,7 @@
 
 	<sql id="Base_Column_List" >
 		k_order.id, k_order.order_type, k_order.sequence_number, k_order.customer_code, k_order.customer_clazz, 
-		k_order.sales_code
+		k_order.sales_code, k_order.st_order_type, k_order.quote_status
 	</sql>
 	
 	<sql id="Column_List">
@@ -57,6 +63,29 @@
 		<include refid="Column_List" />
 		from k_order 
 		where k_order.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="OrderMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_order
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_order
+		<include refid="Where_By_Params" />
 	</select>
 	
 	<sql id="Where_By_Params" >
@@ -79,6 +108,12 @@
 			<if test="salesCode != null and salesCode != ''" >
 				AND k_order.sales_code = #{salesCode, jdbcType=VARCHAR}
 			</if>
+			<if test="stOrderType != null and stOrderType != ''" >
+				AND k_order.st_order_type = #{stOrderType, jdbcType=VARCHAR}
+			</if>
+			<if test="quoteStatus != null and quoteStatus != ''" >
+				AND k_order.quote_status = #{quoteStatus, jdbcType=VARCHAR}
+			</if>
 			
 			<include refid="Where_Clause" />
 		</trim>
@@ -87,28 +122,4 @@
 	<sql id="Where_Clause">
 		
 	</sql>
-	
-	<!-- 按参数统计 -->
-	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
-		select count(1) 
-		from k_order
-		<include refid="Where_By_Params" />
-	</select>
-	
-	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="OrderMap" parameterType="Map" >
-		select 
-		<include refid="Column_List" />
-		from k_order
-		<include refid="Where_By_Params" />
-		<choose>
-			<when test="orderByClause != null">
-				order by ${orderByClause}
-			</when>
-			<otherwise>
-				order by id
-			</otherwise>
-		</choose>
-	</select>
-	
 </mapper>
