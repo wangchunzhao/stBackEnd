@@ -354,7 +354,7 @@ alter table k_bpm_dicision comment 'BPM审批结果';
 create table k_characteristics
 (
    id                   integer unsigned not null auto_increment,
-   item_detail_id       integer not null,
+   item_id              integer not null,
    key_code             varchar(45) not null comment '选定的特征代码',
    value_code           varchar(45) not null comment '选定的特征值的代码',
    is_configurable      integer not null comment '可配置',
@@ -481,7 +481,7 @@ create table k_item
    item_requirement_plan varchar(45) not null comment '需求计划',
    b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
    delivery_address_seq integer comment '发货地址序号',
-   delivery_address_id  integer comment '发货地址ID',
+   delivery_address_id  integer comment '发货地址ID，这个字段可以不用',
    standard_price       decimal(13,2) comment '移动平均价，即成本价格',
    retail_price         decimal(13,2) comment '零售价格',
    actural_price        decimal(13,2) comment '产品实卖价',
@@ -545,7 +545,7 @@ create table k_order
             ZH0D	经销商订单
             ZH0M	备货订单
             ZH0T	大客户订单',
-   sequence_number      varchar(18) not null comment '序列号',
+   sequence_number      varchar(32) not null comment '序列号',
    customer_code        varchar(10) not null comment '签约单位/ 客户',
    customer_clazz       varchar(10) comment '性质分类，经销商/直签',
    sales_code           varchar(32) not null comment '客户经理，如果是创建人就不需要',
@@ -555,6 +555,10 @@ create table k_order
             3 直签客户投标报价
             4 直签客户下定单
             5 备货 ',
+   quote_status         varchar(10) comment '报价单状态
+            00 报价单
+            01 已中标
+            02 已下单',
    primary key (id),
    key sequence_number_UNIQUE (sequence_number)
 );
@@ -585,7 +589,10 @@ create table k_order_info
             11   BPM驳回',
    is_active            integer comment '最新版本，新的版本生成后旧的版本变为0， 新的版本为1
             0 非最新，1 最新',
-   terminal_type        varchar(10) comment '终端客户性质，是否是大客户的客户性质，即客户级别（sap_industry_code），大客户由客户信息带出，经销商选择',
+   terminal_type        varchar(10) comment '终端客户性质
+            01 连锁百强
+            02 国际大连锁
+            03 散户',
    shop_name            varchar(64) not null comment '店名 shop name',
    record_code          varchar(45) comment '项目报备编号',
    sales_tel            varchar(45) comment '客户（销售）经理电话',
@@ -681,7 +688,7 @@ create table sap_characteristic
 (
    code                 varchar(30) not null,
    name                 varchar(64) not null,
-   is_optional          TINYINT(1) not null,
+   is_optional          TINYINT(1) not null comment '可选、必选',
    primary key (code),
    key code_UNIQUE (code)
 );
