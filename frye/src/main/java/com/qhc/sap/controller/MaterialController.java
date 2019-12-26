@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.service.ConstantService;
-import com.qhc.sap.domain.BomExplosion;
+import com.qhc.sap.domain.MaterialBom;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
@@ -38,6 +38,7 @@ import com.qhc.utils.DateUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author wang@dxc.com
@@ -45,13 +46,13 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @Api(value = "Material Management in Frye", description = "物料管理")
+@Slf4j
 public class MaterialController {
 	
-	public final static String MATERIAL_NAME ="name";
-	public final static String MATERIAL_PAGENO ="pageNo";
+
+	public final static String MATERIAL_NAME = "name";
+	public final static String MATERIAL_PAGENO = "pageNo";
 	public final static String MATERIAL_PAGESIZE = "pageSize";
-	public final static String MATERIAL_BOM_CODE ="bom_code";
-	
 
 	@Autowired
 	private MaterialService materialSer;
@@ -82,15 +83,14 @@ public class MaterialController {
 	@ApiOperation(value = "查找增物料信息")
 	@PostMapping(value = "material")
 	@ResponseStatus(HttpStatus.OK)
-	public Result findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
-			throws Exception {
+	public Result findMaterialsByName(@RequestBody(required = true) Map<String, String> pars) throws Exception {
 		Result result = null;
 		try {
 			String name = pars.get("name");
 			String industryCode = pars.get("industryCode");
 			Integer pageNo = Integer.parseInt(pars.get(MATERIAL_PAGENO));
 			Integer pageSize = Integer.parseInt(pars.get(MATERIAL_PAGESIZE));
-			PageInfo<MaterialDto> page = materialSer.findMaterialsByName(name, industryCode, pageNo,pageSize);
+			PageInfo<MaterialDto> page = materialSer.findMaterialsByName(name, industryCode, pageNo, pageSize);
 			PageHelper<MaterialDto> materials = new PageHelper<MaterialDto>(page);
 			result = Result.ok(materials);
 		} catch (Exception e) {
@@ -103,7 +103,8 @@ public class MaterialController {
 	@ApiOperation(value = "通过code查找具体增物料信息")
 	@GetMapping(value = "material/{code}/{industryCode}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
-	public MaterialDto getMaterialById(@PathVariable(required = true) String code, @PathVariable(required = false) String industryCode) throws Exception {
+	public MaterialDto getMaterialById(@PathVariable(required = true) String code,
+			@PathVariable(required = false) String industryCode) throws Exception {
 		if (code.equals("null")) {
 			code = null;
 		}
@@ -114,41 +115,49 @@ public class MaterialController {
 	@ApiOperation(value = "保存或者修改MaterialClazz")
 	@PutMapping(value = "material/materialclass")
 	@ResponseStatus(HttpStatus.OK)
-	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz)  throws Exception{
+	public void putClass(@RequestBody(required = true) @Valid List<Clazz> clazz) throws Exception {
 		characteristicSer.saveClass(clazz);
 	}
 
 	@ApiOperation(value = "保存或者修改CharacteristicValue")
 	@PutMapping(value = "material/characteristic")
 	@ResponseStatus(HttpStatus.OK)
-	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValueDto> chaValues) throws Exception {
+	public void putcharacteristicValue(@RequestBody(required = true) @Valid List<CharacteristicValueDto> chaValues)
+			throws Exception {
 		characteristicSer.saveCharacteristicValue(chaValues);
 	}
-	
+
 	@ApiOperation(value = "保存或者修改默认特征")
 	@PutMapping(value = "material/default")
 	@ResponseStatus(HttpStatus.OK)
-	public void putcharacteristicDefault(@RequestBody(required = true) @Valid List<DefaultCharacteristicsDto> defaultChavalue) throws Exception {
+	public void putcharacteristicDefault(
+			@RequestBody(required = true) @Valid List<DefaultCharacteristicsDto> defaultChavalue) throws Exception {
 		characteristicSer.saveCharacteristicDefault(defaultChavalue);
 	}
-	
+
 	@ApiOperation(value = "根据物料分类代码查找characteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,@PathVariable(required = true) String materialCode)  throws Exception{
-		return materialSer.getCharactersByClazzCode(clazzCode,materialCode);
-		
-	}
-	
-	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
-	@PostMapping(value = "material/configuration")
-	@ResponseStatus(HttpStatus.OK)
-	public BomExplosion findBOMWithPrice(@RequestBody(required = true) Map<String,String> pars)  throws Exception{
-		if(pars !=null &&pars.containsKey(MATERIAL_BOM_CODE)) {
-			return materialSer.findBOMWithPrice(pars);
-		}
-		return null;
+	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,
+			@PathVariable(required = true) String materialCode) throws Exception {
+		return materialSer.getCharactersByClazzCode(clazzCode, materialCode);
+
 	}
 
+	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
+	@PostMapping(value = "material/optionalbom")
+	@ResponseStatus(HttpStatus.OK)
+	public Result findBOMWithPrice(@RequestBody(required = true) Map<String, String> pars) throws Exception {
+		Result result;
+		try {
+			MaterialBom bom = materialSer.findBomPrice(pars);
+			result = Result.ok(bom);
+		} catch (Exception e) {
+			this.log.error("查询产品BOM失败", e);
+			result = Result.error("查询产品BOM失败！");
+		}
+		
+		return result;
+	}
 
 }

@@ -17,7 +17,9 @@ import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
-import com.qhc.sap.domain.BomExplosion;
+import com.qhc.sap.domain.BomBodyParam;
+import com.qhc.sap.domain.MaterialBom;
+import com.qhc.sap.domain.BomHeadParam;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.Configuration;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
@@ -31,17 +33,16 @@ import com.qhc.sap.entity.MaterialView;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
 import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.domain.PageHelper;
+import com.qhc.utils.HttpUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.exception.NotExistException;
 import com.qhc.exception.NotMatchException;
 import com.qhc.order.service.BayernService;
 
-
-
 @Service
 public class MaterialService {
-	
+
 	public final String MATERIAL_PRICE_TYPE_RETAIL_PRICE = "ZH01";
 	public final String MATERIAL_PRICE_TYPE_ANNUAL_PRICE = "ZH02";
 	public final String MATERIAL_PRICE_TYPE_DISCOUNT_PRICE = "ZH03";
@@ -51,32 +52,27 @@ public class MaterialService {
 	public final String MATERIAL_PRICE_TYPE_TRANSFER_PRICE = "ZH10";
 	public final String MATERIAL_PRICE_TYPE_OUTSOURCING_PRICE = "ZH11";
 	public final String MATERIAL_PRICE_TYPE_INTERNAL_PRICE = "ZHCS";
-	
-	public final static String BOM_PATH_EXPORSION = "/material/bom";
-	public final static String BOM_CONFIGURATION_DEFAULT = "default";
-	public final static String BOM_CONFIGURATION_CONFIGURATED = "configurated";
-	
+
 	public final static String PATH_CHARACTERISTIC_DEFAULT_VALUE = "defaultCharacteristic/";
+	
+	@Autowired
+	private SapService sapService;
 
 	@Autowired
 	private MaterialRepository materialRepo;
-	
+
 	@Autowired
 	private PriceRepository priceRepository;
-	
+
 	@Autowired
 	private SapLastUpdatedRepository lastUpdatedRepo;
-	
-	@Autowired
-	private BayernService bayernSer;
-	
+
 	@Autowired
 	private SapViewMapper sapViewMapper;
-	
-	
+
 	@Autowired
 	private CharacteristicDefaultRepository defaultCharacterRep;
-	
+
 	public void saveMaterials(List<MaterialDto> materials) {
 		Set<Material> mset = new HashSet<Material>();
 //		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();
@@ -85,7 +81,7 @@ public class MaterialService {
 		lastUpdated.setCode(MaterialDto.MATERIAL_CODE);
 		lastUpdated.setName("material");
 		//
-		for(MaterialDto ma: materials){
+		for (MaterialDto ma : materials) {
 			Material dm = new Material();
 			dm.setCode(ma.getCode());
 			dm.setDescription(ma.getDescription());
@@ -99,7 +95,7 @@ public class MaterialService {
 			dm.setClazzCode(ma.getClazzCode());
 			mset.add(dm);
 
-			if(ma.getClazzCode()!=null && !ma.getClazzCode().isEmpty()) {
+			if (ma.getClazzCode() != null && !ma.getClazzCode().isEmpty()) {
 //				MaterialClazz mc = new MaterialClazz();
 				MaterialClazzIdentity mci = new MaterialClazzIdentity();
 				mci.setClazzCode(ma.getClazzCode());
@@ -113,30 +109,32 @@ public class MaterialService {
 //		mcRepo.saveAll(mcset);
 		lastUpdatedRepo.save(lastUpdated);
 	}
+
 	/**
 	 * 
-	 * @param name material name
+	 * @param name   material name
 	 * @param pageNo
 	 * @return
 	 */
-	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo, int pageSize){
+	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo, int pageSize) {
 		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
-		
+
 		List<MaterialDto> list = sapViewMapper.findMaterialInfo(null, name);
-		
+
 		for (MaterialDto materialDto : list) {
 			fillMaterialPrice(materialDto, industryCode);
 		}
-		
+
 		return new PageInfo(list);
 	}
+
 	/**
 	 * 
 	 * @param code id of material
 	 * @param code id of customer industry
 	 * @return corresponded material information
 	 */
-	public MaterialDto getMaterialsById(String code, String industryCode){
+	public MaterialDto getMaterialsById(String code, String industryCode) {
 		MaterialDto m = null;
 		List<MaterialDto> list = sapViewMapper.findMaterialInfo(code, null);
 		if (list.size() > 0) {
@@ -144,11 +142,12 @@ public class MaterialService {
 		} else {
 			return null;
 		}
-		
+
 		fillMaterialPrice(m, industryCode);
-		
+
 		return m;
 	}
+
 	private void fillMaterialPrice(MaterialDto m, String industryCode) {
 		if (industryCode == null) {
 			return;
@@ -157,97 +156,89 @@ public class MaterialService {
 		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
 		for (MaterialPrice materialPrice : prices) {
 			String priceTypeCode = materialPrice.getType();
-			switch(priceTypeCode) {
-				case MATERIAL_PRICE_TYPE_RETAIL_PRICE:
-					m.setRetailPrice(materialPrice.getPrice());
-					break;
-				case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
-					m.setAnnualPrice(materialPrice.getPrice());
-					break;
-				case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
-					m.setTranscationPrice(materialPrice.getPrice());
-					break;
+			switch (priceTypeCode) {
+			case MATERIAL_PRICE_TYPE_RETAIL_PRICE:
+				m.setRetailPrice(materialPrice.getPrice());
+				break;
+			case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
+				m.setAnnualPrice(materialPrice.getPrice());
+				break;
+			case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
+				m.setTranscationPrice(materialPrice.getPrice());
+				break;
 			}
 		}
 	}
+
 	/**
 	 * 
 	 * @param clazzCode
 	 * @param materialCode
 	 * @return
 	 */
-	public List<Characteristic> getCharactersByClazzCode(String clazzCode,String materialCode) throws NotMatchException{
+	public List<Characteristic> getCharactersByClazzCode(String clazzCode, String materialCode)
+			throws NotMatchException {
 		List<CharacteristicConfiguration> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		List<CharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		Set<Integer> ids = new HashSet<Integer>();
-		for(CharacteristicDefault dc: defaultValues) {
+		for (CharacteristicDefault dc : defaultValues) {
 			ids.add(dc.getValueId());
 		}
-		//temp valiable
-		Map<String,Characteristic> cs = new HashMap<String,Characteristic>();
-		for(CharacteristicConfiguration cc:ccs) {
+		// temp valiable
+		Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
+		for (CharacteristicConfiguration cc : ccs) {
 			Configuration con = new Configuration();
-			if(!cs.containsKey(cc.getKeyCode())) {
+			if (!cs.containsKey(cc.getKeyCode())) {
 				Characteristic ch = new Characteristic();
 				ch.setCode(cc.getKeyCode());
 				ch.setName(cc.getKeyName());
 				ch.setOptional(false);
 				ch.setClassCode(clazzCode);
 				cs.put(cc.getKeyCode(), ch);
-				
+
 				con.setCode(cc.getValCode());
 				con.setName(cc.getValName());
-				
+
 				ch.getConfigs().add(con);
-			}else {
-				
+			} else {
+
 				con.setCode(cc.getValCode());
 				con.setName(cc.getValName());
 				cs.get(cc.getKeyCode()).getConfigs().add(con);
-			}	
+			}
 			//
-			if(ids.contains(cc.getId())) {
+			if (ids.contains(cc.getId())) {
 				con.setDefault(true);
-			}else {
+			} else {
 				con.setDefault(false);
 			}
-		}		
-		//character list
+		}
+		// character list
 		List<Characteristic> chas = new ArrayList<Characteristic>();
-		for(String key:cs.keySet()) {
+		for (String key : cs.keySet()) {
 			chas.add(cs.get(key));
 		}
 		//
 		return chas;
 	}
-	
+
 	/**
+	 * 从SAP获取产品标配和选配的BOM清单
 	 * 
 	 * @param pars
 	 * @return
 	 */
-	public BomExplosion findBOMWithPrice(Map<String,String> pars){
-		Map<String,List<String>> boms = (Map<String, List<String>>) bayernSer.postForm(BOM_PATH_EXPORSION, pars, Map.class);	
-		if(boms!=null && boms.keySet().size()==2 && boms.containsKey(BOM_CONFIGURATION_DEFAULT) && boms.containsKey(BOM_CONFIGURATION_CONFIGURATED)) {
-			
-			BomExplosion be = new BomExplosion();
-			List<String> defaultBomsStr = boms.get(BOM_CONFIGURATION_DEFAULT);
-			ObjectMapper mapper = new ObjectMapper(); 
-			Bom[] defaultBomsTemp = mapper.convertValue(defaultBomsStr,Bom[].class); 
-			List<Bom> defaultBoms = new ArrayList();
-			for(Bom temp:defaultBomsTemp)
-				defaultBoms.add(temp);
-			List<String> configedBomsStr = boms.get(BOM_CONFIGURATION_CONFIGURATED);
-			Bom[] configedBomsTemp = mapper.convertValue(configedBomsStr,Bom[].class); 
-			List<Bom> configedBoms = new ArrayList();
-			for(Bom temp:configedBomsTemp)
-				configedBoms.add(temp);
-			boolean result = be.fillIn(defaultBoms,configedBoms);
-			if(result)
-				return be;
-
-		}
-			
-		return null;
+	public MaterialBom findBomPrice(Map<String, String> pars) {
+		Map<String, List<Bom>> boms = sapService.getBomExplosion(pars);
+		List<Bom> standard = boms.get("standard");
+		List<Bom> optional = boms.get("optional");
+		
+		MaterialBom mb = new MaterialBom();
+		mb.setOptional(optional);
+		mb.setStandard(standard);
+		
+		mb.calculatePriceGap();
+		
+		return mb;
 	}
 }
