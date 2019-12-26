@@ -163,6 +163,7 @@ public class OrderService {
 				
 				String sequenceNumber = "QHC" + version;
 				order.setSequenceNumber(sequenceNumber);
+				order.setSalesCode(user);
 				
 				orderMapper.insert(order);
 

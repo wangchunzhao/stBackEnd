@@ -26,6 +26,10 @@ logging:
    config: classpath:logback-spring.xml
    path: .\logs
 
+mybatis: 
+   configuration:
+      map-underscore-to-camel-case: true
+
 pagehelper: 
    helperDialect: mysql
    reasonable: true

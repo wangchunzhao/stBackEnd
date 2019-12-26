@@ -467,21 +467,29 @@
 				order by id
 			</otherwise>
 		</choose> -->
+		order by id
 	</select>
 	<sql id="order_view_column_list" >
         oi.*,
+        o.id as order_id,
         o.order_type,
         o.sequence_number,
         o.customer_code,
         o.customer_clazz,
         o.sales_code,
-        su.name as sales_name
+        o.st_order_type,
+        o.quote_status,
+        su.name as sales_name,
+        cu.name as creater_name,
+        uu.name as updater_name
 	</sql>
 	
 	<sql id="order_view_table_list" >
-        	k_order_info oi 
+        k_order_info oi 
         LEFT JOIN k_order o ON o.id = oi.order_id
         LEFT JOIN b_user su ON su.user_identity = o.sales_code
+        LEFT JOIN b_user cu ON cu.user_identity = oi.creater
+        LEFT JOIN b_user uu ON uu.user_identity = oi.updater
         LEFT JOIN sap_customer c on c.code = o.customer_code
     </sql>
     
