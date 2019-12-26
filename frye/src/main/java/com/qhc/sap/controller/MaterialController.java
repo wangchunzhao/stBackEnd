@@ -26,12 +26,14 @@ import com.qhc.sap.domain.BomExplosion;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.service.CharacteristicService;
 import com.qhc.sap.service.CustomerService;
 import com.qhc.sap.service.MaterialService;
 import com.qhc.system.domain.PageHelper;
+import com.qhc.system.domain.Result;
 import com.qhc.utils.DateUtil;
 
 import io.swagger.annotations.Api;
@@ -47,6 +49,7 @@ public class MaterialController {
 	
 	public final static String MATERIAL_NAME ="name";
 	public final static String MATERIAL_PAGENO ="pageNo";
+	public final static String MATERIAL_PAGESIZE = "pageSize";
 	public final static String MATERIAL_BOM_CODE ="bom_code";
 	
 
@@ -79,14 +82,22 @@ public class MaterialController {
 	@ApiOperation(value = "查找增物料信息")
 	@PostMapping(value = "material")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<MaterialDto> findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
+	public Result findMaterialsByName(@RequestBody(required = true) Map<String, String> pars)
 			throws Exception {
-		String name = pars.get("name");
-		String industryCode = pars.get("industryCode");
-		Integer pageNo = Integer.parseInt(pars.get(MATERIAL_PAGENO));
-		PageInfo<MaterialDto> page = materialSer.findMaterialsByName(name, industryCode, pageNo);
-		
-		return new PageHelper<MaterialDto>(page);
+		Result result = null;
+		try {
+			String name = pars.get("name");
+			String industryCode = pars.get("industryCode");
+			Integer pageNo = Integer.parseInt(pars.get(MATERIAL_PAGENO));
+			Integer pageSize = Integer.parseInt(pars.get(MATERIAL_PAGESIZE));
+			PageInfo<MaterialDto> page = materialSer.findMaterialsByName(name, industryCode, pageNo,pageSize);
+			PageHelper<MaterialDto> materials = new PageHelper<MaterialDto>(page);
+			result = Result.ok(materials);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 
 	@ApiOperation(value = "通过code查找具体增物料信息")

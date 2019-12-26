@@ -119,8 +119,8 @@ public class MaterialService {
 	 * @param pageNo
 	 * @return
 	 */
-	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo){
-		com.github.pagehelper.PageHelper.startPage(pageNo, 50);
+	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo, int pageSize){
+		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		
 		List<MaterialDto> list = sapViewMapper.findMaterialInfo(null, name);
 		
