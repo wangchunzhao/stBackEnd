@@ -3,6 +3,7 @@ package com.qhc.order.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.qhc.order.domain.CharacteristicDto;
 import com.qhc.order.entity.Characteristics;
 
 /**
@@ -67,7 +68,7 @@ public interface CharacteristicsMapper {
 	 */
 	int deleteById(Integer id);
 
-	List<Characteristics> findByItemId(Integer itemId);
+	List<CharacteristicDto> findByItemId(Integer itemId);
 
 	void deleteByOrderInfoId(Integer orderInfoId);
 

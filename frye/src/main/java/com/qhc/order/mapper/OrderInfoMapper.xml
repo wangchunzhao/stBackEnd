@@ -30,7 +30,7 @@
 		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
 		<result column="warranty" property="warranty" jdbcType="INTEGER" />
 		<result column="install_type" property="installType" jdbcType="VARCHAR" />
-		<result column="reveive_type" property="reveiveType" jdbcType="VARCHAR" />
+		<result column="receive_type" property="receiveType" jdbcType="VARCHAR" />
 		<result column="transfer_type" property="transferType" jdbcType="VARCHAR" />
 		<result column="freight" property="freight" jdbcType="DECIMAL" />
 		<result column="contactor1_id" property="contactor1Id" jdbcType="VARCHAR" />
@@ -62,7 +62,7 @@
 		<result column="comments" property="comments" jdbcType="VARCHAR" />
 		<result column="submit_time" property="submitTime" jdbcType="TIMESTAMP" />
 		<result column="bpm_submit_time" property="bpmSubmitTime" jdbcType="TIMESTAMP" />
-		<result column="creater" property="creater" jdbcType="CHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="updater" property="updater" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -86,7 +86,7 @@
 			contract_value, contract_rmb_value, currency, 
 			currency_exchange, items_amount, contract_manager, 
 			office_code, group_code, warranty, 
-			install_type, reveive_type, transfer_type, 
+			install_type, receive_type, transfer_type, 
 			freight, contactor1_id, contactor1_tel, 
 			contactor2_id, contactor2_tel, contactor3_id, 
 			contactor3_tel, body_discount, approved_body_discount, 
@@ -108,7 +108,7 @@
 			#{contractValue, jdbcType=DECIMAL}, #{contractRmbValue, jdbcType=DECIMAL}, #{currency, jdbcType=VARCHAR}, 
 			#{currencyExchange, jdbcType=DOUBLE}, #{itemsAmount, jdbcType=DECIMAL}, #{contractManager, jdbcType=VARCHAR}, 
 			#{officeCode, jdbcType=VARCHAR}, #{groupCode, jdbcType=VARCHAR}, #{warranty, jdbcType=INTEGER}, 
-			#{installType, jdbcType=VARCHAR}, #{reveiveType, jdbcType=VARCHAR}, #{transferType, jdbcType=VARCHAR}, 
+			#{installType, jdbcType=VARCHAR}, #{receiveType, jdbcType=VARCHAR}, #{transferType, jdbcType=VARCHAR}, 
 			#{freight, jdbcType=DECIMAL}, #{contactor1Id, jdbcType=VARCHAR}, #{contactor1Tel, jdbcType=VARCHAR}, 
 			#{contactor2Id, jdbcType=VARCHAR}, #{contactor2Tel, jdbcType=VARCHAR}, #{contactor3Id, jdbcType=VARCHAR}, 
 			#{contactor3Tel, jdbcType=VARCHAR}, #{bodyDiscount, jdbcType=DOUBLE}, #{approvedBodyDiscount, jdbcType=DOUBLE}, 
@@ -153,7 +153,7 @@
 			group_code = #{groupCode, jdbcType=VARCHAR}, 
 			warranty = #{warranty, jdbcType=INTEGER}, 
 			install_type = #{installType, jdbcType=VARCHAR}, 
-			reveive_type = #{reveiveType, jdbcType=VARCHAR}, 
+			receive_type = #{receiveType, jdbcType=VARCHAR}, 
 			transfer_type = #{transferType, jdbcType=VARCHAR}, 
 			freight = #{freight, jdbcType=DECIMAL}, 
 			contactor1_id = #{contactor1Id, jdbcType=VARCHAR}, 
@@ -185,7 +185,7 @@
 			comments = #{comments, jdbcType=VARCHAR}, 
 			submit_time = #{submitTime, jdbcType=TIMESTAMP}, 
 			bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
-			<!-- creater = #{creater, jdbcType=CHAR}, 
+			<!-- creater = #{creater, jdbcType=VARCHAR}, 
 			create_time = #{createTime, jdbcType=TIMESTAMP},  -->
 			updater = #{updater, jdbcType=VARCHAR}, 
 			update_time = now()
@@ -204,7 +204,7 @@
 		k_order_info.is_convenient_store, k_order_info.is_reformed, k_order_info.is_new, k_order_info.contract_number, k_order_info.sale_type, 
 		k_order_info.tax_rate, k_order_info.incoterm, k_order_info.incoterm_contect, k_order_info.contract_value, k_order_info.contract_rmb_value, 
 		k_order_info.currency, k_order_info.currency_exchange, k_order_info.items_amount, k_order_info.contract_manager, k_order_info.office_code, 
-		k_order_info.group_code, k_order_info.warranty, k_order_info.install_type, k_order_info.reveive_type, k_order_info.transfer_type, 
+		k_order_info.group_code, k_order_info.warranty, k_order_info.install_type, k_order_info.receive_type, k_order_info.transfer_type, 
 		k_order_info.freight, k_order_info.contactor1_id, k_order_info.contactor1_tel, k_order_info.contactor2_id, k_order_info.contactor2_tel, 
 		k_order_info.contactor3_id, k_order_info.contactor3_tel, k_order_info.body_discount, k_order_info.approved_body_discount, k_order_info.main_discount, 
 		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.payment_type, 
@@ -312,8 +312,8 @@
 			<if test="installType != null and installType != ''" >
 				AND k_order_info.install_type = #{installType, jdbcType=VARCHAR}
 			</if>
-			<if test="reveiveType != null and reveiveType != ''" >
-				AND k_order_info.reveive_type = #{reveiveType, jdbcType=VARCHAR}
+			<if test="receiveType != null and receiveType != ''" >
+				AND k_order_info.receive_type = #{receiveType, jdbcType=VARCHAR}
 			</if>
 			<if test="transferType != null and transferType != ''" >
 				AND k_order_info.transfer_type = #{transferType, jdbcType=VARCHAR}
@@ -409,7 +409,7 @@
 				AND k_order_info.bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}
 			</if>
 			<if test="creater != null and creater != ''" >
-				AND k_order_info.creater = #{creater, jdbcType=CHAR}
+				AND k_order_info.creater = #{creater, jdbcType=VARCHAR}
 			</if>
 			<if test="createTime != null" >
 				AND k_order_info.create_time = #{createTime, jdbcType=TIMESTAMP}

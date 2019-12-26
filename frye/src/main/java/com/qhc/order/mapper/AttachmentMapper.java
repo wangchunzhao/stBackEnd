@@ -68,7 +68,7 @@ public interface AttachmentMapper {
    */
 	int deleteById(Integer id);
 	
-	public List<Attachment> findByOrderInfo(Integer orderInfoId);
+	public List<Attachment> findByOrderInfoId(Integer orderInfoId);
 
 	void deleteByOrderInfoId(Integer orderInforId);
 

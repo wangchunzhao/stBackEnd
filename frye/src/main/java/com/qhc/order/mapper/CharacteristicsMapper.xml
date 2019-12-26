@@ -3,7 +3,7 @@
 <mapper namespace="com.qhc.order.mapper.CharacteristicsMapper" >
 	<resultMap id="CharacteristicsBaseMap" type="com.qhc.order.entity.Characteristics" >
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="item_detail_id" property="itemDetailId" jdbcType="INTEGER" />
+		<result column="item_id" property="itemId" jdbcType="INTEGER" />
 		<result column="key_code" property="keyCode" jdbcType="VARCHAR" />
 		<result column="value_code" property="valueCode" jdbcType="VARCHAR" />
 		<result column="is_configurable" property="isConfigurable" jdbcType="INTEGER" />
@@ -18,16 +18,16 @@
 		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
 			select LAST_INSERT_ID() 
 		</selectKey>
-		insert into k_characteristics ( id, item_detail_id, key_code, 
+		insert into k_characteristics ( id, item_id, key_code, 
 			value_code, is_configurable )
-		values ( #{id, jdbcType=INTEGER}, #{itemDetailId, jdbcType=INTEGER}, #{keyCode, jdbcType=VARCHAR}, 
+		values ( #{id, jdbcType=INTEGER}, #{itemId, jdbcType=INTEGER}, #{keyCode, jdbcType=VARCHAR}, 
 			#{valueCode, jdbcType=VARCHAR}, #{isConfigurable, jdbcType=INTEGER} )
 	</insert>
 	
 	<!-- 修改 -->
 	<update id="update" parameterType="com.qhc.order.entity.Characteristics" >
 		update k_characteristics
-		set item_detail_id = #{itemDetailId, jdbcType=INTEGER}, 
+		set item_id = #{itemId, jdbcType=INTEGER}, 
 			key_code = #{keyCode, jdbcType=VARCHAR}, 
 			value_code = #{valueCode, jdbcType=VARCHAR}, 
 			is_configurable = #{isConfigurable, jdbcType=INTEGER}
@@ -41,7 +41,7 @@
 	</delete>
 
 	<sql id="Base_Column_List" >
-		k_characteristics.id, k_characteristics.item_detail_id, k_characteristics.key_code, k_characteristics.value_code, k_characteristics.is_configurable
+		ic.id, ic.item_id, ic.key_code, ic.value_code, ic.is_configurable
 	</sql>
 	
 	<sql id="Column_List">
@@ -52,26 +52,26 @@
 	<select id="findById" resultMap="CharacteristicsMap" parameterType="java.lang.Integer" >
 		select 
 		<include refid="Column_List" />
-		from k_characteristics 
-		where k_characteristics.id = #{value, jdbcType=INTEGER}
+		from k_characteristics ic
+		where ic.id = #{value, jdbcType=INTEGER}
 	</select>
 	
 	<sql id="Where_By_Params" >
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			<if test="id != null" >
-				AND k_characteristics.id = #{id, jdbcType=INTEGER}
+				AND ic.id = #{id, jdbcType=INTEGER}
 			</if>
-			<if test="itemDetailId != null" >
-				AND k_characteristics.item_detail_id = #{itemDetailId, jdbcType=INTEGER}
+			<if test="itemId != null" >
+				AND ic.item_id = #{itemId, jdbcType=INTEGER}
 			</if>
 			<if test="keyCode != null and keyCode != ''" >
-				AND k_characteristics.key_code = #{keyCode, jdbcType=VARCHAR}
+				AND ic.key_code = #{keyCode, jdbcType=VARCHAR}
 			</if>
 			<if test="valueCode != null and valueCode != ''" >
-				AND k_characteristics.value_code = #{valueCode, jdbcType=VARCHAR}
+				AND ic.value_code = #{valueCode, jdbcType=VARCHAR}
 			</if>
 			<if test="isConfigurable != null" >
-				AND k_characteristics.is_configurable = #{isConfigurable, jdbcType=INTEGER}
+				AND ic.is_configurable = #{isConfigurable, jdbcType=INTEGER}
 			</if>
 			
 			<include refid="Where_Clause" />
@@ -90,10 +90,19 @@
 	</select>
 	
 	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="CharacteristicsMap" parameterType="Map" >
+	<select id="findByParams" resultType="com.qhc.order.domain.CharacteristicDto" parameterType="Map" >
 		select 
-		<include refid="Column_List" />
-		from k_characteristics
+			ic.id, 
+			ic.item_id, 
+			ic.key_code, 
+			ic.value_code, 
+			ic.is_configurable as configurable,
+			c.name as key_name,
+			cv.name as value_name,
+			c.is_optional as optional
+		from k_characteristics ic
+		left join sap_characteristic c on c.code = ic.key_code 
+		left join sap_characteristic_value cv on cv.code = ic.value_code 
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -105,15 +114,23 @@
 		</choose>
 	</select>
 	
-	<select id="findByItemId" resultMap="CharacteristicsMap" parameterType="Integer" >
+	<select id="findByItemId" resultType="com.qhc.order.domain.CharacteristicDto" parameterType="Integer" >
 		select 
-		<include refid="Column_List" />
-		from k_characteristics
-		where item_detail_id = #{value}
+			ic.id, 
+			ic.item_id, 
+			ic.key_code, 
+			ic.value_code, 
+			ic.is_configurable as configurable,
+			c.name as key_name,
+			cv.name as value_name
+		from k_characteristics ic
+		left join sap_characteristic c on c.code = ic.key_code 
+		left join sap_characteristic_value cv on cv.code = ic.value_code 
+		where ic.item_id = #{value}
 	</select>
 	
 	<delete id="deleteByOrderInfoId" parameterType="Integer" >
 		delete from k_characteristics
-		where exists (select 1 from k_item where id = k_characteristics.item_detail_id and k_item.order_info_id = #{value} )
+		where exists (select 1 from k_item where id = k_characteristics.item_id and k_item.order_info_id = #{value} )
 	</delete>
 </mapper>

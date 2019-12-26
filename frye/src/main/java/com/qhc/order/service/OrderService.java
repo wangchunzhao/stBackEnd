@@ -42,6 +42,7 @@ import com.qhc.order.entity.Attachment;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.BpmDicision;
 import com.qhc.order.entity.Characteristics;
+import com.qhc.order.entity.DeliveryAddress;
 import com.qhc.order.entity.Item;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
@@ -147,7 +148,7 @@ public class OrderService {
 		
 		BeanUtils.copyProperties(orderInfo, orderDto);
 		
-		if (orderDto.getId() == null) {
+		if (orderDto.getId() == null || orderDto.getId() == 0) {
 			// new version
 			String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
 			orderInfo.setVersion(version);
@@ -156,7 +157,7 @@ public class OrderService {
 			orderInfo.setCreater(user);
 			orderInfo.setUpdater(user);
 			
-			if (orderDto.getOrderId() == null) {
+			if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
 				Order order = new Order();
 				BeanUtils.copyProperties(order, orderDto);
 				
@@ -246,15 +247,19 @@ public class OrderService {
 		}
 	}
 
-	private void saveDeliveryAddresses(OrderDto orderDto) {
+	private void saveDeliveryAddresses(OrderDto orderDto) throws Exception {
 		Integer orderInfoId = orderDto.getId();
 		deliveryAddressMapper.deleteByOrderInfoId(orderInfoId);
-		List<BillingPlan> payments = orderDto.getPayments();
-		for (BillingPlan billingPlan : payments) {
-			billingPlan.setId(null);
-			billingPlan.setOrderInfoId(orderInfoId);
+		List<DeliveryAddressDto> addresses = orderDto.getDeliveryAddress();
+		for (DeliveryAddressDto addressDto : addresses) {
+			DeliveryAddress address = new DeliveryAddress();
 			
-			billingPlanMapper.insert(billingPlan);
+			BeanUtils.copyProperties(address, addressDto);
+			
+			address.setId(null);
+			address.setOrderInfoId(orderInfoId);
+			
+			deliveryAddressMapper.insert(address);
 		}
 	}
 
@@ -265,9 +270,10 @@ public class OrderService {
 		for (ItemDto itemDto : items) {
 			Item item = new Item();
 			
-			BeanUtils.copyProperties(item, orderDto);
-			item.setOrderInfoId(orderInfoId);
+			BeanUtils.copyProperties(item, itemDto);
+			
 			item.setId(null);
+			item.setOrderInfoId(orderInfoId);
 			
 			itemMapper.insert(item);
 			
@@ -276,7 +282,10 @@ public class OrderService {
 				Characteristics c = new Characteristics();
 				
 				BeanUtils.copyProperties(c, dto);
+				c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
+				
 				c.setId(null);
+				c.setItemId(item.getId());
 				
 				characteristicsMapper.insert(c);
 			}
@@ -349,9 +358,11 @@ public class OrderService {
 	public List<MaterialGroups> calcGrossProfit(OrderDto order) {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
-		List<ItemDto> items = new ArrayList<ItemDto>();
-
-		items = order.getItems();
+		List<ItemDto> items = order.getItems();
+		
+		if (items == null || items.size() == 0) {
+			return groups;
+		}
 
 		// 税率
 		Double taxRate = order.getTaxRate();
@@ -757,11 +768,11 @@ public class OrderService {
 			sapPrices.add(price2);
 
 			// Characteristics value input
-			List<Characteristics> characList = characteristicsMapper.findByItemId(item.getId());
-			for (Characteristics charac : characList) {
+			List<CharacteristicDto> characList = characteristicsMapper.findByItemId(item.getId());
+			for (CharacteristicDto charac : characList) {
 				SapOrderCharacteristics c = new SapOrderCharacteristics();
 
-				if (charac.getIsConfigurable() == 1) {
+				if (charac.isConfigurable()) {
 					// 设置 Item 的 Color option/颜色可选项
 					String vbbpz120 = sapItem.getVbbpz120();
 					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
@@ -906,7 +917,7 @@ public class OrderService {
 		Integer orderInfoId = order.getId();
 		// Attached File
 		order.setAttachments(new ArrayList<Attachment>());
-		List<Attachment> attachments = attachmentMapper.findByOrderInfo(orderInfoId);
+		List<Attachment> attachments = attachmentMapper.findByOrderInfoId(orderInfoId);
 		order.setAttachments(attachments);
 
 		// 收货地址
@@ -948,16 +959,9 @@ public class OrderService {
 					}
 				});
 			}
-//			item.setMaterialgroupName(materialgroupName);
 
 			// characteristics
-			List<Characteristics> characs = characteristicsMapper.findByItemId(itemId);
-			List<CharacteristicDto> configs = new ArrayList<CharacteristicDto>();
-			for (Characteristics charac : characs) {
-				CharacteristicDto c = new CharacteristicDto();
-				BeanUtils.copyProperties(c, charac);
-				configs.add(c);
-			}
+			List<CharacteristicDto> configs = characteristicsMapper.findByItemId(itemId);
 			item.setConfigs(configs);
 		}
 	}
