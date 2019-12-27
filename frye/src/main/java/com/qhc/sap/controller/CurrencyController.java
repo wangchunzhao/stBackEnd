@@ -59,7 +59,7 @@ public class CurrencyController {
 		Date date = currencyService.getLastUpdated(PriceDto.PRICEA_CODE);
 		return DateUtil.convert2String(date, "yyyyMMddHHmmss");
 	}
-	
+	//保存或修改币种
 	@ApiOperation(value = "保存或修改币种",notes="保存或修改币种")
 	@PutMapping(value = "currency")
 	@ResponseStatus(HttpStatus.OK)
