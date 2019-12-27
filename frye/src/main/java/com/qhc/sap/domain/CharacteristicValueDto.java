@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qhc.order.domain.InterEntityToEntity;
-import com.qhc.sap.entity.Characteristic;
-import com.qhc.sap.entity.CharacteristicValue;
+import com.qhc.sap.entity.SapCharacteristic;
+import com.qhc.sap.entity.SapCharacteristicValue;
 import com.qhc.sap.entity.ClassAndCharacter;
 import com.qhc.sap.entity.identity.ClassCharacterIdentity;
 
@@ -92,12 +92,12 @@ public class CharacteristicValueDto implements InterEntityToEntity{
 	public List<Object> toEntity() {
 		// TODO Auto-generated method stub
 		List<Object> objs = new ArrayList();
-		CharacteristicValue dcv = new CharacteristicValue();
+		SapCharacteristicValue dcv = new SapCharacteristicValue();
 		dcv.setCode(this.getCode());
 		dcv.setName(this.getName());
 		dcv.setCharacter(this.getCharacteristicCode());
 		
-		Characteristic dc = new Characteristic();
+		SapCharacteristic dc = new SapCharacteristic();
 		dc.setCode(this.getCharacteristicCode());
 		dc.setName(this.getCharacteristicName());
 		//从SAP取数默认值为   0 
@@ -115,16 +115,16 @@ public class CharacteristicValueDto implements InterEntityToEntity{
 		return objs;
 	}
 	
-	public CharacteristicValue toDCharacteristicValue() {
-		CharacteristicValue dcv = new CharacteristicValue();
+	public SapCharacteristicValue toDCharacteristicValue() {
+		SapCharacteristicValue dcv = new SapCharacteristicValue();
 		dcv.setCode(this.getCode());
 		dcv.setName(this.getName());
 		dcv.setCharacter(this.getCharacteristicCode());
 		return dcv;
 	}
 	
-	public Characteristic toDCharacteristic() {
-		Characteristic dc = new Characteristic();
+	public SapCharacteristic toDCharacteristic() {
+		SapCharacteristic dc = new SapCharacteristic();
 		dc.setCode(this.getCharacteristicCode());
 		dc.setName(this.getCharacteristicName());
 		//从SAP取数默认值为   0 

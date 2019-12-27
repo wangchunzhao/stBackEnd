@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 
-public class CharacteristicDefaultKey implements Serializable{
+public class SapCharacteristicDefaultKey implements Serializable{
 	
 	private String materialsCode;
 	
@@ -56,7 +56,7 @@ public class CharacteristicDefaultKey implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CharacteristicDefaultKey other = (CharacteristicDefaultKey) obj;
+		SapCharacteristicDefaultKey other = (SapCharacteristicDefaultKey) obj;
 		if (characteristicCode == null) {
 			if (other.characteristicCode != null)
 				return false;
@@ -72,14 +72,14 @@ public class CharacteristicDefaultKey implements Serializable{
 		return true;
 	}
 
-	public CharacteristicDefaultKey(String materialsCode, String characteristicCode, int valueId) {
+	public SapCharacteristicDefaultKey(String materialsCode, String characteristicCode, int valueId) {
 		super();
 		this.materialsCode = materialsCode;
 		this.characteristicCode = characteristicCode;
 		this.valueId = valueId;
 	}
 
-	public CharacteristicDefaultKey() {
+	public SapCharacteristicDefaultKey() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

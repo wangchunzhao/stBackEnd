@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="sap_characteristic_value")
-public class CharacteristicValue {
+public class SapCharacteristicValue {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Id
     @Column(name="id",length=11)
@@ -79,7 +79,7 @@ public class CharacteristicValue {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CharacteristicValue other = (CharacteristicValue) obj;
+		SapCharacteristicValue other = (SapCharacteristicValue) obj;
 		if (character == null) {
 			if (other.character != null)
 				return false;

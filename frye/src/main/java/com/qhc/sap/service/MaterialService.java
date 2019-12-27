@@ -24,8 +24,8 @@ import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.Configuration;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
 import com.qhc.sap.domain.MaterialDto;
-import com.qhc.sap.entity.CharacteristicConfiguration;
-import com.qhc.sap.entity.CharacteristicDefault;
+import com.qhc.sap.entity.ClazzCharacteristicValueView;
+import com.qhc.sap.entity.SapCharacteristicDefault;
 import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.MaterialPrice;
 import com.qhc.sap.entity.LastUpdated;
@@ -178,15 +178,15 @@ public class MaterialService {
 	 */
 	public List<Characteristic> getCharactersByClazzCode(String clazzCode, String materialCode)
 			throws NotMatchException {
-		List<CharacteristicConfiguration> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
-		List<CharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
+		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
+		List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		Set<Integer> ids = new HashSet<Integer>();
-		for (CharacteristicDefault dc : defaultValues) {
+		for (SapCharacteristicDefault dc : defaultValues) {
 			ids.add(dc.getValueId());
 		}
 		// temp valiable
 		Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
-		for (CharacteristicConfiguration cc : ccs) {
+		for (ClazzCharacteristicValueView cc : ccs) {
 			Configuration con = new Configuration();
 			if (!cs.containsKey(cc.getKeyCode())) {
 				Characteristic ch = new Characteristic();
@@ -196,14 +196,14 @@ public class MaterialService {
 				ch.setClassCode(clazzCode);
 				cs.put(cc.getKeyCode(), ch);
 
-				con.setCode(cc.getValCode());
-				con.setName(cc.getValName());
+				con.setCode(cc.getValueCode());
+				con.setName(cc.getValueName());
 
 				ch.getConfigs().add(con);
 			} else {
 
-				con.setCode(cc.getValCode());
-				con.setName(cc.getValName());
+				con.setCode(cc.getValueCode());
+				con.setName(cc.getValueName());
 				cs.get(cc.getKeyCode()).getConfigs().add(con);
 			}
 			//

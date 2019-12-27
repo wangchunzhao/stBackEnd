@@ -47,10 +47,10 @@
 	</select>
 	
 	<!-- 查询物料特征信息 -->
-	<select id="findCharacteristicValueByClazzCode" resultType="com.qhc.sap.entity.CharacteristicConfiguration" parameterType="Map" >
+	<select id="findCharacteristicValueByClazzCode" resultType="com.qhc.sap.entity.ClazzCharacteristicValueView" parameterType="Map" >
 		SELECT 
 	        v.id AS id,
-	        `l`.`sap_clazz_code` AS `sap_clazz_code`,
+	        `l`.`sap_clazz_code` AS `clazz_code`,
 	        `c`.`code` AS `key_code`,
 	        `c`.`name` AS `key_name`,
 	        `v`.`code` AS `value_code`,

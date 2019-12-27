@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.qhc.sap.entity.CharacteristicValue;
+import com.qhc.sap.entity.SapCharacteristicValue;
 
 
 /**
@@ -18,7 +18,7 @@ import com.qhc.sap.entity.CharacteristicValue;
  *
  */
 @Repository
-public interface CharacteristicValueRepository extends JpaRepository<CharacteristicValue, String> {
+public interface CharacteristicValueRepository extends JpaRepository<SapCharacteristicValue, String> {
 	
 	@Query(value = "select * from sap_characteristic_value where code = ?1 AND sap_characteristic_code=?2", nativeQuery = true)
     int selectId(String code,String characteristicCode);

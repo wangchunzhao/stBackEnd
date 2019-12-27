@@ -563,8 +563,8 @@ create table k_order_info
    is_term1             integer comment '柜体控制阀门件是否甲供',
    is_term2             integer comment '分体柜是否远程监控',
    is_term3             integer comment '立体柜是否在地下室',
-   install_fee          decimal(13,2) not null comment '工程安装费',
-   material_fee         decimal(13,2) not null comment '工程材料费',
+   install_fee          decimal(13,2) comment '工程安装费',
+   material_fee         decimal(13,2) comment '工程材料费',
    electrical_fee       decimal(13,2) comment '工程电气费',
    refrigeratory_fee    decimal(13,2) comment '工程冷库费',
    maintenance_fee      decimal(13,2) comment '工程维保费',
@@ -685,6 +685,13 @@ INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 2 );
 /*
 -- Query: select * from b_user_role
 */
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 1);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 2);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 3);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 4);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 5);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 6);
+INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 7);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (2, 2);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (3, 2);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (4, 5);

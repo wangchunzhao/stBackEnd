@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.qhc.sap.entity.CharacteristicDefault;
+import com.qhc.sap.entity.SapCharacteristicDefault;
 
-public interface CharacteristicDefaultRepository extends JpaRepository<CharacteristicDefault, String>{
+public interface CharacteristicDefaultRepository extends JpaRepository<SapCharacteristicDefault, String>{
 	@Query(value="select * from sap_material_default_characteristic where sap_materials_code =:material",nativeQuery=true)
-	public List<CharacteristicDefault> findbyMaterialCode(@Param("material")String materialCode);
+	public List<SapCharacteristicDefault> findbyMaterialCode(@Param("material")String materialCode);
 }

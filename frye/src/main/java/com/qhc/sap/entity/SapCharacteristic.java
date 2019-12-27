@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.qhc.sap.entity;
 
 import javax.persistence.Column;
@@ -7,16 +10,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
- * 
  * @author wang@dxc.com
  *
  */
 @Entity
-@Table(name="sap_clazz")
-public class ClazzOfMaterial {
+@Table(name="sap_characteristic")
+public class SapCharacteristic {
 	@Id
     @NotNull
-    @Column(name="code",length=18)
+    @Column(name="code",length=30)
 	private String code;
 	
 	@NotNull
@@ -24,8 +26,8 @@ public class ClazzOfMaterial {
 	private String name;
 	
 	@NotNull
-    @Column(name="is_reserved",columnDefinition="BIT")
-	private boolean isReserved;
+    @Column(name="is_optional",columnDefinition="BIT")
+	private boolean isOptional;
 	
 	public String getCode() {
 		return code;
@@ -39,11 +41,11 @@ public class ClazzOfMaterial {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public boolean isReserved() {
-		return isReserved;
+	public boolean isOptional() {
+		return isOptional;
 	}
-	public void setReserved(boolean isReserved) {
-		this.isReserved = isReserved;
+	public void setOptional(boolean isOptional) {
+		this.isOptional = isOptional;
 	}
-	
+
 }

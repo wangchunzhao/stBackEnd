@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.MaterialDto;
-import com.qhc.sap.entity.CharacteristicConfiguration;
+import com.qhc.sap.entity.ClazzCharacteristicValueView;
 import com.qhc.sap.entity.DefaultCharacterView;
 
 /**
@@ -31,7 +31,7 @@ public interface SapViewMapper {
 	 * @param clazzCode
 	 * @return
 	 */
-	public List<CharacteristicConfiguration> findCharacteristicValueByClazzCode(@Param("clazzCode")String clazzCode);
+	public List<ClazzCharacteristicValueView> findCharacteristicValueByClazzCode(@Param("clazzCode")String clazzCode);
 	
 	/**
 	 * 查询物料特征默认值信息

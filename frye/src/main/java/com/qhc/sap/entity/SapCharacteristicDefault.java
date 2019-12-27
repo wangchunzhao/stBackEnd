@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="sap_material_default_characteristic")
-@IdClass(CharacteristicDefaultKey.class)
-public class CharacteristicDefault implements Serializable{
+@IdClass(SapCharacteristicDefaultKey.class)
+public class SapCharacteristicDefault implements Serializable{
 	
 	@Id
 	@Column(name="sap_materials_code",length=18)

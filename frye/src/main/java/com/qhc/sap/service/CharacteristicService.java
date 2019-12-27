@@ -18,11 +18,11 @@ import com.qhc.sap.dao.ClazzOfMaterialRepository;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
-import com.qhc.sap.entity.Characteristic;
-import com.qhc.sap.entity.CharacteristicDefault;
-import com.qhc.sap.entity.CharacteristicValue;
+import com.qhc.sap.entity.SapCharacteristic;
+import com.qhc.sap.entity.SapCharacteristicDefault;
+import com.qhc.sap.entity.SapCharacteristicValue;
 import com.qhc.sap.entity.ClassAndCharacter;
-import com.qhc.sap.entity.ClazzOfMaterial;
+import com.qhc.sap.entity.SapMaterialClazz;
 
 /**
  * @author wang@dxc.com
@@ -49,9 +49,9 @@ public class CharacteristicService {
 	 * @param clazz
 	 */
 	public void saveClass(List<Clazz> clazz) {
-		Set<ClazzOfMaterial> dcs = new HashSet<ClazzOfMaterial>();
+		Set<SapMaterialClazz> dcs = new HashSet<SapMaterialClazz>();
 		for(Clazz cl:clazz) {
-			ClazzOfMaterial dc = new ClazzOfMaterial();
+			SapMaterialClazz dc = new SapMaterialClazz();
 			dc.setCode(cl.getCode());
 			dc.setName(cl.getName());
 			//从sap抽取的数据该字段为0，其他自己存在的该字段为1
@@ -65,8 +65,8 @@ public class CharacteristicService {
 	 * @param chaValues
 	 */
 	public void saveCharacteristicValue(List<CharacteristicValueDto> chaValues) {
-		Set<Characteristic> dcs = new HashSet<Characteristic>();
-		Set<CharacteristicValue> dcvs = new HashSet<CharacteristicValue>();
+		Set<SapCharacteristic> dcs = new HashSet<SapCharacteristic>();
+		Set<SapCharacteristicValue> dcvs = new HashSet<SapCharacteristicValue>();
 		Set<ClassAndCharacter> cacs = new HashSet<ClassAndCharacter>();
 		//
 		for(CharacteristicValueDto cv: chaValues) {		
@@ -90,13 +90,13 @@ public class CharacteristicService {
 	 * @param defaultChavalue
 	 */
 	public void saveCharacteristicDefault(List<DefaultCharacteristicsDto> defaultChavalue) {
-		Set<CharacteristicDefault> dcs = new HashSet<CharacteristicDefault>();
+		Set<SapCharacteristicDefault> dcs = new HashSet<SapCharacteristicDefault>();
 		for(DefaultCharacteristicsDto cd: defaultChavalue) {
 			try {
 				//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
 				int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
 				//
-				CharacteristicDefault defaultCh = new CharacteristicDefault();
+				SapCharacteristicDefault defaultCh = new SapCharacteristicDefault();
 				defaultCh.setMaterialsCode(cd.getMaterialCode());
 				defaultCh.setCharacteristicCode(cd.getCharacteristic());
 				defaultCh.setValueId(valueId);
