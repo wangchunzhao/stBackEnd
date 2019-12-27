@@ -41,7 +41,7 @@
 				AND m.code = #{code, jdbcType=VARCHAR}
 			</if> -->
 			<if test="name != null and name != ''" >
-				AND ( UPPER(m.description) like '%${name}%' or UPPER(m.code) like '%${name}%' )
+				AND ( UPPER(m.description) like UPPER('%${name}%') or UPPER(m.code) like UPPER('%${name}%') )
 			</if>
 		</trim>
 	</select>

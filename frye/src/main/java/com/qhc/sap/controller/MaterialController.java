@@ -115,10 +115,17 @@ public class MaterialController {
 	@ApiOperation(value = "根据物料分类代码查找characteristic和value列表及default value")
 	@GetMapping(value = "material/configurations/{clazzCode},{materialCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Characteristic> findCharacteristic(@PathVariable(required = true) String clazzCode,
+	public Result findCharacteristic(@PathVariable(required = true) String clazzCode,
 			@PathVariable(required = true) String materialCode) throws Exception {
-		return materialSer.getCharactersByClazzCode(clazzCode, materialCode);
-
+		Result result = null;
+		try {
+			List<Characteristic> chars = materialSer.getCharactersByClazzCode(clazzCode, materialCode);
+			result = Result.ok(chars);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 
 	@ApiOperation(value = "根据BOM配置获取新的Characteristic和value")
