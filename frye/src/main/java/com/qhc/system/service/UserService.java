@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -194,10 +195,18 @@ public class UserService {
 		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
 		Map<String, Object> params = new HashMap<String, Object>();
 		//增加筛选条件
-		params.put("isActive", user.getIsActive());
-		params.put("userIdentity", user.getUserIdentity());
-		params.put("name", "%" + user.getName() + "%");
-		params.put("userMail", "%" + user.getUserMail() + "%");
+		if (user.getIsActive() != null) {
+			params.put("isActive", user.getIsActive());
+		}
+		if (StringUtils.isNoneEmpty(user.getUserIdentity())) {
+			params.put("userIdentity", user.getUserIdentity().trim());
+		}
+		if (StringUtils.isNoneEmpty(user.getName())) {
+			params.put("name", "%" + user.getName().trim() + "%");
+		}
+		if (StringUtils.isNoneEmpty(user.getUserMail())) {
+			params.put("userMail", "%" + user.getUserMail().trim() + "%");
+		}
 
 		return new PageInfo(userMapper.findByParams(params));
 	}
