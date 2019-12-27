@@ -196,8 +196,20 @@ public class UserController {
 	@GetMapping(value = "role/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Object findById(@PathVariable("id") Integer id) throws Exception {
-
 		return roleService.findById(id);
+	}
+
+	/**
+	 * 根据角色名查找角色
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "根据角色名查找角色", notes = "根据角色名查找角色")
+	@GetMapping(value = "role/searchByName/{name}")
+	@ResponseStatus(HttpStatus.OK)
+	public Object findByName(@PathVariable("name") String name) throws Exception {
+		return roleService.findByName(name);
 	}
 
 //	@ApiOperation(value="Create role", notes="Create role")
