@@ -14,16 +14,19 @@ import org.springframework.stereotype.Service;
 
 import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.IncotermRepository;
+import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.domain.IncotermDto;
 import com.qhc.sap.domain.MaterialDto;
+import com.qhc.sap.domain.PaymentPlanDto;
 import com.qhc.sap.domain.PriceDto;
 import com.qhc.sap.entity.Currency;
 import com.qhc.sap.entity.Incoterm;
 import com.qhc.sap.entity.MaterialPrice;
+import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.SapCurrencySaleType;
@@ -53,6 +56,9 @@ public class CurrencyService {
 	
 	@Autowired
 	private PriceRepository priceRepo;
+	
+	@Autowired
+	private PaymentTermRepository PaymentTermRepo;
 	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdate;
@@ -159,6 +165,21 @@ public class CurrencyService {
 		priceRepo.saveAll(dps);
 		lastUpdatedRepo.save(lastUpdated);
 	}
+	
+	public void savePaymentPlan(List<PaymentPlanDto> paymentPlan) {
+		Set<PaymentTerm> incos = new HashSet<PaymentTerm>();
+		for (PaymentPlanDto inco : paymentPlan) {
+			PaymentTerm temp = new PaymentTerm();
+			temp.setCode(inco.getCode());
+			temp.setName(inco.getName());
+			temp.setIsPaymentTerm(inco.getPaymentTerm());
+			incos.add(temp);
+		}
+		PaymentTermRepo.saveAll(incos);
+	}
+	
+	
+	
 	
 	public Date getLastUpdated(String code) {
 		Optional<LastUpdated> lu = lastUpdate.findById(code);

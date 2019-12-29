@@ -1,21 +1,42 @@
 package com.qhc.sap.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomBodyParam;
 import com.qhc.sap.domain.BomHeadParam;
+import com.qhc.sap.domain.CharacteristicValueDto;
+import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.CurrencyDto;
+import com.qhc.sap.domain.CustomerDto;
+import com.qhc.sap.domain.DefaultBodyParam;
+import com.qhc.sap.domain.DefaultCharacteristicsDto;
+import com.qhc.sap.domain.DefaultHeadParam;
+import com.qhc.sap.domain.IncotermDto;
+import com.qhc.sap.domain.MaterialDto;
+import com.qhc.sap.domain.Parameter;
+import com.qhc.sap.domain.PaymentPlanDto;
+import com.qhc.sap.domain.PriceDto;
+import com.qhc.sap.domain.SalesGroup;
+import com.qhc.sap.entity.LastUpdated;
+import com.qhc.utils.DateUtil;
 import com.qhc.utils.HttpUtil;
 
 /**
@@ -26,13 +47,507 @@ import com.qhc.utils.HttpUtil;
  */
 @Service
 public class SapService {
+	
+	@Value("${sap.currency.addr}")
+	String currencyUrl;
+	
+	@Value("${sap.incoterm.addr}")
+	String incotermUrl;
+	
+	@Value("${sap.customer.addr}")
+	String customerUrl;
+	
+	@Value("${sap.clazz.addr}")
+	String clazzUrl;
+	
+	@Value("${sap.characteristic.addr}")
+	String characteristicUrl;
+	
+	@Value("${sap.sapOfficeGroup.addr}")
+	String sapOfficeGroupUrl;
+	
+	@Value("${sap.paymentplan.addr}")
+	String paymentplanUrl;
+	
+	@Value("${sap.price.addr}")
+	String priceUrl;
+	
+	@Value("${sap.priceA.addr}")
+	String priceAUrl;
+	
+	@Value("${sap.defaultCharacteristics.addr}")
+	String defaultCharacteristicsAUrl;
+	
 	@Value("${sap.material.addr}")
 	String materialUrl;
 	
 	@Value("${sap.bomExplosion.addr}")
 	String bomExplosionUrl;
 	
+	@Autowired
+	private SapLastUpdatedRepository lastUpdate;
+	
+	public final static long DEFAULT_DATE = 1008005271098L;
+	
 	private ObjectMapper objectMapper = new ObjectMapper();
+	
+	//currency
+	public List<CurrencyDto> getCurrencyFromSap() {
+		List<CurrencyDto> clist = new ArrayList<CurrencyDto>();
+		try {
+			//接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("KURST");
+			parameter1.setValue("M");
+			Parameter parameter2 = new Parameter();
+			parameter2.setKey("LANGU");
+			parameter2.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			parList.add(parameter2);
+			String currencyParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(currencyUrl, currencyParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) { 
+//				  System.out.println(parseArray.get(i)); 
+				  JSONObject obj = (JSONObject)parseArray.get(i); 
+				  //
+				  if(!obj.getString("tcurr").equals("CNY")|| obj.getString("ktext_f")=="") {
+					  System.out.println("数据有误");
+					  continue;
+				  }else {
+					  CurrencyDto currency = new CurrencyDto();
+					  currency.setCode(obj.getString("fcurr"));
+					  currency.setName(obj.getString("ktext_f"));
+					  currency.setRate(StrToDouble(obj.getString("ukurs")));
+					  clist.add(currency);
+				  }
+			  }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clist;
+	}
+	//incoterm
+	public List<IncotermDto> getIncotermFromSap() {
+		List<IncotermDto> ilist = new ArrayList<IncotermDto>();
+		try {
+			//接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("LANGU");
+			parameter1.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			String incotermParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(incotermUrl, incotermParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) { 
+				JSONObject obj = (JSONObject)parseArray.get(i); 
+				IncotermDto incoterm = new IncotermDto();
+				incoterm.setCode(obj.getString("inco1"));
+				incoterm.setName(obj.getString("bezei"));
+				//全部设置20-出口
+				incoterm.setSapSalesTypeCode("20");
+				ilist.add(incoterm);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ilist;
+	}
+	//class
+	public List<Clazz> getClassesFromSap() {
+		List<Clazz> clist = new ArrayList<Clazz>();
+		try {
+			//接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("LANGU");
+			parameter1.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			String clazzParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(clazzUrl, clazzParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) {
+				JSONObject obj = (JSONObject)parseArray.get(i); 
+				Clazz c1 = new Clazz();
+				c1.setCode(obj.getString("class"));
+				c1.setName(obj.getString("kschl"));
+				clist.add(c1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clist;
+	}
+	//customer
+	public List<CustomerDto> getCustomersFromSap() {
+		List<CustomerDto> clist = new ArrayList<CustomerDto>();
+		try {
+			//接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("DATUM");
+			parameter1.setValue("");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			String customerParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(customerUrl, customerParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data_cm");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) {
+				 JSONObject obj = (JSONObject)parseArray.get(i);
+				 //如果sap_industry_code_code为空，赋默认值
+				 String industryCode = ("".equals(obj.getString("bran1")))?"unknow":obj.getString("bran1");
+				 
+				 if("".equals(obj.getString("kukla")) ) {
+					 System.out.println("关键数据不能为空");
+					 continue;
+				 }else {
+					 CustomerDto customer = new CustomerDto();
+					 customer.setCode(obj.getString("kunnr"));
+					 customer.setName(obj.getString("name1"));
+					 customer.setAddress(obj.getString("street"));
+					 customer.setChangedDate(new Date());
+					 customer.setClazzCode(obj.getString("kukla"));
+					 customer.setAffiliationCode(obj.getString("brsch"));
+					 customer.setAffiliationName(obj.getString("brtxt"));
+					 customer.setIndustryCodeCode(industryCode);
+					 clist.add(customer);
+				 }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clist;
+	}
+	//offices
+	public List<SalesGroup> getSalesgroupFromSAP() {
+		List<SalesGroup> rl = new ArrayList<SalesGroup>();
+		try {
+			//接口请求参数
+			Parameter parameter2 = new Parameter();
+			parameter2.setKey("LANGU");
+			parameter2.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter2);
+			String sapOfficeGroupParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(sapOfficeGroupUrl, sapOfficeGroupParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+//			Object officeData = parseObject.get("sales_office");
+			Object groupData = parseObject.get("sales_group");
+			JSONArray groupDataArray = JSONArray.parseArray(groupData.toString());
+			for (int i = 0; i < groupDataArray.size();i++) { 
+				JSONObject obj = (JSONObject)groupDataArray.get(i);
+				SalesGroup sg1 = new SalesGroup();
+				sg1.setCode(obj.getString("vkgrp"));
+				sg1.setName(obj.getString("vkgrptext"));
+				sg1.setOfficeCode(obj.getString("vkbur"));
+				sg1.setOfficeName(obj.getString("vkburtext"));
+				rl.add(sg1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rl;
+	}
+	//paymentPlan
+	public List<PaymentPlanDto> getPaymentFromSAP(){
+		List<PaymentPlanDto> lp = new ArrayList<PaymentPlanDto>();
+		try {
+			//接口请求参数
+			Parameter parameter2 = new Parameter();
+			parameter2.setKey("LANGU");
+			parameter2.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter2);
+			String paymentplanParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(paymentplanUrl, paymentplanParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object plData = parseObject.get("data_bl");
+			Object ptData = parseObject.get("data_pt");
+			JSONArray plDataArray = JSONArray.parseArray(plData.toString());
+			JSONArray ptDataArray = JSONArray.parseArray(ptData.toString());
+			for (int i = 0; i < ptDataArray.size();i++) { 
+				JSONObject obj = (JSONObject)ptDataArray.get(i);
+				if("".equals(obj.getString("text1"))) {
+					System.out.println("name不能为空");
+					continue;
+				}else {
+					PaymentPlanDto pm = new PaymentPlanDto();
+					pm.setCode(obj.getString("zterm"));
+					pm.setName(obj.getString("text1"));
+					pm.setPaymentTerm(true);
+					lp.add(pm);
+				}
+			}
+			for (int i = 0; i < plDataArray.size();i++) { 
+				JSONObject obj = (JSONObject)plDataArray.get(i);
+				if("".equals(obj.getString("tebez"))) {
+					System.out.println("name不能为空");
+					continue;
+				}else {
+					PaymentPlanDto pm = new PaymentPlanDto();
+					pm.setCode(obj.getString("tetbe"));
+					pm.setName(obj.getString("tebez"));
+					pm.setPaymentTerm(false);
+					lp.add(pm);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lp;
+	}
+	//CharacteristicValue
+	public List<CharacteristicValueDto> getClassesAndCharacteristicValueFromSap() {
+		List<CharacteristicValueDto> clist = new ArrayList<CharacteristicValueDto>();
+		try {
+			//接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("LANGU");
+			parameter1.setValue("1");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			String characteristicParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(characteristicUrl, characteristicParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) {
+				JSONObject obj = (JSONObject)parseArray.get(i);
+				
+				CharacteristicValueDto c1 = new CharacteristicValueDto();
+				c1.setCode(obj.getString("atwrt"));
+				c1.setName(obj.getString("atwtb"));
+				c1.setCharacteristicCode(obj.getString("atnam"));
+				c1.setCharacteristicName(obj.getString("atbez"));
+				c1.setClazzCode(obj.getString("class")); 
+				clist.add(c1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clist;
+	}
+	//materials
+	
+	public List<MaterialDto> getNewestMaterialsFromSap() {
+		List<MaterialDto> mlist = new ArrayList<MaterialDto>();
+		try {
+			String pingGuLei = "1000,3101,3102,3104,3105,3109,3212,3233,3235,3237,9101,9102,9103";
+			String dateParameter = DateUtil.convert2String(this.getLastUpdated(MaterialDto.MATERIAL_CODE), "yyyyMMddHHmmss");
+
+			// 接口请求参数
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("LAEDA");
+			parameter1.setValue(dateParameter.substring(0, 8));
+			Parameter parameter2 = new Parameter();
+			parameter2.setKey("UZEIT");
+			parameter2.setValue(dateParameter.substring(8, 14));
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			parList.add(parameter2);
+			String paymentplanParam = JSONObject.toJSONString(parList);
+			// 发送请求获取数据
+			String bb = HttpUtil.postbody(materialUrl, paymentplanParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object Data = parseObject.get("data");
+			JSONArray DataArray = JSONArray.parseArray(Data.toString());
+			for (int i = 0; i < DataArray.size(); i++) {
+				JSONObject obj = (JSONObject) DataArray.get(i);
+				if ("".equals(obj.getString("meins"))) {
+					System.out.println(obj.getString("matnr") + ":计量单位不能为空");
+				} else if (pingGuLei.indexOf(obj.getString("bklas")) == -1) {
+					Boolean configurable = ("X".equals(obj.getString("kzkfg"))) ? true : false;
+					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? true : false;
+					String clazzCode = ("".equals(obj.getString("class"))) ? "unconfigurable" : obj.getString("class");
+
+					MaterialDto material = new MaterialDto();
+					material.setCode(obj.getString("matnr"));
+					material.setDescription(obj.getString("maktx"));
+					material.setConfigurable(configurable);
+					material.setPurchased(purchased);
+					material.setStandardPrice(StrToDouble(obj.getString("verpr")));
+					//
+					material.setOptTime(
+							DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
+					material.setUnitCode(obj.getString("meins"));
+					material.setGroupCode("9999");
+					material.setClazzCode(clazzCode);
+					material.setMaterialSize(StrToDouble(obj.getString("volum")));
+					mlist.add(material);
+					System.out.println(obj.getString("matnr") + ":评估类不正确");
+				} else {
+					//
+					Boolean configurable = ("X".equals(obj.getString("kzkfg"))) ? true : false;
+					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? true : false;
+					String clazzCode = ("".equals(obj.getString("class"))) ? "unconfigurable" : obj.getString("class");
+					String groupCode = ("".equals(obj.getString("bklas"))) ? "9999" : obj.getString("bklas");
+
+					MaterialDto material = new MaterialDto();
+
+					material.setCode(obj.getString("matnr"));
+					material.setDescription(obj.getString("maktx"));
+					material.setConfigurable(configurable);
+					material.setPurchased(purchased);
+					material.setStandardPrice(StrToDouble(obj.getString("verpr")));
+					//
+					material.setOptTime(
+							DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
+					material.setUnitCode(obj.getString("meins"));
+					material.setGroupCode(groupCode);
+					material.setClazzCode(clazzCode);
+					material.setMaterialSize(StrToDouble(obj.getString("volum")));
+					mlist.add(material);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mlist;
+	}
+	//price
+	public List<PriceDto> getPriceFromSap(String date) {
+		List<PriceDto> ilist = new ArrayList<PriceDto>();
+		try {
+			//接口请求参数 不带年采价的接口Z_QHC_SD_Q091_SD028
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("DATUM");
+			parameter1.setValue("20191031");
+//			parameter1.setValue(date.substring(0, 8));
+			Parameter parameter2 = new Parameter();
+			parameter2.setKey("TCODE");
+			parameter2.setValue("VK11");
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			parList.add(parameter2);
+			String priceParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(priceUrl, priceParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray parseArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < parseArray.size();i++) { 
+				JSONObject obj = (JSONObject)parseArray.get(i); 
+				PriceDto price = new PriceDto();
+				price.setPrice(StrToDouble(obj.getString("kbetr")));
+				price.setType(obj.getString("kschl"));
+				price.setMaterialCode(obj.getString("matnr"));
+				price.setLastDate(obj.getString("erdat")+obj.getString("utime"));
+				//年采价以外的IndustryCode为空，所以设置默认值
+				price.setIndustryCode("unkn");
+				ilist.add(price);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ilist;
+	}
+	//priceA
+	public List<PriceDto> getPriceAFromSap(String date) {
+		List<PriceDto> ilist = new ArrayList<PriceDto>();
+		try {
+			//带年采价的接口 Z_QHC_SD_Q091_SD028A
+			Parameter parameter3 = new Parameter();
+			parameter3.setKey("DATUM");
+			parameter3.setValue("20190101");//20190101
+//			parameter3.setValue(date.substring(0, 8));
+			List<Parameter> parListA = new ArrayList<Parameter>();
+			parListA.add(parameter3);
+			String priceParamA = JSONObject.toJSONString(parListA);
+			//发送请求获取数据
+			String priceA = HttpUtil.postbody(priceAUrl, priceParamA);
+			JSONObject parseObjectA = JSONObject.parseObject(priceA);
+
+			Object priceAdata = parseObjectA.get("data");
+			JSONArray parseArrayA = JSONArray.parseArray(priceAdata.toString());
+			for (int i = 0; i < parseArrayA.size();i++) { 
+				JSONObject objA = (JSONObject)parseArrayA.get(i); 
+				PriceDto price = new PriceDto();
+				price.setPrice(StrToDouble(objA.getString("kbetr")));
+				price.setType(objA.getString("brsch"));
+				price.setMaterialCode(objA.getString("matnr"));
+				price.setLastDate(objA.getString("erdat")+objA.getString("utime"));
+				price.setIndustryCode(objA.getString("kschl"));
+				ilist.add(price);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ilist;
+	}
+	//defaultCharacteristic
+	public List<DefaultCharacteristicsDto> getDefaultCharacteristics() {
+		List<DefaultCharacteristicsDto> list = new ArrayList<DefaultCharacteristicsDto>();
+		try {
+			//请求参数
+			DefaultBodyParam bodyParam = new DefaultBodyParam();
+			bodyParam.setSign("");
+			bodyParam.setOption("");
+			bodyParam.setLow("");
+			List paramlist = new ArrayList<>();
+			paramlist.add(bodyParam);
+			DefaultHeadParam headParam = new DefaultHeadParam();
+			headParam.setAedat("");
+			headParam.setItMatnr(paramlist);
+			String defaultParam = JSONObject.toJSONString(headParam);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(defaultCharacteristicsAUrl, defaultParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object message = parseObject.get("message");
+			Object data = parseObject.get("data");
+			JSONArray dataArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < dataArray.size();i++) { 
+				JSONObject obj = (JSONObject)dataArray.get(i);
+				
+				DefaultCharacteristicsDto dc = new DefaultCharacteristicsDto();
+				dc.setMaterialCode(obj.getString("matnr"));
+				dc.setClassCode(obj.getString("class"));
+				dc.setCharacteristic(obj.getString("atnam"));
+				dc.setCharacterDescription(obj.getString("atbez"));
+				dc.setCharacterValue(obj.getString("atwrt"));
+				dc.setCharacterValueDes(obj.getString("atwtb"));
+				list.add(dc);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// BOM
 	public Map<String, List<Bom>> getBomExplosion(Map<String, String> mapParam) {
@@ -114,5 +629,24 @@ public class SapService {
 		}
 		
 		return list;
+	}
+	
+	public static Double StrToDouble(String str) {
+		if(str.contains("-")) {
+			String bb = "-"+str.substring(0,str.length()-1);
+			return Double.valueOf(bb);
+		}else {
+			return Double.valueOf(str);
+		}
+	}
+	
+	public Date getLastUpdated(String code) {
+		Optional<LastUpdated> lu = lastUpdate.findById(code);
+		if(lu.isPresent()) {
+			return lu.get().getLastUpdate();
+		}
+		Date d = new Date(DEFAULT_DATE);
+
+		return d;
 	}
 }

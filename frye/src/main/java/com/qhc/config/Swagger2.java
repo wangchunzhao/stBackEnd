@@ -25,7 +25,7 @@ public class Swagger2 {
 	                .protocols(Sets.newHashSet("http")) 
 	                .apiInfo(apiInfo())
 	                .select()
-	                .apis(RequestHandlerSelectors.basePackage("com.qhc.frye.rest.controller"))
+	                .apis(RequestHandlerSelectors.basePackage("com.qhc.sap.controller"))
 	                .paths(PathSelectors.any())
 	                .build();
 	}
