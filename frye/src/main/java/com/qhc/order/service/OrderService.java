@@ -1077,7 +1077,7 @@ public class OrderService {
 				bpmItem.setItemCategoryName(itemDto.getItemCategory());
 				bpmItem.setItemRequirementPlanName(itemDto.getItemRequirementPlan());
 				bpmItem.setMaterialCode(itemDto.getMaterialCode());
-				bpmItem.setMaterialAttribute(itemDto.getIsPurchased() == 1 ? "采购" : "生产");
+				bpmItem.setMaterialAttribute(itemDto.getIsPurchased()? "采购" : "生产");
 				bpmItem.setMaterialGroupName(itemDto.getMaterialGroupName());
 				bpmItem.setMaterialName(itemDto.getMaterialName());
 				bpmItem.setMeasureUnitName(itemDto.getMaterialName());
