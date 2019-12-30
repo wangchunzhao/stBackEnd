@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +59,12 @@ import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
+import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
+import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
 import com.qhc.system.dao.ProvinceRepository;
@@ -112,6 +115,9 @@ public class OrderService {
 	CharacteristicsMapper characteristicsMapper;
 
 	@Autowired
+	SapViewMapper sapViewMapper;
+
+	@Autowired
 	private SalesTypeRepository salesTypeRepo;
 
 	@Autowired
@@ -144,7 +150,7 @@ public class OrderService {
 	@Autowired
 	private UserService userService;
 
-	public OrderDto save(String user, OrderDto orderDto) throws Exception {
+	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
 
 		// calculate gross profit margin
@@ -152,6 +158,16 @@ public class OrderService {
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
 		BeanUtils.copyProperties(orderInfo, orderDto);
+		
+		// is b2c
+		List<ItemDto> items = orderDto.getItems();
+		if (items != null) {
+			items.forEach(i -> {
+				if (StringUtils.isNotEmpty(i.getB2cComments())) {
+					orderDto.setIsB2c(1);
+				}
+			});
+		}
 
 		if (orderDto.getId() == null || orderDto.getId() == 0) {
 			// new version
@@ -191,9 +207,9 @@ public class OrderService {
 
 		saveItems(orderDto);
 
-		orderDto = this.findOrder(orderInfo.getId());
+		OrderDto dto = this.findOrder(orderInfo.getId());
 
-		return orderDto;
+		return dto;
 	}
 
 	/**
@@ -940,14 +956,19 @@ public class OrderService {
 		List<ItemDto> items = itemMapper.findByParams(params);
 		order.setItems(items);
 		Map<String, String> unitMap = this.constService.findMeasurementUnits();
-//		Map<String, String> cityMap = this.constService.findMeasurementUnits();
-		for (ItemDto itemDetail : items) {
-			Integer itemId = itemDetail.getId();
-			ItemDto item = new ItemDto();
-			BeanUtils.copyProperties(item, itemDetail);
+		for (ItemDto item : items) {
+			Integer itemId = item.getId();
+			
+			MaterialDto m = sapViewMapper.findMaterialInfo(item.getMaterialCode(), null).get(0);
 
-			item.setUnitName(unitMap.get(item.getUnitCode()));
-			// TODO
+			item.setMaterialName(m.getDescription());
+			item.setMaterialGroupCode(m.getGroupCode());
+			item.setMaterialGroupName(m.getGroupName());
+			item.setStMaterialGroupCode(m.getStGroupCode());
+			item.setStMaterialGroupName(m.getStGroupName());
+			item.setUnitCode(m.getUnitCode());
+			item.setUnitName(m.getUnitName());
+
 			Integer deliveryAddressSeq = item.getDeliveryAddressSeq();
 			if (deliveryAddressSeq != null) {
 				order.getDeliveryAddress().forEach(e -> {
@@ -996,6 +1017,7 @@ public class OrderService {
 				}
 				if (u.getUserIdentity().equals(order.getSalesCode())) {
 					order.setSalesName(u.getName());
+					order.setUserOfficeCode(u.getOfficeCode());
 				}
 //					if (u.getUserIdentity().equals(order.getContractManager())) {
 //						order.setContractManager(u.getName());
