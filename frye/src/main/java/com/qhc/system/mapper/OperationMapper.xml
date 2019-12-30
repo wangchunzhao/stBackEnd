@@ -132,6 +132,6 @@
 		LEFT JOIN b_role c ON b.role_id = c.id
 		LEFT JOIN b_role_operation d ON c.id = d.role_id
 		LEFT JOIN b_operation e ON d.operation_id = e.id
-		WHERE a.id = #{value}
+		WHERE a.user_identity = #{value}
 	</select>
 </mapper>

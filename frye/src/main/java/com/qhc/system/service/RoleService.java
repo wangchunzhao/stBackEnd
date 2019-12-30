@@ -43,7 +43,7 @@ public class RoleService {
 		Role role = roleMapper.findById(id);
 		RoleDto roleDto = new RoleDto();
 		try {
-			BeanUtils.copyProperties(role, roleDto);
+			BeanUtils.copyProperties(roleDto, role);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -111,11 +111,11 @@
 			<if test="userMail != null and userMail != ''" >
 				AND b_user.user_mail like #{userMail, jdbcType=VARCHAR}
 			</if>
+			<if test="isActive != null and isActive == 0" >
+				AND b_user.is_active = 0
+			</if>
 			<if test="isActive != null and isActive == 1" >
 				AND b_user.is_active = 1
-			</if>
-			<if test="isActive != null and isActive == 2" >
-				AND b_user.is_active != 1
 			</if>
 			<if test="creater != null and creater != ''" >
 				AND b_user.creater = #{creater, jdbcType=VARCHAR}
