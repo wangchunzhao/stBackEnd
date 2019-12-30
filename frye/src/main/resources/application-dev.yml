@@ -8,9 +8,9 @@ qhc:
 # Database
 spring: 
    datasource: 
-      url: jdbc:mysql://10.126.80.27:3306/qhc2?charset=utf8mb4&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
-      username: frye
-      password: 12345
+      url: jdbc:mysql://localhost:3306/qhc2?charset=utf8mb4&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+      username: root
+      password: 
       validation-query: select 1
 
 # mybatis view sql

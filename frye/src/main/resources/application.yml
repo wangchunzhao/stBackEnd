@@ -5,6 +5,7 @@ spring:
       restart: 
          enabled: true
    jpa: 
+      database-platform: org.hibernate.dialect.MySQL8Dialect
       hibernate: 
          ddl-auto: validate
          naming: 

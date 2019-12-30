@@ -479,17 +479,12 @@
         o.sales_code,
         o.st_order_type,
         o.quote_status,
-        su.name as sales_name,
-        cu.name as creater_name,
-        uu.name as updater_name
+        c.name as customer_name
 	</sql>
 	
 	<sql id="order_view_table_list" >
         k_order_info oi 
         LEFT JOIN k_order o ON o.id = oi.order_id
-        LEFT JOIN b_user su ON su.user_identity = o.sales_code
-        LEFT JOIN b_user cu ON cu.user_identity = oi.creater
-        LEFT JOIN b_user uu ON uu.user_identity = oi.updater
         LEFT JOIN sap_customer c on c.code = o.customer_code
     </sql>
     
@@ -527,13 +522,13 @@
 			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="createTime != null and createTime != ''" >
 			<![CDATA[
-				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= ${createTime.substring(0, createTime.indexOf(" - "))} and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= ${createTime.substring(createTime.indexOf(" - ") + 3)}
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= '${createTime.substring(0, createTime.indexOf(" - "))}' and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= '${createTime.substring(createTime.indexOf(" - ") + 3)}'
 			]]>
 			</if>
 			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="submitTime != null and submitTime != ''" >
 			<![CDATA[
-				AND DATE_FORMAT(oi.submit_time, '%Y-%m-%d') >= ${submitTime.substring(0, submitTime.indexOf(" - "))} and DATE_FORMAT(oi.submit_time, '%Y-%m-%d') <= ${submitTime.substring(submitTime.indexOf(" - ") + 3)}
+				AND DATE_FORMAT(oi.submit_time, '%Y-%m-%d') >= '${submitTime.substring(0, submitTime.indexOf(" - "))}' and DATE_FORMAT(oi.submit_time, '%Y-%m-%d') <= '${submitTime.substring(submitTime.indexOf(" - ") + 3)}'
 			]]>
 			</if>
 			<if test="officeCode != null and officeCode != ''" >

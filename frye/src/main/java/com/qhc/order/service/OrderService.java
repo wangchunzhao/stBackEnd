@@ -70,18 +70,20 @@ import com.qhc.system.entity.Area;
 import com.qhc.system.entity.City;
 import com.qhc.system.entity.Province;
 import com.qhc.system.entity.Settings;
+import com.qhc.system.entity.User;
+import com.qhc.system.service.UserService;
 import com.qhc.utils.HttpUtil;
 
 @Service
 public class OrderService {
 	private static Logger logger = LoggerFactory.getLogger(OrderService.class);
-	
+
 	@Value("${sap.paymentplan.addr}")
 	String paymentplanUrlStr;
 
 	@Value("${sap.sapCreateOrder.addr}")
 	private String orderCreationUrl;
-	
+
 	@Value("${sap.sapChangeOrder.addr}")
 	private String orderChangeUrl;
 
@@ -139,39 +141,43 @@ public class OrderService {
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
 
+	@Autowired
+	private UserService userService;
+
 	public OrderDto save(String user, OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
-		
+
 		// calculate gross profit margin
 		List<MaterialGroups> margin = calcGrossProfit(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
-		
+
 		BeanUtils.copyProperties(orderInfo, orderDto);
-		
+
 		if (orderDto.getId() == null || orderDto.getId() == 0) {
 			// new version
 			String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
 			orderInfo.setVersion(version);
+			orderInfo.setIsActive(1);
 			orderInfo.setStatus(OrderDto.ORDER_STATUS_DRAFT);
 			orderInfo.setVersionNum(1);
 			orderInfo.setCreater(user);
 			orderInfo.setUpdater(user);
-			
+
 			if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
 				Order order = new Order();
 				BeanUtils.copyProperties(order, orderDto);
-				
+
 				String sequenceNumber = "QHC" + version;
 				order.setSequenceNumber(sequenceNumber);
 				order.setSalesCode(user);
-				
+
 				orderMapper.insert(order);
 
 				orderInfo.setOrderId(order.getId());
 			}
 
 			orderInfoMapper.insert(orderInfo);
-			
+
 			orderInfo.setId(orderInfo.getId());
 		} else {
 			orderInfo.setUpdater(user);
@@ -184,23 +190,23 @@ public class OrderService {
 		saveDeliveryAddresses(orderDto);
 
 		saveItems(orderDto);
-		
+
 		orderDto = this.findOrder(orderInfo.getId());
 
 		return orderDto;
 	}
-	
+
 	/**
 	 * 订单变更，BPM审批通过后的订单修改，产生新的版本
 	 * 
 	 * @param user
 	 * @param orderInfoId
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public OrderDto upgrade(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
-		
+
 		order.setId(null);
 		// new version
 		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
@@ -210,12 +216,12 @@ public class OrderService {
 		order.setSubmitTime(null);
 		order.setIsActive(1);
 		order.setVersionNum(order.getVersionNum() + 1);
-		
+
 		// 将其他版本的active设置为0
 		orderInfoMapper.inactive(order.getSequenceNumber());
-		
+
 		order = this.save(user, order);
-		
+
 		return order;
 	}
 
@@ -231,7 +237,7 @@ public class OrderService {
 		for (Attachment attachment : attachments) {
 			attachment.setId(null);
 			attachment.setOrderInfoId(orderInfoId);
-			
+
 			attachmentMapper.insert(attachment);
 		}
 	}
@@ -243,7 +249,7 @@ public class OrderService {
 		for (BillingPlan billingPlan : payments) {
 			billingPlan.setId(null);
 			billingPlan.setOrderInfoId(orderInfoId);
-			
+
 			billingPlanMapper.insert(billingPlan);
 		}
 	}
@@ -254,12 +260,12 @@ public class OrderService {
 		List<DeliveryAddressDto> addresses = orderDto.getDeliveryAddress();
 		for (DeliveryAddressDto addressDto : addresses) {
 			DeliveryAddress address = new DeliveryAddress();
-			
+
 			BeanUtils.copyProperties(address, addressDto);
-			
+
 			address.setId(null);
 			address.setOrderInfoId(orderInfoId);
-			
+
 			deliveryAddressMapper.insert(address);
 		}
 	}
@@ -270,33 +276,35 @@ public class OrderService {
 		List<ItemDto> items = orderDto.getItems();
 		for (ItemDto itemDto : items) {
 			Item item = new Item();
-			
+
 			BeanUtils.copyProperties(item, itemDto);
-			
+
 			item.setId(null);
 			item.setOrderInfoId(orderInfoId);
-			
+
 			itemMapper.insert(item);
-			
+
 			List<CharacteristicDto> configs = itemDto.getConfigs();
-			for (CharacteristicDto dto : configs) {
-				Characteristics c = new Characteristics();
-				
-				BeanUtils.copyProperties(c, dto);
-				c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
-				
-				c.setId(null);
-				c.setItemId(item.getId());
-				
-				characteristicsMapper.insert(c);
+			if (configs != null) {
+				for (CharacteristicDto dto : configs) {
+					Characteristics c = new Characteristics();
+
+					BeanUtils.copyProperties(c, dto);
+					c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
+
+					c.setId(null);
+					c.setItemId(item.getId());
+
+					characteristicsMapper.insert(c);
+				}
 			}
-		} 
+		}
 	}
-	
+
 	private void deleteItems(Integer orderInfoId) {
 		// delete k_characteristics
 		this.characteristicsMapper.deleteByOrderInfoId(orderInfoId);
-		
+
 		// delete order item
 		itemMapper.deleteByOrderInfoId(orderInfoId);
 	}
@@ -305,35 +313,35 @@ public class OrderService {
 	 * 提交订单
 	 * 
 	 * @param order
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void submit(String user, OrderDto order) throws Exception {
 		String status = order.getStatus();
 		switch (status) {
-			case OrderDto.ORDER_STATUS_DRAFT: 
-			case OrderDto.ORDER_STATUS_REJECT: 
-				if (order.getIsB2c() == 1) {
-					order.setStatus(OrderDto.ORDER_STATUS_B2C);
-				} else if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_DEALER_CODE)) { 
-					// 大客户
-					order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
-				} else {
-					order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
-				}
-				break;
-			case OrderDto.ORDER_STATUS_B2C: 
-				if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_DEALER_CODE)) { 
-					// 大客户
-					order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
-				} else {
-					order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
-				}
-				break;
-			case OrderDto.ORDER_STATUS_ENGINER: 
+		case OrderDto.ORDER_STATUS_DRAFT:
+		case OrderDto.ORDER_STATUS_REJECT:
+			if (order.getIsB2c() == 1) {
+				order.setStatus(OrderDto.ORDER_STATUS_B2C);
+			} else if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_DEALER_CODE)) {
+				// 大客户
+				order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
+			} else {
 				order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
-				break;
-			default:
-				throw new RuntimeException("Unknown status for submit order.");
+			}
+			break;
+		case OrderDto.ORDER_STATUS_B2C:
+			if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_DEALER_CODE)) {
+				// 大客户
+				order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
+			} else {
+				order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
+			}
+			break;
+		case OrderDto.ORDER_STATUS_ENGINER:
+			order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
+			break;
+		default:
+			throw new RuntimeException("Unknown status for submit order.");
 		}
 		order = save(user, order);
 	}
@@ -349,7 +357,7 @@ public class OrderService {
 	public List<MaterialGroups> calcGrossProfit(String sequenceNumber, String version) throws Exception {
 		OrderDto order = this.findOrder(sequenceNumber, version);
 		String json = order.getGrossProfitMargin();
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		JavaType type = mapper.getTypeFactory().constructCollectionLikeType(List.class, MaterialGroups.class);
 		return new ObjectMapper().readValue(json, type);
@@ -360,7 +368,7 @@ public class OrderService {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = order.getItems();
-		
+
 		if (items == null || items.size() == 0) {
 			return groups;
 		}
@@ -589,7 +597,7 @@ public class OrderService {
 			Map<String, Double> taxRate = new HashMap<String, Double>();
 			taxRate.put("10", Double.valueOf(p.getsValue()));
 			taxRate.put("30", Double.valueOf(p.getsValue()));
-			
+
 			oo.setTaxRate(taxRate);
 		}
 
@@ -606,10 +614,10 @@ public class OrderService {
 	public String sendToSap(String user, OrderDto orderDto) {
 		try {
 			this.save(user, orderDto);
-			
+
 			// 1. 根据sequenceNumber组装数据
 			SapOrder sapOrder = assembleSapOrder(orderDto);
-			
+
 			sendToSap(sapOrder);
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
 		} catch (Exception e) {
@@ -631,19 +639,19 @@ public class OrderService {
 	public String sendToSap(SapOrder sapOrder) {
 		String res = null;
 		try {
-			//1.ͬ同步SAP开单 没有数据 先注释
+			// 1.ͬ同步SAP开单 没有数据 先注释
 			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
 			logger.info("Order Data: {}", sapStr);
-			//没有数据先注释
+			// 没有数据先注释
 			res = HttpUtil.postbody(orderCreationUrl, sapStr);
 		} catch (Exception e) {
-			logger.error("ͬ同步SAP异常==>",e);
+			logger.error("ͬ同步SAP异常==>", e);
 			throw new RuntimeException("ͬ同步SAP异常");
 		}
-		
-		//2. 处理返回结果
-		logger.info("SAP返回结果==>"+res);
-		
+
+		// 2. 处理返回结果
+		logger.info("SAP返回结果==>" + res);
+
 		return res;
 	}
 
@@ -679,7 +687,7 @@ public class OrderService {
 		header.setBstzd(toString(order.getWarranty())); // Additional/附加的 -- 保修年限
 		header.setBstkdE(toString(order.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
 		header.setVsart(toString(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
-		header.setZterm(order.getPaymentType());	// Payment terms/付款条款 -- 结算方式  大客户为空，dealer取billing_plan的第一条code（唯一一条） 
+		header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空，dealer取billing_plan的第一条code（唯一一条）
 		header.setKunnr(toString(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
 		header.setWaerk(toString(order.getCurrency())); // Currency/币别 -- 币别
 		header.setInco1(toString(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
@@ -709,7 +717,8 @@ public class OrderService {
 			// Target quantity/数量
 			sapItem.setZmeng((int) item.getQuantity());
 			// Req.dlv.date/请求发货日期 yyyyMMdd
-			String deliveryDate = item.getDeliveryDate() == null ? "" : new SimpleDateFormat("yyyyMMdd").format(item.getDeliveryDate());
+			String deliveryDate = item.getDeliveryDate() == null ? ""
+					: new SimpleDateFormat("yyyyMMdd").format(item.getDeliveryDate());
 			sapItem.setEdatu(deliveryDate);
 			// Item category/行项目类别 -- 项目类别
 			sapItem.setPstyv(item.getItemCategory());
@@ -890,7 +899,7 @@ public class OrderService {
 	 * @throws Exception
 	 */
 	public PageInfo<OrderDto> findOrders(OrderQuery orderQuery) throws Exception {
-		boolean includeDetail = orderQuery.isIncludeDetail();
+//		boolean includeDetail = orderQuery.isIncludeDetail();
 
 		PageInfo<OrderDto> page = queryOrderView(orderQuery);
 
@@ -936,7 +945,7 @@ public class OrderService {
 			Integer itemId = itemDetail.getId();
 			ItemDto item = new ItemDto();
 			BeanUtils.copyProperties(item, itemDetail);
-			
+
 			item.setUnitName(unitMap.get(item.getUnitCode()));
 			// TODO
 			Integer deliveryAddressSeq = item.getDeliveryAddressSeq();
@@ -964,7 +973,7 @@ public class OrderService {
 	 * 
 	 * @param orderQuery
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private PageInfo<OrderDto> queryOrderView(OrderQuery orderQuery) throws Exception {
 		boolean includeDetail = orderQuery.isIncludeDetail();
@@ -974,8 +983,29 @@ public class OrderService {
 
 		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		List<OrderDto> orders = orderInfoMapper.findOrderViewByParams(orderQuery);
-		if (includeDetail) {
-			for (OrderDto order : orders) {
+		for (OrderDto order : orders) {
+			// user name
+			List<User> list = userService.findByIdentitys(order.getCreater(), order.getUpdater(), order.getSalesCode(),
+					order.getContractManager());
+			list.forEach(u -> {
+				if (u.getUserIdentity().equals(order.getCreater())) {
+					order.setCreaterName(u.getName());
+				}
+				if (u.getUserIdentity().equals(order.getUpdater())) {
+					order.setUpdaterName(u.getName());
+				}
+				if (u.getUserIdentity().equals(order.getSalesCode())) {
+					order.setSalesName(u.getName());
+				}
+//					if (u.getUserIdentity().equals(order.getContractManager())) {
+//						order.setContractManager(u.getName());
+//					}
+			});
+			
+			// customerclazz
+			order.setCustomerClazzName(constService.findCustomerClazzByCode(order.getCustomerClazz()));
+
+			if (includeDetail) {
 				assembleOrderDetail(order);
 			}
 		}
@@ -1036,7 +1066,7 @@ public class OrderService {
 		bpmHeader.setMaintenanceFee(order.getMaintenanceFee());
 		bpmHeader.setMargin(sumMargin.getGrossProfitMargin());
 		bpmHeader.setMaterialFee(order.getMaterialFee());
-		
+
 		bpmHeader.setMergeDiscount(bpmHeader.getDiscount());
 		bpmHeader.setOrderType(order.getOrderType());
 		bpmHeader.setPaymentTypeName(order.getPaymentType());
@@ -1061,7 +1091,7 @@ public class OrderService {
 				strGroupName.append(",").append(itemDto.getMaterialGroupName());
 				OrderItem bpmItem = new OrderItem();
 				bpmItems.add(bpmItem);
-	
+
 				bpmItem.setActuralAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 				bpmItem.setActuralAmountOfOptional(itemDto.getOptionalActualPrica() * itemDto.getQuantity());
 				bpmItem.setActuralPrice(itemDto.getActualPrice());
@@ -1077,7 +1107,7 @@ public class OrderService {
 				bpmItem.setItemCategoryName(itemDto.getItemCategory());
 				bpmItem.setItemRequirementPlanName(itemDto.getItemRequirementPlan());
 				bpmItem.setMaterialCode(itemDto.getMaterialCode());
-				bpmItem.setMaterialAttribute(itemDto.getIsPurchased()? "采购" : "生产");
+				bpmItem.setMaterialAttribute(itemDto.getIsPurchased() ? "采购" : "生产");
 				bpmItem.setMaterialGroupName(itemDto.getMaterialGroupName());
 				bpmItem.setMaterialName(itemDto.getMaterialName());
 				bpmItem.setMeasureUnitName(itemDto.getMaterialName());

@@ -1,6 +1,7 @@
 package com.qhc.system.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -209,6 +210,25 @@ public class UserService {
 		}
 
 		return new PageInfo(userMapper.findByParams(params));
+	}
+	
+	public List<User> findByIdentitys(String...userIdentitys) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<String> identitys = new ArrayList<String>();
+		for (String identity : userIdentitys) {
+			if (StringUtils.isEmpty(identity)) {
+				continue;
+			}
+			identitys.add(identity);
+		}
+		
+		if (identitys.size() == 0) {
+			return new ArrayList<User>();
+		}
+		
+		params.put("userIdentityList", identitys);
+		
+		return userMapper.findByParams(params);		
 	}
 
 }
