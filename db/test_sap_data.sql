@@ -1,6 +1,7 @@
 -- -----------------------------------------------------
 -- Data for table `sap_sales_office`
 -- -----------------------------------------------------
+INSERT INTO `sap_sales_office` (`code`,`name`,`sap_sales_type_code`) VALUES ('0841','总部','10');
 INSERT INTO `sap_sales_office` (`code`,`name`,`sap_sales_type_code`) VALUES ('S001','东区(经销商）','10');
 INSERT INTO `sap_sales_office` (`code`,`name`,`sap_sales_type_code`) VALUES ('S002','南区','10');
 INSERT INTO `sap_sales_office` (`code`,`name`,`sap_sales_type_code`) VALUES ('S003','西区','10');

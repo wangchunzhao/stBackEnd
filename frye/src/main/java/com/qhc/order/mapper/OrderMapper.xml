@@ -32,12 +32,12 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="com.qhc.order.entity.Order" >
 		update k_order
-		set order_type = #{orderType, jdbcType=VARCHAR}, 
+		set <!-- order_type = #{orderType, jdbcType=VARCHAR}, 
 			sequence_number = #{sequenceNumber, jdbcType=VARCHAR}, 
-			customer_code = #{customerCode, jdbcType=VARCHAR}, 
+			customer_code = #{customerCode, jdbcType=VARCHAR},  -->
 			customer_clazz = #{customerClazz, jdbcType=VARCHAR}, 
-			sales_code = #{salesCode, jdbcType=VARCHAR}, 
-			st_order_type = #{stOrderType, jdbcType=VARCHAR}, 
+			<!-- sales_code = #{salesCode, jdbcType=VARCHAR}, 
+			st_order_type = #{stOrderType, jdbcType=VARCHAR},  -->
 			quote_status = #{quoteStatus, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>

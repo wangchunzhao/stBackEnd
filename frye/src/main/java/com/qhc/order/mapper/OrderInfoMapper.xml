@@ -126,11 +126,11 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="com.qhc.order.entity.OrderInfo" >
 		update k_order_info
-		set order_id = #{orderId, jdbcType=INTEGER}, 
+		set <!-- order_id = #{orderId, jdbcType=INTEGER}, 
 			version = #{version, jdbcType=VARCHAR}, 
-			version_num = #{versionNum, jdbcType=INTEGER}, 
+			version_num = #{versionNum, jdbcType=INTEGER},  -->
 			status = #{status, jdbcType=VARCHAR}, 
-			is_active = #{isActive, jdbcType=INTEGER}, 
+			<!-- is_active = #{isActive, jdbcType=INTEGER},  -->
 			terminal_type = #{terminalType, jdbcType=VARCHAR}, 
 			shop_name = #{shopName, jdbcType=VARCHAR}, 
 			record_code = #{recordCode, jdbcType=VARCHAR}, 
@@ -183,9 +183,9 @@
 			is_b2c = #{isB2c, jdbcType=INTEGER}, 
 			gross_profit_margin = #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
 			comments = #{comments, jdbcType=VARCHAR}, 
-			submit_time = #{submitTime, jdbcType=TIMESTAMP}, 
+			<!-- submit_time = #{submitTime, jdbcType=TIMESTAMP}, 
 			bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
-			<!-- creater = #{creater, jdbcType=VARCHAR}, 
+			creater = #{creater, jdbcType=VARCHAR}, 
 			create_time = #{createTime, jdbcType=TIMESTAMP},  -->
 			updater = #{updater, jdbcType=VARCHAR}, 
 			update_time = now()
@@ -245,180 +245,6 @@
 			</if>
 			<if test="isActive != null" >
 				AND k_order_info.is_active = #{isActive, jdbcType=INTEGER}
-			</if>
-			<if test="terminalType != null and terminalType != ''" >
-				AND k_order_info.terminal_type = #{terminalType, jdbcType=VARCHAR}
-			</if>
-			<if test="shopName != null and shopName != ''" >
-				AND k_order_info.shop_name = #{shopName, jdbcType=VARCHAR}
-			</if>
-			<if test="recordCode != null and recordCode != ''" >
-				AND k_order_info.record_code = #{recordCode, jdbcType=VARCHAR}
-			</if>
-			<if test="salesTel != null and salesTel != ''" >
-				AND k_order_info.sales_tel = #{salesTel, jdbcType=VARCHAR}
-			</if>
-			<if test="isConvenientStore != null" >
-				AND k_order_info.is_convenient_store = #{isConvenientStore, jdbcType=INTEGER}
-			</if>
-			<if test="isReformed != null" >
-				AND k_order_info.is_reformed = #{isReformed, jdbcType=INTEGER}
-			</if>
-			<if test="isNew != null" >
-				AND k_order_info.is_new = #{isNew, jdbcType=INTEGER}
-			</if>
-			<if test="contractNumber != null and contractNumber != ''" >
-				AND k_order_info.contract_number = #{contractNumber, jdbcType=VARCHAR}
-			</if>
-			<if test="saleType != null and saleType != ''" >
-				AND k_order_info.sale_type = #{saleType, jdbcType=VARCHAR}
-			</if>
-			<if test="taxRate != null" >
-				AND k_order_info.tax_rate = #{taxRate, jdbcType=DOUBLE}
-			</if>
-			<if test="incoterm != null and incoterm != ''" >
-				AND k_order_info.incoterm = #{incoterm, jdbcType=VARCHAR}
-			</if>
-			<if test="incotermContect != null and incotermContect != ''" >
-				AND k_order_info.incoterm_contect = #{incotermContect, jdbcType=VARCHAR}
-			</if>
-			<if test="contractValue != null" >
-				AND k_order_info.contract_value = #{contractValue, jdbcType=DECIMAL}
-			</if>
-			<if test="contractRmbValue != null" >
-				AND k_order_info.contract_rmb_value = #{contractRmbValue, jdbcType=DECIMAL}
-			</if>
-			<if test="currency != null and currency != ''" >
-				AND k_order_info.currency = #{currency, jdbcType=VARCHAR}
-			</if>
-			<if test="currencyExchange != null" >
-				AND k_order_info.currency_exchange = #{currencyExchange, jdbcType=DOUBLE}
-			</if>
-			<if test="itemsAmount != null" >
-				AND k_order_info.items_amount = #{itemsAmount, jdbcType=DECIMAL}
-			</if>
-			<if test="contractManager != null and contractManager != ''" >
-				AND k_order_info.contract_manager = #{contractManager, jdbcType=VARCHAR}
-			</if>
-			<if test="officeCode != null and officeCode != ''" >
-				AND k_order_info.office_code = #{officeCode, jdbcType=VARCHAR}
-			</if>
-			<if test="groupCode != null and groupCode != ''" >
-				AND k_order_info.group_code = #{groupCode, jdbcType=VARCHAR}
-			</if>
-			<if test="warranty != null" >
-				AND k_order_info.warranty = #{warranty, jdbcType=INTEGER}
-			</if>
-			<if test="installType != null and installType != ''" >
-				AND k_order_info.install_type = #{installType, jdbcType=VARCHAR}
-			</if>
-			<if test="receiveType != null and receiveType != ''" >
-				AND k_order_info.receive_type = #{receiveType, jdbcType=VARCHAR}
-			</if>
-			<if test="transferType != null and transferType != ''" >
-				AND k_order_info.transfer_type = #{transferType, jdbcType=VARCHAR}
-			</if>
-			<if test="freight != null" >
-				AND k_order_info.freight = #{freight, jdbcType=DECIMAL}
-			</if>
-			<if test="contactor1Id != null and contactor1Id != ''" >
-				AND k_order_info.contactor1_id = #{contactor1Id, jdbcType=VARCHAR}
-			</if>
-			<if test="contactor1Tel != null and contactor1Tel != ''" >
-				AND k_order_info.contactor1_tel = #{contactor1Tel, jdbcType=VARCHAR}
-			</if>
-			<if test="contactor2Id != null and contactor2Id != ''" >
-				AND k_order_info.contactor2_id = #{contactor2Id, jdbcType=VARCHAR}
-			</if>
-			<if test="contactor2Tel != null and contactor2Tel != ''" >
-				AND k_order_info.contactor2_tel = #{contactor2Tel, jdbcType=VARCHAR}
-			</if>
-			<if test="contactor3Id != null and contactor3Id != ''" >
-				AND k_order_info.contactor3_id = #{contactor3Id, jdbcType=VARCHAR}
-			</if>
-			<if test="contactor3Tel != null and contactor3Tel != ''" >
-				AND k_order_info.contactor3_tel = #{contactor3Tel, jdbcType=VARCHAR}
-			</if>
-			<if test="bodyDiscount != null" >
-				AND k_order_info.body_discount = #{bodyDiscount, jdbcType=DOUBLE}
-			</if>
-			<if test="approvedBodyDiscount != null" >
-				AND k_order_info.approved_body_discount = #{approvedBodyDiscount, jdbcType=DOUBLE}
-			</if>
-			<if test="mainDiscount != null" >
-				AND k_order_info.main_discount = #{mainDiscount, jdbcType=DOUBLE}
-			</if>
-			<if test="approvedMainDiscount != null" >
-				AND k_order_info.approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}
-			</if>
-			<if test="discount != null" >
-				AND k_order_info.discount = #{discount, jdbcType=DOUBLE}
-			</if>
-			<if test="isLongterm != null" >
-				AND k_order_info.is_longterm = #{isLongterm, jdbcType=INTEGER}
-			</if>
-			<if test="isSpecial != null" >
-				AND k_order_info.is_special = #{isSpecial, jdbcType=INTEGER}
-			</if>
-			<if test="paymentType != null and paymentType != ''" >
-				AND k_order_info.payment_type = #{paymentType, jdbcType=VARCHAR}
-			</if>
-			<if test="isTerm1 != null" >
-				AND k_order_info.is_term1 = #{isTerm1, jdbcType=INTEGER}
-			</if>
-			<if test="isTerm2 != null" >
-				AND k_order_info.is_term2 = #{isTerm2, jdbcType=INTEGER}
-			</if>
-			<if test="isTerm3 != null" >
-				AND k_order_info.is_term3 = #{isTerm3, jdbcType=INTEGER}
-			</if>
-			<if test="installFee != null" >
-				AND k_order_info.install_fee = #{installFee, jdbcType=DECIMAL}
-			</if>
-			<if test="materialFee != null" >
-				AND k_order_info.material_fee = #{materialFee, jdbcType=DECIMAL}
-			</if>
-			<if test="electricalFee != null" >
-				AND k_order_info.electrical_fee = #{electricalFee, jdbcType=DECIMAL}
-			</if>
-			<if test="refrigeratoryFee != null" >
-				AND k_order_info.refrigeratory_fee = #{refrigeratoryFee, jdbcType=DECIMAL}
-			</if>
-			<if test="maintenanceFee != null" >
-				AND k_order_info.maintenance_fee = #{maintenanceFee, jdbcType=DECIMAL}
-			</if>
-			<if test="earliestDeliveryDate != null" >
-				AND k_order_info.earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}
-			</if>
-			<if test="earliestProductDate != null" >
-				AND k_order_info.earliest_product_date = #{earliestProductDate, jdbcType=DATE}
-			</if>
-			<if test="isB2c != null" >
-				AND k_order_info.is_b2c = #{isB2c, jdbcType=INTEGER}
-			</if>
-			<if test="grossProfitMargin != null and grossProfitMargin != ''" >
-				AND k_order_info.gross_profit_margin = #{grossProfitMargin, jdbcType=LONGVARCHAR}
-			</if>
-			<if test="comments != null and comments != ''" >
-				AND k_order_info.comments = #{comments, jdbcType=VARCHAR}
-			</if>
-			<if test="submitTime != null" >
-				AND k_order_info.submit_time = #{submitTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="bpmSubmitTime != null" >
-				AND k_order_info.bpm_submit_time = #{bpmSubmitTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="creater != null and creater != ''" >
-				AND k_order_info.creater = #{creater, jdbcType=VARCHAR}
-			</if>
-			<if test="createTime != null" >
-				AND k_order_info.create_time = #{createTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="updater != null and updater != ''" >
-				AND k_order_info.updater = #{updater, jdbcType=VARCHAR}
-			</if>
-			<if test="updateTime != null" >
-				AND k_order_info.update_time = #{updateTime, jdbcType=TIMESTAMP}
 			</if>
 			
 			<include refid="Where_Clause" />

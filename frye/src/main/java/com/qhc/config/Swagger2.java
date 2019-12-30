@@ -26,6 +26,9 @@ public class Swagger2 {
 	                .apiInfo(apiInfo())
 	                .select()
 	                .apis(RequestHandlerSelectors.basePackage("com.qhc.sap.controller"))
+	                .apis(RequestHandlerSelectors.basePackage("com.qhc.system.controller"))
+	                .apis(RequestHandlerSelectors.basePackage("com.qhc.sap.controller"))
+	                .apis(RequestHandlerSelectors.basePackage("com.qhc.order.controller"))
 	                .paths(PathSelectors.any())
 	                .build();
 	}
