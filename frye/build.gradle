@@ -66,7 +66,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.8'
 	//Gradle 5.0
 	annotationProcessor 'org.projectlombok:lombok:1.18.8'
-	
+
 	//restful client: webclient
 	implementation "org.springframework.boot:spring-boot-starter-webflux"
 	
@@ -76,7 +76,9 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 	// https://mvnrepository.com/artifact/commons-io/commons-io
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
-	
+	// https://mvnrepository.com/artifact/com.alibaba/fastjson
+	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.62'
+
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

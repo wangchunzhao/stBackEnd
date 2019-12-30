@@ -211,7 +211,9 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public Object findByName(@PathVariable String name) throws Exception {
 		List<Role> list = new ArrayList<>();
-		list.add(roleService.findByName(name));
+		if (roleService.findByName(name) != null) {
+			list.add(roleService.findByName(name));
+		}
 		PageInfo<Role> pageInfo = new PageInfo<Role>(list);
 		return new RestPage(pageInfo);
 	}
