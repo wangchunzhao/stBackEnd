@@ -11,7 +11,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/qhc2?charset=utf8mb4&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
       username: root
-      password: password
+      password: 
       validation-query: select 1
 
 # mybatis view sql

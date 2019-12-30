@@ -11,6 +11,7 @@
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="updater" property="updater" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="office_code" property="officeCode" jdbcType="VARCHAR" />
 		<result column="tel" property="tel" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -26,11 +27,11 @@
 		insert into b_user ( id, user_identity, name, 
 			user_mail, is_active, creater, 
 			create_time, updater, update_time, 
-			tel )
+			office_code, tel )
 		values ( #{id, jdbcType=INTEGER}, #{userIdentity, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, 
 			#{userMail, jdbcType=VARCHAR}, #{isActive, jdbcType=INTEGER}, #{creater, jdbcType=VARCHAR}, 
-			#{createTime, jdbcType=TIMESTAMP}, #{updater, jdbcType=VARCHAR}, #{updateTime, jdbcType=TIMESTAMP}, 
-			#{tel, jdbcType=VARCHAR} )
+			now(), #{updater, jdbcType=VARCHAR}, now(), 
+			#{officeCode, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -40,10 +41,11 @@
 			name = #{name, jdbcType=VARCHAR}, 
 			user_mail = #{userMail, jdbcType=VARCHAR}, 
 			is_active = #{isActive, jdbcType=INTEGER}, 
-			creater = #{creater, jdbcType=VARCHAR}, 
-			create_time = #{createTime, jdbcType=TIMESTAMP}, 
+			<!-- creater = #{creater, jdbcType=VARCHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP}, -->
 			updater = #{updater, jdbcType=VARCHAR}, 
-			update_time = #{updateTime, jdbcType=TIMESTAMP}, 
+			update_time = now(), 
+			office_code = #{officeCode, jdbcType=VARCHAR}, 
 			tel = #{tel, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
@@ -56,7 +58,8 @@
 
 	<sql id="Base_Column_List" >
 		b_user.id, b_user.user_identity, b_user.name, b_user.user_mail, b_user.is_active, 
-		b_user.creater, b_user.create_time, b_user.updater, b_user.update_time, b_user.tel
+		b_user.creater, b_user.create_time, b_user.updater, b_user.update_time, b_user.office_code, 
+		b_user.tel
 	</sql>
 	
 	<sql id="Column_List">
@@ -69,6 +72,29 @@
 		<include refid="Column_List" />
 		from b_user 
 		where b_user.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="UserMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_user
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_user
+		<include refid="Where_By_Params" />
 	</select>
 	
 	<sql id="Where_By_Params" >
@@ -103,6 +129,9 @@
 			<if test="updateTime != null" >
 				AND b_user.update_time = #{updateTime, jdbcType=TIMESTAMP}
 			</if>
+			<if test="officeCode != null and officeCode != ''" >
+				AND b_user.office_code = #{officeCode, jdbcType=VARCHAR}
+			</if>
 			<if test="tel != null and tel != ''" >
 				AND b_user.tel like #{tel, jdbcType=VARCHAR}
 			</if>
@@ -112,29 +141,9 @@
 	</sql>
 	
 	<sql id="Where_Clause">
-		
+		<if test="userIdentityList != null and userIdentityList.size() > 0" >
+			AND b_user.user_identity in <foreach item="item" index="index" collection="userIdentityList" open="("
+				            separator="," close=")">#{item, jdbcType=VARCHAR}</foreach>
+		</if>
 	</sql>
-	
-	<!-- 按参数统计 -->
-	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
-		select count(1) 
-		from b_user
-		<include refid="Where_By_Params" />
-	</select>
-	
-	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="UserMap" parameterType="Map" >
-		select 
-		<include refid="Column_List" />
-		from b_user
-		<include refid="Where_By_Params" />
-		<choose>
-			<when test="orderByClause != null">
-				order by ${orderByClause}
-			</when>
-			<otherwise>
-				order by id
-			</otherwise>
-		</choose>
-	</select>
 </mapper>

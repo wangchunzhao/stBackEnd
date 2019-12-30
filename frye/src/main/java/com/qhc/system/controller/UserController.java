@@ -1,6 +1,7 @@
 package com.qhc.system.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -205,8 +206,13 @@ public class UserController {
 	@ApiOperation(value = "根据角色名查找角色", notes = "根据角色名查找角色")
 	@GetMapping(value = "role/searchByName/{name}")
 	@ResponseStatus(HttpStatus.OK)
-	public Object findByName(@PathVariable("name") String name) throws Exception {
-		return roleService.findByName(name);
+	public Object findByName(@PathVariable String name) throws Exception {
+		List<Role> list = new ArrayList<>();
+		if (roleService.findByName(name) != null) {
+			list.add(roleService.findByName(name));
+		}
+		PageInfo<Role> pageInfo = new PageInfo<Role>(list);
+		return new RestPage(pageInfo);
 	}
 
 //	@ApiOperation(value="Create role", notes="Create role")
