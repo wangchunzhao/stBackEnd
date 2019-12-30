@@ -121,4 +121,17 @@
 		left join b_role_operation ro on ro.operation_id = b_operation.id
 		where ro.role_id = #{value}
 	</select>
+
+	<!-- 按参数查询 -->
+	<select id="findAllAserMenus" resultMap="OperationMap" parameterType="String" >
+		SELECT
+			e.*
+		FROM
+			b_user a
+		LEFT JOIN b_user_role b ON a.id = b.user_id
+		LEFT JOIN b_role c ON b.role_id = c.id
+		LEFT JOIN b_role_operation d ON c.id = d.role_id
+		LEFT JOIN b_operation e ON d.operation_id = e.id
+		WHERE a.id = #{value}
+	</select>
 </mapper>
