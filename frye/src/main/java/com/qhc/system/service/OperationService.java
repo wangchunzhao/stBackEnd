@@ -1,11 +1,13 @@
 package com.qhc.system.service;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.validation.Valid;
 
+import com.qhc.system.domain.MenusDto;
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +57,69 @@ public class OperationService implements Serializable{
 	public List<OperationDto> findByUser(String userIdentity) {
 		return operationMapper.findByUserIdentity(userIdentity);
 	}
-	
+
+	/**
+	 * 查询用户所有菜单
+	 * @param userId
+	 * @return
+	 */
+	public  Map<String,MenusDto> findAllAserMenus(String userId){
+		//查询用户所有菜单
+		List<Operation> list = operationMapper.findAllAserMenus(userId);
+		//查询所有权限
+		List<Operation> list1 = operationMapper.findByParams(null);
+		Map<String,MenusDto> map = new HashMap<>();
+		List<String> List3=new ArrayList<>();
+		String code = "";
+		String code1 = "";
+		for (Operation on:list) {
+			MenusDto mnd = new MenusDto();
+			if(StringUtils.isNoneBlank(on.getParentId())){
+				for (Operation od:list1) {
+					MenusDto md = new MenusDto();
+					if(od.getId().equals(on.getParentId())){
+						if(!od.getId().equals(code1)){
+							List3.clear();
+						}
+						List3.add(on.getId());
+						String[] nsz=new String[List3.size()];
+						List3.toArray(nsz);
+						code = od.getId();
+						code1 = od.getId();
+						md.setCode(od.getId());
+						md.setName(od.getName());
+						md.setChilds(nsz);
+						map.put(code,md);
+						break;
+					}
+
+				}
+			}
+			code = on.getId();
+			mnd.setCode(on.getId());
+			mnd.setName(on.getName());
+			String[] nsz={""};
+			mnd.setChilds(nsz);
+			map.put(code,mnd);
+		}
+		return map;
+	}
+
+
+//	Map<String,List<T>> hashMap=new HashMap<String, List<T>>();
+//	//查出商品的父级id
+//	List<T> list=goodsService.getParentTypeList();
+//	//查出商品的id
+//	List<T> listGoods=goodsService.goodsTypeList();
+// for (T gt:list){
+//		List<T> typeList=new ArrayList<T>();
+//		for (T g:listGoods){
+//			if (gt.getId()==g.getParent_id()){
+//				typeList.add(g);
+//			}
+//		}
+//     `hashMap.put(gt.getName(),typeList) ;
+//
+
 
 }

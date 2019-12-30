@@ -29,6 +29,7 @@ logging:
 mybatis: 
    configuration:
       map-underscore-to-camel-case: true
+   mapper-locations: classpath:com/qhc/system/mapper/*.xml
 
 pagehelper: 
    helperDialect: mysql

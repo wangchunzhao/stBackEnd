@@ -2,10 +2,12 @@ package com.qhc.system.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.qhc.system.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.qhc.sap.service.SapSalesOfficeService;
-import com.qhc.system.domain.OperationDto;
-import com.qhc.system.domain.RestPage;
-import com.qhc.system.domain.RoleDto;
-import com.qhc.system.domain.UserDto;
-import com.qhc.system.domain.UserOperationInfo;
 import com.qhc.system.entity.Operation;
 import com.qhc.system.entity.Role;
 import com.qhc.system.entity.User;
@@ -229,5 +226,14 @@ public class UserController {
 		relationService.saveRelation(role);
 		return role;
 	}
+
+	@ApiOperation(value = "查询用户所有菜单", notes = "查询用户所有菜单")
+	@GetMapping(value = "queryAllAserMenus/{userIdentity}")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String,MenusDto> queryAllAserMenus(@PathVariable String userIdentity) throws Exception {
+		Map<String,MenusDto> nap = operationService.findAllAserMenus(userIdentity);
+		return nap;
+	}
+
 
 }
