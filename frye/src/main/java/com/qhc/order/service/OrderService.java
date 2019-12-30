@@ -968,6 +968,8 @@ public class OrderService {
 			item.setStMaterialGroupName(m.getStGroupName());
 			item.setUnitCode(m.getUnitCode());
 			item.setUnitName(m.getUnitName());
+			item.setIsConfigurable(m.isConfigurable());
+			item.setIsPurchased(m.isPurchased());
 
 			Integer deliveryAddressSeq = item.getDeliveryAddressSeq();
 			if (deliveryAddressSeq != null) {
