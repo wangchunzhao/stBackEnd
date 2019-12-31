@@ -59,12 +59,14 @@ import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
+import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
 import com.qhc.sap.mapper.SapViewMapper;
+import com.qhc.sap.service.MaterialService;
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
 import com.qhc.system.dao.ProvinceRepository;
@@ -149,6 +151,9 @@ public class OrderService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MaterialService materialService;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
@@ -301,7 +306,7 @@ public class OrderService {
 			itemMapper.insert(item);
 
 			List<CharacteristicDto> configs = itemDto.getConfigs();
-			if (configs != null) {
+			if (configs != null && configs.size() > 0) {
 				for (CharacteristicDto dto : configs) {
 					Characteristics c = new Characteristics();
 
@@ -312,6 +317,23 @@ public class OrderService {
 					c.setItemId(item.getId());
 
 					characteristicsMapper.insert(c);
+				}
+			} else if (itemDto.getIsConfigurable()) {
+				// 可配置物料但没有配置调研表，取默认值
+				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode(), orderDto.getCustomerIndustry());
+				for (Characteristic c : characs) {
+					boolean configurable = c.getConfigs() != null && c.getConfigs().size() > 0;
+					Characteristics cs = new Characteristics();
+					cs.setItemId(item.getId());
+					cs.setIsConfigurable(configurable ? 1 : 0);
+					cs.setKeyCode(c.getCode());
+					if (configurable) {
+						c.getConfigs().forEach(e -> {
+							if (e.isDefault()) {
+								cs.setValueCode(e.getCode());
+							}
+						});
+					}
 				}
 			}
 		}

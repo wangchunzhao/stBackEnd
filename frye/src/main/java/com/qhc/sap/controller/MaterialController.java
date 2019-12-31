@@ -119,7 +119,7 @@ public class MaterialController {
 			@PathVariable(required = true) String materialCode) throws Exception {
 		Result result = null;
 		try {
-			List<Characteristic> chars = materialSer.getCharactersByClazzCode(clazzCode, materialCode);
+			List<Characteristic> chars = materialSer.getCharactersByClazzCode(materialCode, clazzCode);
 			result = Result.ok(chars);
 		} catch (Exception e) {
 			e.printStackTrace();

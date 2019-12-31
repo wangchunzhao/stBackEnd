@@ -172,14 +172,14 @@ public class MaterialService {
 
 	/**
 	 * 
-	 * @param clazzCode
-	 * @param materialCode
+	 * @param materialCode 物料
+	 * @param clazzCode 物料特征分组
 	 * @return
 	 */
-	public List<Characteristic> getCharactersByClazzCode(String clazzCode, String materialCode)
+	public List<Characteristic> getCharactersByClazzCode(String materialCode, String clazzCode)
 			throws NotMatchException {
-		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
+		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		Set<Integer> ids = new HashSet<Integer>();
 		for (SapCharacteristicDefault dc : defaultValues) {
 			ids.add(dc.getValueId());
@@ -201,7 +201,6 @@ public class MaterialService {
 
 				ch.getConfigs().add(con);
 			} else {
-
 				con.setCode(cc.getValueCode());
 				con.setName(cc.getValueName());
 				cs.get(cc.getKeyCode()).getConfigs().add(con);
