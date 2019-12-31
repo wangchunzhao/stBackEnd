@@ -62,7 +62,7 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="com.qhc.order.entity.Contract" >
 		update k_contract
-		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
+		set <!-- order_info_id = #{orderInfoId, jdbcType=INTEGER},  -->
 			delivery_days = #{deliveryDays, jdbcType=INTEGER}, 
 			client_name = #{clientName, jdbcType=VARCHAR}, 
 			install_location = #{installLocation, jdbcType=VARCHAR}, 
@@ -77,16 +77,16 @@
 			bank_name = #{bankName, jdbcType=VARCHAR}, 
 			account_number = #{accountNumber, jdbcType=VARCHAR}, 
 			company_address = #{companyAddress, jdbcType=VARCHAR}, 
-			company_post_code = #{companyPostCode, jdbcType=VARCHAR}, 
+			company_post_code = #{companyPostCode, jdbcType=VARCHAR}<!-- , 
 			status = #{status, jdbcType=INTEGER}, 
-			<!-- creater = #{creater, jdbcType=VARCHAR}, 
-			create_time = #{createTime, jdbcType=TIMESTAMP},  -->
+			creater = #{creater, jdbcType=VARCHAR}, 
+			create_time = #{createTime, jdbcType=TIMESTAMP},
 			sender = #{sender, jdbcType=VARCHAR}, 
 			send_time = #{sendTime, jdbcType=TIMESTAMP}, 
 			signer = #{signer, jdbcType=VARCHAR}, 
 			sign_time = #{signTime, jdbcType=TIMESTAMP}, 
 			file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
-			sign_contractid = #{signContractid, jdbcType=VARCHAR}
+			sign_contractid = #{signContractid, jdbcType=VARCHAR}  -->
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
@@ -130,7 +130,7 @@
 	<select id="findByParams" resultType="com.qhc.order.domain.ContractDto" parameterType="Map" >
 		select 
 			c.id, 
-			c.order_info_id, 
+			<!-- c.order_info_id,  -->
 			c.delivery_days, 
 			c.client_name, 
 			c.install_location, 
@@ -161,6 +161,7 @@
 			oi.contract_manager,
 			o.customer_code,
 			sc.name as customer_name,
+			oi.id as order_info_id,
 			oi.contract_rmb_value,
 			oi.payment_type,
 			oi.receive_type,
@@ -170,10 +171,12 @@
 			oi.contactor2_tel,
 			oi.contactor3_id,
 			oi.contactor3_tel,
-			o.customer_clazz
-		from k_contract c
-		left join k_order_info oi on oi.id = c.order_info_id
+			o.customer_clazz,
+			oi.install_type,
+			oi.create_time as order_create_time
+		from k_order_info oi
 		left join k_order o on o.id = oi.order_id
+		left join k_contract c on oi.id = c.order_info_id
 		left join sap_customer sc on sc.code = o.customer_code
 		<include refid="Where_By_Params" />
 		<choose>
@@ -181,90 +184,44 @@
 				order by ${orderByClause}
 			</when>
 			<otherwise>
-				order by create_time
+				order by oi.create_time desc
 			</otherwise>
 		</choose>
 	</select>
 	
 	<sql id="Where_By_Params">
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			AND (oi.status = '05' or oi.status = '06')
 			<if test="id != null" >
 				AND c.id = #{id, jdbcType=INTEGER}
 			</if>
-			<if test="orderInfoId != null" >
-				AND c.order_info_id = #{orderInfoId, jdbcType=INTEGER}
-			</if>
-			<if test="deliveryDays != null" >
-				AND c.delivery_days = #{deliveryDays, jdbcType=INTEGER}
-			</if>
-			<if test="clientName != null and clientName != ''" >
-				AND c.client_name = #{clientName, jdbcType=VARCHAR}
-			</if>
-			<if test="installLocation != null and installLocation != ''" >
-				AND c.install_location = #{installLocation, jdbcType=VARCHAR}
-			</if>
-			<if test="acceptanceCriteriaCode != null and acceptanceCriteriaCode != ''" >
-				AND c.acceptance_criteria_code = #{acceptanceCriteriaCode, jdbcType=VARCHAR}
-			</if>
-			<if test="customerEmail != null and customerEmail != ''" >
-				AND c.customer_email = #{customerEmail, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceAddress != null and invoiceAddress != ''" >
-				AND c.invoice_address = #{invoiceAddress, jdbcType=VARCHAR}
-			</if>
-			<if test="invoicePostCode != null and invoicePostCode != ''" >
-				AND c.invoice_post_code = #{invoicePostCode, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceReceiver != null and invoiceReceiver != ''" >
-				AND c.invoice_receiver = #{invoiceReceiver, jdbcType=VARCHAR}
-			</if>
-			<if test="invoiceTel != null and invoiceTel != ''" >
-				AND c.invoice_tel = #{invoiceTel, jdbcType=VARCHAR}
-			</if>
-			<if test="broker != null and broker != ''" >
-				AND c.broker = #{broker, jdbcType=VARCHAR}
-			</if>
-			<if test="companyTel != null and companyTel != ''" >
-				AND c.company_tel = #{companyTel, jdbcType=VARCHAR}
-			</if>
-			<if test="bankName != null and bankName != ''" >
-				AND c.bank_name = #{bankName, jdbcType=VARCHAR}
-			</if>
-			<if test="accountNumber != null and accountNumber != ''" >
-				AND c.account_number = #{accountNumber, jdbcType=VARCHAR}
-			</if>
-			<if test="companyAddress != null and companyAddress != ''" >
-				AND c.company_address = #{companyAddress, jdbcType=VARCHAR}
-			</if>
-			<if test="companyPostCode != null and companyPostCode != ''" >
-				AND c.company_post_code = #{companyPostCode, jdbcType=VARCHAR}
-			</if>
-			<if test="status != null" >
+			<if test="status != null and status != ''" >
 				AND c.status = #{status, jdbcType=INTEGER}
 			</if>
-			<if test="creater != null and creater != ''" >
-				AND c.creater = #{creater, jdbcType=VARCHAR}
+			<if test="statusList != null and statusList.size() > 0" >
+				AND c.status in <foreach item="item" index="index" collection="statusList" open="("
+				            separator="," close=")">#{item, jdbcType=INTEGER}</foreach>
 			</if>
-			<if test="createTime != null" >
-				AND c.create_time = #{createTime, jdbcType=TIMESTAMP}
+			<if test="sequenceNumber != null and sequenceNumber != ''" >
+				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%'
 			</if>
-			<if test="sender != null and sender != ''" >
-				AND c.sender = #{sender, jdbcType=VARCHAR}
+			<if test="contractNumber != null and contractNumber != ''" >
+				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%'
 			</if>
-			<if test="sendTime != null" >
-				AND c.send_time = #{sendTime, jdbcType=TIMESTAMP}
+			<if test="customerName != null and customerName != ''" >
+				AND UPPER(sc.name) like '%{contractorName.toUpperCase()}%'
 			</if>
-			<if test="signer != null and signer != ''" >
-				AND c.signer = #{signer, jdbcType=VARCHAR}
+			<!-- 2019-04-07 ~ 2019-11-07 -->
+			<if test="orderCreateTime != null and orderCreateTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= '${orderCreateTime.substring(0, orderCreateTime.indexOf(" - "))}' and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= '${orderCreateTime.substring(orderCreateTime.indexOf(" - ") + 3)}'
+			]]>
 			</if>
-			<if test="signTime != null" >
-				AND c.sign_time = #{signTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="fileHashcode != null and fileHashcode != ''" >
-				AND c.file_hashcode = #{fileHashcode, jdbcType=VARCHAR}
-			</if>
-			<if test="signContractid != null and signContractid != ''" >
-				AND c.sign_contractid = #{signContractid, jdbcType=VARCHAR}
+			<!-- 2019-04-07 ~ 2019-11-07 -->
+			<if test="createTime != null and createTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(c.create_time, '%Y-%m-%d') >= '${createTime.substring(0, createTime.indexOf(" - "))}' and DATE_FORMAT(c.create_time, '%Y-%m-%d') <= '${createTime.substring(createTime.indexOf(" - ") + 3)}'
+			]]>
 			</if>
 		</trim>
 	</sql>

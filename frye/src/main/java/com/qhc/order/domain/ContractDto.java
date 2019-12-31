@@ -103,6 +103,9 @@ public class ContractDto implements Serializable {
 	 *  Order information
 	 */
 	private String version = null;
+	
+	/* 订单创建时间 */
+	private Date orderCreateTime = null;
 
 	/* SequenceNumber */
 	private String sequenceNumber = null;
@@ -135,6 +138,10 @@ public class ContractDto implements Serializable {
 
 	private String customerClazz;//性质分类代码，经销商/直签
 	private String customerClazzName;//性质分类名称
+	
+	private String installType;//安装方式 installation
+	private String installTypeName;//安装方式名称
+	
 	public Integer getId() {
 		return id;
 	}
@@ -297,6 +304,12 @@ public class ContractDto implements Serializable {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	public Date getOrderCreateTime() {
+		return orderCreateTime;
+	}
+	public void setOrderCreateTime(Date orderCreateTime) {
+		this.orderCreateTime = orderCreateTime;
+	}
 	public String getSequenceNumber() {
 		return sequenceNumber;
 	}
@@ -399,4 +412,37 @@ public class ContractDto implements Serializable {
 	public void setCustomerClazzName(String customerClazzName) {
 		this.customerClazzName = customerClazzName;
 	}
+	public String getInstallType() {
+		return installType;
+	}
+	public void setInstallType(String installType) {
+		this.installType = installType;
+	}
+	public String getInstallTypeName() {
+		return installTypeName;
+	}
+	public void setInstallTypeName(String installTypeName) {
+		this.installTypeName = installTypeName;
+	}
+	@Override
+	public String toString() {
+		return "ContractDto [id=" + id + ", orderInfoId=" + orderInfoId + ", deliveryDays=" + deliveryDays
+				+ ", clientName=" + clientName + ", installLocation=" + installLocation + ", acceptanceCriteriaCode="
+				+ acceptanceCriteriaCode + ", customerEmail=" + customerEmail + ", invoiceAddress=" + invoiceAddress
+				+ ", invoicePostCode=" + invoicePostCode + ", invoiceReceiver=" + invoiceReceiver + ", invoiceTel="
+				+ invoiceTel + ", broker=" + broker + ", companyTel=" + companyTel + ", bankName=" + bankName
+				+ ", accountNumber=" + accountNumber + ", companyAddress=" + companyAddress + ", companyPostCode="
+				+ companyPostCode + ", status=" + status + ", creater=" + creater + ", createTime=" + createTime
+				+ ", sender=" + sender + ", sendTime=" + sendTime + ", signer=" + signer + ", signTime=" + signTime
+				+ ", fileHashcode=" + fileHashcode + ", signContractid=" + signContractid + ", version=" + version
+				+ ", orderCreateTime=" + orderCreateTime + ", sequenceNumber=" + sequenceNumber + ", contractNumber="
+				+ contractNumber + ", contractManager=" + contractManager + ", customerCode=" + customerCode
+				+ ", customerName=" + customerName + ", contractRmbValue=" + contractRmbValue + ", paymentType="
+				+ paymentType + ", receiveType=" + receiveType + ", receiveTypeName=" + receiveTypeName
+				+ ", contactor1Id=" + contactor1Id + ", contactor1Tel=" + contactor1Tel + ", contactor2Id="
+				+ contactor2Id + ", contactor2Tel=" + contactor2Tel + ", contactor3Id=" + contactor3Id
+				+ ", contactor3Tel=" + contactor3Tel + ", customerClazz=" + customerClazz + ", customerClazzName="
+				+ customerClazzName + ", installType=" + installType + ", installTypeName=" + installTypeName + "]";
+	}
+	
 }
