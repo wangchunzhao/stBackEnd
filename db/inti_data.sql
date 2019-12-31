@@ -74,12 +74,6 @@ INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 2 );
 -- Query: select * from b_user_role
 */
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 1);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 2);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 3);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 4);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 5);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 6);
-INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (8, 7);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (2, 2);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (3, 2);
 INSERT INTO `b_user_role` (`user_id`,`role_id`) VALUES (4, 5);
