@@ -92,6 +92,9 @@ public class OrderService {
 	@Value("${sap.sapChangeOrder.addr}")
 	private String orderChangeUrl;
 
+	@Value("${bpm.url}")
+	private String bpmUrl;
+
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
 
@@ -1205,9 +1208,14 @@ public class OrderService {
 //			wtwMargin.setUpdateTime(updateTime);
 		}
 
-		// TODO Call the bpm interface to start the order approval process
-		// TODO For test 直接改状态
-		updateBpmStatus(user, order.getSequenceNumber(), "1", order.getBodyDiscount(), order.getMainDiscount());
+		// Call the bpm interface to start the order approval process
+		try {
+			String res = HttpUtil.postbody(bpmUrl, new ObjectMapper().writeValueAsString(bpmOrder));
+			orderInfoMapper.updateStatus(order.getId(), user, OrderDto.ORDER_STATUS_BPM, null, new Date(), null, null);
+		} catch (Exception e) {
+			logger.error("Submit order to BPM is failed.", e);
+			throw new RuntimeException("Submit order to BPM is failed." + e.getMessage());
+		}
 	}
 
 	/**
