@@ -100,6 +100,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@Transactional
 	public UserDto add(@RequestBody(required = true) UserDto user) throws Exception {
+		user.setName(user.getUserName());
 		user = userService.createOrUpdateUser(user);
 		return user;
 	}

@@ -57,7 +57,7 @@ INSERT INTO `b_role` (`id`,`name`) VALUES (7,'领导组');
 /*
 -- Query: select * from b_role_operation
 */
-INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 1 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1019', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1010', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1009', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1008', 1 );
