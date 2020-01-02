@@ -92,6 +92,9 @@
 		<include refid="Column_List" />
 		from b_operation
 		<include refid="Where_By_Params" />
+        <where>
+            operation_type = 'menu'
+        </where>
 		<choose>
 			<when test="orderByClause != null">
 				order by ${orderByClause}
