@@ -72,6 +72,7 @@ public class OperationService implements Serializable{
 		List<String> List3=new ArrayList<>();
 		String code = "";
 		String code1 = "";
+		if(null == list || list.isEmpty())
 		for (Operation on:list) {
 			MenusDto mnd = new MenusDto();
 			if(StringUtils.isNoneBlank(on.getParentId())){
