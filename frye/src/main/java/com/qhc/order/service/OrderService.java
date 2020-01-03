@@ -231,6 +231,11 @@ public class OrderService {
 	 */
 	public OrderDto upgrade(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
+		String status = order.getStatus();
+		
+		if (!(OrderDto.ORDER_STATUS_APPROVED.equals(status) || OrderDto.ORDER_STATUS_APPROVED_UPDATE.equals(status) || OrderDto.ORDER_STATUS_SAP.equals(status))) {
+			throw new RuntimeException("订单当前状态不允许变更");
+		}
 
 		order.setId(null);
 		order.setCreater(user);
