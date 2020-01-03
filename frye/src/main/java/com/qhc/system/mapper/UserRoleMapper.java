@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import com.qhc.system.entity.Role;
 import com.qhc.system.entity.UserRole;
 
 /**
@@ -69,5 +70,12 @@ public interface UserRoleMapper {
 	int deleteById(UserRole userRole);
 	
 	void deleteByUserId(Integer id);
+
+	/**
+	 * 根据role_id删除UserRole
+	 * @param roleId
+	 * @return
+	 */
+	int deleteByRoleId(Integer roleId);
 
 } 

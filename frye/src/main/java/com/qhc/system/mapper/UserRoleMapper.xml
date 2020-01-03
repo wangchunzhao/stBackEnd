@@ -94,4 +94,8 @@
 		delete from b_user_role
 		where user_id = #{userId, jdbcType=INTEGER} 
 	</delete>
+
+	<delete id="deleteByRoleId" parameterType="java.lang.Integer">
+		DELETE FROM b_user_role where role_id=#{roleId, jdbcType=INTEGER}
+	</delete>
 </mapper>
