@@ -92,6 +92,9 @@
 		<include refid="Column_List" />
 		from b_operation
 		<include refid="Where_By_Params" />
+        <where>
+            operation_type = 'menu'
+        </where>
 		<choose>
 			<when test="orderByClause != null">
 				order by ${orderByClause}
@@ -128,10 +131,10 @@
 			e.*
 		FROM
 			b_user a
-		LEFT JOIN b_user_role b ON a.id = b.user_id
-		LEFT JOIN b_role c ON b.role_id = c.id
-		LEFT JOIN b_role_operation d ON c.id = d.role_id
-		LEFT JOIN b_operation e ON d.operation_id = e.id
+		INNER JOIN b_user_role b ON a.id = b.user_id
+		INNER JOIN b_role c ON b.role_id = c.id
+		INNER JOIN b_role_operation d ON c.id = d.role_id
+		INNER JOIN b_operation e on d.operation_id = e.id
 		WHERE a.user_identity = #{value}
 	</select>
 </mapper>
