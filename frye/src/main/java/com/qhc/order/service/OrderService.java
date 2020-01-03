@@ -507,9 +507,12 @@ public class OrderService {
 
 	public Double calculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
 		Double v = 0D;
+		BigDecimal profit = afterTaxAmount.subtract(cost);
+		if (profit.compareTo(BigDecimal.ZERO) == 0) {
+			return 0d;
+		}
 		try {
-			v = (afterTaxAmount.subtract(cost)).divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP)
-					.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+			v = profit.divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		} catch (ArithmeticException e) {
 			e.printStackTrace();
 		}
