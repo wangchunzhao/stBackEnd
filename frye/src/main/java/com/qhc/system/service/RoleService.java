@@ -105,7 +105,7 @@ public class RoleService {
 		Role r = new Role();
 		try {
 			BeanUtils.copyProperties(r, role);
-			if (role.getId() == null) {
+			if (role.getId() == null || role.getId() == 0) {
 				roleMapper.insert(r);
 			} else {
 				roleMapper.update(r);

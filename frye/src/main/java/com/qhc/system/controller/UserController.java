@@ -216,13 +216,13 @@ public class UserController {
 		return new RestPage(pageInfo);
 	}
 
-//	@ApiOperation(value="Create role", notes="Create role")
-//	@PostMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public Role update(@RequestBody(required=true) Role role) throws Exception
-//    {	
-//		return roleService.createOrUpdateRole(role);	
-//    }
+	@ApiOperation(value="Create role", notes="Create role")
+	@PostMapping(value = "role")
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto addRole(@RequestBody(required=true) RoleDto role) throws Exception
+    {
+		return roleService.createOrUpdateRole(role);
+    }
 
 	@ApiOperation(value = "根据Role对象更新角色 ", notes = "根据Role对象更新角色")
 	@PutMapping(value = "role")
