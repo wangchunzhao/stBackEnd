@@ -341,6 +341,12 @@
 			<if test="salesCode != null and salesCode != ''" >
 				AND o.sales_code = #{salesCode, jdbcType=CHAR}
 			</if>
+			<if test="last">
+				AND oi.is_active = 1
+			</if>
+			<if test="b2c != null and b2c != ''">
+				AND oi.is_b2c = #{b2c}
+			</if>
 			<if test="salesName != null and salesName != ''" >
 				AND UPPER(su.name) = '%${salesName.toUpperCase()}%'
 			</if>
@@ -384,12 +390,6 @@
 			</if>
 			<if test="specialDiscount != null and specialDiscount != ''">
 				AND oi.is_special = #{specialDiscount}
-			</if>
-			<if test="last">
-				AND oi.is_active = 1
-			</if>
-			<if test="b2c != null and b2c != ''">
-				AND oi.is_b2c = #{b2c}
 			</if>
 		</trim>
 	</sql>

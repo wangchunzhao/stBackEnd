@@ -2,6 +2,7 @@ package com.qhc.order.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,7 +155,7 @@ public class OrderService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private MaterialService materialService;
 
@@ -162,11 +163,11 @@ public class OrderService {
 		OrderInfo orderInfo = new OrderInfo();
 
 		// calculate gross profit margin
-		List<MaterialGroups> margin = calcGrossProfit(orderDto);
+		List<MaterialGroups> margin = calculateGrossProfit(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
 		BeanUtils.copyProperties(orderInfo, orderDto);
-		
+
 		// is b2c
 		List<ItemDto> items = orderDto.getItems();
 		if (items != null) {
@@ -323,7 +324,8 @@ public class OrderService {
 				}
 			} else if (itemDto.getIsConfigurable()) {
 				// 可配置物料但没有配置调研表，取默认值
-				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode(), orderDto.getCustomerIndustry());
+				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode(),
+						orderDto.getCustomerIndustry());
 				for (Characteristic c : characs) {
 					boolean configurable = c.getConfigs() != null && c.getConfigs().size() > 0;
 					Characteristics cs = new Characteristics();
@@ -395,17 +397,8 @@ public class OrderService {
 		return salesTypeRepo.findAll();
 	}
 
-	public List<MaterialGroups> calcGrossProfit(String sequenceNumber, String version) throws Exception {
-		OrderDto order = this.findOrder(sequenceNumber, version);
-		String json = order.getGrossProfitMargin();
-
-		ObjectMapper mapper = new ObjectMapper();
-		JavaType type = mapper.getTypeFactory().constructCollectionLikeType(List.class, MaterialGroups.class);
-		return new ObjectMapper().readValue(json, type);
-	}
-
 	// sap_material_group分组
-	public List<MaterialGroups> calcGrossProfit(OrderDto order) {
+	public List<MaterialGroups> calculateGrossProfit(OrderDto order) {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = order.getItems();
@@ -430,8 +423,8 @@ public class OrderService {
 			for (MaterialGroups entity : groups) {
 				BigDecimal amount = BigDecimal.ZERO;// 金额
 				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
-				BigDecimal wtwcost = BigDecimal.ZERO;// wtw成本
-				BigDecimal cost = BigDecimal.ZERO;// 成本
+				BigDecimal wtwcost = BigDecimal.ZERO;// wtw（生产）成本
+				BigDecimal cost = BigDecimal.ZERO;// 销售成本
 				BigDecimal wtwgrossProfit = BigDecimal.ZERO;// wtw毛利
 				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
 				Double wtwgrossProfitMargin = 0D;// wtw毛利率
@@ -439,27 +432,26 @@ public class OrderService {
 
 				for (ItemDto item : items) {
 					if (item.getMaterialGroupCode().equals(entity.getCode())) {
-						// 总金额
+						// 1.	金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣
 						BigDecimal saleAmount = BigDecimal
 								.valueOf((item.getActualPrice() + item.getOptionalActualPrica()) * item.getQuantity());
 						amount = amount.add(saleAmount);
-						// 总金额减去税金 = 不含税金额
-						BigDecimal taxAmount = saleAmount.multiply(BigDecimal.valueOf(taxRate));
-						excludingTaxAmount = excludingTaxAmount.add(saleAmount.subtract(taxAmount));
-						// wtw成本
-						wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice() * item.getQuantity()));
-						// 毛利
-						wtwgrossProfit = excludingTaxAmount.subtract(wtwcost);
+						// 成本（销售）
 						cost = cost.add(BigDecimal.valueOf(item.getTransationPrice() * item.getQuantity()));
-						// 毛利
-						grossProfit = excludingTaxAmount.subtract(cost);
-
+						// 成本（生产）
+						wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice() * item.getQuantity()));
 					}
 				}
-				// WTW毛利率
-				wtwgrossProfitMargin = this.calculateGrossProfit(excludingTaxAmount, wtwcost);
+				// 2.	不含税金额=金额/(1+税率)
+				excludingTaxAmount = BigDecimal.valueOf(amount.doubleValue()/(1 + taxRate));
+				// 毛利=不含税金额-成本
+				grossProfit = excludingTaxAmount.subtract(cost);
+				// 毛利（生产）=不含税金额-成本（生产）
+				wtwgrossProfit = excludingTaxAmount.subtract(wtwcost);
 				// 毛利率
 				grossProfitMargin = this.calculateGrossProfit(excludingTaxAmount, cost);
+				// WTW（生产）毛利率
+				wtwgrossProfitMargin = this.calculateGrossProfit(excludingTaxAmount, wtwcost);
 
 				sumAmount = sumAmount.add(amount);
 				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
@@ -505,7 +497,7 @@ public class OrderService {
 		return groups;
 	}
 
-	public Double calculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
+	private Double calculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
 		Double v = 0D;
 		BigDecimal profit = afterTaxAmount.subtract(cost);
 		if (profit.compareTo(BigDecimal.ZERO) == 0) {
@@ -986,7 +978,7 @@ public class OrderService {
 		Map<String, String> unitMap = this.constService.findMeasurementUnits();
 		for (ItemDto item : items) {
 			Integer itemId = item.getId();
-			
+
 			MaterialDto m = sapViewMapper.findMaterialInfo(item.getMaterialCode(), null).get(0);
 
 			item.setMaterialName(m.getDescription());
@@ -1053,7 +1045,7 @@ public class OrderService {
 //						order.setContractManager(u.getName());
 //					}
 			});
-			
+
 			// customerclazz
 			order.setCustomerClazzName(constService.findCustomerClazzByCode(order.getCustomerClazz()));
 
@@ -1076,7 +1068,7 @@ public class OrderService {
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
 		}
-		List<MaterialGroups> grossProfitMargins = this.calcGrossProfit(order);
+		List<MaterialGroups> grossProfitMargins = this.calculateGrossProfit(order);
 		MaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 
 		BpmOrder bpmOrder = new BpmOrder();
@@ -1223,10 +1215,14 @@ public class OrderService {
 
 	/**
 	 * 更新BPM审批状态和折扣
+	 * 
+	 * @throws Exception
 	 */
 	public void updateBpmStatus(String user, String sequenceNumber, String status, Double bodyDiscount,
-			Double unitDiscount) {
+			Double unitDiscount) throws Exception {
 		OrderInfo orderInfo = orderInfoMapper.findByParams(null, sequenceNumber, null, "1").get(0);
+		Order order = orderMapper.findById(orderInfo.getOrderId());
+
 		BpmDicision bpmDicision = new BpmDicision();
 		bpmDicision.setOrderInfoId(orderInfo.getId());
 		bpmDicision.setBodyDiscount(orderInfo.getBodyDiscount());
@@ -1235,15 +1231,77 @@ public class OrderService {
 			// 审批通过
 			status = OrderDto.ORDER_STATUS_APPROVED;
 			bpmDicision.setIsPassed(1);
+			bpmDicision.setApprovedBodyDiscount(bodyDiscount);
+			bpmDicision.setApprovedMainDiscount(unitDiscount);
+
+			// 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改
+			if (order.getStOrderType().equals("2")
+					&& (orderInfo.getBodyDiscount() != bodyDiscount || orderInfo.getMainDiscount() != unitDiscount)) {
+				// 修改订单行项目折扣，重新计算订单毛利率
+				orderInfo.setStatus(status);
+				orderInfo.setUpdater(user);
+				orderInfo.setApprovedBodyDiscount(bodyDiscount);
+				orderInfo.setApprovedMainDiscount(unitDiscount);
+
+				OrderDto orderDto = this.findOrder(orderInfo.getId());
+				List<ItemDto> items = orderDto.getItems();
+				// 更新行项目的discount
+				updateBpmDicount(items, bodyDiscount, unitDiscount);
+				double itemsAmount = 0; // 行项目金额合计
+				for (ItemDto itemDto : items) {
+					double discount = itemDto.getDiscount();
+					itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
+				}
+				// merge discount
+				orderInfo.setItemsAmount(itemsAmount);
+				orderInfo.setDiscount(BigDecimal.valueOf(itemsAmount / orderInfo.getContractRmbValue())
+						.setScale(4, RoundingMode.HALF_UP).doubleValue());
+
+				// calculate gross profit margin
+				List<MaterialGroups> margin = calculateGrossProfit(orderDto);
+				orderInfo.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
+
+				orderInfoMapper.update(orderInfo);
+			} else {
+				orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, bodyDiscount, unitDiscount);
+			}
 		} else {
 			// 审批拒绝
 			status = OrderDto.ORDER_STATUS_REJECT_BPM;
-			bpmDicision.setApprovedBodyDiscount(bodyDiscount);
-			bpmDicision.setApprovedMainDiscount(unitDiscount);
 			bpmDicision.setIsPassed(0);
+			orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, null, null);
 		}
 		dicisionMapper.insert(bpmDicision);
-		orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, bodyDiscount, unitDiscount);
+	}
+
+	/**
+	 * 根据BPM审批结果更新行项目的折扣
+	 * 
+	 * @param items
+	 * @param bodyDiscount
+	 * @param unitDiscount
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	private void updateBpmDicount(List<ItemDto> items, Double bodyDiscount, Double unitDiscount)
+			throws IllegalAccessException, InvocationTargetException {
+		for (ItemDto itemDto : items) {
+			String stGroup = itemDto.getStMaterialGroupCode();
+			if (stGroup.equals("T101") || stGroup.equals("T102")) {
+				// 机柜
+				if (stGroup.equals("T101")) {
+					itemDto.setDiscount(bodyDiscount);
+				}
+				// 机组
+				if (itemDto.getStMaterialGroupCode().equals("T102")) {
+					itemDto.setDiscount(unitDiscount);
+				}
+
+				Item item = new Item();
+				BeanUtils.copyProperties(item, itemDto);
+				itemMapper.update(item);
+			}
+		}
 	}
 
 	private boolean isEmpty(String v) {

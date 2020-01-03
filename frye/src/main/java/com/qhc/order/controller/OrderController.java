@@ -225,7 +225,7 @@ public class OrderController {
 	public Result calcGrossProfit(@RequestBody OrderDto order) throws Exception {
 		Result result = null;
 		try {
-			List<MaterialGroups> list = orderService.calcGrossProfit(order);
+			List<MaterialGroups> list = orderService.calculateGrossProfit(order);
 			result = Result.ok(list);
 		} catch (Exception e) {
 			logger.error("计算毛利失败", e);
@@ -235,21 +235,21 @@ public class OrderController {
 		return result;
 	}
 
-	@ApiOperation(value = "查询订单毛利", notes = "查询订单毛利")
-	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
-	public Result calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version)
-			throws Exception {
-		Result result = null;
-		try {
-			List<MaterialGroups> list = orderService.calcGrossProfit(sequenceNumber, version);
-			result = Result.ok(list);
-		} catch (Exception e) {
-			logger.error("查询订单毛利失败", e);
-			result = Result.error("查询订单毛利失败！");
-		}
-		
-		return result;
-	}
+//	@ApiOperation(value = "查询订单毛利", notes = "查询订单毛利")
+//	@PostMapping(value = "order/{sequenceNumber}/{version}/grossprofit")
+//	public Result calcGrossProfit(@PathVariable String sequenceNumber, @PathVariable String version)
+//			throws Exception {
+//		Result result = null;
+//		try {
+//			List<MaterialGroups> list = orderService.calcGrossProfit(sequenceNumber, version);
+//			result = Result.ok(list);
+//		} catch (Exception e) {
+//			logger.error("查询订单毛利失败", e);
+//			result = Result.error("查询订单毛利失败！");
+//		}
+//		
+//		return result;
+//	}
 
 	@ApiOperation(value = "订单的公共可选择", notes = "所有订单共享的可选项")
 	@GetMapping(value = "order/option")

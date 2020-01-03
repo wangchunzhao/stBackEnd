@@ -303,19 +303,12 @@
 		</trim>
 	</sql>
 	
-	<!-- <select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
+	<select id="findByOrderInfoId" resultMap="ItemMap" parameterType="Integer" >
 		select 
-			i.*,
-			d.province_code, 
-			d.city_code, 
-			d.district_code, 
-			d.address,
-			m.name as material_name
+			i.*
 		from k_item i
-		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
-		left join sap_material m on m.code = i.material_code
-		where order_info_id = #{value}
-	</select> -->
+		where i.order_info_id = #{value}
+	</select>
 	
 	<delete id="deleteByOrderInfoId" parameterType="Integer" >
 		delete from k_item

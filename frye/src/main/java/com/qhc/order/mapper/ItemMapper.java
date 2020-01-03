@@ -68,7 +68,7 @@ public interface ItemMapper {
 	 */
 	List<ItemDto> findByParams(Map<String, Object> params);
 
-//	List<ItemDto> findByOrderInfoId(Integer orderInfoId);
+	List<Item> findByOrderInfoId(Integer orderInfoId);
 
 	void deleteByOrderInfoId(Integer orderInfoId);
 

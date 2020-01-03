@@ -259,7 +259,7 @@ class OrderServiceTest {
 		query.setIncludeDetail(true);
 		PageInfo<OrderDto> result = orderService.findOrders(query);
 		OrderDto order = result.getList().get(0);
-		List<MaterialGroups> groups = orderService.calcGrossProfit(order);
+		List<MaterialGroups> groups = orderService.calculateGrossProfit(order);
 		System.out.println(groups);
 	}
 

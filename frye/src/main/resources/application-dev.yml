@@ -9,7 +9,7 @@ qhc:
 spring: 
    datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/qhc2?charset=utf8mb4&useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/qhc2?charset=utf8mb4&useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
       username: root
       password: 
       validation-query: select 1
