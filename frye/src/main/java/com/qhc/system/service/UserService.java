@@ -65,6 +65,10 @@ public class UserService {
 			} else {
 				userMapper.update(user);
 			}
+			//jxu52 create
+			if (userDto.getRoles() == null) {
+				return userDto;
+			}
 			
 			userRoleMapper.deleteByUserId(user.getId());
 			

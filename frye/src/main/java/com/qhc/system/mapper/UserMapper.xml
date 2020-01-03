@@ -37,16 +37,17 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="com.qhc.system.entity.User" >
 		update b_user
-		set user_identity = #{userIdentity, jdbcType=VARCHAR}, 
-			name = #{name, jdbcType=VARCHAR}, 
-			user_mail = #{userMail, jdbcType=VARCHAR}, 
-			is_active = #{isActive, jdbcType=INTEGER}, 
-			<!-- creater = #{creater, jdbcType=VARCHAR}, 
-			create_time = #{createTime, jdbcType=TIMESTAMP}, -->
-			updater = #{updater, jdbcType=VARCHAR}, 
-			update_time = now(), 
-			office_code = #{officeCode, jdbcType=VARCHAR}, 
-			tel = #{tel, jdbcType=VARCHAR}
+		<set>
+			<if test="userIdentity != null">user_identity = #{userIdentity, jdbcType=VARCHAR},</if>
+			<if test="name != null">name = #{name, jdbcType=VARCHAR},</if>
+			<if test="userMail != null">user_mail = #{userMail, jdbcType=VARCHAR},</if>
+			<if test="isActive != null">is_active = #{isActive, jdbcType=INTEGER},</if>
+			<if test="updater != null">updater = #{updater, jdbcType=VARCHAR},</if>
+			<if test="userIdentity != null">user_identity = #{userIdentity, jdbcType=VARCHAR},</if>
+			<if test="officeCode != null">office_code = #{officeCode, jdbcType=VARCHAR},</if>
+			<if test="tel != null">tel = #{tel, jdbcType=VARCHAR},</if>
+			update_time = now()
+		</set>
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
