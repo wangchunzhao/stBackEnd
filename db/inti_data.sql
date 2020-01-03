@@ -7,7 +7,7 @@ INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operate
 -- -----------------------------------------------------
 -- Data for table `b_operation`
 -- -----------------------------------------------------
-INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1001', '代办任务', NULL, NULL, 'menu');
+INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1001', '待办任务', NULL, NULL, 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1002', '新建订单', NULL, NULL, 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1003', '订单管理', NULL, NULL, 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1004', '合同管理', NULL, NULL, 'menu');
