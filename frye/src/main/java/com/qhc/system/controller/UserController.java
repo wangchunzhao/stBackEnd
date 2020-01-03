@@ -242,5 +242,10 @@ public class UserController {
 		return nap;
 	}
 
-
+	@ApiOperation(value = "根据id删除角色", notes = "根据id删除角色")
+	@PostMapping(value = "deleteRole")
+	@ResponseStatus(HttpStatus.OK)
+	public Role deleteRole(@RequestBody(required=true) Role role) throws Exception {
+		return roleService.deleteRole(role);
+	}
 }

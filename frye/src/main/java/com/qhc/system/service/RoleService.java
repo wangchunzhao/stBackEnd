@@ -1,12 +1,13 @@
 package com.qhc.system.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.qhc.system.mapper.RoleOperationMapper;
+import com.qhc.system.mapper.UserRoleMapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import com.qhc.system.domain.OperationDto;
 import com.qhc.system.domain.RoleDto;
 import com.qhc.system.entity.Role;
 import com.qhc.system.mapper.RoleMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * query role info 查询角色信息
@@ -31,6 +33,10 @@ public class RoleService {
 	private OperationService operationService;
 	@Autowired
 	private RelationService relationService;
+	@Autowired
+	private UserRoleMapper userRoleMapper;
+	@Autowired
+	private RoleOperationMapper roleOperationMapper;
 
 	/**
 	 * 通过id查询角色
@@ -120,11 +126,19 @@ public class RoleService {
 
 	/**
 	 * 删除角色
-	 * 
 	 * @param role
+	 * @return
 	 */
-	public void remove(int id) {
-		roleMapper.deleteById(id);
+	@Transactional
+	public Role deleteRole(Role role) {
+		int roleId = role.getId();
+		//删除角色用户关系
+		userRoleMapper.deleteByRoleId(roleId);
+		//删除角色权限关系
+		roleOperationMapper.deleteByRoleId(roleId);
+		//删除角色
+		roleMapper.deleteById(role.getId());
+		return role;
 	}
 
 	public List<Role> findByNameLike(String name) {
