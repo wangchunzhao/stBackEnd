@@ -297,7 +297,6 @@
 	</select>
 	<sql id="order_view_column_list" >
         oi.*,
-        o.id as order_id,
         o.order_type,
         o.sequence_number,
         o.customer_code,
@@ -378,8 +377,8 @@
             		             separator="," close=")">#{item}</foreach>))
 					</when>
 					<otherwise>
-				AND oi.status in (<foreach item="item" index="index" collection="statusList" open="("
-            separator="," close=")">#{item}</foreach>)
+				AND oi.status in <foreach item="item" index="index" collection="statusList" open="("
+            separator="," close=")">#{item}</foreach>
 					</otherwise>
 				</choose>				
 			</if>
