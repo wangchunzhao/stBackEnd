@@ -20,21 +20,21 @@ public class MaterialBom {
 	public void calculatePriceGap() {
 		for (Bom bom : optional) {
 			if (bom.isMarked()) {
-				double price = getMaterialPrice(bom);
+				double price = getMaterialActualPrice(bom);
 				double transferPrice = bom.getTransferPrice();
 				
 				this.price += price * bom.getQuantity();
-				this.transferPrice += transferPrice;
+				this.transferPrice += transferPrice * bom.getQuantity();
 			}
 		}
 
 		for (Bom bom : standard) {
 			if (bom.isMarked()) {
-				double price = getMaterialPrice(bom);
+				double price = getMaterialActualPrice(bom);
 				double transferPrice = bom.getTransferPrice();
 				
 				this.price -= price * bom.getQuantity();
-				this.transferPrice -= transferPrice;
+				this.transferPrice -= transferPrice * bom.getQuantity();
 			}
 		}
 		
@@ -43,12 +43,12 @@ public class MaterialBom {
 	}
 	
 	/**
-	 * TODO 取bom物料的价格，可能是零售价，也可能是年采价，待定标准价
+	 * TODO 取bom物料的实卖价格，可能是零售价，也可能是年采价，待定标准价
 	 * 
 	 * @param bom
 	 * @return
 	 */
-	private double getMaterialPrice(Bom bom) {
+	private double getMaterialActualPrice(Bom bom) {
 		return bom.getPrice();
 	}
 

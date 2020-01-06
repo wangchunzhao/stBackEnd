@@ -117,6 +117,7 @@ public class OrderController {
 
 	@ApiOperation(value = "变更", notes = "变更")
 	@PostMapping(value = "order/{orderInfoId}/upgrade/{user}")
+	@ResponseBody
 	public Result upgrade(@PathVariable("user") String user, @RequestBody(required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
