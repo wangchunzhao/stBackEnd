@@ -54,7 +54,7 @@ public class AreaService {
 			 bCityList.add(bCity);
 			 
 			 Area bArea = new Area();
-			 bArea.setCityCode(freight.get(i).get(3));
+			 bArea.setbCityCode(freight.get(i).get(3));
 			 bArea.setName(freight.get(i).get(4));
 			 bArea.setCode(freight.get(i).get(5));
 			 bArea.setPrice(Double.valueOf(freight.get(i).get(6)));
