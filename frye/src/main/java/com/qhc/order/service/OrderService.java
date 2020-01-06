@@ -1235,7 +1235,11 @@ public class OrderService {
 		bpmDicision.setMainDiccount(orderInfo.getMainDiscount());
 		if (status.equals("1")) {
 			// 审批通过
-			status = OrderDto.ORDER_STATUS_APPROVED;
+			if (orderInfo.getVersionNum() > 1) {
+				status = OrderDto.ORDER_STATUS_APPROVED_UPDATE;
+			} else {
+				status = OrderDto.ORDER_STATUS_APPROVED;
+			}
 			bpmDicision.setIsPassed(1);
 			bpmDicision.setApprovedBodyDiscount(bodyDiscount);
 			bpmDicision.setApprovedMainDiscount(unitDiscount);
