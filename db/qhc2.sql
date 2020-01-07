@@ -578,10 +578,10 @@ create table k_order_info
             00   草稿
             01   客户经理提交，待B2C审批
             02   客户经理提交，待工程人员审批
-            03   支持经理提交，提交到BPM
-            04   BPM审批通过
-            05   订单变更BPM审批通过
-            06   不用
+            03   工程人员提交，待支持经理审批
+            04   支持经理提交到BPM，待BPM审批
+            05   BPM审批通过
+            06   订单变更BPM审批通过
             07   不用
             08   不用
             09   已下推SAP
@@ -642,6 +642,9 @@ create table k_order_info
    earliest_delivery_date date comment '要求发货时间,最早交付时间',
    earliest_product_date date comment '工厂最早交货时间,最早生产时间',
    is_b2c               integer comment '是否有B2C备注',
+   is_bulk_cargo        integer comment '是否全部为散件',
+   unpredictable        varchar(128) comment '不可预估项',
+   is_urgent_delivery   integer comment '是否特批发货/紧急发货',
    gross_profit_margin  text comment '毛利率，每次修改保存时自动计算订单毛利率并保存到此字段',
    comments             varchar(64) comment '备注 Remark',
    submit_time          datetime comment '最后一次提交时间，会有被驳回然后提交的时间',
@@ -663,14 +666,14 @@ create table k_special_order_application
 (
    id                   integer unsigned not null auto_increment,
    order_info_id        integer not null,
-   applyer              varchar(128) not null,
-   approver             varchar(128),
-   apply_time           datetime not null,
-   approval_time        datetime,
+   applyer              varchar(128) not null comment '申请人',
+   approver             varchar(128) comment '审批人',
+   apply_time           datetime not null comment '申请时间',
+   approval_time        datetime comment '审批时间',
    apply_status         integer not null comment '0: 新建
             1：同意
             2：驳回',
-   receive_mail_time    varchar(64) not null,
+   receive_mail_time    varchar(64) not null comment '收到邮件时间',
    contract_time        varchar(64) not null,
    pay_advance_payment_time varchar(64) not null,
    remark               varchar(64),
