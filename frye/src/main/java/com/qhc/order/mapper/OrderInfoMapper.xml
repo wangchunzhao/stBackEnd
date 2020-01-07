@@ -304,13 +304,15 @@
         o.sales_code,
         o.st_order_type,
         o.quote_status,
-        c.name as customer_name
+        c.name as customer_name,
+      	s.name as officeName
 	</sql>
 	
 	<sql id="order_view_table_list" >
         k_order_info oi 
         LEFT JOIN k_order o ON o.id = oi.order_id
         LEFT JOIN sap_customer c on c.code = o.customer_code
+        LEFT JOIN sap_sales_office s on oi.office_code = s.code
     </sql>
     
 	<!-- 按参数统计 -->
