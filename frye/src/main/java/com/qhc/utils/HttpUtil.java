@@ -78,6 +78,10 @@ public class HttpUtil {
         try {
             url = new URL(tourl);
             httpUrlConn = (HttpURLConnection) url.openConnection();
+            //当接口访问需要用户名密码的情况
+//            String plainCredentials = "ST2SAP:Dalian11!";
+//            String base64Credentials = new String(org.apache.tomcat.util.codec.binary.Base64.encodeBase64(plainCredentials.getBytes()));
+//            httpUrlConn.setRequestProperty("Authorization", "Basic " + base64Credentials);
             httpUrlConn.setDoOutput(true);
             httpUrlConn.setDoInput(true);
             httpUrlConn.setUseCaches(false);
