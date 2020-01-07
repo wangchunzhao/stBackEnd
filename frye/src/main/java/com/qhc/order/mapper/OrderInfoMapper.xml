@@ -58,6 +58,9 @@
 		<result column="earliest_delivery_date" property="earliestDeliveryDate" jdbcType="DATE" />
 		<result column="earliest_product_date" property="earliestProductDate" jdbcType="DATE" />
 		<result column="is_b2c" property="isB2c" jdbcType="INTEGER" />
+		<result column="is_bulk_cargo" property="isBulkCargo" jdbcType="INTEGER" />
+		<result column="is_urgent_delivery" property="isUrgentDelivery" jdbcType="INTEGER" />
+		<result column="unpredictable" property="unpredictable" jdbcType="VARCHAR" />
 		<result column="gross_profit_margin" property="grossProfitMargin" jdbcType="LONGVARCHAR" />
 		<result column="comments" property="comments" jdbcType="VARCHAR" />
 		<result column="submit_time" property="submitTime" jdbcType="TIMESTAMP" />
@@ -95,7 +98,8 @@
 			is_term1, is_term2, is_term3, 
 			install_fee, material_fee, electrical_fee, 
 			refrigeratory_fee, maintenance_fee, earliest_delivery_date, 
-			earliest_product_date, is_b2c, gross_profit_margin, 
+			earliest_product_date, is_b2c, is_bulk_cargo, is_urgent_delivery, 
+			unpredictable, gross_profit_margin, 
 			comments, submit_time, bpm_submit_time, 
 			creater, create_time, updater, 
 			update_time )
@@ -117,9 +121,10 @@
 			#{isTerm1, jdbcType=INTEGER}, #{isTerm2, jdbcType=INTEGER}, #{isTerm3, jdbcType=INTEGER}, 
 			#{installFee, jdbcType=DECIMAL}, #{materialFee, jdbcType=DECIMAL}, #{electricalFee, jdbcType=DECIMAL}, 
 			#{refrigeratoryFee, jdbcType=DECIMAL}, #{maintenanceFee, jdbcType=DECIMAL}, #{earliestDeliveryDate, jdbcType=DATE}, 
-			#{earliestProductDate, jdbcType=DATE}, #{isB2c, jdbcType=INTEGER}, #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
+			#{earliestProductDate, jdbcType=DATE}, #{isB2c, jdbcType=INTEGER}, #{isBulkCargo, jdbcType=INTEGER}, #{isUrgentDelivery, jdbcType=INTEGER}, 
+			#{unpredictable, jdbcType=VARCHAR}, #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
 			#{comments, jdbcType=VARCHAR}, #{submitTime, jdbcType=TIMESTAMP}, #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
-			#{creater, jdbcType=CHAR}, now(), #{updater, jdbcType=VARCHAR}, 
+			#{creater, jdbcType=VARCHAR}, now(), #{updater, jdbcType=VARCHAR}, 
 			now() )
 	</insert>
 	
@@ -181,6 +186,9 @@
 			earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}, 
 			earliest_product_date = #{earliestProductDate, jdbcType=DATE}, 
 			is_b2c = #{isB2c, jdbcType=INTEGER}, 
+			is_bulk_cargo = #{isBulkCargo, jdbcType=INTEGER}, 
+			is_urgent_delivery = #{isUrgentDelivery, jdbcType=INTEGER}, 
+			unpredictable = #{unpredictable, jdbcType=VARCHAR}, 
 			gross_profit_margin = #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
 			comments = #{comments, jdbcType=VARCHAR}, 
 			<!-- submit_time = #{submitTime, jdbcType=TIMESTAMP}, 
@@ -210,7 +218,8 @@
 		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.payment_type, 
 		k_order_info.is_term1, k_order_info.is_term2, k_order_info.is_term3, k_order_info.install_fee, k_order_info.material_fee, 
 		k_order_info.electrical_fee, k_order_info.refrigeratory_fee, k_order_info.maintenance_fee, k_order_info.earliest_delivery_date, k_order_info.earliest_product_date, 
-		k_order_info.is_b2c, k_order_info.gross_profit_margin, k_order_info.comments, k_order_info.submit_time, k_order_info.bpm_submit_time, 
+		k_order_info.is_b2c, k_order_info.is_bulk_cargo, 
+		k_order_info.is_urgent_delivery, k_order_info.unpredictable, k_order_info.gross_profit_margin, k_order_info.comments, k_order_info.submit_time, k_order_info.bpm_submit_time, 
 		k_order_info.creater, k_order_info.create_time, k_order_info.updater, k_order_info.update_time
 	</sql>
 	

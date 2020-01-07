@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @Api(value = "SpecialDelivery", description = "特批发货")
-public class ApplicationController {
+public class SpecialDeliveryController {
 	
 	@Autowired
 	SpecialDeliveryService specialDeliveryService;
