@@ -195,6 +195,9 @@
 			<if test="id != null" >
 				AND c.id = #{id, jdbcType=INTEGER}
 			</if>
+			<if test="orderInfoId != null" >
+				AND c.orderInfoId = #{orderInfoId, jdbcType=INTEGER}
+			</if>
 			<if test="status != null and status != ''" >
 				AND c.status = #{status, jdbcType=INTEGER}
 			</if>
