@@ -5,9 +5,10 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="order_info_id" property="orderInfoId" jdbcType="INTEGER" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
-		<result column="amount" property="amount" jdbcType="DECIMAL" />
 		<result column="pay_date" property="payDate" jdbcType="DATE" />
+		<result column="percentage" property="percentage" jdbcType="DECIMAL" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="rmb_amount" property="rmbAmount" jdbcType="DECIMAL" />
 		<result column="reason" property="reason" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -21,11 +22,11 @@
 			select LAST_INSERT_ID() 
 		</selectKey>
 		insert into k_billing_plan ( id, order_info_id, code, 
-			name, amount, pay_date, 
-			reason )
+			pay_date, percentage, amount, 
+			rmb_amount, reason )
 		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{code, jdbcType=VARCHAR}, 
-			#{name, jdbcType=VARCHAR}, #{amount, jdbcType=DECIMAL}, #{payDate, jdbcType=DATE}, 
-			#{reason, jdbcType=VARCHAR} )
+			#{payDate, jdbcType=DATE}, #{percentage, jdbcType=DECIMAL}, #{amount, jdbcType=DECIMAL}, 
+			#{rmbAmount, jdbcType=DECIMAL}, #{reason, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -33,9 +34,10 @@
 		update k_billing_plan
 		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
 			code = #{code, jdbcType=VARCHAR}, 
-			name = #{name, jdbcType=VARCHAR}, 
-			amount = #{amount, jdbcType=DECIMAL}, 
 			pay_date = #{payDate, jdbcType=DATE}, 
+			percentage = #{percentage, jdbcType=DECIMAL}, 
+			amount = #{amount, jdbcType=DECIMAL}, 
+			rmb_amount = #{rmbAmount, jdbcType=DECIMAL}, 
 			reason = #{reason, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
@@ -47,8 +49,8 @@
 	</delete>
 
 	<sql id="Base_Column_List" >
-		k_billing_plan.id, k_billing_plan.order_info_id, k_billing_plan.code, k_billing_plan.name, k_billing_plan.amount, 
-		k_billing_plan.pay_date, k_billing_plan.reason
+		k_billing_plan.id, k_billing_plan.order_info_id, k_billing_plan.code, k_billing_plan.pay_date, k_billing_plan.percentage, 
+		k_billing_plan.amount, k_billing_plan.rmb_amount, k_billing_plan.reason
 	</sql>
 	
 	<sql id="Column_List">
@@ -61,45 +63,6 @@
 		<include refid="Column_List" />
 		from k_billing_plan 
 		where k_billing_plan.id = #{value, jdbcType=INTEGER}
-	</select>
-	
-	<sql id="Where_By_Params" >
-		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="id != null" >
-				AND k_billing_plan.id = #{id, jdbcType=INTEGER}
-			</if>
-			<if test="orderInfoId != null" >
-				AND k_billing_plan.order_info_id = #{orderInfoId, jdbcType=INTEGER}
-			</if>
-			<if test="code != null and code != ''" >
-				AND k_billing_plan.code = #{code, jdbcType=VARCHAR}
-			</if>
-			<if test="name != null and name != ''" >
-				AND k_billing_plan.name = #{name, jdbcType=VARCHAR}
-			</if>
-			<if test="amount != null" >
-				AND k_billing_plan.amount = #{amount, jdbcType=DECIMAL}
-			</if>
-			<if test="payDate != null" >
-				AND k_billing_plan.pay_date = #{payDate, jdbcType=DATE}
-			</if>
-			<if test="reason != null and reason != ''" >
-				AND k_billing_plan.reason = #{reason, jdbcType=VARCHAR}
-			</if>
-			
-			<include refid="Where_Clause" />
-		</trim>
-	</sql>
-	
-	<sql id="Where_Clause">
-		
-	</sql>
-	
-	<!-- 按参数统计 -->
-	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
-		select count(1) 
-		from k_billing_plan
-		<include refid="Where_By_Params" />
 	</select>
 	
 	<!-- 按参数查询 -->
@@ -117,6 +80,48 @@
 			</otherwise>
 		</choose>
 	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_billing_plan
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_billing_plan.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND k_billing_plan.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="code != null and code != ''" >
+				AND k_billing_plan.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<if test="payDate != null" >
+				AND k_billing_plan.pay_date = #{payDate, jdbcType=DATE}
+			</if>
+			<if test="percentage != null" >
+				AND k_billing_plan.percentage = #{percentage, jdbcType=DECIMAL}
+			</if>
+			<if test="amount != null" >
+				AND k_billing_plan.amount = #{amount, jdbcType=DECIMAL}
+			</if>
+			<if test="rmbAmount != null" >
+				AND k_billing_plan.rmb_amount = #{rmbAmount, jdbcType=DECIMAL}
+			</if>
+			<if test="reason != null and reason != ''" >
+				AND k_billing_plan.reason = #{reason, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
 	
 	<select id="findByOrderInfoId" resultMap="BillingPlanMap" parameterType="Integer" >
 		select 

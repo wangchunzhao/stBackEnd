@@ -319,12 +319,13 @@ alter table k_attachment comment '附件文件名称';
 create table k_billing_plan
 (
    id                   integer unsigned not null auto_increment,
-   order_info_id        integer not null,
-   code                 varchar(10) not null,
-   name                 varchar(64),
-   amount               decimal(13,2),
-   pay_date             date,
-   reason               varchar(64),
+   order_info_id        integer not null comment '订单详情ID',
+   code                 varchar(10) not null comment '回款条款code',
+   pay_date             date not null comment '回款起始日期',
+   percentage           decimal(5,3) comment '回款比例',
+   amount               decimal(13,2) comment '预算回款原币金额',
+   rmb_amount           decimal(13,2) comment '预算回款金额',
+   reason               varchar(64) comment '备注',
    primary key (id),
    key id_UNIQUE (id)
 );
