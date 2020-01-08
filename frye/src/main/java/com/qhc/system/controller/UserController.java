@@ -1,7 +1,6 @@
 package com.qhc.system.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import com.qhc.sap.service.SapSalesOfficeService;
 import com.qhc.system.entity.Operation;
 import com.qhc.system.entity.Role;
 import com.qhc.system.entity.User;
-import com.qhc.system.entity.UserRole;
 import com.qhc.system.service.OperationService;
 import com.qhc.system.service.RelationService;
 import com.qhc.system.service.RoleService;
@@ -50,8 +48,6 @@ public class UserController {
 	@Autowired
 	private OperationService operationService;
 	@Autowired
-	private SapSalesOfficeService officeService;
-	@Autowired
 	private RoleService roleService;
 
 	@ApiOperation(value = "带条件分页查询用户", notes = "带条件分页查询用户")
@@ -69,24 +65,6 @@ public class UserController {
 		return new RestPage(page);
 	}
 
-	/*
-	 * @ApiOperation(value=" Find user by multiple conditions",
-	 * notes="Find user by multiple conditions")
-	 * 
-	 * @GetMapping
-	 * 
-	 * @ResponseStatus(HttpStatus.OK) public List<User>
-	 * findByMultipleConditions(@RequestParam("userIdentity") String
-	 * userIdentity,@RequestParam("userMail") String
-	 * userMail,@RequestParam("isActive") String isActive) throws Exception {
-	 * List<User> users =
-	 * userService.findByMultipleConditions(Integer.valueOf(isActive),userIdentity,
-	 * userMail,""); List<User> userList = new ArrayList<User>();
-	 * if(users!=null&&users.size()>0) { for(User u:users) { User user =
-	 * findByUserIdentity(u.getUserIdentity()); userList.add(user); } } return
-	 * userList; }
-	 * 
-	 */
 	@ApiOperation(value = "根据域账号查询用户", notes = "根据域账号查询用户")
 	@GetMapping(value = "user/{userIdentity}")
 	@ResponseStatus(HttpStatus.OK)
@@ -105,15 +83,6 @@ public class UserController {
 		return user;
 	}
 
-//	@ApiOperation(value = "新增用户角色关系", notes = "新增用户角色关系")
-//	@PostMapping(value = "applicationOfRolechange")
-//	@ResponseStatus(HttpStatus.OK)
-//	@Transactional
-//	public UserRole add(@RequestBody(required = true) UserRole applicationOfRolechange) throws Exception {
-//		return applicationOfRolechangeService.add(applicationOfRolechange);
-//
-//	}
-
 	@ApiOperation(value = "查询所有权限", notes = "查询所有权限")
 	@GetMapping(value = "operations")
 	@ResponseStatus(HttpStatus.OK)
@@ -127,22 +96,6 @@ public class UserController {
 	public Operation findById(@PathVariable("id") String id) throws Exception {
 		return operationService.findById(id);
 	}
-
-	/*
-	 * @ApiOperation(value="Update user", notes="Update user")
-	 * 
-	 * @PutMapping
-	 * 
-	 * @ResponseStatus(HttpStatus.OK) public User update(@RequestBody User user)
-	 * throws Exception { return userService.createOrUpdateUser(user); }
-	 */
-
-//	@ApiOperation(value = "查询整个视图", notes = "查询整个视图")
-//	@GetMapping(value = "userOperationInfo")
-//	@ResponseStatus(HttpStatus.OK)
-//	public List<UserOperationInfo> findAllOperation() throws Exception {
-//		return userOperationInfoRepository.findAll();
-//	}
 
 	@ApiOperation(value = "根据域账号查询视图", notes = "根据域账号查询视图")
 	@GetMapping(value = "userOperationInfo/{userId}")
