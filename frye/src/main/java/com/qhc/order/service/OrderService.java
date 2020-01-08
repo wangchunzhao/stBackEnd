@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1110,29 +1111,29 @@ public class OrderService {
 		bpmHeader.setDealer(order.getOrderType().equals(OrderDto.ORDER_TYPE_DEALER) ? "1" : "0");
 		bpmHeader.setDiscount(order.getDiscount());
 		bpmHeader.setEarliestDeliveryDate(order.getEarliestDeliveryDate());
-		bpmHeader.setElectricalFee(order.getElectricalFee());
-		bpmHeader.setExchange(order.getCurrencyExchange());
-		bpmHeader.setInstallFee(order.getInstallFee());
-		bpmHeader.setMaintenanceFee(order.getMaintenanceFee());
-		bpmHeader.setMargin(sumMargin.getGrossProfitMargin());
-		bpmHeader.setMaterialFee(order.getMaterialFee());
+		bpmHeader.setElectricalFee(ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d));
+		bpmHeader.setExchange(ObjectUtils.defaultIfNull(order.getCurrencyExchange(), 0d));
+		bpmHeader.setInstallFee(ObjectUtils.defaultIfNull(order.getInstallFee(), 0d));
+		bpmHeader.setMaintenanceFee(ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d));
+		bpmHeader.setMargin(ObjectUtils.defaultIfNull(sumMargin.getGrossProfitMargin(), 0d));
+		bpmHeader.setMaterialFee(ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d));
 
-		bpmHeader.setMergeDiscount(bpmHeader.getDiscount());
+		bpmHeader.setMergeDiscount(ObjectUtils.defaultIfNull(bpmHeader.getDiscount(), 0d));
 		bpmHeader.setOrderType(order.getOrderType());
 		bpmHeader.setPaymentTypeName(order.getPaymentType());
 		bpmHeader.setReceiveTypeName(order.getReceiveTypeName());
-		bpmHeader.setRefrigeratoryFee(order.getRefrigeratoryFee());
+		bpmHeader.setRefrigeratoryFee(ObjectUtils.defaultIfNull(order.getRefrigeratoryFee(), 0d));
 		bpmHeader.setSalesCode(order.getSalesCode());
 		bpmHeader.setSalesTel(order.getSalesTel());
 		bpmHeader.setSaleType(order.getSaleType());
 		bpmHeader.setSapOffice(order.getOfficeName());
 		bpmHeader.setSequenceNumber(order.getSequenceNumber());
 		bpmHeader.setShopName(order.getCustomerName());
-		bpmHeader.setSpecialDiscount(bpmHeader.getDiscount() == 0.48 ? "1" : "0");
+		bpmHeader.setSpecialDiscount(String.valueOf(order.getIsSpecial()));
 		bpmHeader.setStatus(order.getStatus());
-		bpmHeader.setTaxRate(order.getTaxRate());
-		bpmHeader.setUnitDiscount(order.getMainDiscount());
-		bpmHeader.setWtwMargin(sumMargin.getWtwGrossProfitMargin());
+		bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
+		bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
+		bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
 
 		// set bpm order item
 		if (items.size() > 0) {
@@ -1162,7 +1163,7 @@ public class OrderService {
 				bpmItem.setMaterialName(itemDto.getMaterialName());
 				bpmItem.setMeasureUnitName(itemDto.getMaterialName());
 				bpmItem.setOnStoreDate(itemDto.getOnStoreDate());
-				bpmItem.setPeriod(itemDto.getPeriod());
+				bpmItem.setPeriod(ObjectUtils.defaultIfNull(itemDto.getPeriod(), 0));
 				bpmItem.setProduceDate(itemDto.getProduceDate());
 				bpmItem.setQuantity(itemDto.getQuantity());
 				bpmItem.setRetailAmount(itemDto.getRetailPrice() * itemDto.getQuantity());
@@ -1173,7 +1174,7 @@ public class OrderService {
 				bpmItem.setTranscationPriceOfOptional(itemDto.getOptionalTransationPrice());
 				bpmItem.setTransfterPrice(itemDto.getTransationPrice());
 			}
-			bpmHeader.setMaterialGroupNames(strGroupName.substring(1));
+			bpmHeader.setMaterialGroupNames(strGroupName.length() > 0 ? strGroupName.substring(1) : "");
 		}
 
 		// set bpm order margins and wtw margins
