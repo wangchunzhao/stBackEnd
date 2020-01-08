@@ -78,6 +78,11 @@ dependencies {
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
 	// https://mvnrepository.com/artifact/com.alibaba/fastjson
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.62'
+	
+	// https://mvnrepository.com/artifact/org.apache.cxf/cxf-core
+	compile group: 'org.apache.cxf', name: 'cxf-core', version: '3.3.4'
+	// https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-frontend-jaxws
+	compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.4'
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {

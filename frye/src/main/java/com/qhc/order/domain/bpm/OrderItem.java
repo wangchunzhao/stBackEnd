@@ -2,6 +2,8 @@ package com.qhc.order.domain.bpm;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class OrderItem {
 	/* 行号 */
 	private int rowNumber;
@@ -54,14 +56,18 @@ public class OrderItem {
 	/* 生产周期 */
 	private int period;
 	/* 工厂最早交货时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date deliveryDate;
 	/* 生产开始时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date produceDate;
 	/* 要求发货时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date shippDate;
 	/* 地址 */
 	private String address;
 	/* 入库时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date onStoreDate;
 	/* 采购周期 */
 //	 private String 	period	;

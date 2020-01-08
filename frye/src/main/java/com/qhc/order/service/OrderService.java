@@ -94,9 +94,6 @@ public class OrderService {
 	@Value("${sap.sapChangeOrder.addr}")
 	private String orderChangeUrl;
 
-	@Value("${bpm.url}")
-	private String bpmUrl;
-
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
 
@@ -159,6 +156,9 @@ public class OrderService {
 
 	@Autowired
 	private MaterialService materialService;
+	
+	@Autowired
+	private BpmService bpmService;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
@@ -1069,8 +1069,10 @@ public class OrderService {
 	 * 发送订单到BPM审批
 	 * 
 	 * @param order
+	 * @throws Exception 
 	 */
-	public void submitBpm(String user, OrderDto order) {
+	public void submitBpm(String user, OrderDto order) throws Exception {
+		order = save(user, order);
 		List<ItemDto> items = order.getItems();
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
@@ -1101,13 +1103,13 @@ public class OrderService {
 		bpmHeader.setApprovalDiscount(order.getDiscount());
 		bpmHeader.setB2c(String.valueOf(order.getIsB2c()));
 		bpmHeader.setBodyDiscount(order.getBodyDiscount());
-		bpmHeader.setComments(order.getComments());
+		bpmHeader.setComments(StringUtils.trimToEmpty(order.getComments()));
 		bpmHeader.setContractAmount(order.getContractValue());
-		bpmHeader.setContractNumber(order.getContractNumber());
+		bpmHeader.setContractNumber(StringUtils.trimToEmpty(order.getContractNumber()));
 		bpmHeader.setContractRmbAmount(order.getContractRmbValue());
 		bpmHeader.setCreateTime(order.getCreateTime());
-		bpmHeader.setCurrencyName(order.getCurrencyName());
-		bpmHeader.setCustomerName(order.getCustomerName());
+		bpmHeader.setCurrencyName(StringUtils.trimToEmpty(order.getCurrencyName()));
+		bpmHeader.setCustomerName(StringUtils.trimToEmpty(order.getCustomerName()));
 		bpmHeader.setDealer(order.getOrderType().equals(OrderDto.ORDER_TYPE_DEALER) ? "1" : "0");
 		bpmHeader.setDiscount(order.getDiscount());
 		bpmHeader.setEarliestDeliveryDate(order.getEarliestDeliveryDate());
@@ -1119,18 +1121,18 @@ public class OrderService {
 		bpmHeader.setMaterialFee(ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d));
 
 		bpmHeader.setMergeDiscount(ObjectUtils.defaultIfNull(bpmHeader.getDiscount(), 0d));
-		bpmHeader.setOrderType(order.getOrderType());
-		bpmHeader.setPaymentTypeName(order.getPaymentType());
-		bpmHeader.setReceiveTypeName(order.getReceiveTypeName());
+		bpmHeader.setOrderType(StringUtils.trimToEmpty(order.getOrderType()));
+		bpmHeader.setPaymentTypeName(StringUtils.trimToEmpty(order.getPaymentType()));
+		bpmHeader.setReceiveTypeName(StringUtils.trimToEmpty(order.getReceiveTypeName()));
 		bpmHeader.setRefrigeratoryFee(ObjectUtils.defaultIfNull(order.getRefrigeratoryFee(), 0d));
-		bpmHeader.setSalesCode(order.getSalesCode());
-		bpmHeader.setSalesTel(order.getSalesTel());
-		bpmHeader.setSaleType(order.getSaleType());
-		bpmHeader.setSapOffice(order.getOfficeName());
-		bpmHeader.setSequenceNumber(order.getSequenceNumber());
-		bpmHeader.setShopName(order.getCustomerName());
+		bpmHeader.setSalesCode(StringUtils.trimToEmpty(order.getSalesCode()));
+		bpmHeader.setSalesTel(StringUtils.trimToEmpty(order.getSalesTel()));
+		bpmHeader.setSaleType(StringUtils.trimToEmpty(order.getSaleType()));
+		bpmHeader.setSapOffice(StringUtils.trimToEmpty(order.getOfficeName()));
+		bpmHeader.setSequenceNumber(StringUtils.trimToEmpty(order.getSequenceNumber()));
+		bpmHeader.setShopName(StringUtils.trimToEmpty(order.getShopName()));
 		bpmHeader.setSpecialDiscount(String.valueOf(order.getIsSpecial()));
-		bpmHeader.setStatus(order.getStatus());
+		bpmHeader.setStatus(StringUtils.trimToEmpty(order.getStatus()));
 		bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
 		bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
 		bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
@@ -1147,21 +1149,22 @@ public class OrderService {
 				bpmItem.setActuralAmountOfOptional(itemDto.getOptionalActualPrica() * itemDto.getQuantity());
 				bpmItem.setActuralPrice(itemDto.getActualPrice());
 				bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrica());
-				bpmItem.setAddress(itemDto.getAddress());
+				bpmItem.setAddress(StringUtils.trimToEmpty(itemDto.getAddress()));
 				bpmItem.setB2cAmountEstimated(itemDto.getB2cEstimatedPrice() * itemDto.getQuantity());
-				bpmItem.setB2cComments(itemDto.getB2cComments());
+				bpmItem.setB2cComments(StringUtils.trimToEmpty(itemDto.getB2cComments()));
 				bpmItem.setB2cCostOfEstimated(itemDto.getB2cEstimatedCost());
 				bpmItem.setB2cPriceEstimated(itemDto.getB2cEstimatedPrice());
-				bpmItem.setColorComments(itemDto.getColorComments());
+				bpmItem.setColorComments(StringUtils.trimToEmpty(itemDto.getColorComments()));
 				bpmItem.setDeliveryDate(itemDto.getDeliveryDate());
 				bpmItem.setDiscount(itemDto.getDiscount());
-				bpmItem.setItemCategoryName(itemDto.getItemCategory());
-				bpmItem.setItemRequirementPlanName(itemDto.getItemRequirementPlan());
-				bpmItem.setMaterialCode(itemDto.getMaterialCode());
+				bpmItem.setItemCategoryName(StringUtils.trimToEmpty(itemDto.getItemCategory()));
+				bpmItem.setItemRequirementPlanName(StringUtils.trimToEmpty(itemDto.getItemRequirementPlan()));
+				bpmItem.setMaterialCode(StringUtils.trimToEmpty(itemDto.getMaterialCode()));
 				bpmItem.setMaterialAttribute(itemDto.getIsPurchased() ? "采购" : "生产");
-				bpmItem.setMaterialGroupName(itemDto.getMaterialGroupName());
-				bpmItem.setMaterialName(itemDto.getMaterialName());
-				bpmItem.setMeasureUnitName(itemDto.getMaterialName());
+				bpmItem.setMaterialGroupName(StringUtils.trimToEmpty(itemDto.getMaterialGroupName()));
+				bpmItem.setMaterialName(StringUtils.trimToEmpty(itemDto.getMaterialName()));
+				String unitName = this.constService.findMeasurementUnits().get(itemDto.getUnitCode());
+				bpmItem.setMeasureUnitName(StringUtils.trimToEmpty(unitName));
 				bpmItem.setOnStoreDate(itemDto.getOnStoreDate());
 				bpmItem.setPeriod(ObjectUtils.defaultIfNull(itemDto.getPeriod(), 0));
 				bpmItem.setProduceDate(itemDto.getProduceDate());
@@ -1170,7 +1173,7 @@ public class OrderService {
 				bpmItem.setRetailPrice(itemDto.getRetailPrice());
 				bpmItem.setRowNumber(itemDto.getRowNum());
 				bpmItem.setShippDate(itemDto.getShippDate());
-				bpmItem.setSpecialComments(itemDto.getSpecialComments());
+				bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
 				bpmItem.setTranscationPriceOfOptional(itemDto.getOptionalTransationPrice());
 				bpmItem.setTransfterPrice(itemDto.getTransationPrice());
 			}
@@ -1185,25 +1188,25 @@ public class OrderService {
 			bpmMargins.add(margin);
 			bpmWtwMargins.add(wtwMargin);
 
-			margin.setAmount(grossProfitMargin.getAmount());
-			margin.setCode(grossProfitMargin.getCode());
-			margin.setName(grossProfitMargin.getName());
-			margin.setCost(grossProfitMargin.getCost());
-			margin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
-			margin.setGrossProfit(grossProfitMargin.getGrossProfit());
-			margin.setMargin(grossProfitMargin.getGrossProfitMargin());
+			margin.setAmount(ObjectUtils.defaultIfNull(grossProfitMargin.getAmount(), BigDecimal.ZERO));
+			margin.setCode(StringUtils.trimToEmpty(grossProfitMargin.getCode()));
+			margin.setName(StringUtils.trimToEmpty(grossProfitMargin.getName()));
+			margin.setCost(ObjectUtils.defaultIfNull(grossProfitMargin.getCost(), BigDecimal.ZERO));
+			margin.setExcludingTaxAmount(ObjectUtils.defaultIfNull(grossProfitMargin.getExcludingTaxAmount(), BigDecimal.ZERO));
+			margin.setGrossProfit(ObjectUtils.defaultIfNull(grossProfitMargin.getGrossProfit(), BigDecimal.ZERO));
+			margin.setMargin(ObjectUtils.defaultIfNull(grossProfitMargin.getGrossProfitMargin(), 0d));
 			margin.setStatus("1");
 			// 最后修改人和修改时间
 //			margin.setUpdateBy(order.get);
 //			margin.setUpdateTime(updateTime);
 
 			wtwMargin.setAmount(grossProfitMargin.getAmount());
-			wtwMargin.setCode(grossProfitMargin.getCode());
-			wtwMargin.setName(grossProfitMargin.getName());
-			wtwMargin.setCost(grossProfitMargin.getWtwCost());
-			wtwMargin.setExcludingTaxAmount(grossProfitMargin.getExcludingTaxAmount());
-			wtwMargin.setGrossProfit(grossProfitMargin.getWtwGrossProfit());
-			wtwMargin.setMargin(grossProfitMargin.getWtwGrossProfitMargin());
+			wtwMargin.setCode(StringUtils.trimToEmpty(grossProfitMargin.getCode()));
+			wtwMargin.setName(StringUtils.trimToEmpty(grossProfitMargin.getName()));
+			wtwMargin.setCost(ObjectUtils.defaultIfNull(grossProfitMargin.getWtwCost(), BigDecimal.ZERO));
+			wtwMargin.setExcludingTaxAmount(ObjectUtils.defaultIfNull(grossProfitMargin.getExcludingTaxAmount(), BigDecimal.ZERO));
+			wtwMargin.setGrossProfit(ObjectUtils.defaultIfNull(grossProfitMargin.getWtwGrossProfit(), BigDecimal.ZERO));
+			wtwMargin.setMargin(ObjectUtils.defaultIfNull(grossProfitMargin.getWtwGrossProfitMargin(), 0d));
 			wtwMargin.setStatus("1");
 			// 最后修改人和修改时间
 //			wtwMargin.setUpdateBy(order.get);
@@ -1212,7 +1215,8 @@ public class OrderService {
 
 		// Call the bpm interface to start the order approval process
 		try {
-			String res = HttpUtil.postbody(bpmUrl, new ObjectMapper().writeValueAsString(bpmOrder));
+			String json = new ObjectMapper().writeValueAsString(bpmOrder);
+			bpmService.callSendProcess(json);
 			orderInfoMapper.updateStatus(order.getId(), user, OrderDto.ORDER_STATUS_BPM, null, new Date(), null, null);
 		} catch (Exception e) {
 			logger.error("Submit order to BPM is failed.", e);

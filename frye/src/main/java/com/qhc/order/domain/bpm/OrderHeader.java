@@ -2,6 +2,8 @@ package com.qhc.order.domain.bpm;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class OrderHeader {
 	/* 客户经理域账号 */
 	private String salesCode;
@@ -46,6 +48,7 @@ public class OrderHeader {
 	/* 批准折扣 */
 	private double approvalDiscount;
 	/* 要求发货时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date earliestDeliveryDate;
 	/* 是否经销商 */
 	private String dealer;
@@ -54,6 +57,7 @@ public class OrderHeader {
 	/* 是否B2C */
 	private String b2c;
 	/* 订单创建时间 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd",timezone = "GMT+8")
 	private Date createTime;
 	/* 毛利率 */
 	private double margin;
