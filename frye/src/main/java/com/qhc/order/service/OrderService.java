@@ -162,6 +162,10 @@ public class OrderService {
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		OrderInfo orderInfo = new OrderInfo();
+		
+		if (StringUtils.isEmpty(orderDto.getStatus())) {
+			orderDto.setStatus(OrderDto.ORDER_STATUS_DRAFT);
+		}
 
 		// calculate gross profit margin
 		List<MaterialGroups> margin = calculateGrossProfit(orderDto);
@@ -184,7 +188,6 @@ public class OrderService {
 			String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
 			orderInfo.setVersion(version);
 			orderInfo.setIsActive(1);
-			orderInfo.setStatus(OrderDto.ORDER_STATUS_DRAFT);
 			orderInfo.setVersionNum(1);
 			orderInfo.setCreater(user);
 			orderInfo.setUpdater(user);
@@ -367,6 +370,9 @@ public class OrderService {
 	 */
 	public void submit(String user, OrderDto order) throws Exception {
 		String status = order.getStatus();
+		if (StringUtils.isEmpty(status)) {
+			status = OrderDto.ORDER_STATUS_DRAFT;
+		}
 		switch (status) {
 		case OrderDto.ORDER_STATUS_DRAFT:
 		case OrderDto.ORDER_STATUS_REJECT:
