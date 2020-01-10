@@ -102,7 +102,7 @@
 			c.is_optional as optional
 		from k_characteristics ic
 		left join sap_characteristic c on c.code = ic.key_code 
-		left join sap_characteristic_value cv on cv.code = ic.value_code 
+		left join sap_characteristic_value cv on cv.code = ic.value_code and cv.sap_characteristic_code = ic.key_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -125,7 +125,7 @@
 			cv.name as value_name
 		from k_characteristics ic
 		left join sap_characteristic c on c.code = ic.key_code 
-		left join sap_characteristic_value cv on cv.code = ic.value_code 
+		left join sap_characteristic_value cv on cv.code = ic.value_code and cv.sap_characteristic_code = ic.key_code
 		where ic.item_id = #{value}
 	</select>
 	
