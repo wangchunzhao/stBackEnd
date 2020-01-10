@@ -660,8 +660,9 @@ public class OrderService {
 	 * @param version
 	 * @return
 	 */
-	public String sendToSap(String user, OrderDto orderDto) {
+	public String sendToSap(String user, Integer orderInfoId) {
 		try {
+			OrderDto orderDto = this.findOrder(orderInfoId);
 			this.save(user, orderDto);
 
 			// 1. 根据sequenceNumber组装数据

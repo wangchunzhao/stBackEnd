@@ -182,13 +182,13 @@ public class OrderController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
-	@PostMapping(value = "order/sap/{user}")
+	@PostMapping(value = "order/{orderInfoId}/sap/{user}")
 	@ResponseStatus(HttpStatus.OK)
-	public Result sendOrderToSap(@PathVariable("user") String user, @RequestBody OrderDto order)
+	public Result sendOrderToSap(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("user") String user)
 			throws Exception {
 		Result result = null;
 		try {
-			String res = orderService.sendToSap(user, order);
+			String res = orderService.sendToSap(user, orderInfoId);
 			result = Result.ok(res);
 		} catch (Exception e) {
 			logger.error("订单下发SAP失败", e);
