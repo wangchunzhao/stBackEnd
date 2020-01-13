@@ -726,7 +726,7 @@ public class OrderService {
 		header.setAuart(toString(order.getOrderType())); // Sales order type/订单类型
 		header.setVkorg("0841"); // Sales org./销售组织 -- Fixed value/固定为 0841
 		header.setVtweg(order.getCustomerClazz()); // DC/分销渠道 -- 客户
-		header.setName2(order.getCustomerName()); // Store name/店名
+		header.setName2(order.getShopName()); // Store name/店名
 		header.setSpart(order.getSaleType()); // Division/产品组
 		header.setVkbur(toString(order.getOfficeCode())); // Sales office/销售办公室 -- 大区
 		header.setVkgrp(toString(order.getGroupCode())); // Sales group/销售组 -- 中心
@@ -855,11 +855,6 @@ public class OrderService {
 		// header的付款条款为billing plan 的 code
 		List<BillingPlan> planList = billingPlanMapper.findByOrderInfoId(orderInfoId);
 		for (BillingPlan kBiddingPlan : planList) {
-			if (orderType.equals(OrderDto.ORDER_TYPE_DEALER)) {
-				header.setZterm(kBiddingPlan.getCode());
-				break;
-			}
-
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
 			plan.setFakwr(BigDecimal.valueOf(kBiddingPlan.getAmount()));
