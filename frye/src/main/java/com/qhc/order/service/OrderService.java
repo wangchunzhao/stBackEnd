@@ -186,7 +186,7 @@ public class OrderService {
 		if (orderDto.getId() == null || orderDto.getId() == 0) {
 			// new version
 			String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
-			orderInfo.setVersion(version);
+			orderInfo.setVersion(version.toUpperCase());
 			orderInfo.setIsActive(1);
 			orderInfo.setVersionNum(1);
 			orderInfo.setCreater(user);
@@ -197,7 +197,7 @@ public class OrderService {
 				BeanUtils.copyProperties(order, orderDto);
 
 				String sequenceNumber = "QHC" + version;
-				order.setSequenceNumber(sequenceNumber);
+				order.setSequenceNumber(sequenceNumber.toUpperCase());
 				order.setSalesCode(user);
 
 				orderMapper.insert(order);
@@ -730,12 +730,12 @@ public class OrderService {
 		header.setSpart(order.getSaleType()); // Division/产品组
 		header.setVkbur(toString(order.getOfficeCode())); // Sales office/销售办公室 -- 大区
 		header.setVkgrp(toString(order.getGroupCode())); // Sales group/销售组 -- 中心
-		header.setVbeln(toString(order.getContractNumber())); // SO number/销售订单编号 -- 合同号
+		header.setVbeln(toString(order.getContractNumber()).toUpperCase()); // SO number/销售订单编号 -- 合同号
 		header.setKvgr1(toString(order.getIsConvenientStore())); // Customer grp.1/客户组1 -- 是否便利店
 		header.setKvgr2(toString(order.getIsNew())); // Customer grp.2/客户组2 -- 是否新客户
 		header.setKvgr3(toString(order.getIsReformed())); // Customer grp.3/客户组3 -- 是否改造店
 		header.setBstzd(toString(order.getWarranty())); // Additional/附加的 -- 保修年限
-		header.setBstkdE(toString(order.getContractNumber())); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
+		header.setBstkdE(toString(order.getContractNumber()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
 		header.setVsart(toString(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
 		header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空，dealer取billing_plan的第一条code（唯一一条）
 		header.setKunnr(toString(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位

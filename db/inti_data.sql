@@ -532,16 +532,16 @@ INSERT INTO `sap_order_type` (`code`, `name`) VALUES ('ZH0M', '备货订单');
 -- -----------------------------------------------------
 -- Data for table `sap_customer_class`
 -- -----------------------------------------------------
-INSERT INTO `sap_customer_class` (`code`, `name`) VALUES ('01', '直销');
-INSERT INTO `sap_customer_class` (`code`, `name`) VALUES ('02', '经销商');
+INSERT INTO `sap_customer_class` (`code`, `name`) VALUES ('10', '直销');
+INSERT INTO `sap_customer_class` (`code`, `name`) VALUES ('20', '经销商');
 
 -- -----------------------------------------------------
 -- Data for table `sap_order_type_and_customer_class`
 -- -----------------------------------------------------
-INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0D', '01');
-INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0T', '02');
-INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '01');
-INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '02');
+INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0D', '10');
+INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0T', '20');
+INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '10');
+INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_customer_class_code`) VALUES ('ZH0M', '20');
 
 -- -----------------------------------------------------
 -- Data for table `sap_installation_terms`

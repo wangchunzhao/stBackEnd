@@ -33,8 +33,8 @@ public class OrderDto {
 	public final static String ORDER_TYPE_KEYACCOUNT = "ZH0T"; // '大客户订单'
 	
 	// 性质分类，客户性质 sap_customer_class
-	public final static String ORDER_CUSTOMER_DEALER_CODE="01";
-	public final static String ORDER_CUSTOMER_KEY_ACCOUNT_CODE="02";
+	public final static String ORDER_CUSTOMER_DEALER_CODE="20";
+	public final static String ORDER_CUSTOMER_KEY_ACCOUNT_CODE="10";
 	
 	private Integer id; // order info id;
 	private Integer orderId; // order id

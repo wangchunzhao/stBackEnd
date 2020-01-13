@@ -823,8 +823,8 @@ create table sap_customer_class
 );
 
 alter table sap_customer_class comment 'SAP客户类型
-01	直销
-02	经销商';
+10	直销
+20	经销商';
 
 /*==============================================================*/
 /* Table: sap_incoterms                                         */
