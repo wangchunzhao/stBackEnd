@@ -855,11 +855,6 @@ public class OrderService {
 		// header的付款条款为billing plan 的 code
 		List<BillingPlan> planList = billingPlanMapper.findByOrderInfoId(orderInfoId);
 		for (BillingPlan kBiddingPlan : planList) {
-			if (orderType.equals(OrderDto.ORDER_TYPE_DEALER)) {
-				header.setZterm(kBiddingPlan.getCode());
-				break;
-			}
-
 			SapOrderPlan plan = new SapOrderPlan();
 			// Value to be billed/金额
 			plan.setFakwr(BigDecimal.valueOf(kBiddingPlan.getAmount()));
