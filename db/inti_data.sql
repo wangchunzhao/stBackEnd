@@ -15,6 +15,7 @@ INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('800', '报表管理', NULL, NULL, '');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1006', '购销明细报表', NULL, '800', 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1007', '投标跟踪表', NULL, '800', 'menu');
+INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1021', '销售订单汇总', NULL, '800', 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('900', '系统管理', NULL, NULL, '');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1008', '用户管理', NULL, '900', 'menu');
 INSERT INTO `b_operation` (`id`, `name`, `description`, `parent_id`, `operation_type`) VALUES ('1009', '角色管理', NULL, '900', 'menu');

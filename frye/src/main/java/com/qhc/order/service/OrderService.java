@@ -369,10 +369,8 @@ public class OrderService {
 	 * @throws Exception
 	 */
 	public void submit(String user, OrderDto order) throws Exception {
+		order = save(user, order);
 		String status = order.getStatus();
-		if (StringUtils.isEmpty(status)) {
-			status = OrderDto.ORDER_STATUS_DRAFT;
-		}
 		switch (status) {
 		case OrderDto.ORDER_STATUS_DRAFT:
 		case OrderDto.ORDER_STATUS_REJECT:
@@ -399,7 +397,9 @@ public class OrderService {
 		default:
 			throw new RuntimeException("Unknown status for submit order.");
 		}
-		order = save(user, order);
+		
+		status = order.getStatus();
+		orderInfoMapper.updateStatus(order.getId(), user, status, new Date(), null, null, null);
 	}
 
 	/**

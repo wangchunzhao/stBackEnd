@@ -416,10 +416,10 @@
 	<update id="updateStatus" parameterType="Map" >
 		update k_order_info
 		set status = #{status, jdbcType=VARCHAR}
-		<if test="submitTime">
+		<if test="submitTime != null">
 			, submit_time = now()
 		</if>
-		<if test="bpmSubmitTime">
+		<if test="bpmSubmitTime != null">
 			, bpm_submit_time = now()
 		</if>
 		<if test="approvedBodyDiscount != null">
