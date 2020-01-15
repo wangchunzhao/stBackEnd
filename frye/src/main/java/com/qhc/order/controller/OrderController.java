@@ -199,6 +199,30 @@ public class OrderController {
 	}
 
 	/**
+	 * 根据流水号获取销售订单详情并同步SAP
+	 * 
+	 * @param sequenceNumber
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "修改报价单报价状态", notes = "修改报价单报价状态")
+	@PostMapping(value = "order/quote/{user},{orderInfoId},{status}")
+	@ResponseStatus(HttpStatus.OK)
+	public Result updateQuoteStatus(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("status") String status, @PathVariable("user") String user)
+			throws Exception {
+		Result result = null;
+		try {
+			String res = orderService.updateQuoteStatus(user, orderInfoId, status);
+			result = Result.ok(res);
+		} catch (Exception e) {
+			logger.error("订单下发SAP失败", e);
+			result = Result.error("订单下发SAP失败！");
+		}
+		
+		return result;
+	}
+
+	/**
 	 * 查询订单版本历史
 	 * 
 	 * @param orderId

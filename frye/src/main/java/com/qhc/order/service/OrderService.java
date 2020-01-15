@@ -166,6 +166,13 @@ public class OrderService {
 		if (StringUtils.isEmpty(orderDto.getStatus())) {
 			orderDto.setStatus(OrderDto.ORDER_STATUS_DRAFT);
 		}
+		
+		// 报价单状态
+		if (orderDto.getStOrderType().equals("3")) {
+			if (StringUtils.isEmpty(orderDto.getQuoteStatus())) {
+				orderDto.setQuoteStatus("00");
+			}
+		}
 
 		// calculate gross profit margin
 		List<MaterialGroups> margin = calculateGrossProfit(orderDto);
@@ -1330,6 +1337,22 @@ public class OrderService {
 			return "";
 		}
 		return v.toString();
+	}
+
+	/**
+	 * 修改报价单报价状态
+	 * 
+	 * @param user
+	 * @param orderInfoId
+	 * @param quoteStatus
+	 * @return
+	 */
+	public String updateQuoteStatus(String user, Integer orderInfoId, String quoteStatus) {
+		OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
+		Order order = orderMapper.findById(orderInfo.getOrderId());
+		order.setQuoteStatus(quoteStatus);
+		orderMapper.update(order);
+		return null;
 	}
 
 }
