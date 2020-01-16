@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
-import com.qhc.sap.service.SapSalesOfficeService;
 import com.qhc.system.entity.Operation;
 import com.qhc.system.entity.Role;
 import com.qhc.system.entity.User;
@@ -95,6 +94,33 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<OperationDto> findById(@PathVariable("user") String user) throws Exception {
 		return operationService.findByUser(user);
+	}
+
+	@ApiOperation(value = "根据域账号查询视图", notes = "根据域账号查询视图")
+	@GetMapping(value = "userOperationInfo/{userId}")
+	@ResponseStatus(HttpStatus.OK)
+	public List<UserOperationInfo> findByUserId(@PathVariable("userId") Integer userId) throws Exception {
+		UserDto user = this.userService.findById(userId);
+		List<OperationDto> operations = this.operationService.findByUser(user.getUserIdentity());
+		
+		List<UserOperationInfo> list = new ArrayList<UserOperationInfo>();
+		for (OperationDto operation : operations) {
+			UserOperationInfo opInfo = new UserOperationInfo();
+			opInfo.setAttachedCode(null);
+			opInfo.setAttachedName(null);
+			opInfo.setOperationId(operation.getId());
+			opInfo.setOperationName(operation.getName());
+			opInfo.setRoleId(null);
+			opInfo.setRoleName(null);
+			opInfo.setUserId(user.getId());
+			opInfo.setUserIdentity(user.getUserIdentity());
+			opInfo.setUserIsActive(user.getIsActive());
+			opInfo.setUserMail(user.getUserMail());
+			
+			list.add(opInfo);
+		}
+		
+		return list;
 	}
 
 	@ApiOperation(value = "带条件分页查询角色", notes = "带条件分页查询角色")
