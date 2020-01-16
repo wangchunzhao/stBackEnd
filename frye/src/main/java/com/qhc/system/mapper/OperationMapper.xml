@@ -92,9 +92,6 @@
 		<include refid="Column_List" />
 		from b_operation
 		<include refid="Where_By_Params" />
-        <where>
-            operation_type = 'menu'
-        </where>
 		<choose>
 			<when test="orderByClause != null">
 				order by ${orderByClause}
@@ -123,18 +120,5 @@
 		from b_operation
 		left join b_role_operation ro on ro.operation_id = b_operation.id
 		where ro.role_id = #{value}
-	</select>
-
-	<!-- 按参数查询 -->
-	<select id="findAllAserMenus" resultMap="OperationMap" parameterType="String" >
-		SELECT
-			e.*
-		FROM
-			b_user a
-		INNER JOIN b_user_role b ON a.id = b.user_id
-		INNER JOIN b_role c ON b.role_id = c.id
-		INNER JOIN b_role_operation d ON c.id = d.role_id
-		INNER JOIN b_operation e on d.operation_id = e.id
-		WHERE a.user_identity = #{value}
 	</select>
 </mapper>

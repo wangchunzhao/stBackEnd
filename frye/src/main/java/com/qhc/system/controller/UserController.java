@@ -90,38 +90,11 @@ public class UserController {
 		return operationService.findAll();
 	}
 
-	@ApiOperation(value = " 根据id查询权限", notes = "根据id查询权限")
-	@GetMapping(value = "operations/{id}")
+	@ApiOperation(value = " 根据identity查询权限", notes = "根据identity查询权限")
+	@GetMapping(value = "operations/{user}")
 	@ResponseStatus(HttpStatus.OK)
-	public Operation findById(@PathVariable("id") String id) throws Exception {
-		return operationService.findById(id);
-	}
-
-	@ApiOperation(value = "根据域账号查询视图", notes = "根据域账号查询视图")
-	@GetMapping(value = "userOperationInfo/{userId}")
-	@ResponseStatus(HttpStatus.OK)
-	public List<UserOperationInfo> findByUserId(@PathVariable("userId") Integer userId) throws Exception {
-		UserDto user = this.userService.findById(userId);
-		List<OperationDto> operations = this.operationService.findByUser(user.getUserIdentity());
-		
-		List<UserOperationInfo> list = new ArrayList<UserOperationInfo>();
-		for (OperationDto operation : operations) {
-			UserOperationInfo opInfo = new UserOperationInfo();
-			opInfo.setAttachedCode(null);
-			opInfo.setAttachedName(null);
-			opInfo.setOperationId(operation.getId());
-			opInfo.setOperationName(operation.getName());
-			opInfo.setRoleId(null);
-			opInfo.setRoleName(null);
-			opInfo.setUserId(user.getId());
-			opInfo.setUserIdentity(user.getUserIdentity());
-			opInfo.setUserIsActive(user.getIsActive());
-			opInfo.setUserMail(user.getUserMail());
-			
-			list.add(opInfo);
-		}
-		
-		return list;
+	public List<OperationDto> findById(@PathVariable("user") String user) throws Exception {
+		return operationService.findByUser(user);
 	}
 
 	@ApiOperation(value = "带条件分页查询角色", notes = "带条件分页查询角色")
@@ -188,10 +161,10 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "查询用户所有菜单", notes = "查询用户所有菜单")
-	@GetMapping(value = "queryAllAserMenus/{userIdentity}")
+	@GetMapping(value = "menus/{userIdentity}")
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String,MenusDto> queryAllAserMenus(@PathVariable String userIdentity) throws Exception {
-		Map<String,MenusDto> nap = operationService.findAllAserMenus(userIdentity);
+		Map<String,MenusDto> nap = operationService.findMenus(userIdentity);
 		return nap;
 	}
 

@@ -6,7 +6,6 @@ import java.util.*;
 import javax.validation.Valid;
 
 import com.qhc.system.domain.MenusDto;
-import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,9 @@ public class OperationService implements Serializable{
 	 * @return
 	 */
 	public List<Operation> findAll() {
-		return operationMapper.findByParams(null);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("operationType", "menu");
+		return operationMapper.findByParams(params);
 	}
 	/**
 	 * 通过id查询权限
@@ -63,65 +64,38 @@ public class OperationService implements Serializable{
 	 * @param userId
 	 * @return
 	 */
-	public  Map<String,MenusDto> findAllAserMenus(String userId){
+	public  Map<String,MenusDto> findMenus(String userId){
 		//查询用户所有菜单
-		List<Operation> list = operationMapper.findAllAserMenus(userId);
+		List<OperationDto> list = operationMapper.findByUserIdentity(userId);
 		//查询所有权限
-		List<Operation> list1 = operationMapper.findByParams(null);
+		List<Operation> all = operationMapper.findByParams(null);
 		Map<String,MenusDto> map = new HashMap<>();
-		List<String> List3=new ArrayList<>();
-		String code = "";
-		String code1 = "";
         assert list != null;
         if(null != list || list.isEmpty())
-		for (Operation on:list) {
+		for (OperationDto on:list) {
 			MenusDto mnd = new MenusDto();
-			if(StringUtils.isNoneBlank(on.getParentId())){
-				for (Operation od:list1) {
-					MenusDto md = new MenusDto();
-					if(od.getId().equals(on.getParentId())){
-						if(!od.getId().equals(code1)){
-							List3.clear();
-						}
-						List3.add(on.getId());
-						String[] nsz=new String[List3.size()];
-						List3.toArray(nsz);
-						code = od.getId();
-						code1 = od.getId();
-						md.setCode(od.getId());
-						md.setName(od.getName());
-						md.setChilds(nsz);
-						map.put(code,md);
-						break;
-					}
-
-				}
-			}
-			code = on.getId();
 			mnd.setCode(on.getId());
 			mnd.setName(on.getName());
-			String[] nsz={""};
-			mnd.setChilds(nsz);
-			map.put(code,mnd);
+			map.put(mnd.getCode(), mnd);
+			String parentId = on.getParentId();
+			if(StringUtils.isNotEmpty(parentId)){
+				MenusDto p = map.get(parentId);
+				if (p == null) {
+					for (Operation od:all) {
+						if(od.getId().equals(on.getParentId())){
+							p = new MenusDto();
+							map.put(od.getId(), p);
+							p.setCode(od.getId());
+							p.setName(od.getName());
+							p.getChilds().add(mnd.getCode());
+							
+							break;
+						}
+					}
+				}
+			}
 		}
 		return map;
 	}
-
-
-//	Map<String,List<T>> hashMap=new HashMap<String, List<T>>();
-//	//查出商品的父级id
-//	List<T> list=goodsService.getParentTypeList();
-//	//查出商品的id
-//	List<T> listGoods=goodsService.goodsTypeList();
-// for (T gt:list){
-//		List<T> typeList=new ArrayList<T>();
-//		for (T g:listGoods){
-//			if (gt.getId()==g.getParent_id()){
-//				typeList.add(g);
-//			}
-//		}
-//     `hashMap.put(gt.getName(),typeList) ;
-//
-
 
 }

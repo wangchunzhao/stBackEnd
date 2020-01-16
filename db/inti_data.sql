@@ -547,8 +547,8 @@ INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_cus
 -- -----------------------------------------------------
 -- Data for table `sap_installation_terms`
 -- -----------------------------------------------------
-INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('01', '招标');
-INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('02', '自装自提');
+INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('10', '招标');
+INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('20', '自装自提');
 
 -- -----------------------------------------------------
 -- Data for table `sap_industry_code`
@@ -633,8 +633,8 @@ INSERT INTO `sap_sales_type` (`code`, `name`) VALUES ('30', '冷库');
 -- -----------------------------------------------------
 -- Data for table `sap_shipping_type`
 -- -----------------------------------------------------
-INSERT INTO `sap_shipping_type` (`code`, `name`) VALUES ('01', '自提');
-INSERT INTO `sap_shipping_type` (`code`, `name`) VALUES ('05', '非自提');
+INSERT INTO `sap_shipping_type` (`code`, `name`) VALUES ('02', '自提');
+INSERT INTO `sap_shipping_type` (`code`, `name`) VALUES ('01', '非自提');
 
 -- -----------------------------------------------------
 -- Data for table `sap_receive_terms`

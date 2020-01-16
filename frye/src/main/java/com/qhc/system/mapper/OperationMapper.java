@@ -84,9 +84,4 @@ public interface OperationMapper {
 	 */
 	List<Operation> findByRoleId(Integer roleId);
 
-	/**
-	 * 查询用户所有菜单
-	 */
-	List<Operation> findAllAserMenus(String userId);
-
 } 
