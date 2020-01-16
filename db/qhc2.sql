@@ -31,8 +31,6 @@ drop table if exists b_user;
 
 drop table if exists b_user_role;
 
-drop table if exists k_attached_info;
-
 drop table if exists k_attachment;
 
 drop table if exists k_billing_plan;
@@ -41,23 +39,21 @@ drop table if exists k_bpm_dicision;
 
 drop table if exists k_characteristics;
 
-drop table if exists k_configure_material;
-
 drop table if exists k_contract;
 
 drop table if exists k_delivery_address;
-
-drop table if exists k_engining_cost;
 
 drop table if exists k_engining_term;
 
 drop table if exists k_item;
 
-drop table if exists k_item_b2c;
+drop table if exists k_item_attachment;
 
 drop table if exists k_order;
 
 drop table if exists k_order_info;
+
+drop table if exists k_special_attachment;
 
 drop table if exists k_special_order_application;
 
@@ -282,23 +278,6 @@ create table b_user_role
 alter table b_user_role comment '用户角色关系表';
 
 /*==============================================================*/
-/* Table: k_attached_info                                       */
-/*==============================================================*/
-create table k_attached_info
-(
-   id                   integer unsigned not null auto_increment,
-   start_date_of_production date comment '最早生产开始日期',
-   date_of_on_store     date comment '入库时间',
-   lead_time            integer unsigned comment '生产/采购周期',
-   opt_time             datetime not null,
-   item_detail_id       varchar(32) not null,
-   primary key (id),
-   key id_UNIQUE (id)
-);
-
-alter table k_attached_info comment 'sap返回的相关信息';
-
-/*==============================================================*/
 /* Table: k_attachment                                          */
 /*==============================================================*/
 create table k_attachment
@@ -366,19 +345,6 @@ create table k_characteristics
 alter table k_characteristics comment '物料选定的特征';
 
 /*==============================================================*/
-/* Table: k_configure_material                                  */
-/*==============================================================*/
-create table k_configure_material
-(
-   id                   integer not null auto_increment,
-   material_code        varchar(45) not null,
-   price                decimal(13,2) not null,
-   item_detail_id       varchar(32) not null,
-   primary key (id),
-   key id_UNIQUE (id)
-);
-
-/*==============================================================*/
 /* Table: k_contract                                            */
 /*==============================================================*/
 create table k_contract
@@ -440,23 +406,6 @@ create table k_delivery_address
 alter table k_delivery_address comment '送达地址';
 
 /*==============================================================*/
-/* Table: k_engining_cost                                       */
-/*==============================================================*/
-create table k_engining_cost
-(
-   id                   integer unsigned not null auto_increment,
-   cost                 decimal(13,2) not null comment '成本',
-   opt_time             datetime not null comment '操作时间',
-   operator             varchar(64) not null comment '操作人',
-   order_info_id        varchar(32) not null comment '订单详情ID',
-   engining_term        varchar(18) not null comment '费用类型',
-   primary key (id),
-   key id_UNIQUE (id)
-);
-
-alter table k_engining_cost comment '工程成本';
-
-/*==============================================================*/
 /* Table: k_engining_term                                       */
 /*==============================================================*/
 create table k_engining_term
@@ -466,7 +415,9 @@ create table k_engining_term
    primary key (code)
 );
 
-alter table k_engining_term comment '工程成本费用类型';
+alter table k_engining_term comment '工程成本费用类型
+''BG1GDA00000-X'', ''安装费''
+''BG1GDB0000';
 
 /*==============================================================*/
 /* Table: k_item                                                */
@@ -521,20 +472,20 @@ create table k_item
 alter table k_item comment '订单行项目表，每行记录代表一个行项目';
 
 /*==============================================================*/
-/* Table: k_item_b2c                                            */
+/* Table: k_item_attachment                                     */
 /*==============================================================*/
-create table k_item_b2c
+create table k_item_attachment
 (
-   id                   integer not null auto_increment,
-   cost                 decimal(13,2) not null comment 'B2C成本',
-   opt_time             datetime not null comment '最后修改时间',
-   operator             varchar(64) not null,
-   item_detail_id       varchar(32) not null,
+   id                   integer unsigned not null auto_increment,
+   order_info_id        integer not null,
+   item_id              integer not null,
+   file_name            varchar(64) not null,
+   file_url             varchar(128),
    primary key (id),
    key id_UNIQUE (id)
 );
 
-alter table k_item_b2c comment 'B2C人员填写的评估成本';
+alter table k_item_attachment comment '行项目调研表附件';
 
 /*==============================================================*/
 /* Table: k_order                                               */
@@ -659,6 +610,22 @@ create table k_order_info
 );
 
 alter table k_order_info comment '订单详情';
+
+/*==============================================================*/
+/* Table: k_special_attachment                                  */
+/*==============================================================*/
+create table k_special_attachment
+(
+   id                   integer unsigned not null auto_increment,
+   order_info_id        integer not null,
+   special_id           integer not null,
+   file_name            varchar(64) not null,
+   file_url             varchar(128),
+   primary key (id),
+   key id_UNIQUE (id)
+);
+
+alter table k_special_attachment comment '特批发货/紧急发货附件';
 
 /*==============================================================*/
 /* Table: k_special_order_application                           */

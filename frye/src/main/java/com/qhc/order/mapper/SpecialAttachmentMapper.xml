@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.SpecialAttachmentMapper" >
+	<resultMap id="SpecialAttachmentBaseMap" type="com.qhc.order.entity.SpecialAttachment" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_info_id" property="orderInfoId" jdbcType="INTEGER" />
+		<result column="special_id" property="specialId" jdbcType="INTEGER" />
+		<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+		<result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="SpecialAttachmentMap" type="com.qhc.order.entity.SpecialAttachment" extends="SpecialAttachmentBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.SpecialAttachment">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_special_attachment ( id, order_info_id, special_id, 
+			file_name, file_url )
+		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{specialId, jdbcType=INTEGER}, 
+			#{fileName, jdbcType=VARCHAR}, #{fileUrl, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.SpecialAttachment" >
+		update k_special_attachment
+		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
+			special_id = #{specialId, jdbcType=INTEGER}, 
+			file_name = #{fileName, jdbcType=VARCHAR}, 
+			file_url = #{fileUrl, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_special_attachment
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_special_attachment.id, k_special_attachment.order_info_id, k_special_attachment.special_id, k_special_attachment.file_name, k_special_attachment.file_url
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="SpecialAttachmentMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_special_attachment 
+		where k_special_attachment.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="SpecialAttachmentMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_special_attachment
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_special_attachment
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_special_attachment.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="orderInfoId != null" >
+				AND k_special_attachment.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+			</if>
+			<if test="specialId != null" >
+				AND k_special_attachment.special_id = #{specialId, jdbcType=INTEGER}
+			</if>
+			<if test="fileName != null and fileName != ''" >
+				AND k_special_attachment.file_name = #{fileName, jdbcType=VARCHAR}
+			</if>
+			<if test="fileUrl != null and fileUrl != ''" >
+				AND k_special_attachment.file_url = #{fileUrl, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<select id="findBySpecialId" resultMap="SpecialAttachmentBaseMap" parameterType="Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_special_attachment
+		where special_id = #{value}
+	</select>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteBySpecialId" parameterType="java.lang.Integer" >
+		delete from k_special_attachment
+		where special_id = #{value}
+	</delete>
+</mapper>

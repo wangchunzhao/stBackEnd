@@ -47,6 +47,7 @@ import com.qhc.order.entity.BpmDicision;
 import com.qhc.order.entity.Characteristics;
 import com.qhc.order.entity.DeliveryAddress;
 import com.qhc.order.entity.Item;
+import com.qhc.order.entity.ItemAttachment;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.mapper.AttachmentMapper;
@@ -54,6 +55,7 @@ import com.qhc.order.mapper.BillingPlanMapper;
 import com.qhc.order.mapper.BpmDicisionMapper;
 import com.qhc.order.mapper.CharacteristicsMapper;
 import com.qhc.order.mapper.DeliveryAddressMapper;
+import com.qhc.order.mapper.ItemAttachmentMapper;
 import com.qhc.order.mapper.ItemMapper;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
@@ -114,6 +116,9 @@ public class OrderService {
 
 	@Autowired
 	ItemMapper itemMapper;
+
+	@Autowired
+	ItemAttachmentMapper itemAttachmentMapper;
 
 	@Autowired
 	CharacteristicsMapper characteristicsMapper;
@@ -358,12 +363,25 @@ public class OrderService {
 					}
 				}
 			}
+			
+			// 保存调研表附件
+			List<ItemAttachment> attachments = itemDto.getAttachments();
+			if (attachments != null && attachments.size() > 0) {
+				for (ItemAttachment itemAttachment : attachments) {
+					itemAttachment.setItemId(item.getId());
+					itemAttachment.setOrderInfoId(item.getOrderInfoId());
+					itemAttachmentMapper.insert(itemAttachment);
+				}
+			}
 		}
 	}
 
 	private void deleteItems(Integer orderInfoId) {
 		// delete k_characteristics
 		this.characteristicsMapper.deleteByOrderInfoId(orderInfoId);
+		
+		// delete item attachemtn
+		itemAttachmentMapper.deleteByOrderInfoId(orderInfoId);
 
 		// delete order item
 		itemMapper.deleteByOrderInfoId(orderInfoId);
@@ -1024,6 +1042,10 @@ public class OrderService {
 			// characteristics
 			List<CharacteristicDto> configs = characteristicsMapper.findByItemId(itemId);
 			item.setConfigs(configs);
+			
+			// item attachment
+			List<ItemAttachment> attachments = itemAttachmentMapper.findByItemId(itemId);
+			item.setAttachments(attachments);
 		}
 	}
 

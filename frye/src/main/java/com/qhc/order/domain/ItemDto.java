@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qhc.order.entity.Characteristics;
+import com.qhc.order.entity.ItemAttachment;
 
 /**
  * @author Walker
@@ -89,6 +90,8 @@ public class ItemDto {
 	
 	private String comments;
 	private String clazzCode;//物料分类代码
+	
+	private List<ItemAttachment> attachments; // 调研表附件
 	
 	public Integer getId() {
 		return id;
@@ -462,6 +465,12 @@ public class ItemDto {
 	}
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
+	}
+	public List<ItemAttachment> getAttachments() {
+		return attachments;
+	}
+	public void setAttachments(List<ItemAttachment> attachments) {
+		this.attachments = attachments;
 	}
 	@Override
 	public String toString() {
