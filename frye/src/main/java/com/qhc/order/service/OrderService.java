@@ -1031,8 +1031,8 @@ public class OrderService {
 						item.setProvinceName(e.getProvinceName());
 						item.setCityCode(e.getCityCode());
 						item.setCityName(e.getCityName());
-						item.setDistrictCode(e.getDistinctCode());
-						item.setDistrictName(e.getDistinctName());
+						item.setDistrictCode(e.getDistrictCode());
+						item.setDistrictName(e.getDistrictName());
 					}
 				});
 			}
