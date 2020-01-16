@@ -63,10 +63,14 @@ public class TransactionAdviceConfig {
 
 		// 建立一个map，用来储存要需要进行事务管理的方法名（模糊匹配）
 		Map<String, TransactionAttribute> txMap = new HashMap<>();
-		txMap.put("insert*", transactionAttribute1);
-		txMap.put("update*", transactionAttribute1);
-		txMap.put("delete*", transactionAttribute1);
+		txMap.put("*", transactionAttribute1);
+//		txMap.put("save*", transactionAttribute1);
+//		txMap.put("insert*", transactionAttribute1);
+//		txMap.put("update*", transactionAttribute1);
+//		txMap.put("delete*", transactionAttribute1);
 		txMap.put("query*", transactionAttribute2);
+		txMap.put("get*", transactionAttribute2);
+		txMap.put("find*", transactionAttribute2);
 
 		// 注入设置好的map
 		source.setNameMap(txMap);

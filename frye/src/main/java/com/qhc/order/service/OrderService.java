@@ -166,6 +166,7 @@ public class OrderService {
 	private BpmService bpmService;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
+		Order order = new Order();
 		OrderInfo orderInfo = new OrderInfo();
 		
 		if (StringUtils.isEmpty(orderDto.getStatus())) {
@@ -183,8 +184,6 @@ public class OrderService {
 		List<MaterialGroups> margin = calculateGrossProfit(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
-		BeanUtils.copyProperties(orderInfo, orderDto);
-
 		// is b2c
 		List<ItemDto> items = orderDto.getItems();
 		if (items != null) {
@@ -194,6 +193,9 @@ public class OrderService {
 				}
 			});
 		}
+
+		BeanUtils.copyProperties(order, orderDto);
+		BeanUtils.copyProperties(orderInfo, orderDto);
 
 		if (orderDto.getId() == null || orderDto.getId() == 0) {
 			// new version
@@ -205,9 +207,6 @@ public class OrderService {
 			orderInfo.setUpdater(user);
 
 			if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
-				Order order = new Order();
-				BeanUtils.copyProperties(order, orderDto);
-
 				String sequenceNumber = "QHC" + version;
 				order.setSequenceNumber(sequenceNumber.toUpperCase());
 				order.setSalesCode(user);
@@ -218,11 +217,10 @@ public class OrderService {
 			}
 
 			orderInfoMapper.insert(orderInfo);
-
-			orderInfo.setId(orderInfo.getId());
 		} else {
 			orderInfo.setUpdater(user);
 			orderInfoMapper.update(orderInfo);
+			orderMapper.update(order);
 		}
 		orderDto.setId(orderInfo.getId());
 

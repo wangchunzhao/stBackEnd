@@ -10369,7 +10369,10 @@ INSERT INTO `sap_clazz_and_character` (`sap_clazz_code`,`sap_characteristic_code
 INSERT INTO `sap_clazz_and_character` (`sap_clazz_code`,`sap_characteristic_code`) VALUES ('D62','D224');
 
 
-
+update sap_customer set sap_customer_class_code = '10' where sap_customer_class_code = '01';
+update sap_customer set sap_customer_class_code = '20' where sap_customer_class_code = '02';
+update sap_order_type_and_customer_class set sap_customer_class_code = '10' where sap_customer_class_code = '01';
+update sap_order_type_and_customer_class set sap_customer_class_code = '20' where sap_customer_class_code = '02';
 
 
 
