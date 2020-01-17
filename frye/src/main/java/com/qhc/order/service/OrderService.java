@@ -407,7 +407,7 @@ public class OrderService {
 			}
 			break;
 		case OrderDto.ORDER_STATUS_B2C:
-			if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_DEALER_CODE)) {
+			if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_KEY_ACCOUNT_CODE)) {
 				// 大客户
 				order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
 			} else {
