@@ -120,6 +120,8 @@ public class ConstantService {
 	
 	public static Map<String, List<CurrencyDto>> currencies = null;
 	
+	public static Map<String, Currency> sapCurrencies = null;
+	
 	public static Map<String, Map<String, String>> installationTerms = null;
 	
 	public static Map<String, String> measurementUnit = null;
@@ -286,6 +288,18 @@ public class ConstantService {
 		}
 
 		return incoterms;
+	}
+	
+	public Map<String, Currency> findAllCurrency() {
+		if (sapCurrencies == null || sapCurrencies.isEmpty()) {
+			sapCurrencies = new HashMap<String, Currency>();
+			List<Currency> list = currencyRepository.findAll();
+			for (Currency currency : list) {
+				sapCurrencies.put(currency.getCode(), currency);
+			}
+		}
+		
+		return sapCurrencies;
 	}
 	
 	public Map<String, List<CurrencyDto>> findCurrencies() {

@@ -62,14 +62,16 @@ INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1019', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1010', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1009', 1 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1008', 1 );
-INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1017', 2 );
-INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1002', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1001', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1002', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1003', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1004', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1005', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1006', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1007', 2 );
 INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1013', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1017', 2 );
+INSERT INTO `b_role_operation` (`operation_id`,`role_id`) VALUES ('1021', 2 );
 
 /*
 -- Query: select * from b_user_role
