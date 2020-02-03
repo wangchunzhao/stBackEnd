@@ -122,7 +122,7 @@ public class ConstantService {
 	
 	public static Map<String, Currency> sapCurrencies = null;
 	
-	public static Map<String, Map<String, String>> installationTerms = null;
+	public static Map<String, String> installationTerms = null;
 	
 	public static Map<String, String> measurementUnit = null;
 	
@@ -330,26 +330,11 @@ public class ConstantService {
 		return currencies;
 	}
 	
-	public Map<String, Map<String, String>> findInstallationTerms() {
+	public Map<String, String> findInstallationTerms() {
 		if (installationTerms == null || installationTerms.isEmpty()) {
-//			List<InstallationTerms> list = installationTermsRepository.findAll(Sort.by(Order.asc("code")));
-			installationTerms = new LinkedHashMap<String, Map<String, String>>();
-
-//			for (InstallationTerms term : list) {
-//				String classCode = term.getCustomerClassCode();
-//				Map<String, String> terms = installationTerms.get(classCode);
-//				if (terms == null) {
-//					terms = new HashMap<String, String>();
-//					installationTerms.put(classCode, terms);
-//				}
-//				terms.put(term.getCode(), term.getName());
-//			}
-			Map<String, String> terms = new HashMap<String, String>();
-			terms.put("01", "招标");
-			installationTerms.put("01", terms);
-			terms = new HashMap<String, String>();
-			terms.put("02", "自装自提");
-			installationTerms.put("02", terms);
+			installationTerms = new LinkedHashMap<String, String>();
+			installationTerms.put("01", "招标");
+			installationTerms.put("02", "自装自提");
 		}
 
 		return installationTerms;

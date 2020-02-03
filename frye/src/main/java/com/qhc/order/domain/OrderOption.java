@@ -66,7 +66,7 @@ public class OrderOption {
 	private Map<String, String> intercoms;
 	
 	// 安装方式
-	private Map<String, Map<String, String>> installationTerms;
+	private Map<String, String> installationTerms;
 	
 	// 标准折扣
 	private String standardDiscount;
@@ -97,7 +97,7 @@ public class OrderOption {
 		this.materialGroupMapGroupOrder = new HashMap<String,String>();
 		this.shippingTypes = new HashMap<String, String>();
 		this.intercoms = new HashMap<String, String>();
-		this.installationTerms = new HashMap<String, Map<String, String>>();
+		this.installationTerms = new HashMap<String, String>();
 	}
 
 	public String getSequenceNumber() {
@@ -262,11 +262,11 @@ public class OrderOption {
 		this.intercoms = intercoms;
 	}
 
-	public Map<String, Map<String, String>> getInstallationTerms() {
+	public Map<String, String> getInstallationTerms() {
 		return installationTerms;
 	}
 
-	public void setInstallationTerms(Map<String, Map<String, String>> installationTerms) {
+	public void setInstallationTerms(Map<String, String> installationTerms) {
 		this.installationTerms = installationTerms;
 	}
 

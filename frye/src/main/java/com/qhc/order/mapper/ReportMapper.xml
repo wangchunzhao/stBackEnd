@@ -5,17 +5,114 @@
 	<!-- 购销明细报表 -->
 	<select id="findPurchaseAndSalesReport" resultType="Map" parameterType="Map" >
 		select 
+			o.sequence_number as sequenceNumber, <!-- 单据编号 -->
+			'' as contactor, <!-- 签约人 -->
+			so.name as officeName, <!-- 区域 -->
+			sg.name as groupName, <!-- 中心 -->
+			'' as contractDate, <!-- 签约日期 -->
+			oi.contract_number as contractNumber, <!-- 合同号 -->
+			o.customer_code as customerCode, <!-- 客户编号 -->
+			sc.name as customerName, <!-- 签约单位 -->
+			scc.name as customerClassName, <!-- 客户性质 -->
+			oi.shop_name as shopName, <!-- 店名 -->
+			sic.name as terminalType, <!-- 终端客户性质 -->
+			oi.is_special as isSpecial, <!-- 是否特批折扣 -->
+			oi.is_reformed as isReformed, <!-- 是否改造店 -->
+			oi.contract_rmb_value as contractRmbAmount, <!-- 合同金额 -->
+			'' as groassProfit, <!-- 毛利率 -->
+			oi.is_longterm as isLongterm, <!-- 是否长期折扣 -->
+			oi.discount as discount, <!-- 折扣 -->
+			da.address as address, <!-- 到货地址 -->
+			oi.transfer_type as transferType, <!-- 是否自提 -->
+			oi.earliest_delivery_date as shippDate, <!-- 要求发货时间 -->
+			oi.install_type as installType, <!-- 安装公司 -->
+			oi.receive_type as receiveType, <!-- 收货方式 -->
+			oi.contactor1_id as contactorId, <!-- 授权人及身份证号 -->
+			oi.contactor1_tel as contactorTel, <!-- 授权人电话 -->
+			'' as receiverId, <!-- 收货人身份证号 -->
+			oi.payment_type as paymentType, <!-- 结算方式 -->
+			oi.freight as freight, <!-- 运费 -->
+			i.period as period, <!-- 保修期限（年） -->
+			oi.currency as currency, <!-- 币别 -->
+			oi.contract_value as contractAmount, <!-- 原币合同金额 -->
+			oi.currency_exchange as exchange, <!-- 汇率 -->
+			oi.is_new as isNew <!-- 是否新客户 -->
+		from k_order_info oi
+		inner join k_order o on o.id = oi.order_id
+		left join sap_customer sc on sc.code = o.customer_code
+		left join sap_customer_class scc on scc.code = sc.sap_customer_class_code
+		left join sap_industry_code sic on sic.code = oi.terminal_type
+		left join k_contract c on c.order_info_id = oi.id
+		left join sap_sales_office so on so.code = oi.office_code
+		left join sap_sales_group sg on sg.code = oi.group_code
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			oi.is_active = 1
+			<if test="sequenceNumber != null and sequenceNumber != ''" >
+				AND o.sequence_number like '%${sequenceNumber}%'
+			</if>
+			<if test="contractNumber != null and contractNumber != ''" >
+				AND oi.contract_number like '%${contractNumber}%'
+			</if>
+			<if test="customerName != null and customerName != ''" >
+				AND sc.name like '%${customerName}%'
+			</if>
+			<if test="createTime != null and createTime != ''" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{createStartTime} AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{createEndTime} 
+			]]>
+			</if>
+			<if test="customerClass != null and customerClass != ''" >
+				AND scc.code = #{customerClass}
+			</if>
+			<!-- <if test="isAnnual != null and isAnnual != ''" >
+				AND scc.code = #{customerClass}
+			</if> -->
+			<if test="isSpecial != null" >
+				AND oi.is_special = #{isSpecial}
+			</if>
+			<if test="status != null and status != ''" >
+				AND oi.status = #{status}
+			</if>
+		</trim>
 	</select>
 	
 	<!-- 投标跟踪报表 -->
 	<select id="findBiddingReport" resultType="Map" parameterType="Map" >
 		select 
+			scc.name as customerClassName, <!-- 分类 -->
+			sc.name as customerName, <!-- 签约单位 -->
+			oi.shop_name as shopName, <!-- 店名 -->
+			'' as biddingTime, <!-- 开标时间 -->
+			'' as supplier, <!-- 供应商 -->
+			oi.contract_value as contractAmount, <!-- 原币合同金额 -->
+			'' as groassProfit, <!-- 毛利 -->
+			'' as shopType, <!-- 新店/改造店/其他 -->
+			so.name as officeName, <!-- 区域 -->
+			o.quote_status as quoteStatus, <!-- 是否中标 -->
+			oi.comments as comments, <!-- 备注 -->
+			null as `month` <!-- 月份 -->
+		from k_order_info oi
+		inner join k_order o on o.id = oi.order_id
+		left join sap_customer sc on sc.code = o.customer_code
+		left join sap_customer_class scc on scc.code = sc.sap_customer_class_code
+		left join sap_industry_code sic on sic.code = oi.terminal_type
+		left join k_contract c on c.order_info_id = oi.id
+		left join sap_sales_office so on so.code = oi.office_code
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			oi.is_active = 1
+			<if test="customerCode != null and customerCode != ''" >
+				AND o.customer_code = #{customerCode} 
+			</if>
+			<if test="officeCode != null and officeCode != ''" >
+				AND oi.office_code = #{officeCode} 
+			</if>
+		</trim>
 	</select>
 	
 	<!-- 销售订单汇总报表 -->
 	<select id="findOrderSummaryReport" resultType="Map" parameterType="Map" >
 		select 
-			o.sequence_number as sequenceNumber,
+			o.sequence_number as sequenceNumber, <!-- 单据编号 -->
 			'' as contactor, <!-- 签约人 -->
 			so.name as officeName, <!-- 区域 -->
 			sg.name as groupName, <!-- 中心 -->
@@ -34,7 +131,7 @@
 			oi.discount as discount, <!-- 折扣 -->
 			sm.description as materialName, <!-- 产品规格型号 -->
 			i.material_code as materialCode, <!-- 物料专用号 -->
-			sm.is_purchased as isPurchasd, <!-- 物料属性 -->
+			sm.is_purchased as isPurchased, <!-- 物料属性 -->
 			i.quantity as quantity, <!-- 合同数量 -->	
 			i.actural_price as salesPrice, <!-- 销售单价 -->
 			i.actural_price * i.quantity as salesAmount, <!-- 销售金额 -->
@@ -58,7 +155,7 @@
 			oi.is_new as isNew <!-- 是否新客户 -->
 		from k_order_info oi
 		inner join k_order o on o.id = oi.order_id
-		left join sap_customer sc on sc.code = oi.group_code
+		left join sap_customer sc on sc.code = o.customer_code
 		left join sap_customer_class scc on scc.code = sc.sap_customer_class_code
 		left join sap_industry_code sic on sic.code = oi.terminal_type
 		left join k_contract c on c.order_info_id = oi.id
@@ -79,7 +176,9 @@
 				AND sc.name like '%${customerName}%'
 			</if>
 			<if test="createTime != null and createTime != ''" >
-				AND oi.create_time = #{createTime}
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{createStartTime} AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{createEndTime} 
+			]]>
 			</if>
 			<if test="customerClass != null and customerClass != ''" >
 				AND scc.code = #{customerClass}
