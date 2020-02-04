@@ -222,6 +222,9 @@
 			<if test="customerName != null and customerName != ''" >
 				AND UPPER(sc.name) like '%{contractorName.toUpperCase()}%'
 			</if>
+			<if test="customerCode != null and customerCode != ''" >
+				AND o.customer_code = #{customerCode, jdbcType=VARCHAR}
+			</if>
 			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="orderCreateTime != null and orderCreateTime != ''" >
 			<![CDATA[
