@@ -252,10 +252,10 @@
 			signer = #{signer, jdbcType=VARCHAR}, 
 			sign_time = now(), 
 		</if>
-		<if test="file_hashcode != null and file_hashcode != ''" >
+		<if test="fileHashcode != null and fileHashcode != ''" >
 			file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
 		</if>
-		<if test="file_hashcode != null and file_hashcode != ''" >
+		<if test="signContractid != null and signContractid != ''" >
 			sign_contractid = #{signContractid, jdbcType=VARCHAR}
 		</if>
 		where id = #{id, jdbcType=INTEGER}
