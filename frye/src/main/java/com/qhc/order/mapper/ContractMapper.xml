@@ -192,6 +192,7 @@
 	<sql id="Where_By_Params">
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			AND (oi.status = '05' or oi.status = '06')
+			AND (o.st_order_type = '1' or o.st_order_type = '2') 
 			<if test="id != null" >
 				AND c.id = #{id, jdbcType=INTEGER}
 			</if>
@@ -199,7 +200,14 @@
 				AND c.order_info_id = #{orderInfoId, jdbcType=INTEGER}
 			</if>
 			<if test="status != null and status != ''" >
-				AND c.status = #{status, jdbcType=INTEGER}
+				<choose>
+					<when test="status == '00'">
+						AND c.status is null
+					</when>
+					<otherwise>
+						AND c.status = #{status, jdbcType=INTEGER}
+					</otherwise>
+				</choose>
 			</if>
 			<if test="statusList != null and statusList.size() > 0" >
 				AND c.status in <foreach item="item" index="index" collection="statusList" open="("
@@ -214,13 +222,13 @@
 			<if test="customerName != null and customerName != ''" >
 				AND UPPER(sc.name) like '%{contractorName.toUpperCase()}%'
 			</if>
-			<!-- 2019-04-07 ~ 2019-11-07 -->
+			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="orderCreateTime != null and orderCreateTime != ''" >
 			<![CDATA[
 				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= '${orderCreateTime.substring(0, orderCreateTime.indexOf(" - "))}' and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= '${orderCreateTime.substring(orderCreateTime.indexOf(" - ") + 3)}'
 			]]>
 			</if>
-			<!-- 2019-04-07 ~ 2019-11-07 -->
+			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="createTime != null and createTime != ''" >
 			<![CDATA[
 				AND DATE_FORMAT(c.create_time, '%Y-%m-%d') >= '${createTime.substring(0, createTime.indexOf(" - "))}' and DATE_FORMAT(c.create_time, '%Y-%m-%d') <= '${createTime.substring(createTime.indexOf(" - ") + 3)}'

@@ -118,10 +118,26 @@ public class OrderController {
 	@ApiOperation(value = "变更", notes = "变更")
 	@PostMapping(value = "order/{orderInfoId}/upgrade/{user}")
 	@ResponseBody
-	public Result upgrade(@PathVariable("user") String user, @RequestBody(required = true) Integer orderInfoId) {
+	public Result upgrade(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
 			orderService.upgrade(user, orderInfoId);
+			result = Result.ok("");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+
+		return result;
+	}
+
+	@ApiOperation(value = "复制", notes = "复制")
+	@PostMapping(value = "order/{orderInfoId}/copy/{user}")
+	@ResponseBody
+	public Result copy(@PathVariable(name="user", required = true) String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
+		Result result = null;
+		try {
+			orderService.copy(user, orderInfoId);
 			result = Result.ok("");
 		} catch (Exception e) {
 			e.printStackTrace();

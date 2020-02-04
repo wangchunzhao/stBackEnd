@@ -26,6 +26,7 @@ import com.qhc.sap.dao.IncotermRepository;
 import com.qhc.sap.dao.InstallationTermsRepository;
 import com.qhc.sap.dao.MeasurementUnitRepository;
 import com.qhc.sap.dao.OrderTypeRepository;
+import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
@@ -41,6 +42,7 @@ import com.qhc.sap.entity.ReceiveTerms;
 import com.qhc.sap.entity.ShippingType;
 import com.qhc.sap.entity.Unit;
 import com.qhc.sap.entity.OrderTypeCustomerClass;
+import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SapCurrencySaleType;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.sap.entity.SapSalesOffice;
@@ -96,6 +98,9 @@ public class ConstantService {
 	@Autowired
 	private MeasurementUnitRepository measurementUnitRepository;
 	
+	@Autowired
+	private PaymentTermRepository paymentTermRepository;
+	
 	public static Map<String, String> customerClazz;
 
 	public static Map<String, String> orderType;// Map<customerClassCode,List<ordertype code>>
@@ -128,6 +133,8 @@ public class ConstantService {
 	
 	//k_acceptance_Criteria
 	public static Map<String, String> acceptanceCriteria = null;
+
+	public static Map<String, String> dealerPaymentTerms = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -368,6 +375,19 @@ public class ConstantService {
 		}
 
 		return acceptanceCriteria;
+	}
+	
+	public Map<String, String> findDealerPaymentTerms() {
+		if (dealerPaymentTerms == null || dealerPaymentTerms.isEmpty()) {
+			List<PaymentTerm> list = paymentTermRepository.findByCodeLike("QA%", Sort.by(Order.asc("code")));
+			dealerPaymentTerms = new LinkedHashMap<String, String>();
+
+			for (PaymentTerm paymentTerm : list) {
+				dealerPaymentTerms.put(paymentTerm.getCode(), paymentTerm.getName());
+			}
+		}
+
+		return dealerPaymentTerms;
 	}
 
 }

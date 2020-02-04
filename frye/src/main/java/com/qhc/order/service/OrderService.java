@@ -269,6 +269,25 @@ public class OrderService {
 
 		return order;
 	}
+	
+	public OrderDto copy(String user, Integer orderInfoId) throws Exception {
+		OrderDto order = this.findOrder(orderInfoId);
+		
+		order.setId(null);
+		order.setCreater(user);
+		// new version
+		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
+		order.setVersion(version);
+		order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
+		order.setSubmitBpmTime(null);
+		order.setSubmitTime(null);
+		order.setIsActive(1);
+		order.setVersionNum(1);
+
+		order = this.save(user, order);
+
+		return order;
+	}
 
 	/**
 	 * 保存订单附件信息
@@ -672,6 +691,9 @@ public class OrderService {
 
 			oo.setTaxRate(taxRate);
 		}
+
+		// 经销商结算方式
+		oo.setDealerPaymentTerms(constService.findDealerPaymentTerms());
 
 		return oo;
 	}

@@ -70,6 +70,9 @@ public class OrderOption {
 	
 	// 标准折扣
 	private String standardDiscount;
+
+	// 经销商计算方式
+	public static Map<String, String> dealerPaymentTerms = null;
 	
 	public OrderOption() {
 		Date  date =new Date();
@@ -276,5 +279,13 @@ public class OrderOption {
 
 	public void setStandardDiscount(String standardDiscount) {
 		this.standardDiscount = standardDiscount;
+	}
+
+	public static Map<String, String> getDealerPaymentTerms() {
+		return dealerPaymentTerms;
+	}
+
+	public static void setDealerPaymentTerms(Map<String, String> dealerPaymentTerms) {
+		dealerPaymentTerms = dealerPaymentTerms;
 	}
 }
