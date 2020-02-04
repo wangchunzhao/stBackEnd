@@ -274,6 +274,7 @@ public class OrderService {
 		OrderDto order = this.findOrder(orderInfoId);
 		
 		order.setId(null);
+		order.setOrderId(null);
 		order.setCreater(user);
 		// new version
 		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());

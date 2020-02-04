@@ -36,6 +36,9 @@ public class OrderQuery {
 	
 	private boolean includeDetail = false;
 	
+	private String orderByClause = null;
+	private String customerCode = null;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -173,6 +176,18 @@ public class OrderQuery {
 	}
 	public void setIncludeDetail(boolean includeDetail) {
 		this.includeDetail = includeDetail;
+	}
+	public String getOrderByClause() {
+		return orderByClause;
+	}
+	public void setOrderByClause(String orderByClause) {
+		this.orderByClause = orderByClause;
+	}
+	public String getCustomerCode() {
+		return customerCode;
+	}
+	public void setCustomerCode(String customerCode) {
+		this.customerCode = customerCode;
 	}
 	
 }

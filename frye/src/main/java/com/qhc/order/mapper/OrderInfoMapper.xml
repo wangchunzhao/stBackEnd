@@ -294,15 +294,14 @@
     FROM
     	<include refid="order_view_table_list" />
 		<include refid="order_view_where" />
-		<!-- <choose>
+		<choose>
 			<when test="orderByClause != null">
 				order by ${orderByClause}
 			</when>
 			<otherwise>
-				order by id
+				order by oi.id
 			</otherwise>
-		</choose> -->
-		order by id
+		</choose>
 	</select>
 	<sql id="order_view_column_list" >
         oi.*,
@@ -384,6 +383,9 @@
 			</if>
 			<if test="contracterName != null and contracterName != ''" >
 				AND UPPER(c.name) like '%${contracterName.toUpperCase()}%'
+			</if>
+			<if test="customerCode != null and customerCode != ''" >
+				AND o.customer_code = #{customerCode, jdbcType=CHAR}
 			</if>
 			<if test="statusList != null and statusList.size() > 0" >
 				<choose>

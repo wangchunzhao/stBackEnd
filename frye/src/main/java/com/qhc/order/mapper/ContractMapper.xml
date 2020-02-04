@@ -244,20 +244,22 @@
 	<update id="updateStatus" parameterType="com.qhc.order.entity.Contract" >
 		update k_contract
 		set status = #{status, jdbcType=INTEGER}, 
-		<if test="sender != null and sender != ''" >
-			sender = #{sender, jdbcType=VARCHAR}, 
-			send_time = now(), 
-		</if>
-		<if test="signer != null and signer != ''" >
-			signer = #{signer, jdbcType=VARCHAR}, 
-			sign_time = now(), 
-		</if>
-		<if test="fileHashcode != null and fileHashcode != ''" >
-			file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
-		</if>
-		<if test="signContractid != null and signContractid != ''" >
-			sign_contractid = #{signContractid, jdbcType=VARCHAR}
-		</if>
+		<trim suffixOverrides="," >
+			<if test="sender != null and sender != ''" >
+				sender = #{sender, jdbcType=VARCHAR}, 
+				send_time = now(), 
+			</if>
+			<if test="signer != null and signer != ''" >
+				signer = #{signer, jdbcType=VARCHAR}, 
+				sign_time = now(), 
+			</if>
+			<if test="fileHashcode != null and fileHashcode != ''" >
+				file_hashcode = #{fileHashcode, jdbcType=VARCHAR}, 
+			</if>
+			<if test="signContractid != null and signContractid != ''" >
+				sign_contractid = #{signContractid, jdbcType=VARCHAR},
+			</if>
+		</trim>
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
