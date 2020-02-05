@@ -512,6 +512,11 @@ public class OrderService {
 
 	// sap_material_group分组
 	public List<MaterialGroups> calculateGrossProfit(OrderDto order) {
+		String stOrderType = order.getStOrderType();
+		// 报价单不需要计算毛利率
+		if ("3".equals(stOrderType)) {
+			return null;
+		}
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = order.getItems();
@@ -766,7 +771,17 @@ public class OrderService {
 	public String sendToSap(String user, Integer orderInfoId) {
 		try {
 			OrderDto orderDto = this.findOrder(orderInfoId);
-			this.save(user, orderDto);
+			// this.save(user, orderDto);
+			String stOrderType = orderDto.getStOrderType();
+			String status = orderDto.getStatus();
+			
+			if (!"3".equals(stOrderType)) {
+				throw new RuntimeException("直销客户投标报价单不能下发SAP");
+			}
+			
+			if (!OrderDto.ORDER_STATUS_MANAGER.equals(status)) {
+				throw new RuntimeException("当前状态不能下发SAP");
+			}
 
 			// 1. 根据sequenceNumber组装数据
 			SapOrder sapOrder = assembleSapOrder(orderDto);
@@ -783,7 +798,7 @@ public class OrderService {
 	}
 
 	/**
-	 * 下发订单到SAP
+	 * 下发订单到SAP，私有方法
 	 * 
 	 * @param orderDto
 	 * @return
