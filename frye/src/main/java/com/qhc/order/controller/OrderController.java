@@ -147,6 +147,22 @@ public class OrderController {
 		return result;
 	}
 
+	@ApiOperation(value = "报价下单", notes = "报价下单")
+	@PostMapping(value = "order/{orderInfoId}/transfer/{user}")
+	@ResponseBody
+	public Result transferToOrder(@PathVariable(name="user", required = true) String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
+		Result result = null;
+		try {
+			orderService.transfer(user, orderInfoId);
+			result = Result.ok("");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+
+		return result;
+	}
+
 	@ApiOperation(value = "提交到BPM", notes = "提交到BPM")
 	@PostMapping(value = "order/submitbpm/{user}")
 	public Result submitBpm(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {

@@ -270,11 +270,66 @@ public class OrderService {
 		return order;
 	}
 	
+	/**
+	 * 复制订单
+	 * @param user
+	 * @param orderInfoId
+	 * @return
+	 * @throws Exception
+	 */
 	public OrderDto copy(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
 		
 		order.setId(null);
 		order.setOrderId(null);
+		order.setCreater(user);
+		order.setAttachments(null); // 清除订单附件
+		for (ItemDto item : order.getItems()) { 
+			item.setAttachments(null); // 清除调研表附件
+		}
+		// new version
+		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
+		order.setVersion(version);
+		order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
+		order.setSubmitBpmTime(null);
+		order.setSubmitTime(null);
+		order.setIsActive(1);
+		order.setVersionNum(1);
+
+		order = this.save(user, order);
+
+		return order;
+	}
+	
+	/**
+	 * 报价单下订单
+	 * @param user
+	 * @param orderInfoId
+	 * @return
+	 * @throws Exception
+	 */
+	public OrderDto transfer(String user, Integer orderInfoId) throws Exception {
+		OrderDto order = this.findOrder(orderInfoId);
+		String stOrderType = order.getStOrderType();
+		String quoteStatus = order.getQuoteStatus();
+		String status = order.getStatus();
+		if (!stOrderType.equals("3")) {
+			throw new RuntimeException("非直签客户投标报价单，不允许下单");
+		}
+		if (!quoteStatus.equals("01")) {
+			throw new RuntimeException("还未中标，不允许下单");
+		}
+		if (!status.equals(OrderDto.ORDER_STATUS_APPROVED) && !status.equals(OrderDto.ORDER_STATUS_APPROVED_UPDATE)) {
+			throw new RuntimeException("报价单未审批通过，不允许下单");
+		}
+		
+		order.setId(null);
+		order.setOrderId(null);
+		order.setStOrderType("4"); // 下单，转为【直签客户下定单】
+		order.setAttachments(null); // 清除订单附件
+		for (ItemDto item : order.getItems()) { 
+			item.setAttachments(null); // 清除调研表附件
+		}
 		order.setCreater(user);
 		// new version
 		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
@@ -286,6 +341,8 @@ public class OrderService {
 		order.setVersionNum(1);
 
 		order = this.save(user, order);
+		
+		this.updateQuoteStatus(user, orderInfoId, "02"); // 修改报价单报价状态
 
 		return order;
 	}
