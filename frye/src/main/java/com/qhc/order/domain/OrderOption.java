@@ -69,8 +69,7 @@ public class OrderOption {
 	private String standardDiscount;
 
 	// 经销商计算方式
-	public Map<String, String> dealerPaymentTerms = null;
-	
+	public Map<String, String> dealerPaymentTerms = null;	
 	public OrderOption() {
 		Date  date =new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -278,11 +277,9 @@ public class OrderOption {
 		this.standardDiscount = standardDiscount;
 	}
 
-	public Map<String, String> getDealerPaymentTerms() {
-		return dealerPaymentTerms;
+	public Map<String, String> getDealerPaymentTerms() {		return dealerPaymentTerms;
 	}
 
 	public void setDealerPaymentTerms(Map<String, String> dealerPaymentTerms) {
-		this.dealerPaymentTerms = dealerPaymentTerms;
-	}
+		this.dealerPaymentTerms = dealerPaymentTerms;	}
 }
