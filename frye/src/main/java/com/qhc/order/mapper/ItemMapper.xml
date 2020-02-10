@@ -161,8 +161,6 @@
 	<select id="findByParams" resultType="com.qhc.order.domain.ItemDto" parameterType="Map" >
 		select 
 			i.*,
-			i.config_retail_price as optional_actual_price ,
-			i.config_transfer_price as optional_transation_price
 			d.province_code, 
 			d.city_code, 
 			d.district_code, 

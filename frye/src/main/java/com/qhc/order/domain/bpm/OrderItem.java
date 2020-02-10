@@ -30,7 +30,7 @@ public class OrderItem {
 	/* 可选项实卖金额 */
 	private double acturalAmountOfOptional;
 	/* 可选项转移价 */
-	private double transcationPriceOfOptional;
+	private double transactionPriceOfOptional;
 	/* B2C预估价 */
 	private double b2cPriceEstimated;
 	/* B2C预估金额 */
@@ -174,12 +174,12 @@ public class OrderItem {
 		this.acturalAmountOfOptional = acturalAmountOfOptional;
 	}
 
-	public double getTranscationPriceOfOptional() {
-		return transcationPriceOfOptional;
+	public double getTransactionPriceOfOptional() {
+		return transactionPriceOfOptional;
 	}
 
-	public void setTranscationPriceOfOptional(double transcationPriceOfOptional) {
-		this.transcationPriceOfOptional = transcationPriceOfOptional;
+	public void setTransactionPriceOfOptional(double transactionPriceOfOptional) {
+		this.transactionPriceOfOptional = transactionPriceOfOptional;
 	}
 
 	public double getB2cPriceEstimated() {
@@ -325,7 +325,7 @@ public class OrderItem {
 				+ materialGroupName + ", quantity=" + quantity + ", measureUnitName=" + measureUnitName
 				+ ", acturalPrice=" + acturalPrice + ", acturalAmount=" + acturalAmount + ", transfterPrice="
 				+ transfterPrice + ", acturalPriceOfOptional=" + acturalPriceOfOptional + ", acturalAmountOfOptional="
-				+ acturalAmountOfOptional + ", transcationPriceOfOptional=" + transcationPriceOfOptional
+				+ acturalAmountOfOptional + ", transactionPriceOfOptional=" + transactionPriceOfOptional
 				+ ", b2cPriceEstimated=" + b2cPriceEstimated + ", b2cAmountEstimated=" + b2cAmountEstimated
 				+ ", b2cCostOfEstimated=" + b2cCostOfEstimated + ", retailPrice=" + retailPrice + ", retailAmount="
 				+ retailAmount + ", discount=" + discount + ", itemCategoryName=" + itemCategoryName

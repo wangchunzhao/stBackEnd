@@ -398,8 +398,6 @@ public class OrderService {
 			Item item = new Item();
 
 			BeanUtils.copyProperties(item, itemDto);
-			item.setConfigTransferPrice(itemDto.getTransationPrice());
-			item.setConfigRetailPrice(itemDto.getTransationPrice());
 
 			item.setId(null);
 			item.setOrderInfoId(orderInfoId);
@@ -1179,7 +1177,7 @@ public class OrderService {
 				bpmItem.setRowNumber(itemDto.getRowNum());
 				bpmItem.setShippDate(itemDto.getShippDate());
 				bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
-				bpmItem.setTranscationPriceOfOptional(itemDto.getOptionalTransationPrice());
+				bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice());
 				bpmItem.setTransfterPrice(itemDto.getTransationPrice());
 			}
 			bpmHeader.setMaterialGroupNames(strGroupName.length() > 0 ? strGroupName.substring(1) : "");
