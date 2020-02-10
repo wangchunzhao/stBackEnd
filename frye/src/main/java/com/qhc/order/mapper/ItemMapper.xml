@@ -14,10 +14,10 @@
 		<result column="delivery_address_id" property="deliveryAddressId" jdbcType="INTEGER" />
 		<result column="standard_price" property="standardPrice" jdbcType="DECIMAL" />
 		<result column="retail_price" property="retailPrice" jdbcType="DECIMAL" />
-		<result column="actural_price" property="acturalPrice" jdbcType="DECIMAL" />
-		<result column="transcation_price" property="transcationPrice" jdbcType="DECIMAL" />
-		<result column="actural_prica_of_optional" property="acturalPricaOfOptional" jdbcType="DECIMAL" />
-		<result column="transcation_prica_of_optional" property="transcationPricaOfOptional" jdbcType="DECIMAL" />
+		<result column="actual_price" property="actualPrice" jdbcType="DECIMAL" />
+		<result column="transaction_price" property="transactionPrice" jdbcType="DECIMAL" />
+		<result column="actual_price_of_optional" property="actualPriceOfOptional" jdbcType="DECIMAL" />
+		<result column="transaction_price_of_optional" property="transactionPriceOfOptional" jdbcType="DECIMAL" />
 		<result column="discount" property="discount" jdbcType="DOUBLE" />
 		<result column="produce_date" property="produceDate" jdbcType="DATE" />
 		<result column="on_store_date" property="onStoreDate" jdbcType="DATE" />
@@ -57,8 +57,8 @@
 			material_code, quantity, item_category, 
 			item_requirement_plan, b2c_estimated_price, delivery_address_seq, 
 			delivery_address_id, standard_price, retail_price, 
-			actural_price, transcation_price, actural_prica_of_optional, 
-			transcation_prica_of_optional, discount, produce_date, 
+			actual_price, transaction_price, actual_price_of_optional, 
+			transaction_price_of_optional, discount, produce_date, 
 			on_store_date, delivery_date, shipp_date, 
 			period, b2c_comments, special_comments, 
 			color_comments, volume_cube, freight, 
@@ -71,8 +71,8 @@
 			#{materialCode, jdbcType=VARCHAR}, #{quantity, jdbcType=DOUBLE}, #{itemCategory, jdbcType=VARCHAR}, 
 			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
 			#{deliveryAddressId, jdbcType=INTEGER}, #{standardPrice, jdbcType=DECIMAL}, #{retailPrice, jdbcType=DECIMAL}, 
-			#{acturalPrice, jdbcType=DECIMAL}, #{transcationPrice, jdbcType=DECIMAL}, #{acturalPricaOfOptional, jdbcType=DECIMAL}, 
-			#{transcationPricaOfOptional, jdbcType=DECIMAL}, #{discount, jdbcType=DOUBLE}, #{produceDate, jdbcType=DATE}, 
+			#{actualPrice, jdbcType=DECIMAL}, #{transactionPrice, jdbcType=DECIMAL}, #{actualPriceOfOptional, jdbcType=DECIMAL}, 
+			#{transactionPriceOfOptional, jdbcType=DECIMAL}, #{discount, jdbcType=DOUBLE}, #{produceDate, jdbcType=DATE}, 
 			#{onStoreDate, jdbcType=DATE}, #{deliveryDate, jdbcType=DATE}, #{shippDate, jdbcType=DATE}, 
 			#{period, jdbcType=INTEGER}, #{b2cComments, jdbcType=VARCHAR}, #{specialComments, jdbcType=VARCHAR}, 
 			#{colorComments, jdbcType=VARCHAR}, #{volumeCube, jdbcType=DECIMAL}, #{freight, jdbcType=DECIMAL}, 
@@ -97,10 +97,10 @@
 			delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}, 
 			standard_price = #{standardPrice, jdbcType=DECIMAL}, 
 			retail_price = #{retailPrice, jdbcType=DECIMAL}, 
-			actural_price = #{acturalPrice, jdbcType=DECIMAL}, 
-			transcation_price = #{transcationPrice, jdbcType=DECIMAL}, 
-			actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}, 
-			transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}, 
+			actual_price = #{actualPrice, jdbcType=DECIMAL}, 
+			transaction_price = #{transactionPrice, jdbcType=DECIMAL}, 
+			actual_price_of_optional = #{actualPriceOfOptional, jdbcType=DECIMAL}, 
+			transaction_price_of_optional = #{transactionPriceOfOptional, jdbcType=DECIMAL}, 
 			discount = #{discount, jdbcType=DOUBLE}, 
 			produce_date = #{produceDate, jdbcType=DATE}, 
 			on_store_date = #{onStoreDate, jdbcType=DATE}, 
@@ -137,8 +137,8 @@
 	<sql id="Base_Column_List" >
 		k_item.id, k_item.order_info_id, k_item.row_num, k_item.material_code, k_item.quantity, 
 		k_item.item_category, k_item.item_requirement_plan, k_item.b2c_estimated_price, k_item.delivery_address_seq, k_item.delivery_address_id, 
-		k_item.standard_price, k_item.retail_price, k_item.actural_price, k_item.transcation_price, k_item.actural_prica_of_optional, 
-		k_item.transcation_prica_of_optional, k_item.discount, k_item.produce_date, k_item.on_store_date, k_item.delivery_date, 
+		k_item.standard_price, k_item.retail_price, k_item.actual_price, k_item.transaction_price, k_item.actual_price_of_optional, 
+		k_item.transaction_price_of_optional, k_item.discount, k_item.produce_date, k_item.on_store_date, k_item.delivery_date, 
 		k_item.shipp_date, k_item.period, k_item.b2c_comments, k_item.special_comments, k_item.color_comments, 
 		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 
 		k_item.attached_image, k_item.request_brand, k_item.request_package, k_item.request_nameplate, k_item.request_circult, 
@@ -161,6 +161,8 @@
 	<select id="findByParams" resultType="com.qhc.order.domain.ItemDto" parameterType="Map" >
 		select 
 			i.*,
+			i.config_retail_price as optional_actual_price ,
+			i.config_transfer_price as optional_transation_price
 			d.province_code, 
 			d.city_code, 
 			d.district_code, 
@@ -225,17 +227,17 @@
 			<if test="retailPrice != null" >
 				AND i.retail_price = #{retailPrice, jdbcType=DECIMAL}
 			</if>
-			<if test="acturalPrice != null" >
-				AND i.actural_price = #{acturalPrice, jdbcType=DECIMAL}
+			<if test="actualPrice != null" >
+				AND i.actual_price = #{actualPrice, jdbcType=DECIMAL}
 			</if>
-			<if test="transcationPrice != null" >
-				AND i.transcation_price = #{transcationPrice, jdbcType=DECIMAL}
+			<if test="transactionPrice != null" >
+				AND i.transaction_price = #{transactionPrice, jdbcType=DECIMAL}
 			</if>
-			<if test="acturalPricaOfOptional != null" >
-				AND i.actural_prica_of_optional = #{acturalPricaOfOptional, jdbcType=DECIMAL}
+			<if test="actualPriceOfOptional != null" >
+				AND i.actual_price_of_optional = #{actualPriceOfOptional, jdbcType=DECIMAL}
 			</if>
-			<if test="transcationPricaOfOptional != null" >
-				AND i.transcation_prica_of_optional = #{transcationPricaOfOptional, jdbcType=DECIMAL}
+			<if test="transactionPriceOfOptional != null" >
+				AND i.transaction_price_of_optional = #{transactionPriceOfOptional, jdbcType=DECIMAL}
 			</if>
 			<if test="discount != null" >
 				AND i.discount = #{discount, jdbcType=DOUBLE}

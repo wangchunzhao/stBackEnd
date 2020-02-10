@@ -55,6 +55,7 @@
 		<result column="electrical_fee" property="electricalFee" jdbcType="DECIMAL" />
 		<result column="refrigeratory_fee" property="refrigeratoryFee" jdbcType="DECIMAL" />
 		<result column="maintenance_fee" property="maintenanceFee" jdbcType="DECIMAL" />
+		<result column="additional_freight" property="additionalFreight" jdbcType="DECIMAL" />
 		<result column="earliest_delivery_date" property="earliestDeliveryDate" jdbcType="DATE" />
 		<result column="earliest_product_date" property="earliestProductDate" jdbcType="DATE" />
 		<result column="is_b2c" property="isB2c" jdbcType="INTEGER" />
@@ -97,7 +98,7 @@
 			is_longterm, is_special, payment_type, 
 			is_term1, is_term2, is_term3, 
 			install_fee, material_fee, electrical_fee, 
-			refrigeratory_fee, maintenance_fee, earliest_delivery_date, 
+			refrigeratory_fee, maintenance_fee, additionalFreight, earliest_delivery_date, 
 			earliest_product_date, is_b2c, is_bulk_cargo, is_urgent_delivery, 
 			unpredictable, gross_profit_margin, 
 			comments, submit_time, bpm_submit_time, 
@@ -120,7 +121,7 @@
 			#{isLongterm, jdbcType=INTEGER}, #{isSpecial, jdbcType=INTEGER}, #{paymentType, jdbcType=VARCHAR}, 
 			#{isTerm1, jdbcType=INTEGER}, #{isTerm2, jdbcType=INTEGER}, #{isTerm3, jdbcType=INTEGER}, 
 			#{installFee, jdbcType=DECIMAL}, #{materialFee, jdbcType=DECIMAL}, #{electricalFee, jdbcType=DECIMAL}, 
-			#{refrigeratoryFee, jdbcType=DECIMAL}, #{maintenanceFee, jdbcType=DECIMAL}, #{earliestDeliveryDate, jdbcType=DATE}, 
+			#{refrigeratoryFee, jdbcType=DECIMAL}, #{maintenanceFee, jdbcType=DECIMAL}, #{additionalFreight, jdbcType=DECIMAL}, #{earliestDeliveryDate, jdbcType=DATE}, 
 			#{earliestProductDate, jdbcType=DATE}, #{isB2c, jdbcType=INTEGER}, #{isBulkCargo, jdbcType=INTEGER}, #{isUrgentDelivery, jdbcType=INTEGER}, 
 			#{unpredictable, jdbcType=VARCHAR}, #{grossProfitMargin, jdbcType=LONGVARCHAR}, 
 			#{comments, jdbcType=VARCHAR}, #{submitTime, jdbcType=TIMESTAMP}, #{bpmSubmitTime, jdbcType=TIMESTAMP}, 
@@ -183,6 +184,7 @@
 			electrical_fee = #{electricalFee, jdbcType=DECIMAL}, 
 			refrigeratory_fee = #{refrigeratoryFee, jdbcType=DECIMAL}, 
 			maintenance_fee = #{maintenanceFee, jdbcType=DECIMAL}, 
+			additional_freight = #{additionalFreight, jdbcType=DECIMAL}, 
 			earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}, 
 			earliest_product_date = #{earliestProductDate, jdbcType=DATE}, 
 			is_b2c = #{isB2c, jdbcType=INTEGER}, 
@@ -217,7 +219,7 @@
 		k_order_info.contactor3_id, k_order_info.contactor3_tel, k_order_info.body_discount, k_order_info.approved_body_discount, k_order_info.main_discount, 
 		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.payment_type, 
 		k_order_info.is_term1, k_order_info.is_term2, k_order_info.is_term3, k_order_info.install_fee, k_order_info.material_fee, 
-		k_order_info.electrical_fee, k_order_info.refrigeratory_fee, k_order_info.maintenance_fee, k_order_info.earliest_delivery_date, k_order_info.earliest_product_date, 
+		k_order_info.electrical_fee, k_order_info.refrigeratory_fee, k_order_info.maintenance_fee, k_order_info.additional_freight, k_order_info.earliest_delivery_date, k_order_info.earliest_product_date, 
 		k_order_info.is_b2c, k_order_info.is_bulk_cargo, 
 		k_order_info.is_urgent_delivery, k_order_info.unpredictable, k_order_info.gross_profit_margin, k_order_info.comments, k_order_info.submit_time, k_order_info.bpm_submit_time, 
 		k_order_info.creater, k_order_info.create_time, k_order_info.updater, k_order_info.update_time

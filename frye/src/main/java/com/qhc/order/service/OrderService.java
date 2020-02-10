@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.domain.CharacteristicDto;
@@ -61,7 +60,6 @@ import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
 import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
-import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.MaterialDto;
@@ -154,9 +152,6 @@ public class OrderService {
 	private SettingsRepository settingsRepository;
 
 	@Autowired
-	private SapMaterialGroupsRepository materialGroupsRepository;
-
-	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -164,6 +159,9 @@ public class OrderService {
 	
 	@Autowired
 	private BpmService bpmService;
+	
+	@Autowired
+	private GrossProfitMarginService grossProfitMarginService;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		Order order = new Order();
@@ -181,7 +179,7 @@ public class OrderService {
 		}
 
 		// calculate gross profit margin
-		List<MaterialGroups> margin = calculateGrossProfit(orderDto);
+		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
 		// is b2c
@@ -400,6 +398,8 @@ public class OrderService {
 			Item item = new Item();
 
 			BeanUtils.copyProperties(item, itemDto);
+			item.setConfigTransferPrice(itemDto.getTransationPrice());
+			item.setConfigRetailPrice(itemDto.getTransationPrice());
 
 			item.setId(null);
 			item.setOrderInfoId(orderInfoId);
@@ -510,125 +510,6 @@ public class OrderService {
 		return salesTypeRepo.findAll();
 	}
 
-	// sap_material_group分组
-	public List<MaterialGroups> calculateGrossProfit(OrderDto order) {
-		String stOrderType = order.getStOrderType();
-		// 报价单不需要计算毛利率
-		if ("3".equals(stOrderType)) {
-			return null;
-		}
-		// 查询所有物料类型sap_material_group isenable != 0
-		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
-		List<ItemDto> items = order.getItems();
-
-		if (items == null || items.size() == 0) {
-			return groups;
-		}
-
-		// 税率
-		Double taxRate = order.getTaxRate();
-
-		// 毛利表
-		BigDecimal sumAmount = BigDecimal.ZERO;// 金额
-		BigDecimal sumExcludingTaxAmount = BigDecimal.ZERO;// 不含税金额
-		BigDecimal sumWtwCost = BigDecimal.ZERO;// wtw成本
-		BigDecimal sumCost = BigDecimal.ZERO;// 成本
-		BigDecimal sumWtwGrossProfit = BigDecimal.ZERO;// 毛利
-		BigDecimal sumGrossProfit = BigDecimal.ZERO;// 毛利
-		Double sumWtwGrossProfitMargin = 0D;// 毛利率
-		Double sumGrossProfitMargin = 0D;// 毛利率
-		if (items != null && items.size() > 0) {
-			for (MaterialGroups entity : groups) {
-				BigDecimal amount = BigDecimal.ZERO;// 金额
-				BigDecimal excludingTaxAmount = BigDecimal.ZERO;// 不含税金额
-				BigDecimal wtwcost = BigDecimal.ZERO;// wtw（生产）成本
-				BigDecimal cost = BigDecimal.ZERO;// 销售成本
-				BigDecimal wtwgrossProfit = BigDecimal.ZERO;// wtw毛利
-				BigDecimal grossProfit = BigDecimal.ZERO;// 毛利
-				Double wtwgrossProfitMargin = 0D;// wtw毛利率
-				Double grossProfitMargin = 0D;// 毛利率
-
-				for (ItemDto item : items) {
-					if (item.getMaterialGroupCode().equals(entity.getCode())) {
-						// 1.	金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣
-						BigDecimal saleAmount = BigDecimal
-								.valueOf((item.getActualPrice() + item.getOptionalActualPrica()) * item.getQuantity());
-						amount = amount.add(saleAmount);
-						// 成本（销售）
-						cost = cost.add(BigDecimal.valueOf(item.getTransationPrice() * item.getQuantity()));
-						// 成本（生产）
-						wtwcost = wtwcost.add(BigDecimal.valueOf(item.getStandardPrice() * item.getQuantity()));
-					}
-				}
-				// 2.	不含税金额=金额/(1+税率)
-				excludingTaxAmount = BigDecimal.valueOf(amount.doubleValue()/(1 + taxRate));
-				// 毛利=不含税金额-成本
-				grossProfit = excludingTaxAmount.subtract(cost);
-				// 毛利（生产）=不含税金额-成本（生产）
-				wtwgrossProfit = excludingTaxAmount.subtract(wtwcost);
-				// 毛利率
-				grossProfitMargin = this.calculateGrossProfit(excludingTaxAmount, cost);
-				// WTW（生产）毛利率
-				wtwgrossProfitMargin = this.calculateGrossProfit(excludingTaxAmount, wtwcost);
-
-				sumAmount = sumAmount.add(amount);
-				sumExcludingTaxAmount = sumExcludingTaxAmount.add(excludingTaxAmount);
-				sumWtwCost = sumWtwCost.add(wtwcost);
-				sumCost = sumCost.add(cost);
-				sumWtwGrossProfit = sumWtwGrossProfit.add(wtwgrossProfit);
-				sumGrossProfit = sumGrossProfit.add(grossProfit);
-
-				entity.setAmount(amount.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setExcludingTaxAmount(excludingTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setWtwCost(wtwcost.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setCost(cost.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setWtwGrossProfit(wtwgrossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setGrossProfit(grossProfit.setScale(2, BigDecimal.ROUND_HALF_UP));
-				entity.setWtwGrossProfitMargin(
-						BigDecimal.valueOf(wtwgrossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-				entity.setGrossProfitMargin(
-						BigDecimal.valueOf(grossProfitMargin).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-			}
-
-		} else {
-			throw new RuntimeException("订单行项目为空，无法计算毛利率！");
-		}
-
-		MaterialGroups sumssg = new MaterialGroups();
-		sumssg.setAmount(sumAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
-		sumssg.setExcludingTaxAmount(sumExcludingTaxAmount.setScale(2, BigDecimal.ROUND_HALF_UP));
-		sumssg.setWtwCost(sumWtwCost.setScale(2, BigDecimal.ROUND_HALF_UP));
-		sumssg.setCost(sumCost.setScale(2, BigDecimal.ROUND_HALF_UP));
-		sumssg.setWtwGrossProfit(sumWtwGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
-		sumssg.setGrossProfit(sumGrossProfit.setScale(4, BigDecimal.ROUND_HALF_UP));
-		// WTW毛利率
-		sumWtwGrossProfitMargin = this.calculateGrossProfit(sumExcludingTaxAmount, sumWtwCost);
-		// 毛利率
-		sumGrossProfitMargin = this.calculateGrossProfit(sumExcludingTaxAmount, sumCost);
-		sumssg.setWtwGrossProfitMargin(sumWtwGrossProfitMargin);
-		sumssg.setGrossProfitMargin(sumGrossProfitMargin);
-		sumssg.setCode("sum");
-		sumssg.setName("合计");
-
-		groups.add(sumssg);
-
-		return groups;
-	}
-
-	private Double calculateGrossProfit(BigDecimal afterTaxAmount, BigDecimal cost) {
-		Double v = 0D;
-		BigDecimal profit = afterTaxAmount.subtract(cost);
-		if (profit.compareTo(BigDecimal.ZERO) == 0) {
-			return 0d;
-		}
-		try {
-			v = profit.divide(afterTaxAmount, 4, BigDecimal.ROUND_HALF_UP).doubleValue();
-		} catch (ArithmeticException e) {
-			e.printStackTrace();
-		}
-
-		return v;
-	}
 
 	/**
 	 * 
@@ -1201,7 +1082,7 @@ public class OrderService {
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
 		}
-		List<MaterialGroups> grossProfitMargins = this.calculateGrossProfit(order);
+		List<MaterialGroups> grossProfitMargins = grossProfitMarginService.calculate(order);
 		MaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 
 		BpmOrder bpmOrder = new BpmOrder();
@@ -1270,9 +1151,9 @@ public class OrderService {
 				bpmItems.add(bpmItem);
 
 				bpmItem.setActuralAmount(itemDto.getActualPrice() * itemDto.getQuantity());
-				bpmItem.setActuralAmountOfOptional(itemDto.getOptionalActualPrica() * itemDto.getQuantity());
+				bpmItem.setActuralAmountOfOptional(itemDto.getOptionalActualPrice() * itemDto.getQuantity());
 				bpmItem.setActuralPrice(itemDto.getActualPrice());
-				bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrica());
+				bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrice());
 				bpmItem.setAddress(StringUtils.trimToEmpty(itemDto.getAddress()));
 				bpmItem.setB2cAmountEstimated(itemDto.getB2cEstimatedPrice() * itemDto.getQuantity());
 				bpmItem.setB2cComments(StringUtils.trimToEmpty(itemDto.getB2cComments()));
@@ -1397,7 +1278,7 @@ public class OrderService {
 						.setScale(4, RoundingMode.HALF_UP).doubleValue());
 
 				// calculate gross profit margin
-				List<MaterialGroups> margin = calculateGrossProfit(orderDto);
+				List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
 				orderInfo.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
 				orderInfoMapper.update(orderInfo);

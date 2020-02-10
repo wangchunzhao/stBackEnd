@@ -1,10 +1,7 @@
 package com.qhc.frye.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.assertj.core.util.Arrays;
@@ -27,6 +24,7 @@ import com.qhc.order.domain.sap.SapOrderPlan;
 import com.qhc.order.domain.sap.SapOrderPrice;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
+import com.qhc.order.service.GrossProfitMarginService;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.system.domain.PageHelper;
@@ -39,6 +37,9 @@ class OrderServiceTest {
 	
 	@Autowired
 	OrderInfoMapper orderInfoMapper;
+	
+	@Autowired
+	GrossProfitMarginService grossProfitMarginService;
 
 	@Test
 	void testGetOrderOption() {
@@ -259,7 +260,7 @@ class OrderServiceTest {
 		query.setIncludeDetail(true);
 		PageInfo<OrderDto> result = orderService.findOrders(query);
 		OrderDto order = result.getList().get(0);
-		List<MaterialGroups> groups = orderService.calculateGrossProfit(order);
+		List<MaterialGroups> groups = grossProfitMarginService.calculate(order);
 		System.out.println(groups);
 	}
 
