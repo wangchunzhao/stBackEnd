@@ -67,6 +67,6 @@ public interface SpecialOrderApplicationMapper {
 	 */
 	int deleteById(Integer id);
 
-	List<SpecialOrderApplication> findByOrderVersionId(Integer kOrdersId);
+	SpecialOrderApplication findByOrderInfo(Integer orderInfoId);
 
 }

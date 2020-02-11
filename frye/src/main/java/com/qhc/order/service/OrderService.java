@@ -49,6 +49,7 @@ import com.qhc.order.entity.Item;
 import com.qhc.order.entity.ItemAttachment;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
+import com.qhc.order.entity.SpecialOrderApplication;
 import com.qhc.order.mapper.AttachmentMapper;
 import com.qhc.order.mapper.BillingPlanMapper;
 import com.qhc.order.mapper.BpmDicisionMapper;
@@ -58,6 +59,7 @@ import com.qhc.order.mapper.ItemAttachmentMapper;
 import com.qhc.order.mapper.ItemMapper;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
+import com.qhc.order.mapper.SpecialOrderApplicationMapper;
 import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
@@ -162,6 +164,9 @@ public class OrderService {
 	
 	@Autowired
 	private GrossProfitMarginService grossProfitMarginService;
+	
+	@Autowired
+	private SpecialOrderApplicationMapper specialOrderApplicationMapper;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		Order order = new Order();
@@ -1236,7 +1241,30 @@ public class OrderService {
 			Double unitDiscount) throws Exception {
 		OrderInfo orderInfo = orderInfoMapper.findByParams(null, sequenceNumber, null, "1").get(0);
 		Order order = orderMapper.findById(orderInfo.getOrderId());
+		
+		String orderStatus = orderInfo.getStatus();
+		// 如果定状态已经是bpm审批通过，而存在未审批通过的特批发货申请，则修改特批发货申请状态
+		if (OrderDto.ORDER_STATUS_APPROVED_UPDATE.equals(orderStatus) || OrderDto.ORDER_STATUS_APPROVED.equals(orderStatus)) {
+			SpecialOrderApplication specialOrderApplication = specialOrderApplicationMapper.findByOrderInfo(orderInfo.getId());
+			if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals("1")) {
+				if (status.equals("1")) {
+					// 审批通过
+					specialOrderApplication.setApplyStatus(2);
+				} else {
+					// 审批拒绝
+					specialOrderApplication.setApplyStatus(3);
+				}
+				
+				specialOrderApplication.setApprovalTime(new Date());
+				specialOrderApplication.setApprover(user);
+				
+				specialOrderApplicationMapper.update(specialOrderApplication);
+			}
+			
+			return;
+		}
 
+		// 更新订单信息
 		BpmDicision bpmDicision = new BpmDicision();
 		bpmDicision.setOrderInfoId(orderInfo.getId());
 		bpmDicision.setBodyDiscount(orderInfo.getBodyDiscount());

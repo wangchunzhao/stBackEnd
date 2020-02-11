@@ -82,66 +82,73 @@
 	
 	<sql id="Where_By_Params" >
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			oi.status = '05' or oi.status = '06')
+			<if test="sequenceNumber != null" >
+				AND o.sequence_number like '%${sequenceNumber, jdbcType=INTEGER}%'
+			</if>
+			<if test="orderStartCreateTime != null" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{orderStartCreateTime, jdbcType=VARCHAR}
+			]]>
+			</if>
+			<if test="orderEndCreateTime != null" >
+			<![CDATA[
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{orderEndCreateTime, jdbcType=VARCHAR}
+			]]>
+			</if>
+			<if test="orderStatus != null" >
+				AND oi.status = #{orderStatus, jdbcType=VARCHAR}
+			</if>
 			<if test="id != null" >
-				AND k_special_order_application.id = #{id, jdbcType=INTEGER}
+				AND soa.id = #{id, jdbcType=INTEGER}
 			</if>
 			<if test="orderInfoId != null" >
-				AND k_special_order_application.order_info_id = #{orderInfoId, jdbcType=INTEGER}
+				AND soa.order_info_id = #{orderInfoId, jdbcType=INTEGER}
 			</if>
 			<if test="applyer != null and applyer != ''" >
-				AND k_special_order_application.applyer = #{applyer, jdbcType=VARCHAR}
+				AND soa.applyer = #{applyer, jdbcType=VARCHAR}
 			</if>
 			<if test="approver != null and approver != ''" >
-				AND k_special_order_application.approver = #{approver, jdbcType=VARCHAR}
+				AND soa.approver = #{approver, jdbcType=VARCHAR}
 			</if>
 			<if test="applyTime != null" >
-				AND k_special_order_application.apply_time = #{applyTime, jdbcType=TIMESTAMP}
-			</if>
-			<if test="approvalTime != null" >
-				AND k_special_order_application.approval_time = #{approvalTime, jdbcType=TIMESTAMP}
+				AND soa.apply_time = #{applyTime, jdbcType=TIMESTAMP}
 			</if>
 			<if test="applyStatus != null" >
-				AND k_special_order_application.apply_status = #{applyStatus, jdbcType=INTEGER}
+				AND soa.apply_status = #{applyStatus, jdbcType=INTEGER}
 			</if>
-			<if test="receiveMailTime != null and receiveMailTime != ''" >
-				AND k_special_order_application.receive_mail_time = #{receiveMailTime, jdbcType=VARCHAR}
+			<if test="approvalTime != null" >
+				AND soa.approval_time = #{approvalTime, jdbcType=TIMESTAMP}
 			</if>
-			<if test="contractTime != null and contractTime != ''" >
-				AND k_special_order_application.contract_time = #{contractTime, jdbcType=VARCHAR}
-			</if>
-			<if test="payAdvancePaymentTime != null and payAdvancePaymentTime != ''" >
-				AND k_special_order_application.pay_advance_payment_time = #{payAdvancePaymentTime, jdbcType=VARCHAR}
-			</if>
-			<if test="remark != null and remark != ''" >
-				AND k_special_order_application.remark = #{remark, jdbcType=VARCHAR}
-			</if>
-			<if test="enclosurePath != null and enclosurePath != ''" >
-				AND k_special_order_application.enclosure_path = #{enclosurePath, jdbcType=VARCHAR}
-			</if>
-			<if test="enclosureName != null and enclosureName != ''" >
-				AND k_special_order_application.enclosure_name = #{enclosureName, jdbcType=VARCHAR}
-			</if>
-			
-			<include refid="Where_Clause" />
 		</trim>
-	</sql>
-	
-	<sql id="Where_Clause">
-		
 	</sql>
 	
 	<!-- 按参数统计 -->
 	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
 		select count(1) 
-		from k_special_order_application
+        from k_order_info oi 
+        LEFT JOIN k_order o ON o.id = oi.order_id
+        LEFT JOIN sap_customer c on c.code = o.customer_code
+        LEFT JOIN k_special_order_application soa ON soa.order_info_id = oi.id
 		<include refid="Where_By_Params" />
 	</select>
 	
 	<!-- 按参数查询 -->
 	<select id="findByParams" resultMap="SpecialOrderApplicationMap" parameterType="Map" >
 		select 
-		<include refid="Column_List" />
-		from k_special_order_application
+	        oi.contract_number,
+	        o.sequence_number,
+	        o.customer_code,
+	        c.name as customer_name,
+	        o.customer_clazz,
+	        oi.discount,
+	        oi.create_time,
+	        oi.status,
+			soa.*
+        from k_order_info oi 
+        LEFT JOIN k_order o ON o.id = oi.order_id
+        LEFT JOIN sap_customer c on c.code = o.customer_code
+        LEFT JOIN k_special_order_application soa ON soa.order_info_id = oi.id
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -151,5 +158,13 @@
 				order by id
 			</otherwise>
 		</choose>
+	</select>
+	
+	<!-- 按主键查询 -->
+	<select id="findByOrderInfo" resultMap="SpecialOrderApplicationMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_special_order_application 
+		where k_special_order_application.order_info_id = #{orderInfoId, jdbcType=INTEGER}
 	</select>
 </mapper>

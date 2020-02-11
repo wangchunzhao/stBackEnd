@@ -24,10 +24,6 @@ public class SpecialDeliveryService {
 		return sd;
 	}
 
-	public List<SpecialOrderApplication> findByOrdersId(Integer ordersId) {
-		return specialOrderApplicationMapper.findByOrderVersionId(ordersId);
-	}
-
 	public SpecialOrderApplication findById(Integer applyId) {
 		return specialOrderApplicationMapper.findById(applyId);
 	}
