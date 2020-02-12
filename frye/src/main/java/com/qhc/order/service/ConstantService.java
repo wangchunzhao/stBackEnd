@@ -341,7 +341,7 @@ public class ConstantService {
 		if (installationTerms == null || installationTerms.isEmpty()) {
 			installationTerms = new LinkedHashMap<String, String>();
 			installationTerms.put("01", "招标");
-			installationTerms.put("02", "自装自提");
+			installationTerms.put("02", "自安自保");
 		}
 
 		return installationTerms;
