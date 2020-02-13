@@ -123,7 +123,7 @@ public class SapSyncController {
 		}
 	}
 	
-	@ApiOperation(value = "同步sap的priceA信息并写入销售工具数据库")
+	@ApiOperation(value = "同步sap的price信息并写入销售工具数据库")
 	@GetMapping(value = "sycPrice")
 	@ResponseStatus(HttpStatus.OK)
 	public void sycPrices() throws Exception {
