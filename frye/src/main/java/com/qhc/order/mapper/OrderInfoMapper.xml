@@ -98,7 +98,7 @@
 			is_longterm, is_special, payment_type, 
 			is_term1, is_term2, is_term3, 
 			install_fee, material_fee, electrical_fee, 
-			refrigeratory_fee, maintenance_fee, additionalFreight, earliest_delivery_date, 
+			refrigeratory_fee, maintenance_fee, additional_freight, earliest_delivery_date, 
 			earliest_product_date, is_b2c, is_bulk_cargo, is_urgent_delivery, 
 			unpredictable, gross_profit_margin, 
 			comments, submit_time, bpm_submit_time, 
