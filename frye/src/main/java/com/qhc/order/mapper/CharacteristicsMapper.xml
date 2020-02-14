@@ -99,7 +99,8 @@
 			ic.is_configurable as configurable,
 			c.name as key_name,
 			cv.name as value_name,
-			c.is_optional as optional
+			c.is_optional as optional,
+			0 as color
 		from k_characteristics ic
 		left join sap_characteristic c on c.code = ic.key_code 
 		left join sap_characteristic_value cv on cv.code = ic.value_code and cv.sap_characteristic_code = ic.key_code
@@ -122,7 +123,8 @@
 			ic.value_code, 
 			ic.is_configurable as configurable,
 			c.name as key_name,
-			cv.name as value_name
+			cv.name as value_name,
+			0 as color
 		from k_characteristics ic
 		left join sap_characteristic c on c.code = ic.key_code 
 		left join sap_characteristic_value cv on cv.code = ic.value_code and cv.sap_characteristic_code = ic.key_code

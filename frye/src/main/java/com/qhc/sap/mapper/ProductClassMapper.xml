@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.sap.mapper.ProductClassMapper" >
+	<resultMap id="ProductClassBaseMap" type="com.qhc.sap.entity.ProductClass" >
+		<id column="product_class" property="productClass" jdbcType="VARCHAR" />
+		<id column="painting_class" property="paintingClass" jdbcType="VARCHAR" />
+		<result column="color_class" property="colorClass" jdbcType="VARCHAR" />
+		<result column="default_color" property="defaultColor" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ProductClassMap" type="com.qhc.sap.entity.ProductClass" extends="ProductClassBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.sap.entity.ProductClass">
+		insert into sap_product_class ( product_class, painting_class, color_class, 
+			default_color )
+		values ( #{productClass, jdbcType=VARCHAR}, #{paintingClass, jdbcType=VARCHAR}, #{colorClass, jdbcType=VARCHAR}, 
+			#{defaultColor, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.sap.entity.ProductClass" >
+		update sap_product_class
+		set color_class = #{colorClass, jdbcType=VARCHAR}, 
+			default_color = #{defaultColor, jdbcType=VARCHAR}
+		where product_class = #{productClass, jdbcType=VARCHAR}
+			and painting_class = #{paintingClass, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="com.qhc.sap.entity.ProductClass" >
+		delete from sap_product_class
+		where product_class = #{productClass, jdbcType=VARCHAR} 
+			and painting_class = #{paintingClass, jdbcType=VARCHAR} 
+	</delete>
+
+	<sql id="Base_Column_List" >
+		sap_product_class.product_class, sap_product_class.painting_class, sap_product_class.color_class, sap_product_class.default_color
+		,sap_painting_class.painting_parts
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ProductClassMap" parameterType="com.qhc.sap.entity.ProductClass" >
+		select 
+		<include refid="Column_List" />
+		from sap_product_class 
+		left join sap_painting_class on sap_painting_class.painting_class = sap_product_class.painting_class
+		where sap_product_class.product_class = #{productClass, jdbcType=VARCHAR} 
+			and sap_product_class.painting_class = #{paintingClass, jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ProductClassMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from sap_product_class
+		left join sap_painting_class on sap_painting_class.painting_class = sap_product_class.painting_class
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by product_class , painting_class 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from sap_product_class
+		left join sap_painting_class on sap_painting_class.painting_class = sap_product_class.painting_class
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="productClass != null and productClass != ''" >
+				AND sap_product_class.product_class = #{productClass, jdbcType=VARCHAR}
+			</if>
+			<if test="paintingClass != null and paintingClass != ''" >
+				AND sap_product_class.painting_class = #{paintingClass, jdbcType=VARCHAR}
+			</if>
+			<if test="colorClass != null and colorClass != ''" >
+				AND sap_product_class.color_class = #{colorClass, jdbcType=VARCHAR}
+			</if>
+			<if test="defaultColor != null and defaultColor != ''" >
+				AND sap_product_class.default_color = #{defaultColor, jdbcType=VARCHAR}
+			</if>
+			<if test="materialCode != null and materialCode != ''" >
+				AND sap_product_class.product_class = (select product_class from sap_material_product_class where material_code = #{materialCode, jdbcType=VARCHAR})
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>

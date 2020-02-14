@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.sap.mapper.MaterialProductClassMapper" >
+	<resultMap id="MaterialProductClassBaseMap" type="com.qhc.sap.entity.MaterialProductClass" >
+		<id column="material_code" property="materialCode" jdbcType="VARCHAR" />
+		<result column="product_class" property="productClass" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="MaterialProductClassMap" type="com.qhc.sap.entity.MaterialProductClass" extends="MaterialProductClassBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.sap.entity.MaterialProductClass">
+		insert into sap_material_product_class ( product_class )
+		values ( #{productClass, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.sap.entity.MaterialProductClass" >
+		update sap_material_product_class
+		set product_class = #{productClass, jdbcType=VARCHAR}
+		where material_code = #{materialCode, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from sap_material_product_class
+		where material_code = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		sap_material_product_class.material_code, sap_material_product_class.product_class
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="MaterialProductClassMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from sap_material_product_class 
+		where sap_material_product_class.material_code = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="MaterialProductClassMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from sap_material_product_class
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by material_code
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from sap_material_product_class
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="materialCode != null and materialCode != ''" >
+				AND sap_material_product_class.material_code = #{materialCode, jdbcType=VARCHAR}
+			</if>
+			<if test="productClass != null and productClass != ''" >
+				AND sap_material_product_class.product_class = #{productClass, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>

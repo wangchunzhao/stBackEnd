@@ -47,6 +47,7 @@ import com.qhc.order.entity.Characteristics;
 import com.qhc.order.entity.DeliveryAddress;
 import com.qhc.order.entity.Item;
 import com.qhc.order.entity.ItemAttachment;
+import com.qhc.order.entity.ItemColor;
 import com.qhc.order.entity.Order;
 import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.entity.SpecialOrderApplication;
@@ -56,6 +57,7 @@ import com.qhc.order.mapper.BpmDicisionMapper;
 import com.qhc.order.mapper.CharacteristicsMapper;
 import com.qhc.order.mapper.DeliveryAddressMapper;
 import com.qhc.order.mapper.ItemAttachmentMapper;
+import com.qhc.order.mapper.ItemColorMapper;
 import com.qhc.order.mapper.ItemMapper;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
@@ -67,6 +69,7 @@ import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
+import com.qhc.sap.entity.ProductClass;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
 import com.qhc.sap.mapper.SapViewMapper;
@@ -122,6 +125,9 @@ public class OrderService {
 
 	@Autowired
 	CharacteristicsMapper characteristicsMapper;
+
+	@Autowired
+	ItemColorMapper itemColorMapper;
 
 	@Autowired
 	SapViewMapper sapViewMapper;
@@ -397,6 +403,7 @@ public class OrderService {
 
 	private void saveItems(OrderDto orderDto) throws Exception {
 		Integer orderInfoId = orderDto.getId();
+		// 先刪除訂單所有行項目及關聯表數據
 		deleteItems(orderInfoId);
 		List<ItemDto> items = orderDto.getItems();
 		for (ItemDto itemDto : items) {
@@ -409,21 +416,32 @@ public class OrderService {
 
 			itemMapper.insert(item);
 
+			String colorOptions = "";
 			List<CharacteristicDto> configs = itemDto.getConfigs();
 			if (configs != null && configs.size() > 0) {
 				for (CharacteristicDto dto : configs) {
-					Characteristics c = new Characteristics();
-
-					BeanUtils.copyProperties(c, dto);
-					c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
-
-					c.setId(null);
-					c.setItemId(item.getId());
-
-					characteristicsMapper.insert(c);
+					if (dto.isColor()) {
+						ItemColor itemColor = new ItemColor();
+						itemColor.setItemId(item.getId());
+						itemColor.setPaintingClass(dto.getKeyCode());
+						itemColor.setColorCode(dto.getValueCode());
+						
+						itemColorMapper.insert(itemColor);
+						colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
+					} else {
+						Characteristics c = new Characteristics();
+	
+						BeanUtils.copyProperties(c, dto);
+						c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
+	
+						c.setId(null);
+						c.setItemId(item.getId());
+	
+						characteristicsMapper.insert(c);
+					}
 				}
-			} else if (itemDto.getIsConfigurable()) {
-				// 可配置物料但没有配置调研表，取默认值
+			} else {
+				// 没有配置调研表，取默认值
 				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode(),
 						orderDto.getCustomerIndustry());
 				for (Characteristic c : characs) {
@@ -440,7 +458,22 @@ public class OrderService {
 						});
 					}
 				}
+				
+				// 取默認顔色配置信息
+				List<ProductClass> productClassList = materialService.getMaterialColorConfig(itemDto.getMaterialCode());
+				for (ProductClass productClass : productClassList) {
+					ItemColor itemColor = new ItemColor();
+					itemColor.setItemId(item.getId());
+					itemColor.setPaintingClass(productClass.getPaintingClass());
+					itemColor.setColorCode(productClass.getDefaultColor());
+					
+					itemColorMapper.insert(itemColor);
+					colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
+				}
 			}
+			colorOptions = colorOptions.length() > 0 ? colorOptions.substring(1) : colorOptions;
+			item.setColorOptions(colorOptions);
+			itemMapper.update(item);
 			
 			// 保存调研表附件
 			List<ItemAttachment> attachments = itemDto.getAttachments();
@@ -455,6 +488,9 @@ public class OrderService {
 	}
 
 	private void deleteItems(Integer orderInfoId) {
+		// delete k_item_color
+		this.itemColorMapper.deleteByOrderInfoId(orderInfoId);
+		
 		// delete k_characteristics
 		this.characteristicsMapper.deleteByOrderInfoId(orderInfoId);
 		
@@ -1016,9 +1052,15 @@ public class OrderService {
 				});
 			}
 
-			// characteristics
-			List<CharacteristicDto> configs = characteristicsMapper.findByItemId(itemId);
+			List<CharacteristicDto> configs = new ArrayList<>();
 			item.setConfigs(configs);
+			
+			// colors
+			List<CharacteristicDto> colors = itemColorMapper.findByItemId(itemId);
+			configs.addAll(colors);
+			// characteristics
+			List<CharacteristicDto> characteristics = characteristicsMapper.findByItemId(itemId);
+			configs.addAll(characteristics);
 			
 			// item attachment
 			List<ItemAttachment> attachments = itemAttachmentMapper.findByItemId(itemId);

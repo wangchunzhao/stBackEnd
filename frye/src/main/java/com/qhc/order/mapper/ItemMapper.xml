@@ -27,10 +27,11 @@
 		<result column="b2c_comments" property="b2cComments" jdbcType="VARCHAR" />
 		<result column="special_comments" property="specialComments" jdbcType="VARCHAR" />
 		<result column="color_comments" property="colorComments" jdbcType="VARCHAR" />
+		<result column="color_options" property="colorOptions" jdbcType="VARCHAR" />
 		<result column="volume_cube" property="volumeCube" jdbcType="DECIMAL" />
 		<result column="freight" property="freight" jdbcType="DECIMAL" />
 		<result column="is_virtual" property="isVirtual" jdbcType="INTEGER" />
-		<result column="config_comments" property="configComments" jdbcType="CHAR" />
+		<result column="config_comments" property="configComments" jdbcType="VARCHAR" />
 		<result column="mosaic_image" property="mosaicImage" jdbcType="VARCHAR" />
 		<result column="attached_image" property="attachedImage" jdbcType="VARCHAR" />
 		<result column="request_brand" property="requestBrand" jdbcType="VARCHAR" />
@@ -66,7 +67,7 @@
 			attached_image, request_brand, request_package, 
 			request_nameplate, request_circult, config_transfer_price, 
 			config_retail_price, is_configurable, clazz_code, 
-			comments )
+			comments, color_options )
 		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{rowNum, jdbcType=INTEGER}, 
 			#{materialCode, jdbcType=VARCHAR}, #{quantity, jdbcType=DOUBLE}, #{itemCategory, jdbcType=VARCHAR}, 
 			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
@@ -76,11 +77,11 @@
 			#{onStoreDate, jdbcType=DATE}, #{deliveryDate, jdbcType=DATE}, #{shippDate, jdbcType=DATE}, 
 			#{period, jdbcType=INTEGER}, #{b2cComments, jdbcType=VARCHAR}, #{specialComments, jdbcType=VARCHAR}, 
 			#{colorComments, jdbcType=VARCHAR}, #{volumeCube, jdbcType=DECIMAL}, #{freight, jdbcType=DECIMAL}, 
-			#{isVirtual, jdbcType=INTEGER}, #{configComments, jdbcType=CHAR}, #{mosaicImage, jdbcType=VARCHAR}, 
+			#{isVirtual, jdbcType=INTEGER}, #{configComments, jdbcType=VARCHAR}, #{mosaicImage, jdbcType=VARCHAR}, 
 			#{attachedImage, jdbcType=VARCHAR}, #{requestBrand, jdbcType=VARCHAR}, #{requestPackage, jdbcType=VARCHAR}, 
 			#{requestNameplate, jdbcType=VARCHAR}, #{requestCircult, jdbcType=VARCHAR}, #{configTransferPrice, jdbcType=DECIMAL}, 
 			#{configRetailPrice, jdbcType=DECIMAL}, #{isConfigurable, jdbcType=INTEGER}, #{clazzCode, jdbcType=VARCHAR}, 
-			#{comments, jdbcType=VARCHAR} )
+			#{comments, jdbcType=VARCHAR}, #{colorOptions, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -113,7 +114,7 @@
 			volume_cube = #{volumeCube, jdbcType=DECIMAL}, 
 			freight = #{freight, jdbcType=DECIMAL}, 
 			is_virtual = #{isVirtual, jdbcType=INTEGER}, 
-			config_comments = #{configComments, jdbcType=CHAR}, 
+			config_comments = #{configComments, jdbcType=VARCHAR}, 
 			mosaic_image = #{mosaicImage, jdbcType=VARCHAR}, 
 			attached_image = #{attachedImage, jdbcType=VARCHAR}, 
 			request_brand = #{requestBrand, jdbcType=VARCHAR}, 
@@ -124,7 +125,8 @@
 			config_retail_price = #{configRetailPrice, jdbcType=DECIMAL}, 
 			is_configurable = #{isConfigurable, jdbcType=INTEGER}, 
 			clazz_code = #{clazzCode, jdbcType=VARCHAR}, 
-			comments = #{comments, jdbcType=VARCHAR}
+			comments = #{comments, jdbcType=VARCHAR}, 
+			color_options = #{colorOptions, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
@@ -142,7 +144,8 @@
 		k_item.shipp_date, k_item.period, k_item.b2c_comments, k_item.special_comments, k_item.color_comments, 
 		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 
 		k_item.attached_image, k_item.request_brand, k_item.request_package, k_item.request_nameplate, k_item.request_circult, 
-		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments
+		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments, 
+		k_item.color_options
 	</sql>
 	
 	<sql id="Column_List">

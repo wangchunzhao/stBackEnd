@@ -8,37 +8,32 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageInfo;
+import com.qhc.exception.NotMatchException;
 import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
-import com.qhc.sap.domain.BomBodyParam;
-import com.qhc.sap.domain.MaterialBom;
-import com.qhc.sap.domain.BomHeadParam;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.Configuration;
-import com.qhc.sap.domain.DefaultCharacteristicsDto;
+import com.qhc.sap.domain.MaterialBom;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.ClazzCharacteristicValueView;
-import com.qhc.sap.entity.SapCharacteristicDefault;
+import com.qhc.sap.entity.ColorClass;
+import com.qhc.sap.entity.LastUpdated;
 import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.MaterialPrice;
-import com.qhc.sap.entity.LastUpdated;
-import com.qhc.sap.entity.MaterialView;
+import com.qhc.sap.entity.MaterialProductClass;
+import com.qhc.sap.entity.ProductClass;
+import com.qhc.sap.entity.SapCharacteristicDefault;
 import com.qhc.sap.entity.identity.MaterialClazzIdentity;
+import com.qhc.sap.mapper.ColorClassMapper;
+import com.qhc.sap.mapper.MaterialProductClassMapper;
+import com.qhc.sap.mapper.ProductClassMapper;
 import com.qhc.sap.mapper.SapViewMapper;
-import com.qhc.system.domain.PageHelper;
-import com.qhc.utils.HttpUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.pagehelper.PageInfo;
-import com.qhc.exception.NotExistException;
-import com.qhc.exception.NotMatchException;
-import com.qhc.order.service.BayernService;
 
 @Service
 public class MaterialService {
@@ -72,6 +67,15 @@ public class MaterialService {
 
 	@Autowired
 	private CharacteristicDefaultRepository defaultCharacterRep;
+
+	@Autowired
+	private MaterialProductClassMapper materialProductClassMapper;
+
+	@Autowired
+	private ProductClassMapper productClassMapper;
+
+	@Autowired
+	private ColorClassMapper colorClassMapper;
 
 	public void saveMaterials(List<MaterialDto> materials) {
 		Set<Material> mset = new HashSet<Material>();
@@ -178,46 +182,65 @@ public class MaterialService {
 	 */
 	public List<Characteristic> getCharactersByClazzCode(String materialCode, String clazzCode)
 			throws NotMatchException {
+		// character list
+		List<Characteristic> chas = new ArrayList<Characteristic>();
+		// 物料颜色特征
+		Map<String, Object> params = new HashMap<>();
+		params.put("materialCode", materialCode);
+		List<ProductClass> productClassList = productClassMapper.findByParams(params);
+		List<ColorClass> colorClassList = colorClassMapper.findByParams(null);
+		for (ProductClass productClass : productClassList) {
+			Characteristic ch = new Characteristic();
+			chas.add(ch);
+			ch.setCode(productClass.getPaintingClass());
+			ch.setName(productClass.getPaintingParts());
+			ch.setOptional(true);
+			ch.setColor(true);
+			ch.setClassCode(productClass.getProductClass());
+			for (ColorClass colorClass : colorClassList) {
+				if (colorClass.getColorClass().equals(productClass.getColorClass())) {
+					Configuration cfg = new Configuration();
+					ch.getConfigs().add(cfg);
+					
+					cfg.setCode(colorClass.getColorCode());
+					cfg.setName(colorClass.getColorDescription());
+					cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
+				}
+			}
+		}
+		
+		// 物料特征
 		List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		Set<Integer> ids = new HashSet<Integer>();
 		for (SapCharacteristicDefault dc : defaultValues) {
 			ids.add(dc.getValueId());
 		}
-		// temp valiable
+		// template variable
 		Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
 		for (ClazzCharacteristicValueView cc : ccs) {
-			Configuration con = new Configuration();
-			if (!cs.containsKey(cc.getKeyCode())) {
-				Characteristic ch = new Characteristic();
+			Characteristic ch = cs.get(cc.getKeyCode());
+			if (ch == null) {
+				ch = new Characteristic();
 				ch.setCode(cc.getKeyCode());
 				ch.setName(cc.getKeyName());
 				ch.setOptional(false);
+				ch.setColor(false);
 				ch.setClassCode(clazzCode);
 				cs.put(cc.getKeyCode(), ch);
-
-				con.setCode(cc.getValueCode());
-				con.setName(cc.getValueName());
-
-				ch.getConfigs().add(con);
-			} else {
-				con.setCode(cc.getValueCode());
-				con.setName(cc.getValueName());
-				cs.get(cc.getKeyCode()).getConfigs().add(con);
+				chas.add(ch);
 			}
-			//
+			Configuration con = new Configuration();
+			ch.getConfigs().add(con);
+			con.setCode(cc.getValueCode());
+			con.setName(cc.getValueName());
 			if (ids.contains(cc.getId())) {
 				con.setDefault(true);
 			} else {
 				con.setDefault(false);
 			}
 		}
-		// character list
-		List<Characteristic> chas = new ArrayList<Characteristic>();
-		for (String key : cs.keySet()) {
-			chas.add(cs.get(key));
-		}
-		//
+
 		return chas;
 	}
 
@@ -260,5 +283,20 @@ public class MaterialService {
 				bom.setRetailPrice(m.getRetailPrice());
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param materialCode 物料
+	 * @param clazzCode 物料特征分组
+	 * @return
+	 */
+	public List<ProductClass> getMaterialColorConfig(String materialCode) {
+		MaterialProductClass materialProductClass = materialProductClassMapper.findById(materialCode);
+		Map<String, Object> params = new HashMap<>();
+		params.put("productClass", materialProductClass.getProductClass());
+		List<ProductClass> productClassList = productClassMapper.findByParams(params);
+		
+		return productClassList;
 	}
 }

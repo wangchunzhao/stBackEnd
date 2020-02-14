@@ -49,6 +49,8 @@ drop table if exists k_item;
 
 drop table if exists k_item_attachment;
 
+drop table if exists k_item_color;
+
 drop table if exists k_order;
 
 drop table if exists k_order_info;
@@ -65,9 +67,7 @@ drop table if exists sap_clazz;
 
 drop table if exists sap_clazz_and_character;
 
-drop table if exists sap_color_characteristic;
-
-drop table if exists sap_color_characteristic_value;
+drop table if exists sap_color_class;
 
 drop table if exists sap_currency;
 
@@ -93,6 +93,8 @@ drop table if exists sap_material_default_characteristic;
 
 drop table if exists sap_material_groups;
 
+drop table if exists sap_material_product_class;
+
 drop table if exists sap_materials;
 
 drop table if exists sap_materials_price;
@@ -101,9 +103,13 @@ drop table if exists sap_order_type;
 
 drop table if exists sap_order_type_and_customer_class;
 
+drop table if exists sap_painting_class;
+
 drop table if exists sap_payment_term_bidding_plan;
 
 drop table if exists sap_price_type;
+
+drop table if exists sap_product_class;
 
 drop table if exists sap_receive_terms;
 
@@ -448,15 +454,16 @@ create table k_item
    period               integer unsigned comment '生产/采购周期',
    b2c_comments         varchar(64) comment 'B2C备注',
    special_comments     varchar(64) comment '特殊备注',
-   color_comments       varchar(64) comment '颜色备注',
    volume_cube          decimal(13,2) comment '体积，待定',
    freight              decimal(13,2) comment '运费，待定',
    is_virtual           integer not null default 0 comment '工程虚拟物料
             0:由销售录入的行项目
             1: 非销售部门录入的行项目',
+   color_comments       varchar(64) comment '颜色备注',
+   color_options        varchar(100) comment '最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1',
+   mosaic_image         varchar(64) comment '拼接图备注',
+   attached_image       varchar(256) comment '拼接图附件',
    config_comments      varchar(256) comment '配置表备注(配置表页面)，待定',
-   mosaic_image         varchar(64) comment '拼接图备注，待定',
-   attached_image       varchar(256) comment '拼接图附件，待定',
    request_brand        varchar(64) comment '，待定',
    request_package      varchar(64) comment '，待定',
    request_nameplate    varchar(64) comment '，待定',
@@ -486,6 +493,21 @@ create table k_item_attachment
 );
 
 alter table k_item_attachment comment '行项目调研表附件';
+
+/*==============================================================*/
+/* Table: k_item_color                                          */
+/*==============================================================*/
+create table k_item_color
+(
+   id                   integer unsigned not null auto_increment,
+   item_id              integer not null comment '行项目ID',
+   product_class        varchar(10) not null comment '产品颜色系列号',
+   painting_class       varchar(10) not null comment '喷粉分组',
+   color_code           varchar(10) not null comment '颜色编码',
+   primary key (id)
+);
+
+alter table k_item_color comment '物料颜色选项结果';
 
 /*==============================================================*/
 /* Table: k_order                                               */
@@ -640,8 +662,9 @@ create table k_special_order_application
    apply_time           datetime not null comment '申请时间',
    approval_time        datetime comment '审批时间',
    apply_status         integer not null comment '0: 新建
-            1：同意
-            2：驳回',
+            1：提交bpm
+            2：同意
+            3：驳回',
    receive_mail_time    varchar(64) not null comment '收到邮件时间',
    contract_time        varchar(64) not null,
    pay_advance_payment_time varchar(64) not null,
@@ -707,30 +730,18 @@ create table sap_clazz_and_character
 );
 
 /*==============================================================*/
-/* Table: sap_color_characteristic                              */
+/* Table: sap_color_class                                       */
 /*==============================================================*/
-create table sap_color_characteristic
+create table sap_color_class
 (
-   code                 varchar(45) not null,
-   name                 varchar(64) not null,
-   sap_materials_code   varchar(18) not null,
-   primary key (code),
-   key code_UNIQUE (code)
+   color_class          varchar(10) not null comment '颜色分组',
+   color_code           varchar(10) not null comment '颜色可选项',
+   color_material_code  varchar(32) comment '粉末物料号码',
+   color_description    varchar(64) comment '颜色特性值描述',
+   primary key (color_class, color_code)
 );
 
-/*==============================================================*/
-/* Table: sap_color_characteristic_value                        */
-/*==============================================================*/
-create table sap_color_characteristic_value
-(
-   id                   integer not null auto_increment,
-   name                 varchar(64) not null,
-   code                 varchar(45) not null,
-   is_default           integer not null,
-   sap_color_characteristic_code varchar(45) not null,
-   primary key (id),
-   key seq_code (code)
-);
+alter table sap_color_class comment '颜色分组';
 
 /*==============================================================*/
 /* Table: sap_currency                                          */
@@ -906,6 +917,18 @@ create table sap_material_groups
 alter table sap_material_groups comment 'SAP物料分组';
 
 /*==============================================================*/
+/* Table: sap_material_product_class                            */
+/*==============================================================*/
+create table sap_material_product_class
+(
+   material_code        varchar(18) not null comment '物料编码',
+   product_class        varchar(10) not null comment '产品系列号',
+   primary key (material_code)
+);
+
+alter table sap_material_product_class comment '物料产品系列号关系';
+
+/*==============================================================*/
 /* Table: sap_materials                                         */
 /*==============================================================*/
 create table sap_materials
@@ -973,6 +996,18 @@ ZH0M	02
                                                       -&#';
 
 /*==============================================================*/
+/* Table: sap_painting_class                                    */
+/*==============================================================*/
+create table sap_painting_class
+(
+   painting_class       varchar(10) not null comment '喷粉部位编码',
+   painting_parts       varchar(64) not null comment '喷粉部位描述',
+   primary key (painting_class)
+);
+
+alter table sap_painting_class comment '产品喷粉部位';
+
+/*==============================================================*/
 /* Table: sap_payment_term_bidding_plan                         */
 /*==============================================================*/
 create table sap_payment_term_bidding_plan
@@ -1000,6 +1035,20 @@ ZH01	零售价
 ZH02	年采价 
 ZH03	客户折扣
                                    -&#&';
+
+/*==============================================================*/
+/* Table: sap_product_class                                     */
+/*==============================================================*/
+create table sap_product_class
+(
+   product_class        varchar(10) not null comment '产品系列号',
+   painting_class       varchar(10) not null comment '喷粉部位',
+   color_class          varchar(10) comment '颜色分组',
+   default_color        varchar(10) comment '默认颜色选项',
+   primary key (product_class, painting_class)
+);
+
+alter table sap_product_class comment '产品颜色系列';
 
 /*==============================================================*/
 /* Table: sap_receive_terms                                     */

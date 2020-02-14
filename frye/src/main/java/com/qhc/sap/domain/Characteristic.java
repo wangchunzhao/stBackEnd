@@ -15,6 +15,10 @@ public class Characteristic {
 	private String code;
 	private String name;
 	private boolean isOptional;
+
+	/* 颜色特征 */
+	private boolean color = false;
+	
 	private Set<Configuration> configs;
 	
 	public Characteristic() {
@@ -51,6 +55,14 @@ public class Characteristic {
 
 	public void setOptional(boolean isOptional) {
 		this.isOptional = isOptional;
+	}
+
+	public boolean isColor() {
+		return color;
+	}
+
+	public void setColor(boolean color) {
+		this.color = color;
 	}
 
 	public Set<Configuration> getConfigs() {

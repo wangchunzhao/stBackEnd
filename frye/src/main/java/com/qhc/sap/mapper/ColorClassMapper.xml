@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.sap.mapper.ColorClassMapper" >
+	<resultMap id="ColorClassBaseMap" type="com.qhc.sap.entity.ColorClass" >
+		<id column="color_class" property="colorClass" jdbcType="VARCHAR" />
+		<id column="color_code" property="colorCode" jdbcType="VARCHAR" />
+		<result column="color_material_code" property="colorMaterialCode" jdbcType="VARCHAR" />
+		<result column="color_description" property="colorDescription" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ColorClassMap" type="com.qhc.sap.entity.ColorClass" extends="ColorClassBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.sap.entity.ColorClass">
+		insert into sap_color_class ( color_class, color_code, color_material_code, 
+			color_description )
+		values ( #{colorClass, jdbcType=VARCHAR}, #{colorCode, jdbcType=VARCHAR}, #{colorMaterialCode, jdbcType=VARCHAR}, 
+			#{colorDescription, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.sap.entity.ColorClass" >
+		update sap_color_class
+		set color_material_code = #{colorMaterialCode, jdbcType=VARCHAR}, 
+			color_description = #{colorDescription, jdbcType=VARCHAR}
+		where color_class = #{colorClass, jdbcType=VARCHAR}
+			and color_code = #{colorCode, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="com.qhc.sap.entity.ColorClass" >
+		delete from sap_color_class
+		where color_class = #{colorClass, jdbcType=VARCHAR} 
+			and color_code = #{colorCode, jdbcType=VARCHAR} 
+	</delete>
+
+	<sql id="Base_Column_List" >
+		sap_color_class.color_class, sap_color_class.color_code, sap_color_class.color_material_code, sap_color_class.color_description
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ColorClassMap" parameterType="com.qhc.sap.entity.ColorClass" >
+		select 
+		<include refid="Column_List" />
+		from sap_color_class 
+		where sap_color_class.color_class = #{colorClass, jdbcType=VARCHAR} 
+			and sap_color_class.color_code = #{colorCode, jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ColorClassMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from sap_color_class
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by color_class , color_code 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from sap_color_class
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="colorClass != null and colorClass != ''" >
+				AND sap_color_class.color_class = #{colorClass, jdbcType=VARCHAR}
+			</if>
+			<if test="colorCode != null and colorCode != ''" >
+				AND sap_color_class.color_code = #{colorCode, jdbcType=VARCHAR}
+			</if>
+			<if test="colorMaterialCode != null and colorMaterialCode != ''" >
+				AND sap_color_class.color_material_code = #{colorMaterialCode, jdbcType=VARCHAR}
+			</if>
+			<if test="colorDescription != null and colorDescription != ''" >
+				AND sap_color_class.color_description = #{colorDescription, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>

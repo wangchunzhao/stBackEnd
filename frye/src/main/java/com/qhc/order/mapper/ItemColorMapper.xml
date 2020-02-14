@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.order.mapper.ItemColorMapper" >
+	<resultMap id="ItemColorBaseMap" type="com.qhc.order.entity.ItemColor" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="item_id" property="itemId" jdbcType="INTEGER" />
+		<result column="painting_class" property="paintingClass" jdbcType="VARCHAR" />
+		<result column="color_code" property="colorCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ItemColorMap" type="com.qhc.order.entity.ItemColor" extends="ItemColorBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.order.entity.ItemColor">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			select LAST_INSERT_ID() 
+		</selectKey>
+		insert into k_item_color ( id, item_id, painting_class, 
+			color_code )
+		values ( #{id, jdbcType=INTEGER}, #{itemId, jdbcType=INTEGER}, #{paintingClass, jdbcType=VARCHAR}, 
+			#{colorCode, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.order.entity.ItemColor" >
+		update k_item_color
+		set item_id = #{itemId, jdbcType=INTEGER}, 
+			painting_class = #{paintingClass, jdbcType=VARCHAR}, 
+			color_code = #{colorCode, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.Integer" >
+		delete from k_item_color
+		where id = #{value, jdbcType=INTEGER}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		k_item_color.id, k_item_color.item_id, k_item_color.painting_class, k_item_color.color_code
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ItemColorMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Column_List" />
+		from k_item_color 
+		where k_item_color.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ItemColorMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_item_color
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_item_color
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND k_item_color.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="itemId != null" >
+				AND k_item_color.item_id = #{itemId, jdbcType=INTEGER}
+			</if>
+			<if test="paintingClass != null and paintingClass != ''" >
+				AND k_item_color.painting_class = #{paintingClass, jdbcType=VARCHAR}
+			</if>
+			<if test="colorCode != null and colorCode != ''" >
+				AND k_item_color.color_code = #{colorCode, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+	
+	<select id="findByItemId" resultType="com.qhc.order.domain.CharacteristicDto" parameterType="Integer" >
+		select 
+			ic.id, 
+			ic.item_id, 
+			ic.painting_class as key_code, 
+			ic.color_code as value_code, 
+			1 as configurable,
+			1 as optional,
+			spcc.painting_parts as key_name,
+			scc.color_description as value_name,
+			1 as color
+		from k_item_color ic
+		left join sap_painting_class spcc on spcc.painting_class = ic.painting_class 
+		inner join k_item i on i.id = ic.item_id
+		left join sap_material_product_class smpc on smpc.material_code = i.material_code
+		left join sap_product_class spc on spc.product_class = smpc.product_class
+		left join sap_color_class scc on scc.color_class = spc.color_class and scc.color_code = ic.color_code
+		where ic.item_id = #{value}
+	</select>
+	
+	<delete id="deleteByOrderInfoId" parameterType="Integer" >
+		delete from k_item_color
+		where exists (select 1 from k_item where id = k_item_color.item_id and k_item.order_info_id = #{value} )
+	</delete>
+</mapper>

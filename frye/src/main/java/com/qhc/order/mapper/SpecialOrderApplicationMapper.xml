@@ -82,7 +82,7 @@
 	
 	<sql id="Where_By_Params" >
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			oi.status = '05' or oi.status = '06')
+			oi.status in ('05', '06') AND o.st_order_type in ('1', '2', '4')
 			<if test="sequenceNumber != null" >
 				AND o.sequence_number like '%${sequenceNumber, jdbcType=INTEGER}%'
 			</if>

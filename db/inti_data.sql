@@ -550,7 +550,7 @@ INSERT INTO `sap_order_type_and_customer_class` (`sap_order_type_code`, `sap_cus
 -- Data for table `sap_installation_terms`
 -- -----------------------------------------------------
 INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('10', '招标');
-INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('20', '自装自提');
+INSERT INTO `sap_installation_terms` (`code`, `name`) VALUES ('20', '自安自保');
 
 -- -----------------------------------------------------
 -- Data for table `sap_industry_code`
