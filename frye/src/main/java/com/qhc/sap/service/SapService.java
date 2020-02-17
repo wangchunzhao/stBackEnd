@@ -381,7 +381,7 @@ public class SapService {
 					System.out.println(obj.getString("matnr") + ":计量单位不能为空");
 				} else if (pingGuLei.indexOf(obj.getString("bklas")) == -1) {
 					Boolean configurable = ("X".equals(obj.getString("kzkfg"))) ? true : false;
-					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? true : false;
+					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? false : true;
 					String clazzCode = ("".equals(obj.getString("class"))) ? "unconfigurable" : obj.getString("class");
 
 					MaterialDto material = new MaterialDto();
