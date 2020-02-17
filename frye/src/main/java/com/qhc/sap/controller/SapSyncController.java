@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.ColorDto;
 import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
@@ -163,7 +164,23 @@ public class SapSyncController {
 		characteristicService.saveCharacteristicDefault(defaultList);
 	}
 	
-	/*	1.currency
+	@ApiOperation(value = "同步sap的颜色可选项信息并写入销售工具数据库")
+	@GetMapping(value = "sycColor")
+	@ResponseStatus(HttpStatus.OK)
+	public void sycColor() throws Exception {
+		List<ColorDto> prclassList = sapService.getColorPrclass();
+		characteristicService.savePrclassColor(prclassList);
+		List<ColorDto> coclassList = sapService.getColorCoclass();
+		characteristicService.saveCoclassColor(coclassList);
+		List<ColorDto> paclassList = sapService.getColorPaclass();
+		characteristicService.savePaclassColor(paclassList);
+		List<ColorDto> pamappList = sapService.getColorPamapp();
+		characteristicService.savePamappColor(pamappList);
+	}
+	
+	
+	/*	
+	1.currency
 	2.incoterm
 	3.class
 	4.customer
@@ -173,7 +190,9 @@ public class SapSyncController {
 	8.materials
 	9.price
 	10.priceA
-	11.defaultCharacteristic */
+	11.defaultCharacteristic 
+	12.color
+	*/
 	
 	@ApiOperation(value = "同步sap数据进入销售工具")
 	@GetMapping(value = "SapToSellingTool")

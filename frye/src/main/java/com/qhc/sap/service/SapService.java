@@ -24,6 +24,7 @@ import com.qhc.sap.domain.BomBodyParam;
 import com.qhc.sap.domain.BomHeadParam;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.ColorDto;
 import com.qhc.sap.domain.CurrencyDto;
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.DefaultBodyParam;
@@ -83,6 +84,9 @@ public class SapService {
 	
 	@Value("${sap.bomExplosion.addr}")
 	String bomExplosionUrl;
+	
+	@Value("${sap.color.addr}")
+	String colorUrl;
 	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdate;
@@ -538,9 +542,99 @@ public class SapService {
 		}
 		return list;
 	}
-	
-	
-	
+	//颜色可选项  分4个
+	public List<ColorDto> getColorPrclass(){
+		List<ColorDto> list = new ArrayList<ColorDto>();
+		try {
+			String colorParam= "{}";
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(colorUrl, colorParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object prclass = parseObject.get("prclass");
+			JSONArray prclassArray = JSONArray.parseArray(prclass.toString());
+			for (int i = 0; i < prclassArray.size();i++) { 
+				JSONObject obj = (JSONObject)prclassArray.get(i);
+				
+				ColorDto pr = new ColorDto();
+				pr.setMaterial(obj.getString("material"));
+				pr.setProductClass(obj.getString("product_class"));
+				list.add(pr);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public List<ColorDto> getColorCoclass(){
+		List<ColorDto> list = new ArrayList<ColorDto>();
+		try {
+			String colorParam= "{}";
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(colorUrl, colorParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object coclass = parseObject.get("coclass");
+			JSONArray coclasssArray = JSONArray.parseArray(coclass.toString());
+			for (int i = 0; i < coclasssArray.size();i++) { 
+				JSONObject obj = (JSONObject)coclasssArray.get(i);
+				
+				ColorDto co = new ColorDto();
+				co.setColorClass(obj.getString("color_class"));
+				co.setColorCode(obj.getString("color_code"));
+				co.setPowderMaterial(obj.getString("powder_material"));
+				co.setMaterialDesc(obj.getString("material_dec"));
+				list.add(co);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public List<ColorDto> getColorPaclass(){
+		List<ColorDto> list = new ArrayList<ColorDto>();
+		try {
+			String colorParam= "{}";
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(colorUrl, colorParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object paclass = parseObject.get("paclass");
+			JSONArray paclassArray = JSONArray.parseArray(paclass.toString());
+			for (int i = 0; i < paclassArray.size();i++) { 
+				JSONObject obj = (JSONObject)paclassArray.get(i);
+				
+				ColorDto pa = new ColorDto();
+				pa.setPaintingClass(obj.getString("painting_class"));
+				pa.setClassName(obj.getString("class_name"));
+				list.add(pa);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public List<ColorDto> getColorPamapp(){
+		List<ColorDto> list = new ArrayList<ColorDto>();
+		try {
+			String colorParam= "{}";
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(colorUrl, colorParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object pamapp = parseObject.get("pamapp");
+			JSONArray pamappArray = JSONArray.parseArray(pamapp.toString());
+			for (int i = 0; i < pamappArray.size();i++) { 
+				JSONObject obj = (JSONObject)pamappArray.get(i);
+				
+				ColorDto pa = new ColorDto();
+				pa.setProductClassPam(obj.getString("product_class"));
+				pa.setPaintingClassPam(obj.getString("painting_class"));
+				pa.setColorClassPam(obj.getString("color_class"));
+				pa.setColorCodePam(obj.getString("color_code"));
+				list.add(pa);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 	
 	
