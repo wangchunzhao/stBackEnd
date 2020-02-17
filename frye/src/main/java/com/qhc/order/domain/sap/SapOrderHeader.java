@@ -58,6 +58,14 @@ public class SapOrderHeader {
 	private String vbbkz122;
 	// Receiving method /收货方式 -- Selling tool 收货方式
 	private String vbbkz106;
+	// Ship-to address/送达方地址 -- Selling tool 到货地址
+	private String street;
+	// Province/省 -- Selling tool 省
+	private String region;
+	// City/市 -- Selling tool 市
+	private String city1;
+	// District/区 -- Selling tool 区
+	private String city2;
 	
 	public String getAuart() {
 		return auart;
@@ -208,5 +216,29 @@ public class SapOrderHeader {
 	}
 	public void setVbbkz106(String vbbkz106) {
 		this.vbbkz106 = vbbkz106;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public String getRegion() {
+		return region;
+	}
+	public void setRegion(String region) {
+		this.region = region;
+	}
+	public String getCity1() {
+		return city1;
+	}
+	public void setCity1(String city1) {
+		this.city1 = city1;
+	}
+	public String getCity2() {
+		return city2;
+	}
+	public void setCity2(String city2) {
+		this.city2 = city2;
 	}
 }

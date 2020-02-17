@@ -795,6 +795,8 @@ public class OrderService {
 
 //		ItemService itemService;
 		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
+		Integer addressSeq = null;
+		boolean singleAddress = true;
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
 			SapOrderItem sapItem = new SapOrderItem();
@@ -814,6 +816,11 @@ public class OrderService {
 			sapItem.setVkaus(item.getItemRequirementPlan());
 
 			// Ship-to address/送达方地址
+			if (addressSeq == null) {
+				addressSeq = item.getDeliveryAddressSeq();
+			} else if (!addressSeq.equals(item.getDeliveryAddressSeq())) {
+				singleAddress = false;
+			}
 			// 街道名称
 			sapItem.setStreet(item.getAddress());
 //			// Province/省 -- 省code
@@ -887,6 +894,18 @@ public class OrderService {
 				c.setAtwrt(charac.getValueCode());
 				sapCharacs.add(c);
 			}
+		}
+		
+		// 如果所有行项目只有一个地址，则设置sap order header的地址为此地址
+		if (singleAddress) {
+			// 街道名称
+			header.setStreet(sapItems.get(0).getStreet());
+//			// Province/省 -- 省code
+			header.setRegion(sapItems.get(0).getStreet());
+//			// City/市 -- 市名称
+			header.setCity1(sapItems.get(0).getStreet());
+//			// District/区 -- 区名称
+			header.setCity2(sapItems.get(0).getStreet());
 		}
 
 		// Billing plan
