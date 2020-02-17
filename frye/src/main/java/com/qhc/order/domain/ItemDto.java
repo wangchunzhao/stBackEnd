@@ -73,6 +73,9 @@ public class ItemDto {
 	private String b2cComments;//B2C备注
 	private String specialComments;//特殊备注
 	private String colorComments; // color 备注
+
+	/* 最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1 */
+	private String colorOptions = null;
 	
 	private List<CharacteristicDto> configs;//配置表数据(配置表页面)
 	
@@ -387,6 +390,12 @@ public class ItemDto {
 	}
 	public void setColorComments(String colorComments) {
 		this.colorComments = colorComments;
+	}
+	public String getColorOptions() {
+		return colorOptions;
+	}
+	public void setColorOptions(String colorOptions) {
+		this.colorOptions = colorOptions;
 	}
 	public String getConfigComments() {
 		return configComments;

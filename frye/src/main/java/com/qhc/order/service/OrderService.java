@@ -843,7 +843,7 @@ public class OrderService {
 			// Special note/特殊备注
 			sapItem.setVbbpz117(item.getSpecialComments());
 			// Color option/颜色可选项 -- Characteristics中处理
-			sapItem.setVbbpz120(item.getColorComments());
+			sapItem.setVbbpz120(item.getColorOptions());
 			// Survey info. Note/调研表备注
 			sapItem.setVbbp0007(item.getComments());
 			// Color Note/颜色备注
