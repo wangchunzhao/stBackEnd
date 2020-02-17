@@ -15,14 +15,25 @@ import com.qhc.sap.dao.CharacteristicRepository;
 import com.qhc.sap.dao.CharacteristicValueRepository;
 import com.qhc.sap.dao.ClassAndCharacterRepository;
 import com.qhc.sap.dao.ClazzOfMaterialRepository;
+import com.qhc.sap.dao.SapColorClassRepository;
+import com.qhc.sap.dao.SapMaterialProductClassRepository;
+import com.qhc.sap.dao.SapPaintingClassRepository;
+import com.qhc.sap.dao.SapProductClassRepository;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
+import com.qhc.sap.domain.ColorDto;
 import com.qhc.sap.domain.DefaultCharacteristicsDto;
 import com.qhc.sap.entity.SapCharacteristic;
 import com.qhc.sap.entity.SapCharacteristicDefault;
 import com.qhc.sap.entity.SapCharacteristicValue;
+import com.qhc.sap.entity.SapColorClass;
 import com.qhc.sap.entity.ClassAndCharacter;
 import com.qhc.sap.entity.SapMaterialClazz;
+import com.qhc.sap.entity.SapMaterialProductClass;
+import com.qhc.sap.entity.SapPaintingClass;
+import com.qhc.sap.entity.SapProductClass;
+import com.qhc.sap.entity.identity.SapColorIdentity;
+import com.qhc.sap.entity.identity.SapProductClassIdentity;
 
 /**
  * @author wang@dxc.com
@@ -44,6 +55,19 @@ public class CharacteristicService {
 	
 	@Autowired
 	private CharacteristicDefaultRepository CharacterDefaultRep;
+	
+	@Autowired
+	private SapMaterialProductClassRepository sapMaterialProductClassRep;
+	
+	@Autowired
+	private SapColorClassRepository sapColorClassRep;
+	
+	@Autowired
+	private SapPaintingClassRepository sapPaintingClassRep;
+	
+	@Autowired
+	private SapProductClassRepository sapProductClassRep;
+	
 	/**
 	 * 
 	 * @param clazz
@@ -83,6 +107,71 @@ public class CharacteristicService {
 		//
 		charaValueRepo.saveAll(dcvs);
 		classAndCharaRepo.saveAll(cacs);
+	}
+	/**
+	 * 
+	 * @param 颜色可选项1
+	 */
+	public void savePrclassColor(List<ColorDto> colorValues) {
+		Set<SapMaterialProductClass> mpclist = new HashSet<SapMaterialProductClass>();
+		
+		for(ColorDto cl:colorValues) {
+			SapMaterialProductClass mpc = new SapMaterialProductClass();
+			mpc.setMaterialCode(cl.getMaterial());
+			mpc.setProductClass(cl.getProductClass());
+			mpclist.add(mpc);
+		}
+		sapMaterialProductClassRep.saveAll(mpclist);
+	}
+	/**
+	 * 
+	 * @param 颜色可选项2
+	 */
+	public void saveCoclassColor(List<ColorDto> colorValues) {
+		Set<SapColorClass> cclist = new HashSet<SapColorClass>();
+		for(ColorDto cl:colorValues) {
+			SapColorClass cc = new SapColorClass();
+			SapColorIdentity ii = new SapColorIdentity();
+			ii.setColorClass(cl.getColorClass());
+			ii.setColorCode(cl.getColorCode());
+			cc.setCci(ii);
+			cc.setColorMaterialCode(cl.getPowderMaterial());
+			cc.setColorDescription(cl.getMaterialDesc());
+			cclist.add(cc);
+		}
+		sapColorClassRep.saveAll(cclist);
+	}
+	/**
+	 * 
+	 * @param 颜色可选项3
+	 */
+	public void savePaclassColor(List<ColorDto> colorValues) {
+		Set<SapPaintingClass> palist = new HashSet<SapPaintingClass>();
+		for(ColorDto cl:colorValues) {
+			SapPaintingClass pc = new SapPaintingClass();
+			pc.setPaintingClass(cl.getPaintingClass());
+			pc.setPaintingParts(cl.getClassName());
+			palist.add(pc);
+		}
+		sapPaintingClassRep.saveAll(palist);
+	}
+	/**
+	 * 
+	 * @param 颜色可选项4
+	 */
+	public void savePamappColor(List<ColorDto> colorValues) {
+		Set<SapProductClass> palist = new HashSet<SapProductClass>();
+		for(ColorDto cl:colorValues) {
+			SapProductClass sp = new SapProductClass();
+			SapProductClassIdentity pcii = new SapProductClassIdentity();
+			pcii.setProductClass(cl.getProductClassPam());
+			pcii.setPaintingCode(cl.getPaintingClassPam());
+			sp.setCci(pcii);
+			sp.setColorClass(cl.getColorClassPam());
+			sp.setDefaultColor(cl.getColorCodePam());
+			palist.add(sp);
+		}
+		sapProductClassRep.saveAll(palist);
 	}
 	
 	/**
