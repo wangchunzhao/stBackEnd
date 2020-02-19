@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.system.dao.SettingsRepository;
 import com.qhc.system.entity.Settings;
@@ -28,6 +29,7 @@ public class SettingsService {
 		return parameterSettingsRepository.findAll();
 	}
 
+	@Transactional
 	public Settings updateParameter(Settings p) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer id = p.getId();

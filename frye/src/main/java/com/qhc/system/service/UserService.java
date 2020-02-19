@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -56,6 +57,7 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	public UserDto createOrUpdateUser(UserDto userDto) {
 		User user = new User();
 		try {
@@ -132,6 +134,7 @@ public class UserService {
 		return dto;
 	}
 
+	@Transactional
 	public void delete(Integer id) {
 		userMapper.deleteById(id);
 	}
@@ -141,6 +144,7 @@ public class UserService {
 	 * @param id
 	 * @return
 	 */
+	@Transactional
 	public User notAvailable(Integer id) {
 		User user = userMapper.findById(id);
 		user.setIsActive(1);

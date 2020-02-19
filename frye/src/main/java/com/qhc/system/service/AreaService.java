@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
@@ -27,7 +28,8 @@ public class AreaService {
 	
 	@Autowired
 	private AreaRepository bAreaRepository;
-	
+
+	@Transactional
 	public Area add(Area bArea) {
 		return bAreaRepository.save(bArea);
 	}
@@ -35,7 +37,8 @@ public class AreaService {
 	public Page<List<Object>> getList(Pageable pageable){
 		return bAreaRepository.findAllList(pageable);
 	}
-	
+
+	@Transactional
 	public void saveFreight(List<List<String>> freight) {
 		Set<Province> bProvinceList = new HashSet<Province>();
 		Set<City> bCityList = new HashSet<City>();

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.IncotermRepository;
@@ -66,6 +67,7 @@ public class CurrencyService {
 	 * 
 	 * @param currency
 	 */
+	@Transactional
 	public void saveCurrency(List<CurrencyDto> currency) {
 		Set<Currency> dcs = new HashSet<Currency>();
 		Set<SapCurrencySaleType> sc = new HashSet<SapCurrencySaleType>();
@@ -102,6 +104,7 @@ public class CurrencyService {
 	 * 
 	 * @param incoterm
 	 */
+	@Transactional
 	public void saveIncoterm(List<IncotermDto> incoterm) {
 		Set<Incoterm> incos = new HashSet<Incoterm>();
 		for(IncotermDto inco:incoterm) {
@@ -125,7 +128,8 @@ public class CurrencyService {
 		}
 		return incos;
 	}
-	
+
+	@Transactional
 	public void savePrice(List<PriceDto> price) {
 		Set<MaterialPrice> dps = new HashSet<MaterialPrice>();
 		//
@@ -145,7 +149,8 @@ public class CurrencyService {
 		priceRepo.saveAll(dps);
 		lastUpdatedRepo.save(lastUpdated);
 	}
-	
+
+	@Transactional
 	public void savePriceA(List<PriceDto> price) {
 		Set<MaterialPrice> dps = new HashSet<MaterialPrice>();
 		//
@@ -165,7 +170,8 @@ public class CurrencyService {
 		priceRepo.saveAll(dps);
 		lastUpdatedRepo.save(lastUpdated);
 	}
-	
+
+	@Transactional
 	public void savePaymentPlan(List<PaymentPlanDto> paymentPlan) {
 		Set<PaymentTerm> incos = new HashSet<PaymentTerm>();
 		for (PaymentPlanDto inco : paymentPlan) {

@@ -107,6 +107,7 @@ public class RoleService {
 	 * 
 	 * @param role
 	 */
+	@Transactional
 	public RoleDto createOrUpdateRole(RoleDto role) {
 		Role r = new Role();
 		try {

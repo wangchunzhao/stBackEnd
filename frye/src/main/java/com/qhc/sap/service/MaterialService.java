@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.qhc.exception.NotMatchException;
@@ -77,6 +78,7 @@ public class MaterialService {
 	@Autowired
 	private ColorClassMapper colorClassMapper;
 
+	@Transactional
 	public void saveMaterials(List<MaterialDto> materials) {
 		Set<Material> mset = new HashSet<Material>();
 //		Set<MaterialClazz> mcset = new HashSet<MaterialClazz>();

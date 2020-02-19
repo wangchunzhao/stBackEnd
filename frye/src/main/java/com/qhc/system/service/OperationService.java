@@ -9,6 +9,7 @@ import com.qhc.system.domain.MenusDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.system.domain.OperationDto;
 import com.qhc.system.entity.Operation;
@@ -44,6 +45,7 @@ public class OperationService implements Serializable{
 		return operationMapper.findById(id);
 	}
 
+	@Transactional
 	public Operation createOrUpdateOperations(@Valid Operation operations) {
 		// TODO Auto-generated method stub
 		return null;

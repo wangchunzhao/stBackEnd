@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -87,6 +88,7 @@ public class CustomerService {
 	 * 
 	 * @param customers
 	 */
+	@Transactional
 	public void saveCustomers(List<CustomerDto> customers) {
 		Set<Customer> dcList = new HashSet<Customer>();
 		Set<Industry> induList = new HashSet<Industry>();

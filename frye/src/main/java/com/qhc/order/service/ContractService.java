@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -45,6 +46,7 @@ public class ContractService {
 		return contractMapper.findById(id);
 	}
 
+	@Transactional
 	public Contract save(Contract contract) {
 		if (contract.getId() == null) {
 			contractMapper.insert(contract);
@@ -93,6 +95,7 @@ public class ContractService {
 	 * @throws JsonProcessingException
 	 * @throws JsonMappingException
 	 */
+	@Transactional
 	public boolean doRefreshContractState() throws JsonMappingException, JsonProcessingException {
 		String states = "03,04,05,06";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -144,6 +147,7 @@ public class ContractService {
 	 * @throws JsonProcessingException
 	 * @throws JsonMappingException
 	 */
+	@Transactional
 	public boolean doSignContract(int contractId) throws JsonMappingException, JsonProcessingException {
 		ContractDto contract = this.findById(contractId);
 
@@ -174,6 +178,7 @@ public class ContractService {
 	 * 
 	 * @param contract
 	 */
+	@Transactional
 	public void updateStatus(Contract contract) {
 		contractMapper.updateStatus(contract);
 	}

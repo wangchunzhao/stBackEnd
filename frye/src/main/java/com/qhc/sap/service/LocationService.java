@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
@@ -33,6 +34,7 @@ public class LocationService {
 	/**
 	 * delete all data in DB table
 	 */
+	@Transactional
 	public void clean() {
 		groupRepo.deleteAll();
 		officeRepo.deleteAll();
@@ -40,6 +42,7 @@ public class LocationService {
 	/**
 	 * put data to db table , please clean it before this.
 	 */
+	@Transactional
 	public void put(List<SalesGroup> salesGroups) {
 		
 		Set<SapSalesGroup> groups = new HashSet<SapSalesGroup>();

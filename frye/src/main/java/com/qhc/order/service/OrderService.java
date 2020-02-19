@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -178,6 +179,7 @@ public class OrderService {
 	@Autowired
 	private SettingsService settingsService;
 
+	@Transactional
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		Order order = new Order();
 		OrderInfo orderInfo = new OrderInfo();
@@ -256,6 +258,7 @@ public class OrderService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	public OrderDto upgrade(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
 		String status = order.getStatus();
@@ -290,6 +293,7 @@ public class OrderService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	public OrderDto copy(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
 		
@@ -321,6 +325,7 @@ public class OrderService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	public OrderDto transfer(String user, Integer orderInfoId) throws Exception {
 		OrderDto order = this.findOrder(orderInfoId);
 		String stOrderType = order.getStOrderType();
@@ -515,6 +520,7 @@ public class OrderService {
 	 * @param order
 	 * @throws Exception
 	 */
+	@Transactional
 	public void submit(String user, OrderDto order) throws Exception {
 		order = save(user, order);
 		String status = order.getStatus();
@@ -704,6 +710,7 @@ public class OrderService {
 	 * @param version
 	 * @return
 	 */
+	@Transactional
 	public String sendToSap(String user, Integer orderInfoId) {
 		try {
 			OrderDto orderDto = this.findOrder(orderInfoId);
@@ -724,6 +731,8 @@ public class OrderService {
 
 			sendToSap(sapOrder);
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
+			// 修改订单状态为已下发SAP
+			orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null, null, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "推送订单到SAP失败，错误信息：" + e.getMessage();
@@ -1156,6 +1165,7 @@ public class OrderService {
 	 * @param order
 	 * @throws Exception 
 	 */
+	@Transactional
 	public void submitBpm(String user, OrderDto order) throws Exception {
 		order = save(user, order);
 		List<ItemDto> items = order.getItems();
@@ -1314,6 +1324,7 @@ public class OrderService {
 	 * 
 	 * @throws Exception
 	 */
+	@Transactional
 	public void updateBpmStatus(String user, String sequenceNumber, String status, Double bodyDiscount,
 			Double unitDiscount) throws Exception {
 		OrderInfo orderInfo = orderInfoMapper.findByParams(null, sequenceNumber, null, "1").get(0);
@@ -1446,6 +1457,7 @@ public class OrderService {
 	 * @param quoteStatus
 	 * @return
 	 */
+	@Transactional
 	public String updateQuoteStatus(String user, Integer orderInfoId, String quoteStatus) {
 		OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
 		Order order = orderMapper.findById(orderInfo.getOrderId());

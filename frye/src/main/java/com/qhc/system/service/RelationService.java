@@ -10,6 +10,7 @@ import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qhc.system.entity.RoleOperation;
 import com.qhc.system.mapper.OperationMapper;
@@ -91,7 +92,8 @@ public class RelationService {
 //			orRepository.delete(or);
 //		}
 //	}
-	
+
+	@Transactional
 	public List<OperationDto> saveRelation(int roleId,String[] operations) {
 		this.roleOperationMapper.deleteByRoleId(roleId);
 		
@@ -108,6 +110,7 @@ public class RelationService {
 		return list;
 	}
 
+	@Transactional
 	public List<RoleOperation> saveRelation(RoleDto role) {
 		List<RoleOperation> list = new ArrayList<RoleOperation>();
 		//删除所有权限关系
