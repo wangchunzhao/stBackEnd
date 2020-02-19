@@ -83,6 +83,7 @@ import com.qhc.system.entity.City;
 import com.qhc.system.entity.Province;
 import com.qhc.system.entity.Settings;
 import com.qhc.system.entity.User;
+import com.qhc.system.service.SettingsService;
 import com.qhc.system.service.UserService;
 import com.qhc.utils.HttpUtil;
 
@@ -173,6 +174,9 @@ public class OrderService {
 	
 	@Autowired
 	private SpecialOrderApplicationMapper specialOrderApplicationMapper;
+	
+	@Autowired
+	private SettingsService settingsService;
 
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
 		Order order = new Order();
@@ -663,13 +667,13 @@ public class OrderService {
 		// 安装方式
 		oo.setInstallationTerms(constService.findInstallationTerms());
 
-		// 标准折扣，Code：0d5d7ea6b2605e38b4f3dbd394168b3b
+		// 标准折扣，Code：std_discount
 		Settings p = settingsRepository.findEnabledInfo("std_discount");
 		if (p != null) {
 			oo.setStandardDiscount(p.getsValue());
 		}
 
-		// 税率，Code：1c20b7ffba1a59faa081324eb34844a5
+		// 税率，Code：tax_rate
 		p = settingsRepository.findEnabledInfo("tax_rate");
 		if (p != null) {
 			Map<String, Double> taxRate = new HashMap<String, Double>();
@@ -677,6 +681,14 @@ public class OrderService {
 			taxRate.put("30", Double.valueOf(p.getsValue()));
 
 			oo.setTaxRate(taxRate);
+		}
+
+		// 税率，Code：tax_rate
+		List<Settings> settings = settingsService.findDistinctInfo();
+		Map<String, String> settingsMap = new HashMap<String, String>();
+		oo.setSettings(settingsMap);
+		for (Settings s : settings) {
+			settingsMap.put(s.getCode(), s.getsValue());
 		}
 
 		// 经销商结算方式

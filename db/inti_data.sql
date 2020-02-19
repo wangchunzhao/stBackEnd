@@ -1,8 +1,13 @@
 /*
 -- Query: select * from b_settings
 */
-INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (1,'std_discount','0.48','2019-01-01','标准折扣','wangch','2019-01-01 00:00:00');
-INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (2,'tax_rate','0.13','2019-01-01','税率','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (1,'std_discount','0.48','2019-01-01','标准折扣（标准折扣率：经销商标准折扣下单用到）','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (2,'tax_rate','0.13','2019-01-01','国内税率','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (3,'withhold_ratio','0.0023','2019-01-01','预提比率（预提备件费=合同金额*预提比率*保修年限）','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (4,'foreign_tax_rate','0','2019-01-01','国外税率','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (5,'schedule_hour','22','2019-01-01','定时更新任务-时','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (6,'schedule_minute','0','2019-01-01','定时更新任务-分','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (7,'fuzzy_query_output_limit','50','2019-01-01','模糊查询-输出限制','wangch','2019-01-01 00:00:00');
 
 -- -----------------------------------------------------
 -- Data for table `b_operation`

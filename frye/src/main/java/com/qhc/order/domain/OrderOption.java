@@ -22,78 +22,84 @@ import com.qhc.system.entity.Area;
 public class OrderOption {
 	//
 	private String sequenceNumber;
-	private Map<String,String> provinces;//Map<prvince code,prvince name>
-	private Map<String,Map<String,String>> citys;//Map<province code,Map<city code,city name>>
+	private Map<String, String> provinces;// Map<prvince code,prvince name>
+	private Map<String, Map<String, String>> citys;// Map<province code,Map<city code,city name>>
 	private Set<Area> districts;
-	private Map<String,String> termialClass;
-	/**sale type code**/
-	private Map<String,String> saleTypes;
+	private Map<String, String> termialClass;
+	/** sale type code **/
+	private Map<String, String> saleTypes;
 	//
-	private Map<String,Map<String,String>> offices;//Map<saleType key(code),Map<office code,office name>>
-	private Map<String,Map<String,String>> groups;//Map<office code,Map<group code,group name>>
+	private Map<String, Map<String, String>> offices;// Map<saleType key(code),Map<office code,office name>>
+	private Map<String, Map<String, String>> groups;// Map<office code,Map<group code,group name>>
 	//
-	private Map<String,Double> taxRate;//Map<saleType key(code),Map<taxRate name,rate>>
+	private Map<String, Double> taxRate;// Map<saleType key(code),Map<taxRate name,rate>>
 	//
-	private Map<String,List<CurrencyDto>> exchangeRate;
+	private Map<String, List<CurrencyDto>> exchangeRate;
 	//
-	private Map<String,String> paymentType;//回款类型
-	private Map<String,String> biddingPlan;//回款类型,大客户
-	
-	private Map<String,String> orderTypes;//Map<customer class code, orderType>
-	
+	private Map<String, String> paymentType;// 回款类型
+	private Map<String, String> biddingPlan;// 回款类型,大客户
+
+	private Map<String, String> orderTypes;// Map<customer class code, orderType>
+
 	// 终端客户性质选择 For dealer
-	private Map<String,String> dealerIndustryCodes;
-	
+	private Map<String, String> dealerIndustryCodes;
+
 	// 物料评估类
-	private Map<String,String> materialGroups; // Map<material group code, material group code name>
-	
+	private Map<String, String> materialGroups; // Map<material group code, material group code name>
+
 	// 物料在订单上的分类
-	private Map<String,String> materialGroupOrders; // Map<material group order code, material group order code name>
-	
+	private Map<String, String> materialGroupOrders; // Map<material group order code, material group order code name>
+
 	// 物料评估类 与 物料在订单上的分类映射
-	private Map<String,String> materialGroupMapGroupOrder; // Map<material group code, material group order code>
-	
+	private Map<String, String> materialGroupMapGroupOrder; // Map<material group code, material group order code>
+
 	// 运输方式
-	private Map<String,String> shippingTypes;
-	
+	private Map<String, String> shippingTypes;
+
 	// 收货方式
-	private Map<String,String> receiveTerms;
-	
+	private Map<String, String> receiveTerms;
+
 	// 国际贸易条款
 	private Map<String, String> intercoms;
-	
+
 	// 安装方式
 	private Map<String, String> installationTerms;
-	
+
 	// 标准折扣
 	private String standardDiscount;
 
 	// 经销商计算方式
-	public Map<String, String> dealerPaymentTerms = null;	
+	public Map<String, String> dealerPaymentTerms = null;
+	// 参数设置
+	private Map<String, String> settings;
+
 	public OrderOption() {
-		Date  date =new Date();
+		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String date1 = sdf.format(date);
 		Random r = new Random();
-		int num = r.nextInt(89)+10;
-		this.sequenceNumber = "QHC"+date1+String.valueOf(num);
+		int num = r.nextInt(89) + 10;
+		this.sequenceNumber = "QHC" + date1 + String.valueOf(num);
 		//
 		this.provinces = new HashMap<String, String>();
-		this.citys = new HashMap<String, Map<String, String>>();;
+		this.citys = new HashMap<String, Map<String, String>>();
+		;
 		this.districts = new HashSet<Area>();
-		this.termialClass = new HashMap<String, String>();;
-		this.saleTypes =new HashMap<String, String>();
-		this.offices =new HashMap<String, Map<String, String>>();;
-		this.groups=new HashMap<String, Map<String, String>>();
-		this.taxRate=new HashMap<String, Double>();
-		this.exchangeRate= new HashMap<String,List<CurrencyDto>>();
-		this.paymentType =new HashMap<String, String>();
+		this.termialClass = new HashMap<String, String>();
+		;
+		this.saleTypes = new HashMap<String, String>();
+		this.offices = new HashMap<String, Map<String, String>>();
+		;
+		this.groups = new HashMap<String, Map<String, String>>();
+		this.taxRate = new HashMap<String, Double>();
+		this.exchangeRate = new HashMap<String, List<CurrencyDto>>();
+		this.paymentType = new HashMap<String, String>();
 		this.biddingPlan = new HashMap<String, String>();
-		this.orderTypes = new HashMap<String,String>();
-		this.dealerIndustryCodes = new HashMap<String,String>();
-		this.materialGroups = new HashMap<String,String>();
-		this.materialGroupOrders = new HashMap<String,String>();
-		this.materialGroupMapGroupOrder = new HashMap<String,String>();
+		this.orderTypes = new HashMap<String, String>();
+		this.dealerIndustryCodes = new HashMap<String, String>();
+		this.materialGroups = new HashMap<String, String>();
+		this.materialGroupOrders = new HashMap<String, String>();
+		this.materialGroupMapGroupOrder = new HashMap<String, String>();
 		this.shippingTypes = new HashMap<String, String>();
 		this.intercoms = new HashMap<String, String>();
 		this.installationTerms = new HashMap<String, String>();
@@ -162,8 +168,6 @@ public class OrderOption {
 	public void setGroups(Map<String, Map<String, String>> groups) {
 		this.groups = groups;
 	}
-
-	
 
 	public Map<String, Double> getTaxRate() {
 		return taxRate;
@@ -277,9 +281,19 @@ public class OrderOption {
 		this.standardDiscount = standardDiscount;
 	}
 
-	public Map<String, String> getDealerPaymentTerms() {		return dealerPaymentTerms;
+	public Map<String, String> getDealerPaymentTerms() {
+		return dealerPaymentTerms;
 	}
 
 	public void setDealerPaymentTerms(Map<String, String> dealerPaymentTerms) {
-		this.dealerPaymentTerms = dealerPaymentTerms;	}
+		this.dealerPaymentTerms = dealerPaymentTerms;
+	}
+
+	public Map<String, String> getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Map<String, String> settings) {
+		this.settings = settings;
+	}
 }
