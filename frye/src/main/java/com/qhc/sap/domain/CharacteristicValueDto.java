@@ -90,7 +90,6 @@ public class CharacteristicValueDto implements InterEntityToEntity{
 
 	@Override
 	public List<Object> toEntity() {
-		// TODO Auto-generated method stub
 		List<Object> objs = new ArrayList();
 		SapCharacteristicValue dcv = new SapCharacteristicValue();
 		dcv.setCode(this.getCode());

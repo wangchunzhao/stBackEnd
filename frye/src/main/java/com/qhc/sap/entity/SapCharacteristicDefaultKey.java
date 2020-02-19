@@ -81,7 +81,6 @@ public class SapCharacteristicDefaultKey implements Serializable{
 
 	public SapCharacteristicDefaultKey() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
     
     

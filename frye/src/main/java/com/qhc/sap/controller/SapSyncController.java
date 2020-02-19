@@ -230,7 +230,6 @@ public class SapSyncController {
 			List<DefaultCharacteristicsDto> defaultList = sapService.getDefaultCharacteristics();
 			characteristicService.saveCharacteristicDefault(defaultList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

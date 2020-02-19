@@ -198,7 +198,6 @@ public class Area {
 
 	public Area() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	

@@ -78,7 +78,6 @@ public class NotifyInfor {
 
 	public NotifyInfor() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	

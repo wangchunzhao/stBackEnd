@@ -39,7 +39,6 @@ public class Province {
 
 	public Province() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	

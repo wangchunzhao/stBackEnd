@@ -47,7 +47,6 @@ public class OperationService implements Serializable{
 
 	@Transactional
 	public Operation createOrUpdateOperations(@Valid Operation operations) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
