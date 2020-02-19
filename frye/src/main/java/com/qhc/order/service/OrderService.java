@@ -208,6 +208,8 @@ public class OrderService {
 				}
 			});
 		}
+		
+		// TODO 计算运费
 
 		BeanUtils.copyProperties(order, orderDto);
 		BeanUtils.copyProperties(orderInfo, orderDto);

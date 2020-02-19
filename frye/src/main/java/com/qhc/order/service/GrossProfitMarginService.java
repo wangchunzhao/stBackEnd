@@ -11,6 +11,7 @@ import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.entity.MaterialGroups;
+import com.qhc.system.service.SettingsService;
 
 /**
  * 订单毛利率计算服务
@@ -23,6 +24,9 @@ public class GrossProfitMarginService {
 
 	@Autowired
 	private SapMaterialGroupsRepository materialGroupsRepository;
+	
+	@Autowired
+	private SettingsService settingsService;
 
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
@@ -39,6 +43,8 @@ public class GrossProfitMarginService {
 		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d);
 		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0d);
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d);
+		int warranty = order.getWarranty();
+		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
 
 		// 毛利率合计行
 		MaterialGroups sumMaterialGroup = new MaterialGroups();
@@ -62,20 +68,10 @@ public class GrossProfitMarginService {
 //			String orderGroupCode = mgroup.getMaterialGroupOrderCode();
 			switch (code) {
 			case "3101": // "整机柜"
-				calcItemMargin(mgroup, order);
-				break;
 			case "3102": // "分体柜"
-				calcItemMargin(mgroup, order);
-				break;
 			case "3109": // "机组"
-				calcItemMargin(mgroup, order);
-				break;
 			case "3103": // "换热器和冷凝器"
-				calcItemMargin(mgroup, order);
-				break;
 			case "3104": // "侧板"
-				calcItemMargin(mgroup, order);
-				break;
 			case "1000": // "散件"
 				calcItemMargin(mgroup, order);
 				break;
@@ -83,8 +79,10 @@ public class GrossProfitMarginService {
 				calcItemMargin(mgroup, order);
 				break;
 			case "3231": // "其他项目收费"
+				// TODO 收入为手工输入
+				double otherAmount = 0;
 				// 1元，固定值
-				setMaterialGroupMargin(mgroup, 0, 0, 1, 1);
+				setMaterialGroupMargin(mgroup, otherAmount, 0, 1, 1);
 				break;
 			case "3212": // "安装费"
 				setMaterialGroupMargin(mgroup, 0, 0, installFee, installFee);
@@ -102,7 +100,7 @@ public class GrossProfitMarginService {
 				setMaterialGroupMargin(mgroup, 0, 0, freight, freight);
 				break;
 			case "3237": // "不可预估费"
-				// 不可预估费是作为行项目录入，不在订单详情
+				// TODO 不可预估费是作为行项目录入，不在订单详情
 				calcItemMargin(mgroup, order);
 				break;
 			case "9103": // "追加运费"
@@ -117,6 +115,9 @@ public class GrossProfitMarginService {
 			case "9999": // "不可用物料类别"
 				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
 				break;
+			// 预提备件费？？？=总收入金额（不含税）*保修年限*系数（预提比率0.0023 或者ZH14）
+				// double f = excludingTaxAmount * warranty  * withholdRatio;
+				// setMaterialGroupMargin(mgroup, 0, 0, f, f);
 			}
 
 			amount += mgroup.getAmount().doubleValue();

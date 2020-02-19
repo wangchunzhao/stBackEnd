@@ -1,15 +1,11 @@
 package com.qhc.system.service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +57,18 @@ public class SettingsService {
 
 	public Settings findById(Integer id) {
 		return parameterSettingsRepository.findById(id).get();
+	}
+
+	public Settings findByCode(String code) {
+		Settings result = null;
+		List<Settings> list = findDistinctInfo();
+		for (Settings settings : list) {
+			if (settings.getCode().equals(code)) {
+				result = settings;
+				break;
+			}
+		}
+		return result;
 	}
 	
 	public List<Settings> findDistinctInfo() {
