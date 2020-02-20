@@ -125,11 +125,13 @@ public class GrossProfitMarginService {
 		
 		// 预提备件费=总收入金额（不含税）*保修年限*系数（预提比率0.0023 或者ZH14）
 		MaterialGroups withholdRatioMaterialGroup = new MaterialGroups();
-		sumMaterialGroup.setCode("withholdRatio");
-		sumMaterialGroup.setName("预提备件费");
+		withholdRatioMaterialGroup.setCode("withholdRatio");
+		withholdRatioMaterialGroup.setName("预提备件费");
 		double f = excludingTaxAmount * warranty  * withholdRatio;
 		setMaterialGroupMargin(withholdRatioMaterialGroup, 0, 0, f, f);
 		groups.add(withholdRatioMaterialGroup);
+		cost += f;
+		wtwCost += f;
 		
 		// 合计行
 		setMaterialGroupMargin(sumMaterialGroup, amount, excludingTaxAmount, cost, wtwCost);

@@ -191,55 +191,59 @@ public class MaterialService {
 		params.put("materialCode", materialCode);
 		List<ProductClass> productClassList = productClassMapper.findByParams(params);
 		List<ColorClass> colorClassList = colorClassMapper.findByParams(null);
-		for (ProductClass productClass : productClassList) {
-			Characteristic ch = new Characteristic();
-			chas.add(ch);
-			ch.setCode(productClass.getPaintingClass());
-			ch.setName(productClass.getPaintingParts());
-			ch.setOptional(true);
-			ch.setColor(true);
-			ch.setClassCode(productClass.getProductClass());
-			for (ColorClass colorClass : colorClassList) {
-				if (colorClass.getColorClass().equals(productClass.getColorClass())) {
-					Configuration cfg = new Configuration();
-					ch.getConfigs().add(cfg);
-					
-					cfg.setCode(colorClass.getColorCode());
-					cfg.setName(colorClass.getColorDescription());
-					cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
+		if (productClassList != null && productClassList.size() > 0) {
+			for (ProductClass productClass : productClassList) {
+				Characteristic ch = new Characteristic();
+				chas.add(ch);
+				ch.setCode(productClass.getPaintingClass());
+				ch.setName(productClass.getPaintingParts());
+				ch.setOptional(true);
+				ch.setColor(true);
+				ch.setClassCode(productClass.getProductClass());
+				for (ColorClass colorClass : colorClassList) {
+					if (colorClass.getColorClass().equals(productClass.getColorClass())) {
+						Configuration cfg = new Configuration();
+						ch.getConfigs().add(cfg);
+						
+						cfg.setCode(colorClass.getColorCode());
+						cfg.setName(colorClass.getColorDescription());
+						cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
+					}
 				}
 			}
 		}
 		
 		// 物料特征
-		List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
 		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
-		Set<Integer> ids = new HashSet<Integer>();
-		for (SapCharacteristicDefault dc : defaultValues) {
-			ids.add(dc.getValueId());
-		}
-		// template variable
-		Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
-		for (ClazzCharacteristicValueView cc : ccs) {
-			Characteristic ch = cs.get(cc.getKeyCode());
-			if (ch == null) {
-				ch = new Characteristic();
-				ch.setCode(cc.getKeyCode());
-				ch.setName(cc.getKeyName());
-				ch.setOptional(false);
-				ch.setColor(false);
-				ch.setClassCode(clazzCode);
-				cs.put(cc.getKeyCode(), ch);
-				chas.add(ch);
+		if (ccs != null && ccs.size() > 0) {
+			List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
+			Set<Integer> ids = new HashSet<Integer>();
+			for (SapCharacteristicDefault dc : defaultValues) {
+				ids.add(dc.getValueId());
 			}
-			Configuration con = new Configuration();
-			ch.getConfigs().add(con);
-			con.setCode(cc.getValueCode());
-			con.setName(cc.getValueName());
-			if (ids.contains(cc.getId())) {
-				con.setDefault(true);
-			} else {
-				con.setDefault(false);
+			// template variable
+			Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
+			for (ClazzCharacteristicValueView cc : ccs) {
+				Characteristic ch = cs.get(cc.getKeyCode());
+				if (ch == null) {
+					ch = new Characteristic();
+					ch.setCode(cc.getKeyCode());
+					ch.setName(cc.getKeyName());
+					ch.setOptional(false);
+					ch.setColor(false);
+					ch.setClassCode(clazzCode);
+					cs.put(cc.getKeyCode(), ch);
+					chas.add(ch);
+				}
+				Configuration con = new Configuration();
+				ch.getConfigs().add(con);
+				con.setCode(cc.getValueCode());
+				con.setName(cc.getValueName());
+				if (ids.contains(cc.getId())) {
+					con.setDefault(true);
+				} else {
+					con.setDefault(false);
+				}
 			}
 		}
 
@@ -295,6 +299,9 @@ public class MaterialService {
 	 */
 	public List<ProductClass> getMaterialColorConfig(String materialCode) {
 		MaterialProductClass materialProductClass = materialProductClassMapper.findById(materialCode);
+		if (materialProductClass == null) {
+			return new ArrayList<>();
+		}
 		Map<String, Object> params = new HashMap<>();
 		params.put("productClass", materialProductClass.getProductClass());
 		List<ProductClass> productClassList = productClassMapper.findByParams(params);
