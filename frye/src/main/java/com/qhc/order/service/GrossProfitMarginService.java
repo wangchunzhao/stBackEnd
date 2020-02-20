@@ -115,9 +115,6 @@ public class GrossProfitMarginService {
 			case "9999": // "不可用物料类别"
 				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
 				break;
-			// 预提备件费？？？=总收入金额（不含税）*保修年限*系数（预提比率0.0023 或者ZH14）
-				// double f = excludingTaxAmount * warranty  * withholdRatio;
-				// setMaterialGroupMargin(mgroup, 0, 0, f, f);
 			}
 
 			amount += mgroup.getAmount().doubleValue();
@@ -125,6 +122,15 @@ public class GrossProfitMarginService {
 			cost += mgroup.getCost().doubleValue();
 			wtwCost += mgroup.getWtwCost().doubleValue();
 		}
+		
+		// 预提备件费=总收入金额（不含税）*保修年限*系数（预提比率0.0023 或者ZH14）
+		MaterialGroups withholdRatioMaterialGroup = new MaterialGroups();
+		sumMaterialGroup.setCode("withholdRatio");
+		sumMaterialGroup.setName("预提备件费");
+		double f = excludingTaxAmount * warranty  * withholdRatio;
+		setMaterialGroupMargin(withholdRatioMaterialGroup, 0, 0, f, f);
+		groups.add(withholdRatioMaterialGroup);
+		
 		// 合计行
 		setMaterialGroupMargin(sumMaterialGroup, amount, excludingTaxAmount, cost, wtwCost);
 		groups.add(sumMaterialGroup);
