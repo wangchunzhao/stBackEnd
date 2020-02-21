@@ -43,6 +43,10 @@ public class Material {
 	private double materialSize;
 	
 	@NotNull
+    @Column(name="material_type",columnDefinition="CHAR",length=10)
+	private String materialType;
+	
+	@NotNull
     @Column(name="opt_time",columnDefinition="DATETIME")
 	private Date optTime;
 	
@@ -138,7 +142,13 @@ public class Material {
 	public void setMaterialSize(double materialSize) {
 		this.materialSize = materialSize;
 	}
-	
-	
+
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
+	}
 
 }

@@ -611,23 +611,23 @@ INSERT INTO `sap_unit_of_measurement` (`code`, `name`) VALUES ('MT', 'MT');
 -- -----------------------------------------------------
 -- Data for table `sap_material_groups`
 -- -----------------------------------------------------
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3212', '安装费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3233', '材料费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3235', '电气费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3236', '维保费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3105', '冷库', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3231', '其他项目收费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3237', '不可预估费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3234', '销售运费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('1000', '散件', 'T105', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3101', '整机柜', 'T101', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3102', '分体柜', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3109', '机组', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3103', '换热器和冷凝器', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3104', '侧板', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3103', '换热器和冷凝器', 'T103', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3104', '侧板', 'T105', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3105', '冷库', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3109', '机组', 'T102', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3212', '安装费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3231', '其他项目收费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3233', '材料费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3234', '销售运费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3235', '电气费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3236', '维保费', 'T101', 1);
+INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('3237', '不可预估费', 'T101', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9101', 'B2C', 'T101', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9102', '可选项', 'T101', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9103', '追加运费', 'T101', 1);
-INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('1000', '散件', 'T101', 1);
 INSERT INTO `sap_material_groups` (`code`, `name`, `b_material_group_order_code`, `isenable`) VALUES ('9999', '不可用物料类别', 'T106', 0);
 
 -- -----------------------------------------------------

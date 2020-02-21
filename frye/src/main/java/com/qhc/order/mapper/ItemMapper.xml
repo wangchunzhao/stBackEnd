@@ -43,6 +43,7 @@
 		<result column="is_configurable" property="isConfigurable" jdbcType="INTEGER" />
 		<result column="clazz_code" property="clazzCode" jdbcType="VARCHAR" />
 		<result column="comments" property="comments" jdbcType="VARCHAR" />
+		<result column="item_status" property="itemStatus" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="ItemMap" type="com.qhc.order.entity.Item" extends="ItemBaseMap" >
@@ -67,7 +68,7 @@
 			attached_image, request_brand, request_package, 
 			request_nameplate, request_circult, config_transfer_price, 
 			config_retail_price, is_configurable, clazz_code, 
-			comments, color_options )
+			comments, color_options, item_status )
 		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{rowNum, jdbcType=INTEGER}, 
 			#{materialCode, jdbcType=VARCHAR}, #{quantity, jdbcType=DOUBLE}, #{itemCategory, jdbcType=VARCHAR}, 
 			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
@@ -81,7 +82,7 @@
 			#{attachedImage, jdbcType=VARCHAR}, #{requestBrand, jdbcType=VARCHAR}, #{requestPackage, jdbcType=VARCHAR}, 
 			#{requestNameplate, jdbcType=VARCHAR}, #{requestCircult, jdbcType=VARCHAR}, #{configTransferPrice, jdbcType=DECIMAL}, 
 			#{configRetailPrice, jdbcType=DECIMAL}, #{isConfigurable, jdbcType=INTEGER}, #{clazzCode, jdbcType=VARCHAR}, 
-			#{comments, jdbcType=VARCHAR}, #{colorOptions, jdbcType=VARCHAR} )
+			#{comments, jdbcType=VARCHAR}, #{colorOptions, jdbcType=VARCHAR}, #{itemStatus, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -126,7 +127,8 @@
 			is_configurable = #{isConfigurable, jdbcType=INTEGER}, 
 			clazz_code = #{clazzCode, jdbcType=VARCHAR}, 
 			comments = #{comments, jdbcType=VARCHAR}, 
-			color_options = #{colorOptions, jdbcType=VARCHAR}
+			color_options = #{colorOptions, jdbcType=VARCHAR}, 
+			item_status = #{itemStatus, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
@@ -145,7 +147,7 @@
 		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 
 		k_item.attached_image, k_item.request_brand, k_item.request_package, k_item.request_nameplate, k_item.request_circult, 
 		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments, 
-		k_item.color_options
+		k_item.color_options, k_item.item_status
 	</sql>
 	
 	<sql id="Column_List">

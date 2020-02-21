@@ -93,6 +93,9 @@ public class ItemDto {
 	
 	private String comments;
 	private String clazzCode;//物料分类代码
+
+	/* 行状态 */
+	private String itemStatus = null;
 	
 	private List<ItemAttachment> attachments; // 调研表附件
 	
@@ -475,6 +478,12 @@ public class ItemDto {
 	public void setClazzCode(String clazzCode) {
 		this.clazzCode = clazzCode;
 	}
+	public String getItemStatus() {
+		return itemStatus;
+	}
+	public void setItemStatus(String itemStatus) {
+		this.itemStatus = itemStatus;
+	}
 	public List<ItemAttachment> getAttachments() {
 		return attachments;
 	}
@@ -502,10 +511,11 @@ public class ItemDto {
 				+ ", provinceName=" + provinceName + ", cityCode=" + cityCode + ", cityName=" + cityName
 				+ ", districtCode=" + districtCode + ", districtName=" + districtName + ", address=" + address
 				+ ", b2cComments=" + b2cComments + ", specialComments=" + specialComments + ", colorComments="
-				+ colorComments + ", configs=" + configs + ", configComments=" + configComments + ", mosaicImage="
-				+ mosaicImage + ", attachedImage=" + attachedImage + ", isVirtual=" + isVirtual + ", volumeCube="
-				+ volumeCube + ", feight=" + feight + ", requestBrand=" + requestBrand + ", requestPackage="
-				+ requestPackage + ", requestNameplate=" + requestNameplate + ", requestCircult=" + requestCircult
-				+ ", comments=" + comments + ", clazzCode=" + clazzCode + "]";
+				+ colorComments + ", colorOptions=" + colorOptions + ", configs=" + configs + ", configComments="
+				+ configComments + ", mosaicImage=" + mosaicImage + ", attachedImage=" + attachedImage + ", isVirtual="
+				+ isVirtual + ", volumeCube=" + volumeCube + ", feight=" + feight + ", requestBrand=" + requestBrand
+				+ ", requestPackage=" + requestPackage + ", requestNameplate=" + requestNameplate + ", requestCircult="
+				+ requestCircult + ", comments=" + comments + ", clazzCode=" + clazzCode + ", itemStatus=" + itemStatus
+				+ ", attachments=" + attachments + "]";
 	}
 }
