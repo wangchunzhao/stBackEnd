@@ -71,5 +71,11 @@ public interface ItemMapper {
 	List<Item> findByOrderInfoId(Integer orderInfoId);
 
 	void deleteByOrderInfoId(Integer orderInfoId);
+	
+	/**
+	 * 修改订单下所有行项目状态
+	 * @param item
+	 */
+	void updateStatusByOrderInfo(Item item);
 
 }

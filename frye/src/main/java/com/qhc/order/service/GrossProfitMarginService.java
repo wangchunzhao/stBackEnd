@@ -79,10 +79,12 @@ public class GrossProfitMarginService {
 				calcItemMargin(mgroup, order);
 				break;
 			case "3231": // "其他项目收费"
-				// TODO 收入为手工输入
-				double otherAmount = 0;
+				// 收入为手工输入
+				calcItemMargin(mgroup, order);
+				double otherAmount = mgroup.getAmount().doubleValue();
+				double otherExcludingTaxAmount = mgroup.getExcludingTaxAmount().doubleValue();
 				// 1元，固定值
-				setMaterialGroupMargin(mgroup, otherAmount, 0, 1, 1);
+				setMaterialGroupMargin(mgroup, otherAmount, otherExcludingTaxAmount, 1, 1);
 				break;
 			case "3212": // "安装费"
 				setMaterialGroupMargin(mgroup, 0, 0, installFee, installFee);
@@ -100,7 +102,7 @@ public class GrossProfitMarginService {
 				setMaterialGroupMargin(mgroup, 0, 0, freight, freight);
 				break;
 			case "3237": // "不可预估费"
-				// TODO 不可预估费是作为行项目录入，不在订单详情
+				// 不可预估费是作为行项目录入，不在订单详情
 				calcItemMargin(mgroup, order);
 				break;
 			case "9103": // "追加运费"

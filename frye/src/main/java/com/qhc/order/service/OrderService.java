@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.domain.CharacteristicDto;
@@ -36,11 +35,6 @@ import com.qhc.order.domain.bpm.OrderHeader;
 import com.qhc.order.domain.bpm.OrderItem;
 import com.qhc.order.domain.bpm.OrderMargin;
 import com.qhc.order.domain.sap.SapOrder;
-import com.qhc.order.domain.sap.SapOrderCharacteristics;
-import com.qhc.order.domain.sap.SapOrderHeader;
-import com.qhc.order.domain.sap.SapOrderItem;
-import com.qhc.order.domain.sap.SapOrderPlan;
-import com.qhc.order.domain.sap.SapOrderPrice;
 import com.qhc.order.entity.Attachment;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.BpmDicision;
@@ -86,7 +80,6 @@ import com.qhc.system.entity.Settings;
 import com.qhc.system.entity.User;
 import com.qhc.system.service.SettingsService;
 import com.qhc.system.service.UserService;
-import com.qhc.utils.HttpUtil;
 
 @Service
 public class OrderService {
@@ -111,28 +104,28 @@ public class OrderService {
 	private BpmDicisionMapper dicisionMapper;
 
 	@Autowired
-	BillingPlanMapper billingPlanMapper;
+	private BillingPlanMapper billingPlanMapper;
 
 	@Autowired
-	AttachmentMapper attachmentMapper;
+	private AttachmentMapper attachmentMapper;
 
 	@Autowired
-	DeliveryAddressMapper deliveryAddressMapper;
+	private DeliveryAddressMapper deliveryAddressMapper;
 
 	@Autowired
-	ItemMapper itemMapper;
+	private ItemMapper itemMapper;
 
 	@Autowired
-	ItemAttachmentMapper itemAttachmentMapper;
+	private ItemAttachmentMapper itemAttachmentMapper;
 
 	@Autowired
-	CharacteristicsMapper characteristicsMapper;
+	private CharacteristicsMapper characteristicsMapper;
 
 	@Autowired
-	ItemColorMapper itemColorMapper;
+	private ItemColorMapper itemColorMapper;
 
 	@Autowired
-	SapViewMapper sapViewMapper;
+	private SapViewMapper sapViewMapper;
 
 	@Autowired
 	private SalesTypeRepository salesTypeRepo;
@@ -178,6 +171,12 @@ public class OrderService {
 	
 	@Autowired
 	private SettingsService settingsService;
+	
+	@Autowired
+	private AreaRepository areaRepository;
+	
+	@Autowired
+	private SapOrderService sapOrderService;
 
 	@Transactional
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
@@ -195,10 +194,6 @@ public class OrderService {
 			}
 		}
 
-		// calculate gross profit margin
-		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
-		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
-
 		// is b2c
 		List<ItemDto> items = orderDto.getItems();
 		if (items != null) {
@@ -208,8 +203,51 @@ public class OrderService {
 				}
 			});
 		}
-		
-		// TODO 计算运费
+
+		// 计算运费
+//		•	预估运费 = Volume * ZCTP* + ZCTF*
+//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
+//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
+//				o	Case 3: Volume>=50m3, corresponding conditions were ‘ZCTP3/ZCTF3’
+//		ZCTP = 客户单价
+//		ZCTF	 = 客户送货费
+		Map<String, Double> freightMap = new HashMap<>();
+		double freight = 0;
+		for(ItemDto item : items) {
+			String districtCode = item.getDistrictCode();
+			if (StringUtils.isEmpty(districtCode)) {
+				continue;
+			}
+			double volumn = ObjectUtils.defaultIfNull(item.getQuantity(), 0).doubleValue() * ObjectUtils.defaultIfNull(item.getVolumeCube(), 0).doubleValue();
+			volumn += ObjectUtils.defaultIfNull(freightMap.get(districtCode), 0).doubleValue();
+			freightMap.put(districtCode, volumn);
+		}
+		for (Map.Entry<String, Double> freightEntity : freightMap.entrySet()) {
+			String districtCode = freightEntity.getKey();
+			Double volumn = freightEntity.getValue();
+			Area area = areaRepository.findById(districtCode).get();
+			if (area == null) {
+				continue;
+			}
+			double zctp = 0, zctf = 0;
+			if (volumn <= 20) {
+				zctp = area.getPrice6();
+				zctf = area.getPrice7();
+			} else if (volumn > 20 && volumn < 50) {
+				zctp = area.getPrice8();
+				zctf = area.getPrice9();
+			} else {
+				zctp = area.getPrice10();
+				zctf = area.getPrice11();
+			}
+			
+			freight += volumn * zctp + zctf;
+		}
+		orderDto.setFreight(freight);
+
+		// calculate gross profit margin
+		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
+		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
 		BeanUtils.copyProperties(order, orderDto);
 		BeanUtils.copyProperties(orderInfo, orderDto);
@@ -418,6 +456,9 @@ public class OrderService {
 		deleteItems(orderInfoId);
 		List<ItemDto> items = orderDto.getItems();
 		for (ItemDto itemDto : items) {
+			if ( StringUtils.isEmpty(itemDto.getItemStatus())) {
+				itemDto.setItemStatus("00");
+			}
 			Item item = new Item();
 
 			BeanUtils.copyProperties(item, itemDto);
@@ -729,12 +770,17 @@ public class OrderService {
 			}
 
 			// 1. 根据sequenceNumber组装数据
-			SapOrder sapOrder = assembleSapOrder(orderDto);
+			SapOrder sapOrder = sapOrderService.assembleSapOrder(orderDto);
 
-			sendToSap(sapOrder);
+			sapOrderService.sendToSap(sapOrder);
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
 			// 修改订单状态为已下发SAP
 			orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null, null, null);
+			//  修改行项目状体为已下发SAP
+			Item item = new Item(); 
+			item.setOrderInfoId(orderInfoId);
+			item.setItemStatus("10");
+			itemMapper.updateStatusByOrderInfo(item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "推送订单到SAP失败，错误信息：" + e.getMessage();
@@ -744,222 +790,6 @@ public class OrderService {
 
 	}
 
-	/**
-	 * 下发订单到SAP，私有方法
-	 * 
-	 * @param orderDto
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	public String sendToSap(SapOrder sapOrder) {
-		String res = null;
-		try {
-			// 1.ͬ同步SAP开单 没有数据 先注释
-			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
-			logger.info("Order Data: {}", sapStr);
-			// 没有数据先注释
-			res = HttpUtil.postbody(orderCreationUrl, sapStr);
-		} catch (Exception e) {
-			logger.error("ͬ同步SAP异常==>", e);
-			throw new RuntimeException("ͬ同步SAP异常");
-		}
-
-		// 2. 处理返回结果
-		logger.info("SAP返回结果==>" + res);
-
-		return res;
-	}
-
-	/**
-	 * 根据流水号组装数据
-	 * 
-	 * @param sequenceNumber
-	 * @return //
-	 */
-	private SapOrder assembleSapOrder(OrderDto order) {
-		Integer orderInfoId = order.getId();
-		String orderType = order.getOrderType();
-
-		// assemble sap order header
-		SapOrderHeader header = new SapOrderHeader();
-		List<SapOrderItem> sapItems = new ArrayList<SapOrderItem>();
-		List<SapOrderCharacteristics> sapCharacs = new ArrayList<SapOrderCharacteristics>();
-		List<SapOrderPrice> sapPrices = new ArrayList<SapOrderPrice>();
-		List<SapOrderPlan> sapPlans = new ArrayList<SapOrderPlan>();
-
-		// Header input
-		header.setAuart(toString(order.getOrderType())); // Sales order type/订单类型
-		header.setVkorg("0841"); // Sales org./销售组织 -- Fixed value/固定为 0841
-		header.setVtweg(order.getCustomerClazz()); // DC/分销渠道 -- 客户
-		header.setName2(order.getShopName()); // Store name/店名
-		header.setSpart(order.getSaleType()); // Division/产品组
-		header.setVkbur(toString(order.getOfficeCode())); // Sales office/销售办公室 -- 大区
-		header.setVkgrp(toString(order.getGroupCode())); // Sales group/销售组 -- 中心
-		header.setVbeln(toString(order.getContractNumber()).toUpperCase()); // SO number/销售订单编号 -- 合同号
-		header.setKvgr1(toString(order.getIsConvenientStore())); // Customer grp.1/客户组1 -- 是否便利店
-		header.setKvgr2(toString(order.getIsNew())); // Customer grp.2/客户组2 -- 是否新客户
-		header.setKvgr3(toString(order.getIsReformed())); // Customer grp.3/客户组3 -- 是否改造店
-		header.setBstzd(toString(order.getWarranty())); // Additional/附加的 -- 保修年限
-		header.setBstkdE(toString(order.getContractNumber()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
-		header.setVsart(toString(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
-		header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空，dealer取billing_plan的第一条code（唯一一条）
-		header.setKunnr(toString(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
-		header.setWaerk(toString(order.getCurrency())); // Currency/币别 -- 币别
-		header.setInco1(toString(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
-		header.setInco1(toString(order.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
-//		// 折扣
-		header.setVbbkz120(String.valueOf(order.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
-		header.setVbbkz121(order.getSalesCode()); // Sale rep./签约人 -- 客户经理
-		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 合同管理员
-		String contactorInfo = toString(order.getContactor1Id()) + "/" + toString(order.getContactor1Tel())
-				+ toString(order.getContactor2Id()) + "/" + toString(order.getContactor2Tel())
-				+ toString(order.getContactor3Id()) + "/" + toString(order.getContactor3Tel());
-		header.setVbbkz108(contactorInfo); // Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
-		String vbbkz122 = toString(order.getIsTerm1()) + "/" + toString(order.getIsTerm2())
-				+ toString(order.getIsTerm3());
-		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
-		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
-
-//		ItemService itemService;
-		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
-		Integer addressSeq = null;
-		boolean singleAddress = true;
-		for (ItemDto item : items) {
-			int rowNumber = item.getRowNum();
-			SapOrderItem sapItem = new SapOrderItem();
-			// Ship-to PO item/送达方-采购订单编号项目
-			sapItem.setPosnr(rowNumber);
-			// Material Number/物料编码
-			sapItem.setMatnr(item.getMaterialCode());
-			// Target quantity/数量
-			sapItem.setZmeng((int) item.getQuantity());
-			// Req.dlv.date/请求发货日期 yyyyMMdd
-			String deliveryDate = item.getDeliveryDate() == null ? ""
-					: new SimpleDateFormat("yyyyMMdd").format(item.getDeliveryDate());
-			sapItem.setEdatu(deliveryDate);
-			// Item category/行项目类别 -- 项目类别
-			sapItem.setPstyv(item.getItemCategory());
-			// Item usage/项目用途 -- 项目需求计划
-			sapItem.setVkaus(item.getItemRequirementPlan());
-
-			// Ship-to address/送达方地址
-			if (addressSeq == null) {
-				addressSeq = item.getDeliveryAddressSeq();
-			} else if (!addressSeq.equals(item.getDeliveryAddressSeq())) {
-				singleAddress = false;
-			}
-			// 街道名称
-			sapItem.setStreet(item.getAddress());
-//			// Province/省 -- 省code
-			sapItem.setRegion(item.getProvinceCode());
-//			// City/市 -- 市名称
-			sapItem.setCity1(item.getCityCode());
-//			// District/区 -- 区名称
-			sapItem.setCity2(item.getDistrictCode());
-
-			// B2C note/B2C备注
-			sapItem.setVbbp0006(item.getB2cComments());
-			// Survey info. for item /调研表基本信息
-			StringBuilder sb = new StringBuilder(128);
-			if (!isEmpty(item.getRequestBrand())) {
-				sb.append(",").append(item.getRequestBrand());
-			}
-			if (!isEmpty(item.getRequestPackage())) {
-				sb.append(",").append(item.getRequestPackage());
-			}
-			if (!isEmpty(item.getRequestNameplate())) {
-				sb.append(",").append(item.getRequestNameplate());
-			}
-			if (!isEmpty(item.getRequestCircult())) {
-				sb.append(",").append(item.getRequestCircult());
-			}
-			sapItem.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
-			// Special note/特殊备注
-			sapItem.setVbbpz117(item.getSpecialComments());
-			// Color option/颜色可选项 -- Characteristics中处理
-			sapItem.setVbbpz120(item.getColorOptions());
-			// Survey info. Note/调研表备注
-			sapItem.setVbbp0007(item.getComments());
-			// Color Note/颜色备注
-			sapItem.setVbbpz118(item.getColorComments());
-
-			sapItems.add(sapItem);
-
-			// Price/condition record input
-			// ZH05：实卖价合计
-			SapOrderPrice price1 = new SapOrderPrice();
-			price1.setPosnr(rowNumber);
-			price1.setKschl("ZH05");
-			price1.setKbetr(BigDecimal.valueOf(item.getActualPrice() * item.getQuantity()));
-			sapPrices.add(price1);
-			// ZH08：转移价合计/成本合计
-			SapOrderPrice price2 = new SapOrderPrice();
-			price2.setPosnr(rowNumber);
-			price2.setKschl("ZH08");
-			price2.setKbetr(BigDecimal.valueOf(item.getTransationPrice() * item.getQuantity()));
-			sapPrices.add(price2);
-
-			// Characteristics value input
-			List<CharacteristicDto> characList = characteristicsMapper.findByItemId(item.getId());
-			for (CharacteristicDto charac : characList) {
-				SapOrderCharacteristics c = new SapOrderCharacteristics();
-
-				if (charac.isConfigurable()) {
-					// 设置 Item 的 Color option/颜色可选项
-					String vbbpz120 = sapItem.getVbbpz120();
-					String tmp = charac.getKeyCode() + ":" + charac.getValueCode();
-					vbbpz120 = (vbbpz120 == null || vbbpz120.length() == 0) ? tmp : "," + tmp;
-					sapItem.setVbbpz120(vbbpz120);
-					continue;
-				}
-
-				// Item/行项目编号
-				c.setPosnr(rowNumber);
-				// Characteristic/特性
-				c.setAtnam(charac.getKeyCode());
-				// Char. value/特性值
-				c.setAtwrt(charac.getValueCode());
-				sapCharacs.add(c);
-			}
-		}
-		
-		// 如果所有行项目只有一个地址，则设置sap order header的地址为此地址
-		if (singleAddress) {
-			// 街道名称
-			header.setStreet(sapItems.get(0).getStreet());
-//			// Province/省 -- 省code
-			header.setRegion(sapItems.get(0).getStreet());
-//			// City/市 -- 市名称
-			header.setCity1(sapItems.get(0).getStreet());
-//			// District/区 -- 区名称
-			header.setCity2(sapItems.get(0).getStreet());
-		}
-
-		// Billing plan
-		// header的付款条款为billing plan 的 code
-		List<BillingPlan> planList = billingPlanMapper.findByOrderInfoId(orderInfoId);
-		for (BillingPlan kBiddingPlan : planList) {
-			SapOrderPlan plan = new SapOrderPlan();
-			// Value to be billed/金额
-			plan.setFakwr(BigDecimal.valueOf(kBiddingPlan.getAmount()));
-			// Settlement date/结算日期
-			plan.setFkdat(new SimpleDateFormat("yyyyMMdd").format(kBiddingPlan.getPayDate()));
-			// Date category/日期原因
-			plan.setTetxt(kBiddingPlan.getReason());
-			// Payment terms/付款条款
-			plan.setZterm(kBiddingPlan.getCode());
-		}
-
-		SapOrder sapOrder = new SapOrder();
-		sapOrder.setIsZhdr(header);
-		sapOrder.setItZitem(sapItems);
-		sapOrder.setItZcharc(sapCharacs);
-		sapOrder.setItZcond(sapPrices);
-		sapOrder.setItZplan(sapPlans);
-
-		return sapOrder;
-
-	}
 
 	/**
 	 * 查询订单版本历史
@@ -1068,7 +898,6 @@ public class OrderService {
 		params.put("orderInfoId", order.getId());
 		List<ItemDto> items = itemMapper.findByParams(params);
 		order.setItems(items);
-		Map<String, String> unitMap = this.constService.findMeasurementUnits();
 		for (ItemDto item : items) {
 			Integer itemId = item.getId();
 
@@ -1339,7 +1168,7 @@ public class OrderService {
 			if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals("1")) {
 				if (status.equals("1")) {
 					// 审批通过
-					specialOrderApplication.setApplyStatus(2);
+					specialOrderApplication.setApplyStatus(21);
 				} else {
 					// 审批拒绝
 					specialOrderApplication.setApplyStatus(3);
@@ -1438,17 +1267,6 @@ public class OrderService {
 				itemMapper.update(item);
 			}
 		}
-	}
-
-	private boolean isEmpty(String v) {
-		return v == null || v.trim().length() == 0;
-	}
-
-	private String toString(Object v) {
-		if (v == null) {
-			return "";
-		}
-		return v.toString();
 	}
 
 	/**

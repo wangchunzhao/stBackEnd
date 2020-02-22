@@ -26,6 +26,7 @@ import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.OrderMapper;
 import com.qhc.order.service.GrossProfitMarginService;
 import com.qhc.order.service.OrderService;
+import com.qhc.order.service.SapOrderService;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.system.domain.PageHelper;
 
@@ -34,6 +35,8 @@ class OrderServiceTest {
 	Logger logger = LoggerFactory.getLogger(OrderServiceTest.class);
 	@Autowired
 	OrderService orderService;
+	@Autowired
+	SapOrderService sapOrderService;
 	
 	@Autowired
 	OrderInfoMapper orderInfoMapper;
@@ -59,7 +62,7 @@ class OrderServiceTest {
 		
 		logger.info("Start test sap order creation.");
 		
-		String result = orderService.sendToSap(sapCreationOrder);
+		String result = sapOrderService.sendToSap(sapCreationOrder);
 		
 		logger.info("Result: {}" + result);
 	}

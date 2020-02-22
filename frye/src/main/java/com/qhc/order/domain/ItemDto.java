@@ -84,7 +84,7 @@ public class ItemDto {
 	private String mosaicImage;//拼接图备注(配置表页面)
 	private String attachedImage;//拼接图附件(配置表页面)
 	private int isVirtual;//工程虚拟物料
-	private double volumeCube;//工程虚拟物料
+	private double volumeCube;//物料体积
 	private double feight;//运费
 	private String requestBrand;
 	private String requestPackage;

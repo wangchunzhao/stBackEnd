@@ -319,4 +319,9 @@
 		delete from k_item
 		where order_info_id = #{value}
 	</delete>
+	
+	<update id="updateStatusByOrderInfo" parameterType="com.qhc.order.entity.Item" >
+		update k_item set item_status = #{itemStatus}
+		where order_info_id = #{orderInfoId}
+	</delete>
 </mapper>
