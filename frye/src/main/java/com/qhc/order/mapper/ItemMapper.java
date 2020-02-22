@@ -73,9 +73,9 @@ public interface ItemMapper {
 	void deleteByOrderInfoId(Integer orderInfoId);
 	
 	/**
-	 * 修改订单下所有行项目状态
+	 * 修改订单下所有行项目状态为下发sap
 	 * @param item
 	 */
-	void updateStatusByOrderInfo(Item item);
+	void updateSendSapStatusByOrderInfo(Item item);
 
 }

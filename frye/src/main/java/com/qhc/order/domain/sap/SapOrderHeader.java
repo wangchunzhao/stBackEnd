@@ -44,7 +44,7 @@ public class SapOrderHeader {
 	private String inco1;
 	// Incoterms2/国际贸易条款2 -- Selling tool 国际贸易条件2
 	private String inco2;
-	// TODO 折扣 ：规定为 ZH03
+	// 折扣 ：规定为 ZH03
 	// Contract amount/合同金额 -- Selling tool 合同金额
 	private String vbbkz120;
 	// Sale rep./签约人 -- Selling tool 客户经理

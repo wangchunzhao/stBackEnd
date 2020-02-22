@@ -160,19 +160,10 @@ public class SapOrderService {
 
 			sapItems.add(sapItem);
 
-			// Price/condition record input
-			// ZH05：实卖价合计
-			SapOrderPrice price1 = new SapOrderPrice();
-			price1.setPosnr(rowNumber);
-			price1.setKschl("ZH05");
-			price1.setKbetr(BigDecimal.valueOf(item.getActualPrice() * item.getQuantity()));
-			sapPrices.add(price1);
-			// ZH08：转移价合计/成本合计
-			SapOrderPrice price2 = new SapOrderPrice();
-			price2.setPosnr(rowNumber);
-			price2.setKschl("ZH08");
-			price2.setKbetr(BigDecimal.valueOf(item.getTransationPrice() * item.getQuantity()));
-			sapPrices.add(price2);
+			// add price condition
+			double actualPriceSum = item.getActualPrice() * item.getQuantity();
+			double transferPriceSum = item.getTransationPrice() * item.getQuantity();
+			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
 			List<CharacteristicDto> characList = characteristicsMapper.findByItemId(item.getId());
@@ -201,23 +192,30 @@ public class SapOrderService {
 			header.setCity2(sapItems.get(0).getStreet());
 		}
 		
-		// TODO 将费用类物料加到行项目
+		// 将费用类物料加到行项目
 //		其他项目收费  BG1GD1000000-X	
 //		addFeeItem(sapItems, "BG1GD1000000-X", 0);
-////		安装费  BG1GDA00000-X	
-//		addFeeItem(sapItems, "BG1GDA00000-X", 0);
-////		材料费  BG1GDB00000-X	
-//		addFeeItem(sapItems, "BG1GDB00000-X", 0);
-////		销售运费  BG1P7E00000-X	
-//		addFeeItem(sapItems, "BG1P7E00000-X", 0);
-////		电气费  BG1R8J00000-X	
-//		addFeeItem(sapItems, "BG1R8J00000-X", 0);
-////		维保费  BG1R8K00000-X	
-//		addFeeItem(sapItems, "BG1R8K00000-X", 0);
-////		冷库  BG1R8R00000-X	
-//		addFeeItem(sapItems, "BG1R8R00000-X", 0);
-////		不可预估费  BG1R8L00000-X	
-//		addFeeItem(sapItems, "BG1R8L00000-X", 0);
+//		安装费  BG1GDA00000-X  9901
+		addFeeItem(sapItems, sapPrices, "BG1GDA00000-X", 9901, order.getInstallFee());
+//		材料费  BG1GDB00000-X	  9902
+		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, order.getMaterialFee());
+//		销售运费  BG1P7E00000-X	9903
+		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight());
+		// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
+		SapOrderPrice price3 = new SapOrderPrice();
+		price3.setPosnr(9903);
+		price3.setKschl("ZH12");
+		price3.setKbetr(BigDecimal.valueOf(order.getAdditionalFreight()));
+		sapPrices.add(price3);
+		
+//		电气费  BG1R8J00000-X	
+		addFeeItem(sapItems, sapPrices, "BG1R8J00000-X", 9904, order.getElectricalFee());
+//		维保费  BG1R8K00000-X	
+		addFeeItem(sapItems, sapPrices, "BG1R8K00000-X", 9905, order.getMaintenanceFee());
+//		冷库  BG1R8R00000-X	
+//		addFeeItem(sapItems, sapPrices, "BG1R8R00000-X", 0);
+//		不可预估费  BG1R8L00000-X	
+//		addFeeItem(sapItems, sapPrices, "BG1R8L00000-X", 0);
 		
 		// Billing plan
 		// header的付款条款为billing plan 的 code
@@ -245,13 +243,31 @@ public class SapOrderService {
 
 	}
 	
+	private void addItemPrice(List<SapOrderPrice> sapPrices, int rowNumber, double actualPriceSum,
+			double transferPriceSum) {
+		// Price/condition record input
+		// ZH05：实卖价合计
+		SapOrderPrice price1 = new SapOrderPrice();
+		price1.setPosnr(rowNumber);
+		price1.setKschl("ZH05");
+		price1.setKbetr(BigDecimal.valueOf(actualPriceSum));
+		sapPrices.add(price1);
+		// ZH08：转移价合计/成本合计
+		SapOrderPrice price2 = new SapOrderPrice();
+		price2.setPosnr(rowNumber);
+		price2.setKschl("ZH08");
+		price2.setKbetr(BigDecimal.valueOf(transferPriceSum));
+		sapPrices.add(price2);
+	}
+	
 	/**
 	 * 添加物料费用行项目
 	 * @param sapItems
 	 * @param feeCode
 	 * @param rowNumber
+	 * @param fee1 费用
 	 */
-	private void addFeeItem(List<SapOrderItem> sapItems, String feeCode, Integer rowNumber) {
+	private void addFeeItem(List<SapOrderItem> sapItems, List<SapOrderPrice> sapPrices, String feeCode, Integer rowNumber, Double fee) {
 		SapOrderItem sapItem = new SapOrderItem();
 		// Ship-to PO item/送达方-采购订单编号项目
 		sapItem.setPosnr(rowNumber);
@@ -289,20 +305,9 @@ public class SapOrderService {
 		// Color Note/颜色备注
 		sapItem.setVbbpz118("");
 		
-//		// Price/condition record input
-//		// ZH05：实卖价合计
-//		SapOrderPrice price1 = new SapOrderPrice();
-//		price1.setPosnr(rowNumber);
-//		price1.setKschl("ZH05");
-//		price1.setKbetr(BigDecimal.valueOf(item.getActualPrice() * item.getQuantity()));
-//		sapPrices.add(price1);
-//		// ZH08：转移价合计/成本合计
-//		SapOrderPrice price2 = new SapOrderPrice();
-//		price2.setPosnr(rowNumber);
-//		price2.setKschl("ZH08");
-//		price2.setKbetr(BigDecimal.valueOf(item.getTransationPrice() * item.getQuantity()));
-//		sapPrices.add(price2);
-
+		fee = ObjectUtils.defaultIfNull(fee, 0).doubleValue();
+		addItemPrice(sapPrices, rowNumber, fee, fee);
+		
 		sapItems.add(sapItem);
 	}
 

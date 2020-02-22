@@ -780,7 +780,7 @@ public class OrderService {
 			Item item = new Item(); 
 			item.setOrderInfoId(orderInfoId);
 			item.setItemStatus("10");
-			itemMapper.updateStatusByOrderInfo(item);
+			itemMapper.updateSendSapStatusByOrderInfo(item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "推送订单到SAP失败，错误信息：" + e.getMessage();
