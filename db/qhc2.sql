@@ -454,7 +454,7 @@ create table k_item
    period               integer unsigned comment '生产/采购周期',
    b2c_comments         varchar(64) comment 'B2C备注',
    special_comments     varchar(64) comment '特殊备注',
-   volume_cube          decimal(13,2) comment '体积，待定',
+   volume_cube          decimal(13,2) comment '体积',
    freight              decimal(13,2) comment '运费，待定',
    is_virtual           integer not null default 0 comment '工程虚拟物料
             0:由销售录入的行项目
@@ -473,6 +473,7 @@ create table k_item
    is_configurable      integer not null comment '是否是可配置物料',
    clazz_code           varchar(45) comment '物料分类代码',
    comments             varchar(64) comment '备注，位于配置页面',
+   item_status          varchar(10) comment '行项目状态，00 草稿，10 下推SAP，其他状态与SAP同',
    primary key (id)
 );
 
@@ -591,11 +592,11 @@ create table k_order_info
    receive_type         varchar(10) comment '收货方式 code',
    transfer_type        varchar(45) comment '运输类型代码code',
    freight              decimal(13,2) comment '运费合计',
-   contactor1_id        varchar(18) comment '第一联系人身份证',
+   contactor1_id        varchar(64) comment '第一联系人身份证',
    contactor1_tel       varchar(16) comment '第一联系人电话',
-   contactor2_id        varchar(18) comment '第二联系人身份证',
+   contactor2_id        varchar(64) comment '第二联系人身份证',
    contactor2_tel       varchar(16) comment '第二联系人电话',
-   contactor3_id        varchar(18) comment '第三联系人身份证',
+   contactor3_id        varchar(64) comment '第三联系人身份证',
    contactor3_tel       varchar(16) comment '第三联系人电话',
    body_discount        double(4,2) comment '柜体折扣',
    approved_body_discount double(4,2) comment '批准的柜体折扣',
@@ -940,6 +941,7 @@ create table sap_materials
    stand_price          decimal(13,2) not null comment '标准价格moving_average_price',
    opt_time             datetime not null comment '操作时间',
    material_size        double(13,3) not null comment '物料体积',
+   material_type        varchar(10) comment '物料类型',
    sap_unit_of_measurement_code varchar(3) not null comment '计量单位',
    sap_material_groups_code varchar(4) not null comment '物料分组',
    sap_clazz_code       varchar(18) not null comment '特征分组',
