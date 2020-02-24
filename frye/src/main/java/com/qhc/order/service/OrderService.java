@@ -248,6 +248,11 @@ public class OrderService {
 		// calculate gross profit margin
 		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
+		
+		// 檢查空值
+		if (orderDto.getAdditionalFreight() == null ) {
+			orderDto.setAdditionalFreight(0D);
+		}
 
 		BeanUtils.copyProperties(order, orderDto);
 		BeanUtils.copyProperties(orderInfo, orderDto);
@@ -752,39 +757,35 @@ public class OrderService {
 	 * @param sequenceNumber
 	 * @param version
 	 * @return
+	 * @throws Exception 
 	 */
 	@Transactional
-	public String sendToSap(String user, Integer orderInfoId) {
-		try {
-			OrderDto orderDto = this.findOrder(orderInfoId);
-			// this.save(user, orderDto);
-			String stOrderType = orderDto.getStOrderType();
-			String status = orderDto.getStatus();
-			
-			if (!"3".equals(stOrderType)) {
-				throw new RuntimeException("直销客户投标报价单不能下发SAP");
-			}
-			
-			if (!OrderDto.ORDER_STATUS_MANAGER.equals(status)) {
-				throw new RuntimeException("当前状态不能下发SAP");
-			}
-
-			// 1. 根据sequenceNumber组装数据
-			SapOrder sapOrder = sapOrderService.assembleSapOrder(orderDto);
-
-			sapOrderService.sendToSap(sapOrder);
-//		  	logger.info("SAP同步开单结果==>"+sapRes);
-			// 修改订单状态为已下发SAP
-			orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null, null, null);
-			//  修改行项目状体为已下发SAP
-			Item item = new Item(); 
-			item.setOrderInfoId(orderInfoId);
-			item.setItemStatus("10");
-			itemMapper.updateSendSapStatusByOrderInfo(item);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "推送订单到SAP失败，错误信息：" + e.getMessage();
+	public String sendToSap(String user, Integer orderInfoId) throws Exception {
+		OrderDto orderDto = this.findOrder(orderInfoId);
+		// this.save(user, orderDto);
+		String stOrderType = orderDto.getStOrderType();
+		String status = orderDto.getStatus();
+		
+		if ("3".equals(stOrderType)) {
+			throw new RuntimeException("直销客户投标报价单不能下发SAP");
 		}
+		
+		if (!OrderDto.ORDER_STATUS_APPROVED.equals(status) && !OrderDto.ORDER_STATUS_APPROVED_UPDATE.equals(status)) {
+			throw new RuntimeException("当前状态不能下发SAP");
+		}
+
+		// 1. 根据sequenceNumber组装数据
+		SapOrder sapOrder = sapOrderService.assembleSapOrder(orderDto);
+
+		sapOrderService.sendToSap(sapOrder);
+//		  	logger.info("SAP同步开单结果==>"+sapRes);
+		// 修改订单状态为已下发SAP
+		orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null, null, null);
+		//  修改行项目状体为已下发SAP
+		Item item = new Item(); 
+		item.setOrderInfoId(orderInfoId);
+		item.setItemStatus("10");
+		itemMapper.updateSendSapStatusByOrderInfo(item);
 
 		return "success";
 
