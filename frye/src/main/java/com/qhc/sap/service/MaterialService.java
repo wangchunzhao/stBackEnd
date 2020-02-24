@@ -98,6 +98,7 @@ public class MaterialService {
 			dm.setUnit(ma.getUnitCode());
 			dm.setType(ma.getGroupCode());
 			dm.setMaterialSize(ma.getMaterialSize());
+			dm.setMaterialType(ma.getMaterialType());
 			dm.setClazzCode(ma.getClazzCode());
 			mset.add(dm);
 

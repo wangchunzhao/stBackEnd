@@ -395,12 +395,12 @@ public class SapService {
 					material.setPurchased(purchased);
 					material.setStandardPrice(StrToDouble(obj.getString("verpr")));
 					//
-					material.setOptTime(
-							DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
+					material.setOptTime(DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
 					material.setUnitCode(obj.getString("meins"));
 					material.setGroupCode("9999");
 					material.setClazzCode(clazzCode);
 					material.setMaterialSize(StrToDouble(obj.getString("volum")));
+					material.setMaterialType(obj.getString("mtart"));
 					mlist.add(material);
 					System.out.println(obj.getString("matnr") + ":评估类不正确");
 				} else {
@@ -418,12 +418,12 @@ public class SapService {
 					material.setPurchased(purchased);
 					material.setStandardPrice(StrToDouble(obj.getString("verpr")));
 					//
-					material.setOptTime(
-							DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
+					material.setOptTime(DateUtil.convert2Date(obj.getString("laeda") + obj.getString("laetm"), "yyyyMMddHHmmss"));
 					material.setUnitCode(obj.getString("meins"));
 					material.setGroupCode(groupCode);
 					material.setClazzCode(clazzCode);
 					material.setMaterialSize(StrToDouble(obj.getString("volum")));
+					material.setMaterialType(obj.getString("mtart"));
 					mlist.add(material);
 				}
 
