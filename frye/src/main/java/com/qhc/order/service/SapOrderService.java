@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,7 @@ import com.qhc.order.mapper.BillingPlanMapper;
 import com.qhc.order.mapper.CharacteristicsMapper;
 import com.qhc.utils.HttpUtil;
 
+@Service
 public class SapOrderService {
 	private static Logger logger = LoggerFactory.getLogger(SapOrderService.class);
 	
