@@ -323,5 +323,5 @@
 	<update id="updateSendSapStatusByOrderInfo" parameterType="com.qhc.order.entity.Item" >
 		update k_item set item_status = #{itemStatus}
 		where order_info_id = #{orderInfoId} and (item_status is null or item_status = '' or item_status = '00')
-	</delete>
+	</update>
 </mapper>

@@ -11,6 +11,7 @@
 			m.stand_price as standard_price, 
 			m.opt_time, 
 			m.material_size, 
+			m.material_type, 
 			m.sap_unit_of_measurement_code as unit_code,
 			u.name as unit_name, 
 			m.sap_material_groups_code as group_code,
