@@ -67,7 +67,13 @@ public class SapOrderService {
 		// Header input
 		header.setAuart(StringUtils.defaultString(order.getOrderType(), "")); // Sales order type/订单类型
 		header.setVkorg("0841"); // Sales org./销售组织 -- Fixed value/固定为 0841
-		header.setVtweg(order.getCustomerClazz()); // DC/分销渠道 -- 客户
+		String customerClazz = order.getCustomerClazz();
+		if (customerClazz.equals("01")) {
+			customerClazz = "10";
+		} else if (customerClazz.equals("02") || customerClazz.equals("03")) {
+			customerClazz = "20";
+		}
+		header.setVtweg(customerClazz); // DC/分销渠道 -- 客户
 		header.setName2(order.getShopName()); // Store name/店名
 		header.setSpart(order.getSaleType()); // Division/产品组
 		header.setVkbur(StringUtils.trimToEmpty(order.getOfficeCode())); // Sales office/销售办公室 -- 大区
@@ -205,7 +211,7 @@ public class SapOrderService {
 		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight());
 		Double additionalFreight = order.getAdditionalFreight();
 		additionalFreight = additionalFreight == null ? 0D : additionalFreight;
-		if (order.getAdditionalFreight().doubleValue() > 0) {
+		if (additionalFreight > 0) {
 			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
 			SapOrderPrice price3 = new SapOrderPrice();
 			price3.setPosnr(9903);
