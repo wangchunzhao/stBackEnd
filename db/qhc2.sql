@@ -405,7 +405,7 @@ create table k_delivery_address
    province_code        varchar(32) comment '省',
    city_code            varchar(32) comment '市',
    district_code        varchar(32) comment '区',
-   address              varchar(128) not null comment '地址',
+   address              varchar(128) comment '地址',
    primary key (id)
 );
 
@@ -460,7 +460,7 @@ create table k_item
             0:由销售录入的行项目
             1: 非销售部门录入的行项目',
    color_comments       varchar(64) comment '颜色备注',
-   color_options        varchar(100) comment '最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1',
+   color_options        varchar(512) comment '最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1',
    mosaic_image         varchar(64) comment '拼接图备注',
    attached_image       varchar(256) comment '拼接图附件',
    config_comments      varchar(256) comment '配置表备注(配置表页面)，待定',
