@@ -203,12 +203,16 @@ public class SapOrderService {
 		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, order.getMaterialFee());
 //		销售运费  BG1P7E00000-X	9903
 		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight());
-		// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
-		SapOrderPrice price3 = new SapOrderPrice();
-		price3.setPosnr(9903);
-		price3.setKschl("ZH12");
-		price3.setKbetr(BigDecimal.valueOf(order.getAdditionalFreight()));
-		sapPrices.add(price3);
+		Double additionalFreight = order.getAdditionalFreight();
+		additionalFreight = additionalFreight == null ? 0D : additionalFreight;
+		if (order.getAdditionalFreight().doubleValue() > 0) {
+			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
+			SapOrderPrice price3 = new SapOrderPrice();
+			price3.setPosnr(9903);
+			price3.setKschl("ZH12");
+			price3.setKbetr(BigDecimal.valueOf(additionalFreight));
+			sapPrices.add(price3);
+		}
 		
 //		电气费  BG1R8J00000-X	
 		addFeeItem(sapItems, sapPrices, "BG1R8J00000-X", 9904, order.getElectricalFee());
@@ -248,18 +252,22 @@ public class SapOrderService {
 	private void addItemPrice(List<SapOrderPrice> sapPrices, int rowNumber, double actualPriceSum,
 			double transferPriceSum) {
 		// Price/condition record input
-		// ZH05：实卖价合计
-		SapOrderPrice price1 = new SapOrderPrice();
-		price1.setPosnr(rowNumber);
-		price1.setKschl("ZH05");
-		price1.setKbetr(BigDecimal.valueOf(actualPriceSum));
-		sapPrices.add(price1);
-		// ZH08：转移价合计/成本合计
-		SapOrderPrice price2 = new SapOrderPrice();
-		price2.setPosnr(rowNumber);
-		price2.setKschl("ZH08");
-		price2.setKbetr(BigDecimal.valueOf(transferPriceSum));
-		sapPrices.add(price2);
+		if (actualPriceSum > 0) {
+			// ZH05：实卖价合计
+			SapOrderPrice price1 = new SapOrderPrice();
+			price1.setPosnr(rowNumber);
+			price1.setKschl("ZH05");
+			price1.setKbetr(BigDecimal.valueOf(actualPriceSum));
+			sapPrices.add(price1);
+		}
+		if (transferPriceSum > 0) {
+			// ZH08：转移价合计/成本合计
+			SapOrderPrice price2 = new SapOrderPrice();
+			price2.setPosnr(rowNumber);
+			price2.setKschl("ZH08");
+			price2.setKbetr(BigDecimal.valueOf(transferPriceSum));
+			sapPrices.add(price2);
+		}
 	}
 	
 	/**
@@ -308,7 +316,7 @@ public class SapOrderService {
 		sapItem.setVbbpz118("");
 		
 		fee = ObjectUtils.defaultIfNull(fee, 0).doubleValue();
-		addItemPrice(sapPrices, rowNumber, fee, fee);
+		addItemPrice(sapPrices, rowNumber, 0, fee);
 		
 		sapItems.add(sapItem);
 	}

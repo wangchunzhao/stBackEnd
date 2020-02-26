@@ -464,6 +464,20 @@ public class OrderService {
 			if ( StringUtils.isEmpty(itemDto.getItemStatus())) {
 				itemDto.setItemStatus("00");
 			}
+			
+			String materialCode = itemDto.getMaterialCode();
+			// BG1GD1000000-X  其他项目收费，成本固定1元，清除用户输入的标准价和转移价
+			if (materialCode.equals("BG1GD1000000-X")) {
+				itemDto.setTransationPrice(0);
+				itemDto.setStandardPrice(0);
+			}
+			// BG1R8R00000-X 冷库
+			// BG1R8L00000-X 不可预估费
+			// 设置标准价=用户输入的转移价
+			if (materialCode.equals("BG1R8R00000-X") || materialCode.equals("BG1R8L00000-X")) {
+				itemDto.setStandardPrice(itemDto.getTransationPrice());
+			}
+			
 			Item item = new Item();
 
 			BeanUtils.copyProperties(item, itemDto);
