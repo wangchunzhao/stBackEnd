@@ -103,7 +103,7 @@
 	    LEFT JOIN sap_industry i on i.code = iac.sap_industry_code
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			<if test="clazzCode != null and clazzCode != ''" >
-				AND c.sap_customer_class_code = #{clazzCode}
+				AND (c.sap_customer_class_code = #{clazzCode} OR c.sap_customer_class_code = '03')
 			</if>
 			<if test="name != null and name != ''" >
 				AND c.name like '%${name}%'
