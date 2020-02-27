@@ -112,11 +112,11 @@
 			scc.color_description as value_name,
 			1 as color
 		from k_item_color ic
-		left join sap_painting_class spcc on spcc.painting_class = ic.painting_class 
 		inner join k_item i on i.id = ic.item_id
 		left join sap_material_product_class smpc on smpc.material_code = i.material_code
-		left join sap_product_class spc on spc.product_class = smpc.product_class
+		left join sap_product_class spc on spc.product_class = smpc.product_class and spc.painting_class = ic.painting_class 
 		left join sap_color_class scc on scc.color_class = spc.color_class and scc.color_code = ic.color_code
+		left join sap_painting_class spcc on spcc.painting_class = ic.painting_class 
 		where ic.item_id = #{value}
 	</select>
 	
