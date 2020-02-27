@@ -180,6 +180,7 @@ public class OrderService {
 
 	@Transactional
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
+		List<ItemDto> items = orderDto.getItems();
 		Order order = new Order();
 		OrderInfo orderInfo = new OrderInfo();
 		
@@ -193,9 +194,15 @@ public class OrderService {
 				orderDto.setQuoteStatus("00");
 			}
 		}
+		
+		// 檢查空值
+		if (orderDto.getAdditionalFreight() == null ) {
+			orderDto.setAdditionalFreight(0D);
+		}
+		for(ItemDto item : items) {
+		}
 
 		// is b2c
-		List<ItemDto> items = orderDto.getItems();
 		if (items != null) {
 			items.forEach(i -> {
 				if (StringUtils.isNotEmpty(i.getB2cComments())) {
@@ -248,11 +255,6 @@ public class OrderService {
 		// calculate gross profit margin
 		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
 		orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
-		
-		// 檢查空值
-		if (orderDto.getAdditionalFreight() == null ) {
-			orderDto.setAdditionalFreight(0D);
-		}
 
 		BeanUtils.copyProperties(order, orderDto);
 		BeanUtils.copyProperties(orderInfo, orderDto);
