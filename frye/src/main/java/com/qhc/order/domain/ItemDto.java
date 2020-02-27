@@ -31,7 +31,7 @@ public class ItemDto {
 	private double standardPrice;//标准价格，客户信息
 	private double retailPrice;//市场零售价，客户信息
 	private double retailAmount;// 市场零售金额
-	private double transationPrice;//转移价，客户信息
+	private double transactionPrice;//转移价，客户信息
 	private double yearPurchasePrice;//年采价，大客户有，客户信息
 	private double actualPrice;//产品实卖价
 	private double actualAmount;//产品实卖金额
@@ -196,11 +196,11 @@ public class ItemDto {
 	public void setRetailAmount(double retailAmount) {
 		this.retailAmount = retailAmount;
 	}
-	public double getTransationPrice() {
-		return transationPrice;
+	public double getTransactionPrice() {
+		return transactionPrice;
 	}
-	public void setTransationPrice(double transationPrice) {
-		this.transationPrice = transationPrice;
+	public void setTransactionPrice(double transactionPrice) {
+		this.transactionPrice = transactionPrice;
 	}
 	public double getYearPurchasePrice() {
 		return yearPurchasePrice;
@@ -498,7 +498,7 @@ public class ItemDto {
 				+ ", stMaterialGroupCode=" + stMaterialGroupCode + ", stMaterialGroupName=" + stMaterialGroupName
 				+ ", unitCode=" + unitCode + ", unitName=" + unitName + ", quantity=" + quantity + ", standardPrice="
 				+ standardPrice + ", retailPrice=" + retailPrice + ", retailAmount=" + retailAmount
-				+ ", transationPrice=" + transationPrice + ", yearPurchasePrice=" + yearPurchasePrice + ", actualPrice="
+				+ ", transactionPrice=" + transactionPrice + ", yearPurchasePrice=" + yearPurchasePrice + ", actualPrice="
 				+ actualPrice + ", actualAmount=" + actualAmount + ", optionalActualPrice=" + optionalActualPrice
 				+ ", optionalActualAmount=" + optionalActualAmount + ", optionalTransactionPrice="
 				+ optionalTransactionPrice + ", b2cEstimatedPrice=" + b2cEstimatedPrice + ", b2cEstimatedAmount="

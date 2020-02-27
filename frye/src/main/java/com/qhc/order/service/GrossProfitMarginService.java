@@ -164,7 +164,7 @@ public class GrossProfitMarginService {
 				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
 				amount +=  (item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice()) * item.getQuantity();
 				// 成本（销售）
-				cost += item.getTransationPrice() * item.getQuantity();
+				cost += item.getTransactionPrice() * item.getQuantity();
 				// 成本（生产）
 				wtwCost += item.getStandardPrice() * item.getQuantity();
 			}

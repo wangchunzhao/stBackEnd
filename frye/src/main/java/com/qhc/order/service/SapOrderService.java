@@ -170,7 +170,7 @@ public class SapOrderService {
 
 			// add price condition
 			double actualPriceSum = item.getActualPrice() * item.getQuantity();
-			double transferPriceSum = item.getTransationPrice() * item.getQuantity();
+			double transferPriceSum = item.getTransactionPrice() * item.getQuantity();
 			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
