@@ -1,6 +1,7 @@
 package com.qhc.order.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -80,11 +81,19 @@ public class GrossProfitMarginService {
 				break;
 			case "3231": // "其他项目收费"
 				// 收入为手工输入
-				calcItemMargin(mgroup, order);
-				double otherAmount = mgroup.getAmount().doubleValue();
-				double otherExcludingTaxAmount = mgroup.getExcludingTaxAmount().doubleValue();
-				// 1元，固定值
-				setMaterialGroupMargin(mgroup, otherAmount, otherExcludingTaxAmount, 1, 1);
+				final List<String> l = new ArrayList<>();
+				items.forEach(i -> { 
+					if (i.getMaterialGroupCode().equals(code)) l.add("1"); 
+				});
+				if (l.size() > 0) {
+					calcItemMargin(mgroup, order);
+					double otherAmount = mgroup.getAmount().doubleValue();
+					double otherExcludingTaxAmount = mgroup.getExcludingTaxAmount().doubleValue();
+					// 1元，固定值
+					setMaterialGroupMargin(mgroup, otherAmount, otherExcludingTaxAmount, 1, 1);
+				} else {
+					setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
+				}
 				break;
 			case "3212": // "安装费"
 				setMaterialGroupMargin(mgroup, 0, 0, installFee, installFee);
