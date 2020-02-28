@@ -211,7 +211,7 @@ public class SapOrderService {
 		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight());
 		Double additionalFreight = order.getAdditionalFreight();
 		additionalFreight = additionalFreight == null ? 0D : additionalFreight;
-		if (additionalFreight > 0) {
+		if (order.getFreight() > 0 && additionalFreight > 0) {
 			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
 			SapOrderPrice price3 = new SapOrderPrice();
 			price3.setPosnr(9903);
@@ -284,6 +284,11 @@ public class SapOrderService {
 	 * @param fee1 费用
 	 */
 	private void addFeeItem(List<SapOrderItem> sapItems, List<SapOrderPrice> sapPrices, String feeCode, Integer rowNumber, Double fee) {
+		fee = ObjectUtils.defaultIfNull(fee, 0).doubleValue();
+		// 费用为0则不传 
+		if (fee <= 0) {
+			return;
+		}
 		SapOrderItem sapItem = new SapOrderItem();
 		// Ship-to PO item/送达方-采购订单编号项目
 		sapItem.setPosnr(rowNumber);
@@ -321,7 +326,6 @@ public class SapOrderService {
 		// Color Note/颜色备注
 		sapItem.setVbbpz118("");
 		
-		fee = ObjectUtils.defaultIfNull(fee, 0).doubleValue();
 		addItemPrice(sapPrices, rowNumber, 0, fee);
 		
 		sapItems.add(sapItem);
