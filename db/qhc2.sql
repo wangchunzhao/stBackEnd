@@ -99,6 +99,8 @@ drop table if exists sap_materials;
 
 drop table if exists sap_materials_price;
 
+drop table if exists sap_materials_price_temp;
+
 drop table if exists sap_order_type;
 
 drop table if exists sap_order_type_and_customer_class;
@@ -343,7 +345,7 @@ create table k_characteristics
    item_id              integer not null,
    key_code             varchar(45) not null comment '选定的特征代码',
    value_code           varchar(45) not null comment '选定的特征值的代码',
-   is_configurable      integer not null comment '可配置',
+   is_configurable      integer not null comment '可配置，无用',
    primary key (id),
    key character_unique (key_code)
 );
@@ -470,7 +472,7 @@ create table k_item
    request_circult      varchar(64) comment '，待定',
    config_transfer_price decimal(13,2) comment '，待定',
    config_retail_price  decimal(13,2) comment '，待定',
-   is_configurable      integer not null comment '是否是可配置物料',
+   is_configurable      integer not null comment '是否是可配置物料，1/0，来自物料信息',
    clazz_code           varchar(45) comment '物料分类代码',
    comments             varchar(64) comment '备注，位于配置页面',
    item_status          varchar(10) comment '行项目状态，00 草稿，10 下推SAP，其他状态与SAP同',
@@ -964,6 +966,20 @@ create table sap_materials_price
 );
 
 alter table sap_materials_price comment 'SAP物料价格';
+
+/*==============================================================*/
+/* Table: sap_materials_price_temp                              */
+/*==============================================================*/
+create table sap_materials_price_temp
+(
+   sap_price_type_code  varchar(4) not null,
+   sap_materials_code   varchar(18) not null,
+   sap_industry_code    varchar(4) not null,
+   price                decimal(13,2) not null,
+   primary key (sap_materials_code, sap_industry_code, sap_price_type_code)
+);
+
+alter table sap_materials_price_temp comment 'SAP物料价格临时表';
 
 /*==============================================================*/
 /* Table: sap_order_type                                        */
