@@ -160,6 +160,7 @@ public class MaterialService {
 			return;
 		}
 		String code = m.getCode();
+		double standardPrice = m.getStandardPrice();
 		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
 		for (MaterialPrice materialPrice : prices) {
 			String priceTypeCode = materialPrice.getType();
@@ -170,8 +171,13 @@ public class MaterialService {
 			case MATERIAL_PRICE_TYPE_ANNUAL_PRICE:
 				m.setAnnualPrice(materialPrice.getPrice());
 				break;
-			case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
-				m.setTranscationPrice(materialPrice.getPrice());
+				// 转移价，不用
+//			case MATERIAL_PRICE_TYPE_TRANSACTION_PRICE:
+//				m.setTranscationPrice(materialPrice.getPrice());
+//				break;
+				// 转移加价百分比
+			case MATERIAL_PRICE_TYPE_TRANSACTION_PERCENTAGE_PRICE:
+				m.setTranscationPrice(standardPrice * materialPrice.getPrice() / 100);
 				break;
 			}
 		}
@@ -281,9 +287,7 @@ public class MaterialService {
 	private void fillBomPrice(String industryCode, List<Bom> optional) {
 		for (Bom bom : optional) {
 			if (bom.isMarked()) {
-				MaterialDto m = new MaterialDto();
-				m.setCode(bom.getCode());
-				this.fillMaterialPrice(m, industryCode);
+				MaterialDto m = getMaterialsById(bom.getCode(), industryCode);
 				
 				bom.setAnnualPrice(m.getAnnualPrice());
 				bom.setTransferPrice(m.getTranscationPrice());
