@@ -231,7 +231,7 @@ public class OrderService {
 			for(ItemDto item : items) {
 				String districtCode = item.getDistrictCode();
 				if (StringUtils.isEmpty(districtCode)) {
-					continue;
+					throw new RuntimeException("地址的省市区不能为空！");
 				}
 				double volumn = ObjectUtils.defaultIfNull(item.getQuantity(), 0).doubleValue() * ObjectUtils.defaultIfNull(item.getVolumeCube(), 0).doubleValue();
 				volumn += ObjectUtils.defaultIfNull(freightMap.get(districtCode), 0).doubleValue();
