@@ -10,6 +10,7 @@
 		<result column="item_category" property="itemCategory" jdbcType="VARCHAR" />
 		<result column="item_requirement_plan" property="itemRequirementPlan" jdbcType="VARCHAR" />
 		<result column="b2c_estimated_price" property="b2cEstimatedPrice" jdbcType="DECIMAL" />
+		<result column="b2c_estimated_cost" property="b2cEstimatedCost" jdbcType="DECIMAL" />
 		<result column="delivery_address_seq" property="deliveryAddressSeq" jdbcType="INTEGER" />
 		<result column="delivery_address_id" property="deliveryAddressId" jdbcType="INTEGER" />
 		<result column="standard_price" property="standardPrice" jdbcType="DECIMAL" />
@@ -57,7 +58,7 @@
 		</selectKey>
 		insert into k_item ( id, order_info_id, row_num, 
 			material_code, quantity, item_category, 
-			item_requirement_plan, b2c_estimated_price, delivery_address_seq, 
+			item_requirement_plan, b2c_estimated_price, b2c_estimated_cost, delivery_address_seq, 
 			delivery_address_id, standard_price, retail_price, 
 			actual_price, transaction_price, optional_actual_price, 
 			optional_transaction_price, discount, produce_date, 
@@ -71,7 +72,7 @@
 			comments, color_options, item_status )
 		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{rowNum, jdbcType=INTEGER}, 
 			#{materialCode, jdbcType=VARCHAR}, #{quantity, jdbcType=DOUBLE}, #{itemCategory, jdbcType=VARCHAR}, 
-			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
+			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{b2cEstimatedCost, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
 			#{deliveryAddressId, jdbcType=INTEGER}, #{standardPrice, jdbcType=DECIMAL}, #{retailPrice, jdbcType=DECIMAL}, 
 			#{actualPrice, jdbcType=DECIMAL}, #{transactionPrice, jdbcType=DECIMAL}, #{optionalActualPrice, jdbcType=DECIMAL}, 
 			#{optionalTransactionPrice, jdbcType=DECIMAL}, #{discount, jdbcType=DOUBLE}, #{produceDate, jdbcType=DATE}, 
@@ -95,6 +96,7 @@
 			item_category = #{itemCategory, jdbcType=VARCHAR}, 
 			item_requirement_plan = #{itemRequirementPlan, jdbcType=VARCHAR}, 
 			b2c_estimated_price = #{b2cEstimatedPrice, jdbcType=DECIMAL}, 
+			b2c_estimated_cost = #{b2cEstimatedCost, jdbcType=DECIMAL}, 
 			delivery_address_seq = #{deliveryAddressSeq, jdbcType=INTEGER}, 
 			delivery_address_id = #{deliveryAddressId, jdbcType=INTEGER}, 
 			standard_price = #{standardPrice, jdbcType=DECIMAL}, 

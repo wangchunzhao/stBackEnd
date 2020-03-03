@@ -38,6 +38,12 @@ public class SapOrderHeader {
 	private String zterm;
 	// Sold-to party/售达方 -- Selling tool 签约单位
 	private String kunnr;
+	// Sold-to party/开票方 -- Selling tool 签约单位
+	private String kunnr_re;
+	// Sold-to party/付款方 -- Selling tool 签约单位
+	private String kunnr_rg;
+	// Sold-to party/送达方 -- Selling tool 签约单位
+	private String kunnr_we;
 	// Currency/币别 -- Selling tool 币别
 	private String waerk;
 	// Incoterms/国际贸易条款 -- Selling tool 国际贸易条件
@@ -161,6 +167,24 @@ public class SapOrderHeader {
 	}
 	public void setKunnr(String kunnr) {
 		this.kunnr = kunnr;
+	}
+	public String getKunnr_re() {
+		return kunnr_re;
+	}
+	public void setKunnr_re(String kunnr_re) {
+		this.kunnr_re = kunnr_re;
+	}
+	public String getKunnr_rg() {
+		return kunnr_rg;
+	}
+	public void setKunnr_rg(String kunnr_rg) {
+		this.kunnr_rg = kunnr_rg;
+	}
+	public String getKunnr_we() {
+		return kunnr_we;
+	}
+	public void setKunnr_we(String kunnr_we) {
+		this.kunnr_we = kunnr_we;
 	}
 	public String getWaerk() {
 		return waerk;

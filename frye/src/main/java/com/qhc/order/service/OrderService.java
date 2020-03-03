@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.domain.CharacteristicDto;
@@ -188,6 +189,10 @@ public class OrderService {
 			orderDto.setStatus(OrderDto.ORDER_STATUS_DRAFT);
 		}
 		
+		if (orderDto.getStatus().equals(OrderDto.ORDER_STATUS_MANAGER)) {
+			orderDto.setContractManager(user);
+		}
+		
 		// 报价单状态
 		if (orderDto.getStOrderType().equals("3")) {
 			if (StringUtils.isEmpty(orderDto.getQuoteStatus())) {
@@ -255,6 +260,17 @@ public class OrderService {
 			}
 			orderDto.setFreight(freight);
 		}
+
+		// 行项目金额合计
+		double itemsAmount = 0; 
+		for (ItemDto itemDto : items) {
+			double discount = itemDto.getDiscount();
+			itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
+		}
+		// merge discount
+		orderDto.setItemsAmount(itemsAmount);
+		orderDto.setDiscount(BigDecimal.valueOf(itemsAmount / orderDto.getContractRmbValue())
+				.setScale(4, RoundingMode.HALF_UP).doubleValue());
 
 		// calculate gross profit margin
 		List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
@@ -1024,7 +1040,7 @@ public class OrderService {
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
 		}
-		List<MaterialGroups> grossProfitMargins = grossProfitMarginService.calculate(order);
+		List<MaterialGroups> grossProfitMargins = new ObjectMapper().readValue(order.getGrossProfitMargin(), new TypeReference<List<MaterialGroups>>() {});
 		MaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 
 		BpmOrder bpmOrder = new BpmOrder();

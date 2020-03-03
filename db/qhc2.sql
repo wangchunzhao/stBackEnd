@@ -440,6 +440,7 @@ create table k_item
    item_category        varchar(45) not null comment '行项目类别',
    item_requirement_plan varchar(45) not null comment '需求计划',
    b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
+   b2c_estimated_cost   decimal(13,2) comment 'B2C评估成本',
    delivery_address_seq integer comment '发货地址序号',
    delivery_address_id  integer comment '发货地址ID，这个字段可以不用',
    standard_price       decimal(13,2) comment '移动平均价，即成本价格',
@@ -475,7 +476,8 @@ create table k_item
    is_configurable      integer not null comment '是否是可配置物料，1/0，来自物料信息',
    clazz_code           varchar(45) comment '物料分类代码',
    comments             varchar(64) comment '备注，位于配置页面',
-   item_status          varchar(10) comment '行项目状态，00 草稿，10 下推SAP，其他状态与SAP同',
+   item_status          varchar(10) comment '行项目状态，00 草稿，10 下推SAP，Z2 取消
+            Z7 订单关闭',
    primary key (id)
 );
 

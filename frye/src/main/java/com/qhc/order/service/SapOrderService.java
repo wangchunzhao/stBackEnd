@@ -83,17 +83,20 @@ public class SapOrderService {
 		header.setKvgr2(ObjectUtils.defaultIfNull(order.getIsNew(), "").toString()); // Customer grp.2/客户组2 -- 是否新客户
 		header.setKvgr3(ObjectUtils.defaultIfNull(order.getIsReformed(), "").toString()); // Customer grp.3/客户组3 -- 是否改造店
 		header.setBstzd(ObjectUtils.defaultIfNull(order.getWarranty(), "").toString()); // Additional/附加的 -- 保修年限
-		header.setBstkdE(StringUtils.trimToEmpty(order.getContractNumber()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号 - 合同号
+		header.setBstkdE(StringUtils.trimToEmpty(order.getRecordCode()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号
 		header.setVsart(StringUtils.trimToEmpty(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
 		header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空，dealer取billing_plan的第一条code（唯一一条）
 		header.setKunnr(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
+		header.setKunnr_re(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/开票方 -- 签约单位
+		header.setKunnr_rg(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/付款方 -- 签约单位
+		header.setKunnr_we(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/送达方 -- 签约单位
 		header.setWaerk(StringUtils.trimToEmpty(order.getCurrency())); // Currency/币别 -- 币别
 		header.setInco1(StringUtils.trimToEmpty(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
 		header.setInco1(StringUtils.trimToEmpty(order.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
 		header.setVbbkz120(String.valueOf(order.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
 		header.setVbbkz121(order.getSalesCode()); // Sale rep./签约人 -- 客户经理
-		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 合同管理员
+		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 支持经理
 		String contactorInfo = StringUtils.trimToEmpty(order.getContactor1Id()) + "/" + StringUtils.trimToEmpty(order.getContactor1Tel())
 				+ StringUtils.trimToEmpty(order.getContactor2Id()) + "/" + StringUtils.trimToEmpty(order.getContactor2Tel())
 				+ StringUtils.trimToEmpty(order.getContactor3Id()) + "/" + StringUtils.trimToEmpty(order.getContactor3Tel());
@@ -117,9 +120,9 @@ public class SapOrderService {
 			// Target quantity/数量
 			sapItem.setZmeng((int) item.getQuantity());
 			// Req.dlv.date/请求发货日期 yyyyMMdd
-			String deliveryDate = item.getDeliveryDate() == null ? ""
-					: new SimpleDateFormat("yyyyMMdd").format(item.getDeliveryDate());
-			sapItem.setEdatu(deliveryDate);
+			String shippDate = item.getShippDate() == null ? ""
+					: new SimpleDateFormat("yyyyMMdd").format(item.getShippDate());
+			sapItem.setEdatu(shippDate);
 			// Item category/行项目类别 -- 项目类别
 			sapItem.setPstyv(item.getItemCategory());
 			// Item usage/项目用途 -- 项目需求计划
@@ -169,8 +172,10 @@ public class SapOrderService {
 			sapItems.add(sapItem);
 
 			// add price condition
-			double actualPriceSum = item.getActualPrice() * item.getQuantity();
-			double transferPriceSum = item.getTransactionPrice() * item.getQuantity();
+			// 实卖价合计
+			double actualPriceSum = item.getActualPrice() * item.getQuantity() + item.getOptionalActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
+			// 转移价合计
+			double transferPriceSum = item.getTransactionPrice() * item.getQuantity() + item.getOptionalTransactionPrice() * item.getQuantity() + item.getB2cEstimatedCost();
 			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
