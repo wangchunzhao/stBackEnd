@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.ProvinceMapMapper" >
+	<resultMap id="ProvinceMapBaseMap" type="com.qhc.system.entity.ProvinceMap" >
+		<id column="st_province" property="stProvince" jdbcType="VARCHAR" />
+		<result column="sap_province" property="sapProvince" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ProvinceMapMap" type="com.qhc.system.entity.ProvinceMap" extends="ProvinceMapBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.ProvinceMap">
+		insert into b_province_map ( sap_province )
+		values ( #{sapProvince, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.ProvinceMap" >
+		update b_province_map
+		set sap_province = #{sapProvince, jdbcType=VARCHAR}
+		where st_province = #{stProvince, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from b_province_map
+		where st_province = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_province_map.st_province, b_province_map.sap_province
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="ProvinceMapMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from b_province_map 
+		where b_province_map.st_province = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="ProvinceMapMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_province_map
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by st_province
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_province_map
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="stProvince != null and stProvince != ''" >
+				AND b_province_map.st_province = #{stProvince, jdbcType=VARCHAR}
+			</if>
+			<if test="sapProvince != null and sapProvince != ''" >
+				AND b_province_map.sap_province = #{sapProvince, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>

@@ -27,6 +27,8 @@ import com.qhc.order.domain.sap.SapOrderPrice;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.mapper.BillingPlanMapper;
 import com.qhc.order.mapper.CharacteristicsMapper;
+import com.qhc.system.entity.ProvinceMap;
+import com.qhc.system.mapper.ProvinceMapMapper;
 import com.qhc.utils.HttpUtil;
 
 @Service
@@ -44,6 +46,8 @@ public class SapOrderService {
 	private CharacteristicsMapper characteristicsMapper;
 	@Autowired
 	private BillingPlanMapper billingPlanMapper;
+	@Autowired
+	private ProvinceMapMapper provinceMapMapper;
 
 	public SapOrderService() {
 	}
@@ -101,8 +105,14 @@ public class SapOrderService {
 				+ StringUtils.trimToEmpty(order.getContactor2Id()) + "/" + StringUtils.trimToEmpty(order.getContactor2Tel())
 				+ StringUtils.trimToEmpty(order.getContactor3Id()) + "/" + StringUtils.trimToEmpty(order.getContactor3Tel());
 		header.setVbbkz108(contactorInfo); // Contact info./授权人信息 -- 授权人信息6个字段 3个联系人id+tel / 分隔
-		String vbbkz122 = ObjectUtils.defaultIfNull(order.getIsTerm1(), "") + "/" + ObjectUtils.defaultIfNull(order.getIsTerm2(), "")
-				+ ObjectUtils.defaultIfNull(order.getIsTerm3(), "");
+		String vbbkz122 = "";
+		// 	柜体控制阀件是否甲供
+		vbbkz122 += order.getIsTerm1() == 1 ? "/" + "柜体控制阀件甲供" : "";
+		// 分体柜是否远程监控
+		vbbkz122 += order.getIsTerm2() == 1 ? "/" + "分体柜远程监控" : "";
+		// 立柜柜体是否在地下室
+		vbbkz122 += order.getIsTerm3() == 1 ? "/" + "立柜柜体在地下室" : "";
+		vbbkz122 = vbbkz122.length() > 0 ? vbbkz122.substring(1) : "";
 		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
 		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
 
@@ -137,11 +147,16 @@ public class SapOrderService {
 			// 街道名称
 			sapItem.setStreet(item.getAddress());
 //			// Province/省 -- 省code
-			sapItem.setRegion(item.getProvinceCode());
+			String province = item.getProvinceCode();
+			ProvinceMap provinceMap = provinceMapMapper.findById(item.getProvinceCode());
+			if (provinceMap == null) {
+				throw new RuntimeException("省【" + province + "】没有找到对应的SAP省对应关系");
+			}
+			sapItem.setRegion(provinceMap.getSapProvince());
 //			// City/市 -- 市名称
-			sapItem.setCity1(item.getCityCode());
+			sapItem.setCity1(item.getCityName());
 //			// District/区 -- 区名称
-			sapItem.setCity2(item.getDistrictCode());
+			sapItem.setCity2(item.getDistrictName());
 
 			// B2C note/B2C备注
 			sapItem.setVbbp0006(item.getB2cComments());

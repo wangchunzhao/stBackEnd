@@ -21,6 +21,8 @@ drop table if exists b_operation;
 
 drop table if exists b_province;
 
+drop table if exists b_province_map;
+
 drop table if exists b_role;
 
 drop table if exists b_role_operation;
@@ -214,6 +216,18 @@ create table b_province
 );
 
 alter table b_province comment '省';
+
+/*==============================================================*/
+/* Table: b_province_map                                        */
+/*==============================================================*/
+create table b_province_map
+(
+   st_province          varchar(32) not null comment '销售工具省code',
+   sap_province         varchar(32) not null comment 'sap省code',
+   primary key (st_province)
+);
+
+alter table b_province_map comment '销售工具与SAP省code映射关系';
 
 /*==============================================================*/
 /* Table: b_role                                                */
