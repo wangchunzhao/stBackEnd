@@ -71,6 +71,8 @@ public class SapOrderHeader {
 	private String city1;
 	// District/区 -- Selling tool 区
 	private String city2;
+	// 交货日期 -- 要求发货日期
+	private String vdatu;
 	
 	public String getAuart() {
 		return auart;
@@ -263,5 +265,11 @@ public class SapOrderHeader {
 	}
 	public void setCity2(String city2) {
 		this.city2 = city2;
+	}
+	public String getVdatu() {
+		return vdatu;
+	}
+	public void setVdatu(String vdatu) {
+		this.vdatu = vdatu;
 	}
 }

@@ -115,6 +115,9 @@ public class SapOrderService {
 		vbbkz122 = vbbkz122.length() > 0 ? vbbkz122.substring(1) : "";
 		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
 		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
+		String deliveryDate = order.getEarliestDeliveryDate() == null ? ""
+				: new SimpleDateFormat("yyyyMMdd").format(order.getEarliestDeliveryDate());
+		header.setVdatu(deliveryDate); // 交货日期 -- 要求发货日期
 
 //		ItemService itemService;
 		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
@@ -138,6 +141,7 @@ public class SapOrderService {
 			// Item usage/项目用途 -- 项目需求计划
 			sapItem.setVkaus(item.getItemRequirementPlan());
 
+			// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
 			// Ship-to address/送达方地址
 			if (addressSeq == null) {
 				addressSeq = item.getDeliveryAddressSeq();
@@ -147,12 +151,8 @@ public class SapOrderService {
 			// 街道名称
 			sapItem.setStreet(item.getAddress());
 //			// Province/省 -- 省code
-			String province = item.getProvinceCode();
-			ProvinceMap provinceMap = provinceMapMapper.findById(item.getProvinceCode());
-			if (provinceMap == null) {
-				throw new RuntimeException("省【" + province + "】没有找到对应的SAP省对应关系");
-			}
-			sapItem.setRegion(provinceMap.getSapProvince());
+			String province = getSapProvince(order.getSaleType(), item.getProvinceCode());
+			sapItem.setRegion(province);
 //			// City/市 -- 市名称
 			sapItem.setCity1(item.getCityName());
 //			// District/区 -- 区名称
@@ -208,6 +208,7 @@ public class SapOrderService {
 			}
 		}
 		
+		// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
 		// 如果所有行项目只有一个地址，则设置sap order header的地址为此地址
 		if (singleAddress) {
 			// 街道名称
@@ -273,6 +274,18 @@ public class SapOrderService {
 
 		return sapOrder;
 
+	}
+	private String getSapProvince(String saleType, String province) {
+		// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
+		if (saleType.equals("20")) {
+			return province;
+		}
+		ProvinceMap provinceMap = provinceMapMapper.findById(province);
+		if (provinceMap == null) {
+			throw new RuntimeException("省【" + province + "】没有找到对应的SAP省对应关系");
+		}
+		province = provinceMap.getSapProvince();
+		return province;
 	}
 	
 	private void addItemPrice(List<SapOrderPrice> sapPrices, int rowNumber, double actualPriceSum,

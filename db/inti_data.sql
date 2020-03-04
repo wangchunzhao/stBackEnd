@@ -9,6 +9,41 @@ INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operate
 INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (6,'schedule_minute','0','2019-01-01','定时更新任务-分','wangch','2019-01-01 00:00:00');
 INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (7,'fuzzy_query_output_limit','50','2019-01-01','模糊查询-输出限制','wangch','2019-01-01 00:00:00');
 
+/*
+-- Query: select * from b_province_map
+*/
+INSERT INTO `b_province_map` VALUES ('10', '010', '北京');
+INSERT INTO `b_province_map` VALUES ('11', '020', '上海');
+INSERT INTO `b_province_map` VALUES ('12', '030', '天津');
+INSERT INTO `b_province_map` VALUES ('13', '320', '重庆');
+INSERT INTO `b_province_map` VALUES ('20', '120', '山东');
+INSERT INTO `b_province_map` VALUES ('21', '230', '四川');
+INSERT INTO `b_province_map` VALUES ('22', '190', '广东');
+INSERT INTO `b_province_map` VALUES ('23', '170', '湖北');
+INSERT INTO `b_province_map` VALUES ('24', '130', '浙江');
+INSERT INTO `b_province_map` VALUES ('25', '160', '湖南');
+INSERT INTO `b_province_map` VALUES ('26', '100', '江苏');
+INSERT INTO `b_province_map` VALUES ('27', '220', '贵州');
+INSERT INTO `b_province_map` VALUES ('28', '240', '云南');
+INSERT INTO `b_province_map` VALUES ('29', '060', '河北');
+INSERT INTO `b_province_map` VALUES ('30', '110', '安徽');
+INSERT INTO `b_province_map` VALUES ('31', '180', '河南');
+INSERT INTO `b_province_map` VALUES ('32', '090', '黑龙江');
+INSERT INTO `b_province_map` VALUES ('33', '140', '江西');
+INSERT INTO `b_province_map` VALUES ('34', '150', '福建');
+INSERT INTO `b_province_map` VALUES ('35', '070', '辽宁');
+INSERT INTO `b_province_map` VALUES ('36', '290', '新疆');
+INSERT INTO `b_province_map` VALUES ('37', '210', '广西');
+INSERT INTO `b_province_map` VALUES ('38', '250', '陕西');
+INSERT INTO `b_province_map` VALUES ('39', '040', '内蒙古');
+INSERT INTO `b_province_map` VALUES ('40', '080', '吉林');
+INSERT INTO `b_province_map` VALUES ('41', '050', '山西');
+INSERT INTO `b_province_map` VALUES ('42', '200', '海南');
+INSERT INTO `b_province_map` VALUES ('43', '260', '甘肃');
+INSERT INTO `b_province_map` VALUES ('44', '270', '宁夏');
+INSERT INTO `b_province_map` VALUES ('45', '280', '青海');
+INSERT INTO `b_province_map` VALUES ('46', '300', '西藏');
+
 -- -----------------------------------------------------
 -- Data for table `b_operation`
 -- -----------------------------------------------------

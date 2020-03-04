@@ -213,7 +213,7 @@ public class MaterialService {
 						ch.getConfigs().add(cfg);
 						
 						cfg.setCode(colorClass.getColorCode());
-						cfg.setName(colorClass.getColorDescription());
+						cfg.setName(colorClass.getColorMaterialCode() + " - " + colorClass.getColorDescription());
 						cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
 					}
 				}
