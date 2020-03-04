@@ -224,6 +224,7 @@ create table b_province_map
 (
    st_province          varchar(32) not null comment '销售工具省code',
    sap_province         varchar(32) not null comment 'sap省code',
+   name                 varchar(64) not null,
    primary key (st_province)
 );
 
