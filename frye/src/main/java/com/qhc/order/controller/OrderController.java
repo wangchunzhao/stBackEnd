@@ -296,7 +296,7 @@ public class OrderController {
 		return result;
 	}
 
-	@ApiOperation(value = "订单的公共可选择", notes = "所有订单共享的可选项")
+	@ApiOperation(value = "订单的公共可选项", notes = "所有订单共享的可选项")
 	@GetMapping(value = "order/option")
 	public Result getOption() throws Exception {
 		Result result = null;

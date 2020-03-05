@@ -2,9 +2,12 @@ package com.qhc.order.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
 import com.qhc.sap.entity.MaterialGroups;
+import com.qhc.system.dao.AreaRepository;
+import com.qhc.system.entity.Area;
 import com.qhc.system.service.SettingsService;
 
 /**
@@ -28,6 +33,9 @@ public class GrossProfitMarginService {
 	
 	@Autowired
 	private SettingsService settingsService;
+	
+	@Autowired
+	private AreaRepository areaRepository;
 
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
@@ -42,7 +50,22 @@ public class GrossProfitMarginService {
 		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d);
 		double electricalFee = ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d);
 		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d);
-		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0d);
+		double freight = 0;
+		String transferType = order.getTransferType();
+		// 计算运费
+		// 自提不计算运费
+		if (!transferType.equals("02")) {
+	//		•	预估运费 = Volume * ZCTP* + ZCTF*
+	//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
+	//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
+	//				o	Case 3: Volume>=50m3, corresponding conditions were ‘ZCTP3/ZCTF3’
+	//		ZCTP = 客户单价
+	//		ZCTF	 = 客户送货费
+			freight = calculateFreight(items);
+			order.setFreight(freight);
+		}
+		this.calculateFreight(items);
+		order.setFreight(freight);
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d);
 		int warranty = order.getWarranty();
 		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
@@ -149,6 +172,54 @@ public class GrossProfitMarginService {
 		groups.add(sumMaterialGroup);
 
 		return groups;
+	}
+
+	/**
+	 * 运费计算
+	 * 
+	 * @param items
+	 * @return
+	 */
+	private double calculateFreight(List<ItemDto> items) {
+		//		•	预估运费 = Volume * ZCTP* + ZCTF*
+		//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
+		//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
+		//				o	Case 3: Volume>=50m3, corresponding conditions were ‘ZCTP3/ZCTF3’
+		//		ZCTP = 客户单价
+		//		ZCTF	 = 客户送货费
+		Map<String, Double> freightMap = new HashMap<>();
+		double freight = 0;
+		for(ItemDto item : items) {
+			String districtCode = item.getDistrictCode();
+			if (StringUtils.isEmpty(districtCode)) {
+				throw new RuntimeException("地址的省市区不能为空！");
+			}
+			double volumn = ObjectUtils.defaultIfNull(item.getQuantity(), 0).doubleValue() * ObjectUtils.defaultIfNull(item.getVolumeCube(), 0).doubleValue();
+			volumn += ObjectUtils.defaultIfNull(freightMap.get(districtCode), 0).doubleValue();
+			freightMap.put(districtCode, volumn);
+		}
+		for (Map.Entry<String, Double> freightEntity : freightMap.entrySet()) {
+			String districtCode = freightEntity.getKey();
+			Double volumn = freightEntity.getValue();
+			Area area = areaRepository.findById(districtCode).get();
+			if (area == null) {
+				continue;
+			}
+			double zctp = 0, zctf = 0;
+			if (volumn <= 20) {
+				zctp = area.getPrice6();
+				zctf = area.getPrice7();
+			} else if (volumn > 20 && volumn < 50) {
+				zctp = area.getPrice8();
+				zctf = area.getPrice9();
+			} else {
+				zctp = area.getPrice10();
+				zctf = area.getPrice11();
+			}
+			
+			freight += volumn * zctp + zctf;
+		}
+		return freight;
 	}
 
 	/**

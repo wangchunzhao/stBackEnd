@@ -174,9 +174,6 @@ public class OrderService {
 	private SettingsService settingsService;
 	
 	@Autowired
-	private AreaRepository areaRepository;
-	
-	@Autowired
 	private SapOrderService sapOrderService;
 
 	@Transactional
@@ -214,51 +211,6 @@ public class OrderService {
 					orderDto.setIsB2c(1);
 				}
 			});
-		}
-
-		String transferType = orderDto.getTransferType();
-		// 计算运费
-		// 自提不计算运费
-		if (!transferType.equals("02")) {
-	//		•	预估运费 = Volume * ZCTP* + ZCTF*
-	//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
-	//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
-	//				o	Case 3: Volume>=50m3, corresponding conditions were ‘ZCTP3/ZCTF3’
-	//		ZCTP = 客户单价
-	//		ZCTF	 = 客户送货费
-			Map<String, Double> freightMap = new HashMap<>();
-			double freight = 0;
-			for(ItemDto item : items) {
-				String districtCode = item.getDistrictCode();
-				if (StringUtils.isEmpty(districtCode)) {
-					throw new RuntimeException("地址的省市区不能为空！");
-				}
-				double volumn = ObjectUtils.defaultIfNull(item.getQuantity(), 0).doubleValue() * ObjectUtils.defaultIfNull(item.getVolumeCube(), 0).doubleValue();
-				volumn += ObjectUtils.defaultIfNull(freightMap.get(districtCode), 0).doubleValue();
-				freightMap.put(districtCode, volumn);
-			}
-			for (Map.Entry<String, Double> freightEntity : freightMap.entrySet()) {
-				String districtCode = freightEntity.getKey();
-				Double volumn = freightEntity.getValue();
-				Area area = areaRepository.findById(districtCode).get();
-				if (area == null) {
-					continue;
-				}
-				double zctp = 0, zctf = 0;
-				if (volumn <= 20) {
-					zctp = area.getPrice6();
-					zctf = area.getPrice7();
-				} else if (volumn > 20 && volumn < 50) {
-					zctp = area.getPrice8();
-					zctf = area.getPrice9();
-				} else {
-					zctp = area.getPrice10();
-					zctf = area.getPrice11();
-				}
-				
-				freight += volumn * zctp + zctf;
-			}
-			orderDto.setFreight(freight);
 		}
 
 		// 行项目金额合计
