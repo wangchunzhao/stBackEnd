@@ -214,11 +214,11 @@ public class SapOrderService {
 			// 街道名称
 			header.setStreet(sapItems.get(0).getStreet());
 //			// Province/省 -- 省code
-			header.setRegion(sapItems.get(0).getStreet());
+			header.setRegion(sapItems.get(0).getRegion());
 //			// City/市 -- 市名称
-			header.setCity1(sapItems.get(0).getStreet());
+			header.setCity1(sapItems.get(0).getCity1());
 //			// District/区 -- 区名称
-			header.setCity2(sapItems.get(0).getStreet());
+			header.setCity2(sapItems.get(0).getCity2());
 		}
 		
 		// 将费用类物料加到行项目
