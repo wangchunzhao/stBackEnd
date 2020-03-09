@@ -181,6 +181,11 @@ public class MaterialService {
 				break;
 			}
 		}
+		
+		// 对于所有以’H008’开头的物料转移价格的计算公式：标准价格*107%
+		if (code.startsWith("H008")) {
+			m.setTranscationPrice(standardPrice * 107 / 100);
+		}
 	}
 
 	/**
