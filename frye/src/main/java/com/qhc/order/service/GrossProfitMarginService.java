@@ -63,8 +63,7 @@ public class GrossProfitMarginService {
 	//		ZCTF	 = 客户送货费
 			freight = calculateFreight(items);
 			order.setFreight(freight);
-		}
-		this.calculateFreight(items);
+		} 
 		order.setFreight(freight);
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d);
 		int warranty = order.getWarranty();
@@ -194,7 +193,7 @@ public class GrossProfitMarginService {
 			if (StringUtils.isEmpty(districtCode)) {
 				throw new RuntimeException("地址的省市区不能为空！");
 			}
-			double volumn = ObjectUtils.defaultIfNull(item.getQuantity(), 0).doubleValue() * ObjectUtils.defaultIfNull(item.getVolumeCube(), 0).doubleValue();
+			double volumn = item.getQuantity() * item.getVolumeCube();
 			volumn += ObjectUtils.defaultIfNull(freightMap.get(districtCode), 0).doubleValue();
 			freightMap.put(districtCode, volumn);
 		}

@@ -196,7 +196,6 @@
 		select count(1) 
 		from k_item i
 		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
-		left join sap_material m on m.code = i.material_code
 		<include refid="Where_By_Params" />
 	</select>
 	

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.order.domain.CharacteristicDto;
+import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.sap.SapOrder;
@@ -141,22 +142,23 @@ public class SapOrderService {
 			// Item usage/项目用途 -- 项目需求计划
 			sapItem.setVkaus(item.getItemRequirementPlan());
 
-			// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
-			// Ship-to address/送达方地址
-			if (addressSeq == null) {
-				addressSeq = item.getDeliveryAddressSeq();
-			} else if (!addressSeq.equals(item.getDeliveryAddressSeq())) {
-				singleAddress = false;
-			}
-			// 街道名称
-			sapItem.setStreet(item.getAddress());
-//			// Province/省 -- 省code
-			String province = getSapProvince(order.getSaleType(), item.getProvinceCode());
-			sapItem.setRegion(province);
-//			// City/市 -- 市名称
-			sapItem.setCity1(item.getCityName());
-//			// District/区 -- 区名称
-			sapItem.setCity2(item.getDistrictName());
+			// 2020/03/05 行项目不传地址
+//			// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
+//			// Ship-to address/送达方地址
+//			if (addressSeq == null) {
+//				addressSeq = item.getDeliveryAddressSeq();
+//			} else if (!addressSeq.equals(item.getDeliveryAddressSeq())) {
+//				singleAddress = false;
+//			}
+//			// 街道名称
+//			sapItem.setStreet(item.getAddress());
+////			// Province/省 -- 省code
+//			String province = getSapProvince(order.getSaleType(), item.getProvinceCode());
+//			sapItem.setRegion(province);
+////			// City/市 -- 市名称
+//			sapItem.setCity1(item.getCityName());
+////			// District/区 -- 区名称
+//			sapItem.setCity2(item.getDistrictName());
 
 			// B2C note/B2C备注
 			sapItem.setVbbp0006(item.getB2cComments());
@@ -210,15 +212,18 @@ public class SapOrderService {
 		
 		// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
 		// 如果所有行项目只有一个地址，则设置sap order header的地址为此地址
-		if (singleAddress) {
+//		if (singleAddress) {
+		List<DeliveryAddressDto> addresses = order.getDeliveryAddress();
+		if (order.getDeliveryAddress() != null && order.getDeliveryAddress().size() > 0) {
+			DeliveryAddressDto address = addresses.get(0);
 			// 街道名称
-			header.setStreet(sapItems.get(0).getStreet());
+			header.setStreet(address.getAddress()); // sapItems.get(0).getStreet());
 //			// Province/省 -- 省code
-			header.setRegion(sapItems.get(0).getRegion());
+			header.setRegion(this.getSapProvince(order.getSaleType(), address.getProvinceCode())); // sapItems.get(0).getRegion());
 //			// City/市 -- 市名称
-			header.setCity1(sapItems.get(0).getCity1());
+			header.setCity1(address.getCityName()); // sapItems.get(0).getCity1());
 //			// District/区 -- 区名称
-			header.setCity2(sapItems.get(0).getCity2());
+			header.setCity2(address.getDistrictName()); // sapItems.get(0).getCity2());
 		}
 		
 		// 将费用类物料加到行项目

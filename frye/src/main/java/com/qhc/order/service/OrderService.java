@@ -901,6 +901,7 @@ public class OrderService {
 			item.setUnitName(m.getUnitName());
 			item.setIsConfigurable(m.isConfigurable());
 			item.setIsPurchased(m.isPurchased());
+			item.setVolumeCube(m.getMaterialSize());
 
 			Integer deliveryAddressSeq = item.getDeliveryAddressSeq();
 			if (deliveryAddressSeq != null) {
