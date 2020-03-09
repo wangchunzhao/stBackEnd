@@ -119,6 +119,21 @@ public class OrderController {
 		return result;
 	}
 
+	@ApiOperation(value = "驳回", notes = "驳回")
+	@PostMapping(value = "order/{orderInfoId}/reject/{user}")
+	public Result submit(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
+		Result result = null;
+		try {
+			orderService.reject(user, orderInfoId);
+			result = Result.ok("");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+
+		return result;
+	}
+
 	@ApiOperation(value = "变更", notes = "变更")
 	@PostMapping(value = "order/{orderInfoId}/upgrade/{user}")
 	@ResponseBody

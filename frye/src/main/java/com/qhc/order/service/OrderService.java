@@ -592,6 +592,17 @@ public class OrderService {
 	}
 
 	/**
+	 * 驳回订单
+	 * 
+	 * @param order
+	 * @throws Exception
+	 */
+	@Transactional
+	public void reject(String user, Integer orderInfoId) throws Exception {
+		orderInfoMapper.updateStatus(orderInfoId, user, OrderDto.ORDER_STATUS_REJECT, null, null, null, null);
+	}
+
+	/**
 	 * 
 	 * @return sales type
 	 */
