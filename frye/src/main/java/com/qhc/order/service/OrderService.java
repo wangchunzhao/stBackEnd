@@ -393,6 +393,9 @@ public class OrderService {
 		Integer orderInfoId = orderDto.getId();
 		attachmentMapper.deleteByOrderInfoId(orderInfoId);
 		List<Attachment> attachments = orderDto.getAttachments();
+		if (attachments == null || attachments.size() == 0) {
+			return;
+		}
 		for (Attachment attachment : attachments) {
 			attachment.setId(null);
 			attachment.setOrderInfoId(orderInfoId);
@@ -405,6 +408,9 @@ public class OrderService {
 		Integer orderInfoId = orderDto.getId();
 		billingPlanMapper.deleteByOrderInfoId(orderInfoId);
 		List<BillingPlan> payments = orderDto.getPayments();
+		if (payments == null || payments.size() == 0) {
+			return;
+		}
 		for (BillingPlan billingPlan : payments) {
 			billingPlan.setId(null);
 			billingPlan.setOrderInfoId(orderInfoId);
@@ -417,6 +423,9 @@ public class OrderService {
 		Integer orderInfoId = orderDto.getId();
 		deliveryAddressMapper.deleteByOrderInfoId(orderInfoId);
 		List<DeliveryAddressDto> addresses = orderDto.getDeliveryAddress();
+		if (addresses == null || addresses.size() == 0) {
+			return;
+		}
 		for (DeliveryAddressDto addressDto : addresses) {
 			DeliveryAddress address = new DeliveryAddress();
 
@@ -434,6 +443,9 @@ public class OrderService {
 		// 先刪除訂單所有行項目及關聯表數據
 		deleteItems(orderInfoId);
 		List<ItemDto> items = orderDto.getItems();
+		if (items == null || items.size() == 0) {
+			return;
+		}
 		for (ItemDto itemDto : items) {
 			if ( StringUtils.isEmpty(itemDto.getItemStatus())) {
 				itemDto.setItemStatus("00");
