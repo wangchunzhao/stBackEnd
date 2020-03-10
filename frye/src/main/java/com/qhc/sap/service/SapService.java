@@ -9,12 +9,18 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -48,6 +54,7 @@ import com.qhc.utils.HttpUtil;
  */
 @Service
 public class SapService {
+	private static final Logger logger = LoggerFactory.getLogger(SapService.class);
 	
 	@Value("${sap.currency.addr}")
 	String currencyUrl;
@@ -645,11 +652,7 @@ public class SapService {
 
 	// BOM
 	public Map<String, List<Bom>> getBomExplosion(Map<String, String> mapParam) {
-		Map<String, List<Bom>> map = new HashMap<String, List<Bom>>();
-
 		try {
-			List<Bom> standard = new ArrayList<Bom>();
-			List<Bom> optional = new ArrayList<Bom>();
 			// 请求参数
 			BomHeadParam bomHeadParam = new BomHeadParam();
 			bomHeadParam.setMatnr(mapParam.get("bom_code"));
@@ -670,25 +673,37 @@ public class SapService {
 
 			// 发送请求获取数据
 			String jsonResult = HttpUtil.postbody(bomExplosionUrl, bomParam);
-			JsonNode jsonNode = objectMapper.readTree(jsonResult);
-			Object message = jsonNode.get("message");
-			if (!message.equals("Success")) {
-				throw new RuntimeException(String.format("Failed get bom from sap. response: %s", jsonNode));
-			}
-			// optional
-			JsonNode data = jsonNode.get("data");
-			// default standard
-			JsonNode dataDef = jsonNode.get("data_def");
 			
-			standard = convert((ArrayNode)dataDef);
-			optional = convert((ArrayNode)data);
+			Map<String, List<Bom>> map = parseBomResult(jsonResult);
 			
-			map.put("optional", optional);
-			map.put("standard", standard);
-
+			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("BOM接口请求", e);
+			throw new RuntimeException(e);
 		}
+	}
+	
+	public Map<String, List<Bom>> parseBomResult(String jsonResult)
+			throws JsonProcessingException, JsonMappingException {
+		Map<String, List<Bom>> map = new HashMap<>();
+		List<Bom> standard;
+		List<Bom> optional;
+		objectMapper.getFactory().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+		JsonNode jsonNode = objectMapper.readTree(jsonResult);
+		JsonNode message = jsonNode.get("message");
+		if (message == null || !message.asText("").equals("成功")) {
+			throw new RuntimeException(String.format("Failed get bom from sap. response: %s", jsonNode));
+		}
+		// optional
+		JsonNode data = jsonNode.get("data");
+		// default standard
+		JsonNode dataDef = jsonNode.get("data_def");
+		
+		standard = convert((ArrayNode)dataDef);
+		optional = convert((ArrayNode)data);
+		
+		map.put("optional", optional);
+		map.put("standard", standard);
 		
 		return map;
 	}
