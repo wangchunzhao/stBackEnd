@@ -642,13 +642,6 @@ public class SapService {
 		}
 		return list;
 	}
-	
-	
-	
-	
-	
-	
-	
 
 	// BOM
 	public Map<String, List<Bom>> getBomExplosion(Map<String, String> mapParam) {

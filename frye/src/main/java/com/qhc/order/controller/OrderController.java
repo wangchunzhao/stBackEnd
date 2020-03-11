@@ -243,7 +243,7 @@ public class OrderController {
 			result = Result.ok(res);
 		} catch (Exception e) {
 			logger.error("订单下发SAP失败", e);
-			result = Result.error("订单下发SAP失败！");
+			result = Result.error("订单下发SAP失败！" + e.getMessage());
 		}
 		
 		return result;

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.order.domain.CharacteristicDto;
 import com.qhc.order.domain.DeliveryAddressDto;
@@ -384,9 +385,14 @@ public class SapOrderService {
 			logger.info("Order Data: {}", sapStr);
 			// 没有数据先注释
 			res = HttpUtil.postbody(orderCreationUrl, sapStr);
+			JsonNode tree = new ObjectMapper().readTree(res);
+			JsonNode result = tree.get("subrc");
+			if (result == null && !result.asText("").equals("S")) {
+				throw new RuntimeException("订单下推Sap失败，Message=" + tree.get("message").asText(""));
+			}
 		} catch (Exception e) {
-			logger.error("ͬ同步SAP异常==>", e);
-			throw new RuntimeException("ͬ同步SAP异常");
+			logger.error("ͬ下推SAP异常==>", e);
+			throw new RuntimeException("ͬ下推SAP异常");
 		}
 
 		// 2. 处理返回结果
