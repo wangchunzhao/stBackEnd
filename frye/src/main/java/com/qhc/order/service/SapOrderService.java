@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -379,13 +380,15 @@ public class SapOrderService {
 	 */
 	public String sendToSap(SapOrder sapOrder) {
 		String res = null;
+		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			// 1.ͬ同步SAP开单 没有数据 先注释
-			String sapStr = new ObjectMapper().writeValueAsString(sapOrder);
+			String sapStr = objectMapper.writeValueAsString(sapOrder);
 			logger.info("Order Data: {}", sapStr);
 			// 没有数据先注释
 			res = HttpUtil.postbody(orderCreationUrl, sapStr);
-			JsonNode tree = new ObjectMapper().readTree(res);
+			objectMapper.getFactory().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+			JsonNode tree = objectMapper.readTree(res);
 			JsonNode result = tree.get("subrc");
 			if (result == null && !result.asText("").equals("S")) {
 				throw new RuntimeException("订单下推Sap失败，Message=" + tree.get("message").asText(""));
