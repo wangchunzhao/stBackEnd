@@ -515,6 +515,8 @@ public class OrderService {
 								}
 							});
 						}
+						
+						characteristicsMapper.insert(cs);
 					}
 				}
 				
