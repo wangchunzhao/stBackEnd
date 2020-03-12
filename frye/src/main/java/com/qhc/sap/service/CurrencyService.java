@@ -134,8 +134,8 @@ public class CurrencyService {
 		Set<MaterialPrice> dps = new HashSet<MaterialPrice>();
 		//
 		LastUpdated lastUpdated = new LastUpdated();
-		lastUpdated.setCode(PriceDto.PRICE_CODE);
-		lastUpdated.setName("price");
+		lastUpdated.setCode(PriceDto.PRICE_CHANGE_CODE);
+		lastUpdated.setName("priceChange");
 		//
 		for(PriceDto pri:price) {
 			MaterialPrice temp = new MaterialPrice();
@@ -147,6 +147,18 @@ public class CurrencyService {
 			lastUpdated.setLastUpdate(DateUtil.convert2Date(pri.getLastDate(), "yyyyMMddhhmmss"));
 		}
 		priceRepo.saveAll(dps);
+		lastUpdatedRepo.save(lastUpdated);
+	}
+	
+	@Transactional
+	public void savePriceDate(String date) {
+		//
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(PriceDto.PRICE_CODE);
+		lastUpdated.setName("price");
+		//将日期增加一天
+		lastUpdated.setLastUpdate(DateUtil.addDays(DateUtil.convert2Date(date, "yyyyMMdd"), 1));
+		
 		lastUpdatedRepo.save(lastUpdated);
 	}
 
