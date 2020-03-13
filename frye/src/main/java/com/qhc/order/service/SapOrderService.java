@@ -390,7 +390,7 @@ public class SapOrderService {
 			objectMapper.getFactory().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
 			JsonNode tree = objectMapper.readTree(res);
 			JsonNode result = tree.get("subrc");
-			if (result == null && !result.asText("").equals("S")) {
+			if (result == null || !result.asText("").equals("S")) {
 				throw new RuntimeException("订单下推Sap失败，Message=" + tree.get("message").asText(""));
 			}
 		} catch (Exception e) {
