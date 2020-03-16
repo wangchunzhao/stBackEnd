@@ -498,39 +498,37 @@ public class OrderService {
 					}
 				}
 			} else {
-				// 没有配置调研表，取默认值
-				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode(),
-						orderDto.getCustomerIndustry());
+				// 没有配置调研表，取默认值颜色选项和物料特征
+				List<Characteristic> characs = materialService.getCharactersByClazzCode(itemDto.getMaterialCode());
 				if (characs != null && characs.size() > 0) {
 					for (Characteristic c : characs) {
 						boolean configurable = c.getConfigs() != null && c.getConfigs().size() > 0;
-						Characteristics cs = new Characteristics();
-						cs.setItemId(item.getId());
-						cs.setIsConfigurable(configurable ? 1 : 0);
-						cs.setKeyCode(c.getCode());
-						if (configurable) {
+						boolean isColor = c.isColor();
+						if (isColor) {
+							ItemColor itemColor = new ItemColor();
+							itemColor.setItemId(item.getId());
+							itemColor.setPaintingClass(c.getCode());
+							c.getConfigs().forEach(e -> {
+								if (e.isDefault()) {
+									itemColor.setColorCode(e.getCode());
+								}
+							});
+							
+							itemColorMapper.insert(itemColor);
+							colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
+						} else {
+							Characteristics cs = new Characteristics();
+							cs.setItemId(item.getId());
+							cs.setIsConfigurable(configurable ? 1 : 0);
+							cs.setKeyCode(c.getCode());
 							c.getConfigs().forEach(e -> {
 								if (e.isDefault()) {
 									cs.setValueCode(e.getCode());
 								}
 							});
+							
+							characteristicsMapper.insert(cs);
 						}
-						
-						characteristicsMapper.insert(cs);
-					}
-				}
-				
-				// 取默認顔色配置信息
-				List<ProductClass> productClassList = materialService.getMaterialColorConfig(itemDto.getMaterialCode());
-				if (productClassList != null && productClassList.size() > 0) {
-					for (ProductClass productClass : productClassList) {
-						ItemColor itemColor = new ItemColor();
-						itemColor.setItemId(item.getId());
-						itemColor.setPaintingClass(productClass.getPaintingClass());
-						itemColor.setColorCode(productClass.getDefaultColor());
-						
-						itemColorMapper.insert(itemColor);
-						colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
 					}
 				}
 			}

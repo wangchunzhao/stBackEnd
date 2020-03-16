@@ -60,9 +60,7 @@
         LEFT JOIN `sap_characteristic` `c` ON `c`.`code` = `v`.`sap_characteristic_code`
     	LEFT JOIN `sap_clazz_and_character` `l` ON `l`.`sap_characteristic_code` = `c`.`code`
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			<if test="clazzCode != null and clazzCode != ''" >
-				AND l.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
-			</if>
+			AND l.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
 		</trim>
 	</select>
 	

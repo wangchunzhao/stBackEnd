@@ -191,10 +191,9 @@ public class MaterialService {
 	/**
 	 * 
 	 * @param materialCode 物料
-	 * @param clazzCode 物料特征分组
 	 * @return
 	 */
-	public List<Characteristic> getCharactersByClazzCode(String materialCode, String clazzCode)
+	public List<Characteristic> getCharactersByClazzCode(String materialCode)
 			throws NotMatchException {
 		// character list
 		List<Characteristic> chas = new ArrayList<Characteristic>();
@@ -202,7 +201,6 @@ public class MaterialService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("materialCode", materialCode);
 		List<ProductClass> productClassList = productClassMapper.findByParams(params);
-		List<ColorClass> colorClassList = colorClassMapper.findByParams(null);
 		if (productClassList != null && productClassList.size() > 0) {
 			for (ProductClass productClass : productClassList) {
 				Characteristic ch = new Characteristic();
@@ -212,20 +210,24 @@ public class MaterialService {
 				ch.setOptional(true);
 				ch.setColor(true);
 				ch.setClassCode(productClass.getProductClass());
+				Map<String, Object> colorclassParams = new HashMap<>();
+				colorclassParams.put("colorClass", productClass.getColorClass());
+				List<ColorClass> colorClassList = colorClassMapper.findByParams(colorclassParams);
 				for (ColorClass colorClass : colorClassList) {
-					if (colorClass.getColorClass().equals(productClass.getColorClass())) {
-						Configuration cfg = new Configuration();
-						ch.getConfigs().add(cfg);
-						
-						cfg.setCode(colorClass.getColorCode());
-						cfg.setName(colorClass.getColorMaterialCode() + " - " + colorClass.getColorDescription());
-						cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
-					}
+					Configuration cfg = new Configuration();
+					ch.getConfigs().add(cfg);
+					
+					cfg.setCode(colorClass.getColorCode());
+					cfg.setName(colorClass.getColorMaterialCode() + " - " + colorClass.getColorDescription());
+					cfg.setDefault(colorClass.getColorCode().equals(productClass.getDefaultColor()));
 				}
 			}
 		}
 		
 		// 物料特征
+		Material m = materialRepo.findById(materialCode).get();
+		// 物料特征分组
+		String clazzCode = m.getClazzCode();
 		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
 		if (ccs != null && ccs.size() > 0) {
 			List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
