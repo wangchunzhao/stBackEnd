@@ -77,6 +77,8 @@ public class OrderItem {
 	private String specialComments;
 	/* 颜色备注 */
 	private String colorComments;
+	/* 成本价 */
+	private double standardCost;
 
 	public int getRowNumber() {
 		return rowNumber;
@@ -316,6 +318,14 @@ public class OrderItem {
 
 	public void setColorComments(String colorComments) {
 		this.colorComments = colorComments;
+	}
+
+	public double getStandardCost() {
+		return standardCost;
+	}
+
+	public void setStandardCost(double standardCost) {
+		this.standardCost = standardCost;
 	}
 
 	@Override

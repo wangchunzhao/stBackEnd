@@ -71,6 +71,7 @@ INSERT INTO `sap_currency_sale_type` (`sap_sales_type_code`,`sap_currency_code`)
 INSERT INTO `sap_currency_sale_type` (`sap_sales_type_code`,`sap_currency_code`) VALUES ('10','RMB');
 INSERT INTO `sap_currency_sale_type` (`sap_sales_type_code`,`sap_currency_code`) VALUES ('30','RMB');
 INSERT INTO `sap_currency_sale_type` (`sap_sales_type_code`,`sap_currency_code`) VALUES ('20','USD');
+INSERT INTO `sap_currency_sale_type` (`sap_sales_type_code`,`sap_currency_code`) VALUES ('20','RMB');
 
 /*
 -- Query: select * from sap_incoterms
