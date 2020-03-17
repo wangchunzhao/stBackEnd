@@ -161,6 +161,18 @@ public class CurrencyService {
 		
 		lastUpdatedRepo.save(lastUpdated);
 	}
+	
+	@Transactional
+	public void savePriceADate(String date) {
+		//
+		LastUpdated lastUpdated = new LastUpdated();
+		lastUpdated.setCode(PriceDto.PRICEA_CODE);
+		lastUpdated.setName("priceA");
+		//将日期增加一天
+		lastUpdated.setLastUpdate(DateUtil.addDays(DateUtil.convert2Date(date, "yyyyMMdd"), 1));
+		
+		lastUpdatedRepo.save(lastUpdated);
+	}
 
 	@Transactional
 	public void savePriceA(List<PriceDto> price) {

@@ -14,6 +14,7 @@ public class PriceDto implements Serializable{
 	public final static String PRICE_CODE = "59870645008146f9938f7e8718031779";
 	public final static String PRICE_CHANGE_CODE = "59870645008146f9938f7e8718031781";
 	public final static String PRICEA_CODE = "59870645008146f9938f7e8718031780";
+	public final static String PRICEA_CHANGE_CODE = "59870645008146f9938f7e8718031782";
 	
 	private double price;
 	private String type;
