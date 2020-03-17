@@ -151,14 +151,6 @@ public class SapSyncController {
 					break;
 				}
 			}
-//			String update = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICE_CODE),"yyyyMMddHHmmss");
-//			List<PriceDto> temp = sapService.getPriceFromSap(update);
-//			if (temp.size() > 0) {
-//				currencyService.savePrice(temp);
-//			} else {
-//				System.out.println("price数据抽取完毕");
-//				break;
-//			}
 		}
 	}
 	
@@ -167,14 +159,29 @@ public class SapSyncController {
 	@ResponseStatus(HttpStatus.OK)
 	public void sycPricesA() throws Exception {
 		for (int i = 0; i < 1000; i++) {
-			String update = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICEA_CODE),"yyyyMMddHHmmss");
-			List<PriceDto> temp = sapService.getPriceAFromSap(update);
-			if (temp.size() > 0) {
-				currencyService.savePriceA(temp);
-			} else {
-				System.out.println("priceA数据抽取完毕");
-				break;
+			if(i == 0) {
+				String date = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICEA_CODE),"yyyyMMddHHmmss");
+				List<PriceDto> temp = sapService.getPriceAFromSap(date,"");
+				if (temp.size() > 0) {
+					currencyService.savePriceA(temp);
+				} else {
+					currencyService.savePriceADate(date.substring(0, 8));
+					System.out.println("priceA数据抽取完毕");
+					break;
+				}
+			}else {
+				String date = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICEA_CODE),"yyyyMMddHHmmss");
+				String updateDate = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICEA_CHANGE_CODE),"yyyyMMddHHmmss");
+				List<PriceDto> temp = sapService.getPriceAFromSap(date,updateDate);
+				if (temp.size() > 0) {
+					currencyService.savePriceA(temp);
+				} else {
+					currencyService.savePriceADate(date.substring(0, 8));
+					System.out.println("priceA数据抽取完毕");
+					break;
+				}
 			}
+			
 		}
 	}
 	

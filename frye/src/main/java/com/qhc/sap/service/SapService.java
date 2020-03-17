@@ -495,15 +495,30 @@ public class SapService {
 		return ilist;
 	}
 	//priceA
-	public List<PriceDto> getPriceAFromSap(String date) {
+	public List<PriceDto> getPriceAFromSap(String date,String updateDate) {
 		List<PriceDto> ilist = new ArrayList<PriceDto>();
 		try {
 			//带年采价的接口 Z_QHC_SD_Q091_SD028A
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("DATUM");
+			parameter1.setValue(date.substring(0, 8));//20190101
+			Parameter parameter2 = new Parameter();
 			Parameter parameter3 = new Parameter();
-			parameter3.setKey("DATUM");
-			parameter3.setValue("20190101");//20190101
-//			parameter3.setValue(date.substring(0, 8));
+			if(!"".equals(updateDate)) {
+				
+				parameter2.setKey("LAEDA");
+				parameter2.setValue(updateDate.substring(0, 8));
+				parameter3.setKey("UZEIT");
+				parameter3.setValue(updateDate.substring(8, 14));
+			}else {
+				parameter2.setKey("LAEDA");
+				parameter2.setValue("");
+				parameter3.setKey("UZEIT");
+				parameter3.setValue("");
+			}
 			List<Parameter> parListA = new ArrayList<Parameter>();
+			parListA.add(parameter1);
+			parListA.add(parameter2);
 			parListA.add(parameter3);
 			String priceParamA = JSONObject.toJSONString(parListA);
 			//发送请求获取数据
