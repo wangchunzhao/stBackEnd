@@ -168,12 +168,13 @@
 	<select id="findByParams" resultType="com.qhc.order.domain.ItemDto" parameterType="Map" >
 		select 
 			i.*,
+			i.retail_price * i.quantity as retail_amount,
 			i.actual_price * i.quantity as actual_amount,
 			i.optional_actual_price * i.quantity as optional_actual_amount,
 			i.b2c_estimated_price * i.quantity as b2c_estimated_amount,
-			i.actual_price + i.optional_actual_price + i.b2c_estimated_price as actual_Price_Sum,
-			(i.actual_price + i.optional_actual_price + i.b2c_estimated_price) * i.quantity as actual_Amount_Sum,
-			(i.transaction_price + i.optional_transaction_price + i.b2c_estimated_price) * i.quantity as transaction_Price_Sum,
+			i.actual_price + i.optional_actual_price + i.b2c_estimated_price as actual_price_sum,
+			(i.actual_price + i.optional_actual_price + i.b2c_estimated_price) * i.quantity as actual_amount_sum,
+			(i.transaction_price + i.optional_transaction_price + i.b2c_estimated_price) * i.quantity as transaction_price_sum,
 			d.province_code, 
 			d.city_code, 
 			d.district_code, 
