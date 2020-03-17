@@ -17,6 +17,8 @@
 		<result column="retail_price" property="retailPrice" jdbcType="DECIMAL" />
 		<result column="actual_price" property="actualPrice" jdbcType="DECIMAL" />
 		<result column="transaction_price" property="transactionPrice" jdbcType="DECIMAL" />
+		<result column="optional_standard_price" property="optionalStandardPrice" jdbcType="DECIMAL" />
+		<result column="optional_retail_price" property="optionalRetailPrice" jdbcType="DECIMAL" />
 		<result column="optional_actual_price" property="optionalActualPrice" jdbcType="DECIMAL" />
 		<result column="optional_transaction_price" property="optionalTransactionPrice" jdbcType="DECIMAL" />
 		<result column="discount" property="discount" jdbcType="DOUBLE" />
@@ -28,7 +30,6 @@
 		<result column="b2c_comments" property="b2cComments" jdbcType="VARCHAR" />
 		<result column="special_comments" property="specialComments" jdbcType="VARCHAR" />
 		<result column="color_comments" property="colorComments" jdbcType="VARCHAR" />
-		<result column="color_options" property="colorOptions" jdbcType="VARCHAR" />
 		<result column="volume_cube" property="volumeCube" jdbcType="DECIMAL" />
 		<result column="freight" property="freight" jdbcType="DECIMAL" />
 		<result column="is_virtual" property="isVirtual" jdbcType="INTEGER" />
@@ -44,6 +45,7 @@
 		<result column="is_configurable" property="isConfigurable" jdbcType="INTEGER" />
 		<result column="clazz_code" property="clazzCode" jdbcType="VARCHAR" />
 		<result column="comments" property="comments" jdbcType="VARCHAR" />
+		<result column="color_options" property="colorOptions" jdbcType="VARCHAR" />
 		<result column="item_status" property="itemStatus" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -61,6 +63,7 @@
 			item_requirement_plan, b2c_estimated_price, b2c_estimated_cost, delivery_address_seq, 
 			delivery_address_id, standard_price, retail_price, 
 			actual_price, transaction_price, optional_actual_price, 
+			optional_standard_price, optional_retail_price, 
 			optional_transaction_price, discount, produce_date, 
 			on_store_date, delivery_date, shipp_date, 
 			period, b2c_comments, special_comments, 
@@ -75,6 +78,7 @@
 			#{itemRequirementPlan, jdbcType=VARCHAR}, #{b2cEstimatedPrice, jdbcType=DECIMAL}, #{b2cEstimatedCost, jdbcType=DECIMAL}, #{deliveryAddressSeq, jdbcType=INTEGER}, 
 			#{deliveryAddressId, jdbcType=INTEGER}, #{standardPrice, jdbcType=DECIMAL}, #{retailPrice, jdbcType=DECIMAL}, 
 			#{actualPrice, jdbcType=DECIMAL}, #{transactionPrice, jdbcType=DECIMAL}, #{optionalActualPrice, jdbcType=DECIMAL}, 
+			#{optionalStandardPrice, jdbcType=DECIMAL}, #{optionalRetailPrice, jdbcType=DECIMAL}, 
 			#{optionalTransactionPrice, jdbcType=DECIMAL}, #{discount, jdbcType=DOUBLE}, #{produceDate, jdbcType=DATE}, 
 			#{onStoreDate, jdbcType=DATE}, #{deliveryDate, jdbcType=DATE}, #{shippDate, jdbcType=DATE}, 
 			#{period, jdbcType=INTEGER}, #{b2cComments, jdbcType=VARCHAR}, #{specialComments, jdbcType=VARCHAR}, 
@@ -103,6 +107,8 @@
 			retail_price = #{retailPrice, jdbcType=DECIMAL}, 
 			actual_price = #{actualPrice, jdbcType=DECIMAL}, 
 			transaction_price = #{transactionPrice, jdbcType=DECIMAL}, 
+			optional_standard_price = #{optionalStandardPrice, jdbcType=DECIMAL}, 
+			optional_retail_price = #{optionalRetailPrice, jdbcType=DECIMAL}, 
 			optional_actual_price = #{optionalActualPrice, jdbcType=DECIMAL}, 
 			optional_transaction_price = #{optionalTransactionPrice, jdbcType=DECIMAL}, 
 			discount = #{discount, jdbcType=DOUBLE}, 
@@ -144,6 +150,7 @@
 		k_item.id, k_item.order_info_id, k_item.row_num, k_item.material_code, k_item.quantity, 
 		k_item.item_category, k_item.item_requirement_plan, k_item.b2c_estimated_price, k_item.delivery_address_seq, k_item.delivery_address_id, 
 		k_item.standard_price, k_item.retail_price, k_item.actual_price, k_item.transaction_price, k_item.optional_actual_price, 
+		k_item.optional_standard_price, k_item.optional_retail_price, 
 		k_item.optional_transaction_price, k_item.discount, k_item.produce_date, k_item.on_store_date, k_item.delivery_date, 
 		k_item.shipp_date, k_item.period, k_item.b2c_comments, k_item.special_comments, k_item.color_comments, 
 		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 

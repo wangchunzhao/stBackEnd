@@ -1115,7 +1115,7 @@ public class OrderService {
 				bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
 				bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice());
 				bpmItem.setTransfterPrice(itemDto.getTransactionPrice());
-				bpmItem.setStandardCost(itemDto.getStandardPrice() + itemDto.getOptionalActualPrice());
+				bpmItem.setStandardCost(itemDto.getStandardPrice() + itemDto.getOptionalStandardPrice());
 			}
 			bpmHeader.setMaterialGroupNames(strGroupName.length() > 0 ? strGroupName.substring(1) : "");
 		}

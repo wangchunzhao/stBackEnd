@@ -296,6 +296,7 @@ public class MaterialService {
 			if (bom.isMarked()) {
 				MaterialDto m = getMaterialsById(bom.getCode(), industryCode);
 				
+//				bom.setPrice(m.getStandardPrice());
 				bom.setAnnualPrice(m.getAnnualPrice());
 				bom.setTransferPrice(m.getTranscationPrice());
 				bom.setRetailPrice(m.getRetailPrice());
