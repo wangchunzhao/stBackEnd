@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.qhc.system.entity.Province;
 @Repository
-public interface ProvinceRepository extends JpaRepository<Province, Integer> ,JpaSpecificationExecutor<Province>{
+public interface ProvinceRepository extends JpaRepository<Province, String> ,JpaSpecificationExecutor<Province>{
 
 }

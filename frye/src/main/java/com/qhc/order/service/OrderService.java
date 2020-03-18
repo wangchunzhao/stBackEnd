@@ -132,7 +132,7 @@ public class OrderService {
 	private SalesTypeRepository salesTypeRepo;
 
 	@Autowired
-	private AreaRepository distinctRepo;
+	private AreaRepository districtRepo;
 
 	@Autowired
 	private CityRepository cityRepo;
@@ -648,7 +648,7 @@ public class OrderService {
 
 		}
 		//
-		List<Area> bas = distinctRepo.findAll();
+		List<Area> bas = districtRepo.findAll();
 		Set<Area> distincts = oo.getDistricts();
 		distincts.addAll(bas);
 		//
@@ -1035,9 +1035,15 @@ public class OrderService {
 		if (addresses != null && addresses.size() > 0) {
 			StringBuilder strAddress = new StringBuilder(512);
 			for (DeliveryAddressDto deliveryAddressDto : addresses) {
-				strAddress.append(",").append(deliveryAddressDto.getAddress());
+				String provinceName = StringUtils.isEmpty(deliveryAddressDto.getProvinceCode()) ? "" : provinceRepo.findById(deliveryAddressDto.getProvinceCode()).get().getName();
+				String cityName = StringUtils.isEmpty(deliveryAddressDto.getCityCode()) ? "" : cityRepo.findById(deliveryAddressDto.getCityCode()).get().getName();
+				String districtName = StringUtils.isEmpty(deliveryAddressDto.getDistrictCode()) ? "" : districtRepo.findById(deliveryAddressDto.getDistrictCode()).get().getName();
+				String address = StringUtils.trimToEmpty(deliveryAddressDto.getAddress());
+				strAddress.append(",").append(provinceName).append(cityName).append(districtName).append(address);
 			}
 			bpmHeader.setAddress(strAddress.substring(1));
+		} else {
+			bpmHeader.setAddress("");
 		}
 		bpmHeader.setApprovalDiscount(order.getDiscount());
 		bpmHeader.setB2c(String.valueOf(order.getIsB2c()));
@@ -1047,7 +1053,8 @@ public class OrderService {
 		bpmHeader.setContractNumber(StringUtils.trimToEmpty(order.getContractNumber()));
 		bpmHeader.setContractRmbAmount(order.getContractRmbValue());
 		bpmHeader.setCreateTime(order.getCreateTime());
-		bpmHeader.setCurrencyName(StringUtils.trimToEmpty(order.getCurrencyName()));
+		String currencyName = constService.findAllCurrency().get(order.getCurrency()).getName();
+		bpmHeader.setCurrencyName(StringUtils.trimToEmpty(currencyName));
 		bpmHeader.setCustomerName(StringUtils.trimToEmpty(order.getCustomerName()));
 		bpmHeader.setDealer(order.getOrderType().equals(OrderDto.ORDER_TYPE_DEALER) ? "1" : "0");
 		bpmHeader.setDiscount(order.getDiscount());
@@ -1062,7 +1069,8 @@ public class OrderService {
 		bpmHeader.setMergeDiscount(ObjectUtils.defaultIfNull(bpmHeader.getDiscount(), 0d));
 		bpmHeader.setOrderType(StringUtils.trimToEmpty(order.getOrderType()));
 		bpmHeader.setPaymentTypeName(StringUtils.trimToEmpty(order.getPaymentType()));
-		bpmHeader.setReceiveTypeName(StringUtils.trimToEmpty(order.getReceiveTypeName()));
+		String receiveTypeName = constService.findReceiveTerms().get(order.getReceiveType());
+		bpmHeader.setReceiveTypeName(StringUtils.trimToEmpty(receiveTypeName));
 		bpmHeader.setRefrigeratoryFee(ObjectUtils.defaultIfNull(order.getRefrigeratoryFee(), 0d));
 		bpmHeader.setSalesCode(StringUtils.trimToEmpty(order.getSalesCode()));
 		bpmHeader.setSalesTel(StringUtils.trimToEmpty(order.getSalesTel()));

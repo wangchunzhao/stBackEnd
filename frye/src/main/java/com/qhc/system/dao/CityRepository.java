@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.qhc.system.entity.City;
 
 @Repository
-public interface CityRepository extends JpaRepository<City, Integer> ,JpaSpecificationExecutor<City>{
+public interface CityRepository extends JpaRepository<City, String> ,JpaSpecificationExecutor<City>{
 
 }
