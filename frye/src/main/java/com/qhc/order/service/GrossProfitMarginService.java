@@ -52,9 +52,10 @@ public class GrossProfitMarginService {
 		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d);
 		double freight = 0;
 		String transferType = order.getTransferType();
+		String saleType = order.getSaleType();
 		// 计算运费
-		// 自提不计算运费
-		if (!transferType.equals("02")) {
+		// 自提不计算运费，销售类型为出口也不计算运费
+		if (!transferType.equals("02") && !saleType.equals("20")) {
 	//		•	预估运费 = Volume * ZCTP* + ZCTF*
 	//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
 	//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
