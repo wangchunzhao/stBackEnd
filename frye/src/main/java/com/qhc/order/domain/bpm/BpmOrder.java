@@ -7,12 +7,7 @@ public class BpmOrder {
 	private List<OrderItem> items;
 	private List<OrderMargin> margin;
 	private List<OrderMargin> wtwMargin;
-
-	@Override
-	public String toString() {
-		return "BpmOrder [order=" + order + ", items=" + items + ", margin=" + margin + ", wtwMargin=" + wtwMargin
-				+ "]";
-	}
+	private List<OrderAttachment> attachments;
 
 	public OrderHeader getOrder() {
 		return order;
@@ -44,5 +39,19 @@ public class BpmOrder {
 
 	public void setWtwMargin(List<OrderMargin> wtwMargin) {
 		this.wtwMargin = wtwMargin;
+	}
+
+	public List<OrderAttachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<OrderAttachment> attachments) {
+		this.attachments = attachments;
+	}
+
+	@Override
+	public String toString() {
+		return "BpmOrder [order=" + order + ", items=" + items + ", margin=" + margin + ", wtwMargin=" + wtwMargin
+				+ ", attachments=" + attachments + "]";
 	}
 }

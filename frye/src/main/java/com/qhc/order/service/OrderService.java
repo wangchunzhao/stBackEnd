@@ -32,6 +32,7 @@ import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
 import com.qhc.order.domain.bpm.BpmOrder;
+import com.qhc.order.domain.bpm.OrderAttachment;
 import com.qhc.order.domain.bpm.OrderHeader;
 import com.qhc.order.domain.bpm.OrderItem;
 import com.qhc.order.domain.bpm.OrderMargin;
@@ -1016,16 +1017,22 @@ public class OrderService {
 		if (items == null) {
 			items = new ArrayList<ItemDto>();
 		}
+		List<Attachment> attachments = order.getAttachments();
+		if (attachments == null) {
+			attachments = new ArrayList<Attachment>();
+		}
 		List<MaterialGroups> grossProfitMargins = new ObjectMapper().readValue(order.getGrossProfitMargin(), new TypeReference<List<MaterialGroups>>() {});
 		MaterialGroups sumMargin = grossProfitMargins.get(grossProfitMargins.size() - 1);
 
 		BpmOrder bpmOrder = new BpmOrder();
 		OrderHeader bpmHeader = new OrderHeader();
+		List<OrderAttachment> bpmAttachments = new ArrayList<OrderAttachment>(attachments.size());
 		List<OrderItem> bpmItems = new ArrayList<OrderItem>(items.size());
 		List<OrderMargin> bpmMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
 		List<OrderMargin> bpmWtwMargins = new ArrayList<OrderMargin>(grossProfitMargins.size());
 
 		bpmOrder.setOrder(bpmHeader);
+		bpmOrder.setAttachments(bpmAttachments);
 		bpmOrder.setItems(bpmItems);
 		bpmOrder.setMargin(bpmMargins);
 		bpmOrder.setWtwMargin(bpmWtwMargins);
@@ -1083,6 +1090,16 @@ public class OrderService {
 		bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
 		bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
 		bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
+		bpmHeader.setIsUrgentDelivery(order.getIsUrgentDelivery());
+
+		// set bpm order attachements
+		for (Attachment attachment : attachments) {
+			OrderAttachment orderAttachment = new OrderAttachment();
+			bpmAttachments.add(orderAttachment);
+			
+			orderAttachment.setName(attachment.getFileName());
+			orderAttachment.setUrl(attachment.getFileUrl());
+		}
 
 		// set bpm order item
 		if (items.size() > 0) {
