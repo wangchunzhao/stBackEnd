@@ -372,21 +372,42 @@ public class SapOrderService {
 	}
 
 	/**
-	 * 下发订单到SAP，私有方法
+	 * 下发订单到SAP
 	 * 
 	 * @param orderDto
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public String sendToSap(SapOrder sapOrder) {
+	public String createOrder(SapOrder sapOrder) {
+		return this.sendToSap(sapOrder, orderCreationUrl);
+	}
+
+	/**
+	 * 下发订单到SAP
+	 * 
+	 * @param orderDto
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public String updateOrder(SapOrder sapOrder) {
+		return this.sendToSap(sapOrder, orderChangeUrl);
+	}
+
+	/**
+	 * 下发订单到SAP
+	 * 
+	 * @param orderDto
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	private String sendToSap(SapOrder sapOrder, String url) {
 		String res = null;
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			// 1.ͬ同步SAP开单 没有数据 先注释
 			String sapStr = objectMapper.writeValueAsString(sapOrder);
 			logger.info("Order Data: {}", sapStr);
-			// 没有数据先注释
-			res = HttpUtil.postbody(orderCreationUrl, sapStr);
+			res = HttpUtil.postbody(url, sapStr);
 			objectMapper.getFactory().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
 			JsonNode tree = objectMapper.readTree(res);
 			JsonNode result = tree.get("subrc");

@@ -62,7 +62,7 @@ class OrderServiceTest {
 		
 		logger.info("Start test sap order creation.");
 		
-		String result = sapOrderService.sendToSap(sapCreationOrder);
+		String result = sapOrderService.createOrder(sapCreationOrder);
 		
 		logger.info("Result: {}" + result);
 	}

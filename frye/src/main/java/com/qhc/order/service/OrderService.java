@@ -789,7 +789,11 @@ public class OrderService {
 		// 1. 根据sequenceNumber组装数据
 		SapOrder sapOrder = sapOrderService.assembleSapOrder(orderDto);
 
-		sapOrderService.sendToSap(sapOrder);
+		if (orderDto.getVersionNum() > 1) {
+			sapOrderService.updateOrder(sapOrder);
+		} else {
+			sapOrderService.createOrder(sapOrder);
+		}
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
 		// 修改订单状态为已下发SAP
 		orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null, null, null);
