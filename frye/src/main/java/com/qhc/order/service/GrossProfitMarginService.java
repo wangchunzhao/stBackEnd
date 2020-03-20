@@ -65,7 +65,12 @@ public class GrossProfitMarginService {
 			freight = calculateFreight(items);
 			order.setFreight(freight);
 		} 
-		order.setFreight(freight);
+		if (transferType.equals("02")) {
+			order.setFreight(0);
+		}
+		if (saleType.equals("20")) {
+			// 出口外销运费手工填写
+		}
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d);
 		int warranty = order.getWarranty();
 		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();

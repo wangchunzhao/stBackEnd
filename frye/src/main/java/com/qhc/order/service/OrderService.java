@@ -321,6 +321,7 @@ public class OrderService {
 		order.setOrderId(null);
 		order.setCreater(user);
 		order.setAttachments(null); // 清除订单附件
+		order.setContractNumber(null); // 合同號
 		for (ItemDto item : order.getItems()) { 
 			item.setAttachments(null); // 清除调研表附件
 		}
