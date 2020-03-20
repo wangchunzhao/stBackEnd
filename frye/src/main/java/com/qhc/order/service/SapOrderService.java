@@ -412,11 +412,11 @@ public class SapOrderService {
 			JsonNode tree = objectMapper.readTree(res);
 			JsonNode result = tree.get("subrc");
 			if (result == null || !result.asText("").equals("S")) {
-				throw new RuntimeException("订单下推Sap失败，Message=" + tree.get("message").asText(""));
+				throw new RuntimeException("Sap错误，Message=" + tree.get("message").asText(""));
 			}
 		} catch (Exception e) {
 			logger.error("ͬ下推SAP异常==>", e);
-			throw new RuntimeException("ͬ下推SAP异常");
+			throw new RuntimeException(e);
 		}
 
 		// 2. 处理返回结果
