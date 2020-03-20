@@ -1080,8 +1080,15 @@ public class OrderService {
 
 		bpmHeader.setMergeDiscount(ObjectUtils.defaultIfNull(bpmHeader.getDiscount(), 0d));
 		bpmHeader.setOrderType(StringUtils.trimToEmpty(order.getOrderType()));
-		bpmHeader.setPaymentTypeName(StringUtils.trimToEmpty(order.getPaymentType()));
-		String receiveTypeName = constService.findReceiveTerms().get(order.getReceiveType());
+		// 结算方式
+		String paymentType = StringUtils.trimToEmpty(order.getPaymentType());
+		String paymentTypeName = constService.findDealerPaymentTerms().get(paymentType);
+		if (StringUtils.isEmpty(paymentTypeName)) {
+			paymentTypeName = paymentType;
+		}
+		bpmHeader.setPaymentTypeName(paymentTypeName);
+		// 运输类型
+		String receiveTypeName = constService.findShippingTypes().get(order.getTransferType());
 		bpmHeader.setReceiveTypeName(StringUtils.trimToEmpty(receiveTypeName));
 		bpmHeader.setRefrigeratoryFee(ObjectUtils.defaultIfNull(order.getRefrigeratoryFee(), 0d));
 		bpmHeader.setSalesCode(StringUtils.trimToEmpty(order.getSalesCode()));
@@ -1145,7 +1152,8 @@ public class OrderService {
 				bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
 				bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice());
 				bpmItem.setTransfterPrice(itemDto.getTransactionPrice());
-				bpmItem.setStandardCost(itemDto.getStandardPrice() + itemDto.getOptionalStandardPrice());
+				double standardCost = itemDto.getStandardPrice() + (itemDto.getOptionalStandardPrice() == null ? 0 : itemDto.getOptionalStandardPrice()) ;
+				bpmItem.setStandardCost(standardCost);
 			}
 			bpmHeader.setMaterialGroupNames(strGroupName.length() > 0 ? strGroupName.substring(1) : "");
 		}
