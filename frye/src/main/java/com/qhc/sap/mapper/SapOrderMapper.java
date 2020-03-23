@@ -13,7 +13,7 @@ import com.qhc.sap.entity.Order;
  * 
  * @author Walker
  */
-public interface OrderMapper {
+public interface SapOrderMapper {
 
   /**
    * 

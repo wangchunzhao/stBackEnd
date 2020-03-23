@@ -178,7 +178,7 @@ public class OrderService {
 	private SapOrderService sapOrderService;
 	
 	@Autowired
-	private com.qhc.sap.mapper.OrderMapper sapOrderMapper;
+	private com.qhc.sap.mapper.SapOrderMapper sapOrderMapper;
 
 	@Transactional
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
