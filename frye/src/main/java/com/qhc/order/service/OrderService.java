@@ -176,6 +176,9 @@ public class OrderService {
 	
 	@Autowired
 	private SapOrderService sapOrderService;
+	
+	@Autowired
+	private com.qhc.sap.mapper.OrderMapper sapOrderMapper;
 
 	@Transactional
 	public OrderDto save(String user, final OrderDto orderDto) throws Exception {
@@ -204,6 +207,9 @@ public class OrderService {
 		}
 		for(ItemDto item : items) {
 		}
+		
+		// 檢查合同號
+		checkContractNumber(orderDto);
 
 		// is b2c
 		if (items != null) {
@@ -268,6 +274,34 @@ public class OrderService {
 		OrderDto dto = this.findOrder(orderInfo.getId());
 
 		return dto;
+	}
+
+	/**
+	 * 檢查合同號
+	 * @param orderDto
+	 */
+	private void checkContractNumber(final OrderDto orderDto) {
+		String contractNumber = StringUtils.trimToEmpty(orderDto.getContractNumber());
+		if (contractNumber.length() > 0) {
+			contractNumber = contractNumber.toUpperCase();
+			if (contractNumber.length() > 10) {
+				throw new RuntimeException("合同号限制10位");
+			}
+			Map<String, Object> params = new HashMap<>();
+			params.put("contractNumber", contractNumber);
+			List<com.qhc.sap.entity.Order> clist = sapOrderMapper.findByParams(params);
+			if (clist.size() > 0) {
+				throw new RuntimeException("合同号已经存在，请冲重新输入");
+			}
+			params.clear();
+			params.put("id", orderDto.getId());
+			params.put("contractNumber", contractNumber);
+			List<String> existsConstractNumberList =  orderInfoMapper.checkContractNumber(params);
+			if (existsConstractNumberList.size() > 0) {
+				throw new RuntimeException("合同号已经存在，请冲重新输入");
+			}
+			orderDto.setContractNumber(contractNumber);
+		}
 	}
 
 	/**
@@ -787,13 +821,10 @@ public class OrderService {
 			throw new RuntimeException("当前状态不能下发SAP");
 		}
 
-		// 1. 根据sequenceNumber组装数据
-		SapOrder sapOrder = sapOrderService.assembleSapOrder(orderDto);
-
 		if (orderDto.getVersionNum() > 1) {
-			sapOrderService.updateOrder(sapOrder);
+			sapOrderService.updateOrder(orderDto);
 		} else {
-			sapOrderService.createOrder(sapOrder);
+			sapOrderService.createOrder(orderDto);
 		}
 //		  	logger.info("SAP同步开单结果==>"+sapRes);
 		// 修改订单状态为已下发SAP

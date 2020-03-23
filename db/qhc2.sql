@@ -103,6 +103,8 @@ drop table if exists sap_materials_price;
 
 drop table if exists sap_materials_price_temp;
 
+drop table if exists sap_order;
+
 drop table if exists sap_order_type;
 
 drop table if exists sap_order_type_and_customer_class;
@@ -999,6 +1001,16 @@ create table sap_materials_price_temp
 );
 
 alter table sap_materials_price_temp comment 'SAP物料价格临时表';
+
+/*==============================================================*/
+/* Table: sap_order                                             */
+/*==============================================================*/
+create table sap_order
+(
+   contract_number      varchar(32) not null comment 'sap存量合同号'
+);
+
+alter table sap_order comment 'sap订单存量信息，合同号/订单号等';
 
 /*==============================================================*/
 /* Table: sap_order_type                                        */

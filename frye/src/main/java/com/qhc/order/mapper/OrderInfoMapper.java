@@ -113,5 +113,7 @@ public interface OrderInfoMapper {
 	List<OrderDto> findOrderViewByParams(OrderQuery query);
 
 	List<OrderVersion> findOrderVersions(String sequenceNumber);
+	
+	List<String> checkContractNumber(Map<String, Object> params);
 
 }

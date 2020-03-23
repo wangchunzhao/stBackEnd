@@ -62,6 +62,7 @@
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			AND l.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
 		</trim>
+		order by  `c`.`code`, `v`.`code`
 	</select>
 	
 	<!-- 查询物料特征默认值 -->

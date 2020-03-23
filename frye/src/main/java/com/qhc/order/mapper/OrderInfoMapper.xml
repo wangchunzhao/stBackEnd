@@ -432,7 +432,7 @@
 		<if test="approvedMainDiscount != null">
 			, approved_main_discount = approvedMainDiscount
 		</if>
-		<if test="user">
+		<if test="user != null">
 			, updater = #{user, jdbcType=VARCHAR}
 			, update_time = now()
 		</if>
@@ -449,5 +449,15 @@
 		from k_order 
 		left join k_order_info on k_order.id = k_order_info.order_id
 		where k_order.sequence_number = #{sequenceNumber}
+	</select>
+	
+	<select id="checkContractNumber" resultType="String" parameterType="Map">
+		select 
+			contract_number
+		from k_order_info 
+		where contract_number = #{contractNumber, jdbcType=VARCHAR}
+			<if test="id != null" >
+				AND id != #{id, jdbcType=INTEGER}
+			</if>
 	</select>
 </mapper>

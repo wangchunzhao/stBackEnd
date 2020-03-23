@@ -73,6 +73,8 @@ public class SapOrderHeader {
 	private String city2;
 	// 交货日期 -- 要求发货日期
 	private String vdatu;
+	// 变更状态
+	private String updateflag;
 	
 	public String getAuart() {
 		return auart;
@@ -271,5 +273,11 @@ public class SapOrderHeader {
 	}
 	public void setVdatu(String vdatu) {
 		this.vdatu = vdatu;
+	}
+	public String getUpdateflag() {
+		return updateflag;
+	}
+	public void setUpdateflag(String updateflag) {
+		this.updateflag = updateflag;
 	}
 }

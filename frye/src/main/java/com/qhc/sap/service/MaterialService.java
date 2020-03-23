@@ -228,35 +228,35 @@ public class MaterialService {
 		Material m = materialRepo.findById(materialCode).get();
 		// 物料特征分组
 		String clazzCode = m.getClazzCode();
-		List<ClazzCharacteristicValueView> ccs = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
-		if (ccs != null && ccs.size() > 0) {
+		List<ClazzCharacteristicValueView> allmc = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
+		if (allmc != null && allmc.size() > 0) {
 			List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
-			Set<Integer> ids = new HashSet<Integer>();
+			Set<Integer> defaultIds = new HashSet<Integer>();
 			for (SapCharacteristicDefault dc : defaultValues) {
-				ids.add(dc.getValueId());
+				defaultIds.add(dc.getValueId());
 			}
 			// template variable
-			Map<String, Characteristic> cs = new HashMap<String, Characteristic>();
-			for (ClazzCharacteristicValueView cc : ccs) {
-				Characteristic ch = cs.get(cc.getKeyCode());
-				if (ch == null) {
-					ch = new Characteristic();
-					ch.setCode(cc.getKeyCode());
-					ch.setName(cc.getKeyName());
-					ch.setOptional(false);
-					ch.setColor(false);
-					ch.setClassCode(clazzCode);
-					cs.put(cc.getKeyCode(), ch);
-					chas.add(ch);
+			Map<String, Characteristic> cmap = new HashMap<String, Characteristic>();
+			for (ClazzCharacteristicValueView mcview : allmc) {
+				Characteristic mc = cmap.get(mcview.getKeyCode());
+				if (mc == null) {
+					mc = new Characteristic();
+					mc.setCode(mcview.getKeyCode());
+					mc.setName(mcview.getKeyName());
+					mc.setOptional(false);
+					mc.setColor(false);
+					mc.setClassCode(clazzCode);
+					cmap.put(mcview.getKeyCode(), mc);
+					chas.add(mc);
 				}
-				Configuration con = new Configuration();
-				ch.getConfigs().add(con);
-				con.setCode(cc.getValueCode());
-				con.setName(cc.getValueName());
-				if (ids.contains(cc.getId())) {
-					con.setDefault(true);
+				Configuration mcValues = new Configuration();
+				mc.getConfigs().add(mcValues);
+				mcValues.setCode(mcview.getValueCode());
+				mcValues.setName(mcview.getValueName());
+				if (defaultIds.contains(mcview.getId())) {
+					mcValues.setDefault(true);
 				} else {
-					con.setDefault(false);
+					mcValues.setDefault(false);
 				}
 			}
 		}

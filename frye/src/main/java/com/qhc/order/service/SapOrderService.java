@@ -63,6 +63,7 @@ public class SapOrderService {
 	public SapOrder assembleSapOrder(OrderDto order) {
 		Integer orderInfoId = order.getId();
 //		String orderType = order.getOrderType();
+		boolean isUpdate = order.getVersionNum() > 1;
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -121,6 +122,9 @@ public class SapOrderService {
 		String deliveryDate = order.getEarliestDeliveryDate() == null ? ""
 				: new SimpleDateFormat("yyyyMMdd").format(order.getEarliestDeliveryDate());
 		header.setVdatu(deliveryDate); // 交货日期 -- 要求发货日期
+		if (isUpdate) {
+			header.setUpdateflag("U");
+		}
 
 //		ItemService itemService;
 		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
@@ -128,6 +132,14 @@ public class SapOrderService {
 		boolean singleAddress = true;
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
+			String itemStatus = StringUtils.trimToEmpty(item.getItemStatus());
+			if (isUpdate) {
+				if (itemStatus.equals("") || itemStatus.equals("00")) {
+					header.setUpdateflag("I");
+				} else {
+					header.setUpdateflag("U");
+				}
+			}
 			SapOrderItem sapItem = new SapOrderItem();
 			// Ship-to PO item/送达方-采购订单编号项目
 			sapItem.setPosnr(rowNumber);
@@ -378,7 +390,9 @@ public class SapOrderService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public String createOrder(SapOrder sapOrder) {
+	public String createOrder(OrderDto orderDto) {
+		// 1. 根据sequenceNumber组装数据
+		SapOrder sapOrder = assembleSapOrder(orderDto);
 		return this.sendToSap(sapOrder, orderCreationUrl);
 	}
 
@@ -389,7 +403,9 @@ public class SapOrderService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public String updateOrder(SapOrder sapOrder) {
+	public String updateOrder(OrderDto orderDto) {
+		// 1. 根据sequenceNumber组装数据
+		SapOrder sapOrder = assembleSapOrder(orderDto);
 		return this.sendToSap(sapOrder, orderChangeUrl);
 	}
 

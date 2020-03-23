@@ -121,7 +121,7 @@ public class OrderController {
 
 	@ApiOperation(value = "驳回", notes = "驳回")
 	@PostMapping(value = "order/{orderInfoId}/reject/{user}")
-	public Result submit(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
+	public Result reject(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
 			orderService.reject(user, orderInfoId);
