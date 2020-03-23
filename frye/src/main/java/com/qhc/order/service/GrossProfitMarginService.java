@@ -39,6 +39,7 @@ public class GrossProfitMarginService {
 
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
+		double exchange = order.getCurrencyExchange();
 		// 报价单不需要计算毛利率
 		if ("3".equals(stOrderType)) {
 			return null;
@@ -46,10 +47,6 @@ public class GrossProfitMarginService {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = order.getItems();
-		double installFee = ObjectUtils.defaultIfNull(order.getInstallFee(), 0d);
-		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d);
-		double electricalFee = ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d);
-		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d);
 		double freight = 0;
 		String transferType = order.getTransferType();
 		String saleType = order.getSaleType();
@@ -71,7 +68,12 @@ public class GrossProfitMarginService {
 		if (saleType.equals("20")) {
 			// 出口外销运费手工填写
 		}
-		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d);
+		freight = freight / exchange; // 转换为凭证货币，用于毛利率计算
+		double installFee = ObjectUtils.defaultIfNull(order.getInstallFee(), 0d) / exchange; // 转换为凭证货币
+		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d) / exchange; // 转换为凭证货币
+		double electricalFee = ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d) / exchange; // 转换为凭证货币
+		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d) / exchange; // 转换为凭证货币
+		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d) / exchange; // 转换为凭证货币
 		int warranty = order.getWarranty();
 		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
 
@@ -111,14 +113,17 @@ public class GrossProfitMarginService {
 				// 收入为手工输入
 				final List<String> l = new ArrayList<>();
 				items.forEach(i -> { 
-					if (i.getMaterialGroupCode().equals(code)) l.add("1"); 
+					if (i.getMaterialGroupCode().equals(code)) {
+						l.add("1"); 
+					}
 				});
 				if (l.size() > 0) {
 					calcItemMargin(mgroup, order);
 					double otherAmount = mgroup.getAmount().doubleValue();
 					double otherExcludingTaxAmount = mgroup.getExcludingTaxAmount().doubleValue();
+					double otherCost = 1 / exchange; // 转换为凭证货币
 					// 1元，固定值
-					setMaterialGroupMargin(mgroup, otherAmount, otherExcludingTaxAmount, 1, 1);
+					setMaterialGroupMargin(mgroup, otherAmount, otherExcludingTaxAmount, otherCost, otherCost);
 				} else {
 					setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
 				}
@@ -235,6 +240,7 @@ public class GrossProfitMarginService {
 	 * @param items
 	 */
 	private void calcItemMargin(MaterialGroups group, OrderDto order) {
+		double exchange = order.getCurrencyExchange();
 		List<ItemDto> items = order.getItems();
 		double taxRate = order.getTaxRate();
 //		String orderGroupCode = group.getMaterialGroupOrderCode();
@@ -246,12 +252,12 @@ public class GrossProfitMarginService {
 		for (ItemDto item : items) {
 			String itemMaterialGroupCode = item.getMaterialGroupCode();
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
-				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
-				amount +=  (item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice()) * item.getQuantity();
+				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价 (转换为凭证货币)
+				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() / exchange ) * item.getQuantity();
 				// 成本（销售）
-				cost += item.getTransactionPrice() * item.getQuantity();
+				cost += item.getTransactionPrice() / exchange * item.getQuantity(); // 转换为凭证货币
 				// 成本（生产）
-				wtwCost += item.getStandardPrice() * item.getQuantity();
+				wtwCost += item.getStandardPrice() / exchange * item.getQuantity(); // 转换为凭证货币
 			}
 		}
 

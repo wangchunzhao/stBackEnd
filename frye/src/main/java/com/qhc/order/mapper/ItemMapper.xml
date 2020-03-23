@@ -179,15 +179,16 @@
 			i.actual_price * i.quantity as actual_amount,
 			i.optional_actual_price * i.quantity as optional_actual_amount,
 			i.b2c_estimated_price * i.quantity as b2c_estimated_amount,
-			i.actual_price + i.optional_actual_price + i.b2c_estimated_price as actual_price_sum,
-			(i.actual_price + i.optional_actual_price + i.b2c_estimated_price) * i.quantity as actual_amount_sum,
-			(i.transaction_price + i.optional_transaction_price + i.b2c_estimated_price) * i.quantity as transaction_price_sum,
+			i.actual_price + i.optional_actual_price + i.b2c_estimated_price / oi.currency_exchange as actual_price_sum,
+			(i.actual_price + i.optional_actual_price + i.b2c_estimated_price / oi.currency_exchange ) * i.quantity as actual_amount_sum,
+			(i.transaction_price + i.optional_transaction_price + i.b2c_estimated_price / oi.currency_exchange) * i.quantity as transaction_price_sum,
 			d.province_code, 
 			d.city_code, 
 			d.district_code, 
 			d.address
 		from k_item i
 		left join k_delivery_address d on d.order_info_id = i.order_info_id and d.seq = i.delivery_address_seq
+		left join k_order_info oi on oi.id = i.order_info_id
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
