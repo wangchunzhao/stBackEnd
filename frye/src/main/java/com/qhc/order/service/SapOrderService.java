@@ -63,6 +63,7 @@ public class SapOrderService {
 	public SapOrder assembleSapOrder(OrderDto order) {
 		Integer orderInfoId = order.getId();
 //		String orderType = order.getOrderType();
+		double exchange = order.getCurrencyExchange();
 		boolean isUpdate = order.getVersionNum() > 1;
 
 		// assemble sap order header
@@ -132,6 +133,7 @@ public class SapOrderService {
 		boolean singleAddress = true;
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
+			double quantity = item.getQuantity();
 			String itemStatus = StringUtils.trimToEmpty(item.getItemStatus());
 			if (isUpdate) {
 				if (itemStatus.equals("") || itemStatus.equals("00")) {
@@ -146,7 +148,7 @@ public class SapOrderService {
 			// Material Number/物料编码
 			sapItem.setMatnr(item.getMaterialCode());
 			// Target quantity/数量
-			sapItem.setZmeng((int) item.getQuantity());
+			sapItem.setZmeng((int) quantity);
 			// Req.dlv.date/请求发货日期 yyyyMMdd
 			String shippDate = item.getShippDate() == null ? ""
 					: new SimpleDateFormat("yyyyMMdd").format(item.getShippDate());
@@ -204,9 +206,9 @@ public class SapOrderService {
 
 			// add price condition
 			// 实卖价合计
-			double actualPriceSum = item.getActualPrice() * item.getQuantity() + item.getOptionalActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
+			double actualPriceSum = item.getActualPrice() * quantity + item.getOptionalActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
 			// 转移价合计
-			double transferPriceSum = item.getTransactionPrice() * item.getQuantity() + item.getOptionalTransactionPrice() * item.getQuantity() + item.getB2cEstimatedCost();
+			double transferPriceSum = (item.getTransactionPrice() * quantity + item.getOptionalTransactionPrice() * quantity + item.getB2cEstimatedCost()) / exchange; // 转换未凭证货币
 			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
@@ -244,13 +246,13 @@ public class SapOrderService {
 //		其他项目收费  BG1GD1000000-X	
 //		addFeeItem(sapItems, "BG1GD1000000-X", 0);
 //		安装费  BG1GDA00000-X  9901
-		addFeeItem(sapItems, sapPrices, "BG1GDA00000-X", 9901, order.getInstallFee());
+		addFeeItem(sapItems, sapPrices, "BG1GDA00000-X", 9901, order.getInstallFee() / exchange);
 //		材料费  BG1GDB00000-X	  9902
-		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, order.getMaterialFee());
+		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, order.getMaterialFee() / exchange);
 //		销售运费  BG1P7E00000-X	9903
-		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight());
+		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, order.getFreight() / exchange);
 		Double additionalFreight = order.getAdditionalFreight();
-		additionalFreight = additionalFreight == null ? 0D : additionalFreight;
+		additionalFreight = additionalFreight == null ? 0D : additionalFreight / exchange;
 		if (order.getFreight() > 0 && additionalFreight > 0) {
 			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
 			SapOrderPrice price3 = new SapOrderPrice();
@@ -261,9 +263,9 @@ public class SapOrderService {
 		}
 		
 //		电气费  BG1R8J00000-X	
-		addFeeItem(sapItems, sapPrices, "BG1R8J00000-X", 9904, order.getElectricalFee());
+		addFeeItem(sapItems, sapPrices, "BG1R8J00000-X", 9904, order.getElectricalFee() / exchange);
 //		维保费  BG1R8K00000-X	
-		addFeeItem(sapItems, sapPrices, "BG1R8K00000-X", 9905, order.getMaintenanceFee());
+		addFeeItem(sapItems, sapPrices, "BG1R8K00000-X", 9905, order.getMaintenanceFee() / exchange);
 //		冷库  BG1R8R00000-X	
 //		addFeeItem(sapItems, sapPrices, "BG1R8R00000-X", 0);
 //		不可预估费  BG1R8L00000-X	
