@@ -59,12 +59,9 @@ class OrderServiceTest {
 	@Test
 	void testOrderCreationForSAP() {
 		SapOrder sapCreationOrder = getSapCreationOrder();
-		
 		logger.info("Start test sap order creation.");
-		
-		String result = sapOrderService.createOrder(sapCreationOrder);
-		
-		logger.info("Result: {}" + result);
+//		String result = sapOrderService.createOrder(sapCreationOrder);
+//		logger.info("Result: {}" + result);
 	}
 	
 	private SapOrder getSapCreationOrder() {
