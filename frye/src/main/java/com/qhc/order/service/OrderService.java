@@ -285,20 +285,20 @@ public class OrderService {
 		if (contractNumber.length() > 0) {
 			contractNumber = contractNumber.toUpperCase();
 			if (contractNumber.length() > 10) {
-				throw new RuntimeException("合同号限制10位");
+				throw new RuntimeException("合同号已存在或格式不正确");
 			}
 			Map<String, Object> params = new HashMap<>();
 			params.put("contractNumber", contractNumber);
-			List<com.qhc.sap.entity.Order> clist = sapOrderMapper.findByParams(params);
-			if (clist.size() > 0) {
-				throw new RuntimeException("合同号已经存在，请冲重新输入");
+			int count = sapOrderMapper.countByParams(params);
+			if (count > 0) {
+				throw new RuntimeException("合同号已存在或格式不正确");
 			}
 			params.clear();
 			params.put("id", orderDto.getId());
 			params.put("contractNumber", contractNumber);
 			List<String> existsConstractNumberList =  orderInfoMapper.checkContractNumber(params);
 			if (existsConstractNumberList.size() > 0) {
-				throw new RuntimeException("合同号已经存在，请冲重新输入");
+				throw new RuntimeException("合同号已存在或格式不正确");
 			}
 			orderDto.setContractNumber(contractNumber);
 		}

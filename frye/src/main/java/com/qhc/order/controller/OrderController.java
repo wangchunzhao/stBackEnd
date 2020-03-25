@@ -50,7 +50,7 @@ public class OrderController {
 	 * 
 	 * @param orderId
 	 * @return
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	@ApiOperation(value = "查询订单详情", notes = "查询订单详情")
 	@GetMapping(value = "order/{orderInfoId}")
@@ -60,7 +60,7 @@ public class OrderController {
 		try {
 			OrderDto order = orderService.findOrder(orderInfoId);
 			result = Result.ok(order);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -72,7 +72,7 @@ public class OrderController {
 	 * 
 	 * @param query
 	 * @return
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	@ApiOperation(value = "查询订单列表", notes = "查询订单列表")
 	@PostMapping(value = "order/query")
@@ -82,7 +82,7 @@ public class OrderController {
 		try {
 			PageHelper<OrderDto> page = new PageHelper<OrderDto>(orderService.findOrders(query));
 			result = Result.ok(page);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -96,7 +96,7 @@ public class OrderController {
 		try {
 			orderService.save(user, order);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -111,7 +111,7 @@ public class OrderController {
 		try {
 			orderService.submit(user, order);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -126,7 +126,7 @@ public class OrderController {
 		try {
 			orderService.reject(user, orderInfoId);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -142,7 +142,7 @@ public class OrderController {
 		try {
 			orderService.upgrade(user, orderInfoId);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -158,7 +158,7 @@ public class OrderController {
 		try {
 			OrderDto order = orderService.copy(user, orderInfoId);
 			result = Result.ok(order);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -174,7 +174,7 @@ public class OrderController {
 		try {
 			orderService.transfer(user, orderInfoId);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -189,7 +189,7 @@ public class OrderController {
 		try {
 			orderService.submitBpm(user, order);
 			result = Result.ok("");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
 		}
@@ -219,7 +219,7 @@ public class OrderController {
 			this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
 
 			return true;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("BPM call back", e);
 			return false;
 		}
@@ -230,18 +230,18 @@ public class OrderController {
 	 * 
 	 * @param sequenceNumber
 	 * @return
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
 	@PostMapping(value = "order/{orderInfoId}/sap/{user}")
 	@ResponseStatus(HttpStatus.OK)
 	public Result sendOrderToSap(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("user") String user)
-			throws Exception {
+			throws Throwable {
 		Result result = null;
 		try {
 			String res = orderService.sendToSap(user, orderInfoId);
 			result = Result.ok(res);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error("订单下发SAP失败！" + e.getMessage());
 		}
@@ -254,18 +254,18 @@ public class OrderController {
 	 * 
 	 * @param sequenceNumber
 	 * @return
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	@ApiOperation(value = "修改报价单报价状态", notes = "修改报价单报价状态")
 	@PostMapping(value = "order/quote/{user},{orderInfoId},{status}")
 	@ResponseStatus(HttpStatus.OK)
 	public Result updateQuoteStatus(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("status") String status, @PathVariable("user") String user)
-			throws Exception {
+			throws Throwable {
 		Result result = null;
 		try {
 			String res = orderService.updateQuoteStatus(user, orderInfoId, status);
 			result = Result.ok(res);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error("订单下发SAP失败！");
 		}
@@ -278,17 +278,17 @@ public class OrderController {
 	 * 
 	 * @param orderId
 	 * @return
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	@ApiOperation(value = "根据sequenceNumber查询订单版本历史", notes = "根据sequenceNumber查询订单版本历史")
 	@GetMapping(value = "order/{sequenceNumber}/version")
 	@ResponseStatus(HttpStatus.OK)
-	public Result orderVersions(@PathVariable String sequenceNumber) throws Exception {
+	public Result orderVersions(@PathVariable String sequenceNumber) throws Throwable {
 		Result result = null;
 		try {
 			List<OrderVersion> list = orderService.findOrderVersions(sequenceNumber);
 			result = Result.ok(list);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("查询订单版本历史失败", e);
 			result = Result.error("查询订单版本历史失败！");
 		}
@@ -298,12 +298,12 @@ public class OrderController {
 
 	@ApiOperation(value = "计算毛利", notes = "计算毛利")
 	@PostMapping(value = "order/grossprofit")
-	public Result calcGrossProfit(@RequestBody OrderDto order) throws Exception {
+	public Result calcGrossProfit(@RequestBody OrderDto order) throws Throwable {
 		Result result = null;
 		try {
 			List<MaterialGroups> list = grossProfitMarginService.calculate(order);
 			result = Result.ok(list);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("计算毛利失败", e);
 			result = Result.error("计算毛利失败！");
 		}
@@ -313,12 +313,12 @@ public class OrderController {
 
 	@ApiOperation(value = "订单的公共可选项", notes = "所有订单共享的可选项")
 	@GetMapping(value = "order/option")
-	public Result getOption() throws Exception {
+	public Result getOption() throws Throwable {
 		Result result = null;
 		try {
 			OrderOption option = orderService.getOrderOption();
 			result = Result.ok(option);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("订单的公共可选择失败", e);
 			result = Result.error("订单的公共可选择失败！");
 		}
