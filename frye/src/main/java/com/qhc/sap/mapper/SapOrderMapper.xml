@@ -34,7 +34,7 @@
 				order by ${orderByClause}
 			</when>
 			<otherwise>
-				order by 
+				order by contract_number
 			</otherwise>
 		</choose>
 	</select>

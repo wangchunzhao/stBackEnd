@@ -597,7 +597,7 @@ create table k_order_info
    is_convenient_store  integer comment '是否是便利店',
    is_reformed          integer comment '是否是改造店',
    is_new               integer comment '是不是新店',
-   contract_number      varchar(45) not null comment '合同号，结算号',
+   contract_number      varchar(45) comment '合同号，结算号',
    sale_type            varchar(2) comment '销售类型',
    tax_rate             double comment '税率',
    incoterm             varchar(45) comment '国际贸易条件code',
