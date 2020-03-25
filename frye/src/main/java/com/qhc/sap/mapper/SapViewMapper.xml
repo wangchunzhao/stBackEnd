@@ -35,6 +35,7 @@
 				from sap_materials_price
 				group by sap_materials_code, sap_industry_code ) p ON p.sap_materials_code = m.code -->
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+		    AND m.stand_price!='0'
 			<if test="code != null and code != ''" >
 				AND m.code = #{code, jdbcType=VARCHAR}
 			</if>

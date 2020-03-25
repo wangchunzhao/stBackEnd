@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BpmService {
-	Logger logger = LoggerFactory.getLogger(BpmService.class);
+	private static Logger logger = LoggerFactory.getLogger(BpmService.class);
 
 	@Value("${bpm.url}")
 	private String bpmUrl;
@@ -20,6 +20,7 @@ public class BpmService {
 		JaxWsDynamicClientFactory dcflient = JaxWsDynamicClientFactory.newInstance();
 		Client client = dcflient.createClient(bpmUrl);
 		try {
+			logger.info("Order Data: {}", json);
 			Object[] objects = client.invoke("StartProcess", new Object[] { json });
 			logger.info(new StringBuilder().append("*******").append(objects[0].toString()).toString());
 			if ((objects != null) && (objects.length > 0) && (objects[0].toString().equalsIgnoreCase("true")))
