@@ -315,7 +315,8 @@
         o.st_order_type,
         o.quote_status,
         c.name as customer_name,
-      	s.name as officeName
+      	s.name as office_name,
+      	g.name as group_name
 	</sql>
 	
 	<sql id="order_view_table_list" >
@@ -323,6 +324,7 @@
         LEFT JOIN k_order o ON o.id = oi.order_id
         LEFT JOIN sap_customer c on c.code = o.customer_code
         LEFT JOIN sap_sales_office s on oi.office_code = s.code
+        LEFT JOIN sap_sales_group g on oi.group_code = g.code
     </sql>
     
 	<!-- 按参数统计 -->
