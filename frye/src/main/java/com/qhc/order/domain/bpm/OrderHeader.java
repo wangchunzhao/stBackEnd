@@ -83,6 +83,8 @@ public class OrderHeader {
 	private String materialGroupNames;
 	/* 是否特批发货/紧急发货 */
 	private Integer isUrgentDelivery = null;
+	/* 是否特批下单 */
+	private Integer isSpecialOrder = 0;
 
 	public String getSalesCode() {
 		return salesCode;
@@ -388,6 +390,14 @@ public class OrderHeader {
 		this.isUrgentDelivery = isUrgentDelivery;
 	}
 
+	public Integer getIsSpecialOrder() {
+		return isSpecialOrder;
+	}
+
+	public void setIsSpecialOrder(Integer isSpecialOrder) {
+		this.isSpecialOrder = isSpecialOrder;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel + ", orderType=" + orderType
@@ -403,7 +413,7 @@ public class OrderHeader {
 				+ status + ", comments=" + comments + ", installFee=" + installFee + ", materialFee=" + materialFee
 				+ ", electricalFee=" + electricalFee + ", refrigeratoryFee=" + refrigeratoryFee + ", maintenanceFee="
 				+ maintenanceFee + ", address=" + address + ", materialGroupNames=" + materialGroupNames
-				+ ", isUrgentDelivery=" + isUrgentDelivery + "]";
+				+ ", isUrgentDelivery=" + isUrgentDelivery + ", isSpecialOrder=" + isSpecialOrder + "]";
 	}
 
 }

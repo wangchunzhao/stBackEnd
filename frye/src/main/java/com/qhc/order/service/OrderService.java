@@ -1140,6 +1140,7 @@ public class OrderService {
 		bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
 		bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
 		bpmHeader.setIsUrgentDelivery(order.getIsUrgentDelivery());
+		bpmHeader.setIsSpecialOrder(order.getIsSpecialOrder());
 
 		// set bpm order attachements
 		for (Attachment attachment : attachments) {
