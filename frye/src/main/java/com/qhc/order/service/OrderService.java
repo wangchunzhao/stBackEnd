@@ -1289,9 +1289,10 @@ public class OrderService {
 			bpmDicision.setApprovedBodyDiscount(bodyDiscount);
 			bpmDicision.setApprovedMainDiscount(unitDiscount);
 
-			// 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改
+			// 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
 			if (order.getStOrderType().equals("2")
-					&& (orderInfo.getBodyDiscount() != bodyDiscount || orderInfo.getMainDiscount() != unitDiscount)) {
+					&& (orderInfo.getBodyDiscount() != bodyDiscount || orderInfo.getMainDiscount() != unitDiscount)
+					&& (ObjectUtils.defaultIfNull(orderInfo.getIsLongterm(), 0) != 1)) {
 				// 修改订单行项目折扣，重新计算订单毛利率
 				orderInfo.setStatus(status);
 				orderInfo.setUpdater(user);
