@@ -166,6 +166,9 @@ public class OrderDto {
 	private int isLongterm;//是否为长期折扣
 	
 	private int isSpecial; // 是否非标准折扣，默认为0，经销商非标下单为1
+
+	/* 是否特批下单，1 特批， 0 */
+	private int isSpecialOrder = 0;
 	
 	private String paymentType; //结算方式，经销商
 	private List<BillingPlan> payments; //回款计划，大客户
@@ -850,6 +853,14 @@ public class OrderDto {
 		this.isSpecial = isSpecial;
 	}
 
+	public int getIsSpecialOrder() {
+		return isSpecialOrder;
+	}
+
+	public void setIsSpecialOrder(int isSpecialOrder) {
+		this.isSpecialOrder = isSpecialOrder;
+	}
+
 	public String getPaymentType() {
 		return paymentType;
 	}
@@ -1085,10 +1096,11 @@ public class OrderDto {
 				+ ", deliveryAddress=" + deliveryAddress + ", bodyDiscount=" + bodyDiscount + ", approvedBodyDiscount="
 				+ approvedBodyDiscount + ", mainDiscount=" + mainDiscount + ", approvedMainDiscount="
 				+ approvedMainDiscount + ", discount=" + discount + ", isLongterm=" + isLongterm + ", isSpecial="
-				+ isSpecial + ", paymentType=" + paymentType + ", payments=" + payments + ", isTerm1=" + isTerm1
-				+ ", isTerm2=" + isTerm2 + ", isTerm3=" + isTerm3 + ", installFee=" + installFee + ", materialFee="
-				+ materialFee + ", electricalFee=" + electricalFee + ", refrigeratoryFee=" + refrigeratoryFee
-				+ ", maintenanceFee=" + maintenanceFee + ", additionalFreight=" + additionalFreight + ", earliestDeliveryDate=" + earliestDeliveryDate
+				+ isSpecial + ", isSpecialOrder=" + isSpecialOrder + ", paymentType=" + paymentType + ", payments="
+				+ payments + ", isTerm1=" + isTerm1 + ", isTerm2=" + isTerm2 + ", isTerm3=" + isTerm3 + ", installFee="
+				+ installFee + ", materialFee=" + materialFee + ", electricalFee=" + electricalFee
+				+ ", refrigeratoryFee=" + refrigeratoryFee + ", maintenanceFee=" + maintenanceFee
+				+ ", additionalFreight=" + additionalFreight + ", earliestDeliveryDate=" + earliestDeliveryDate
 				+ ", earliestProductDate=" + earliestProductDate + ", items=" + items + ", isB2c=" + isB2c
 				+ ", isBulkCargo=" + isBulkCargo + ", isUrgentDelivery=" + isUrgentDelivery + ", unpredictable="
 				+ unpredictable + ", grossProfitMargin=" + grossProfitMargin + ", comments=" + comments

@@ -69,14 +69,15 @@ public class GrossProfitMarginService {
 		if (saleType.equals("20")) {
 			// 出口外销运费手工填写
 		}
+		
+		int warranty = order.getWarranty();
+		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
 		freight = freight / exchange; // 转换为凭证货币，用于毛利率计算
 		double installFee = ObjectUtils.defaultIfNull(order.getInstallFee(), 0d) / exchange; // 转换为凭证货币
 		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d) / exchange; // 转换为凭证货币
 		double electricalFee = ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d) / exchange; // 转换为凭证货币
 		double maintenanceFee = ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0d) / exchange; // 转换为凭证货币
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0d) / exchange; // 转换为凭证货币
-		int warranty = order.getWarranty();
-		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
 
 		// 毛利率合计行
 		MaterialGroups sumMaterialGroup = new MaterialGroups();
@@ -172,11 +173,11 @@ public class GrossProfitMarginService {
 		MaterialGroups withholdRatioMaterialGroup = new MaterialGroups();
 		withholdRatioMaterialGroup.setCode("withholdRatio");
 		withholdRatioMaterialGroup.setName("预提备件费");
-		double f = excludingTaxAmount * warranty  * withholdRatio;
-		setMaterialGroupMargin(withholdRatioMaterialGroup, 0, 0, f, f);
+		double withholdRatioFee = excludingTaxAmount * warranty  * withholdRatio;
+		setMaterialGroupMargin(withholdRatioMaterialGroup, 0, 0, withholdRatioFee, withholdRatioFee);
 		groups.add(withholdRatioMaterialGroup);
-		cost += f;
-		wtwCost += f;
+		cost += withholdRatioFee;
+		wtwCost += withholdRatioFee;
 		
 		// 合计行
 		setMaterialGroupMargin(sumMaterialGroup, amount, excludingTaxAmount, cost, wtwCost);
@@ -253,17 +254,22 @@ public class GrossProfitMarginService {
 		for (ItemDto item : items) {
 			String itemMaterialGroupCode = item.getMaterialGroupCode();
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
-				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价 (转换为凭证货币)
-				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() / exchange ) * item.getQuantity();
+				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
+				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();
 				// 成本（销售）
-				cost += item.getTransactionPrice() / exchange * item.getQuantity(); // 转换为凭证货币
+				cost += item.getTransactionPrice() * item.getQuantity(); // 转换为凭证货币
 				// 成本（生产）
-				wtwCost += item.getStandardPrice() / exchange * item.getQuantity(); // 转换为凭证货币
+				wtwCost += item.getStandardPrice() * item.getQuantity(); // 转换为凭证货币
 			}
 		}
 
 		// 2. 不含税金额=金额/(1+税率)
 		excludingTaxAmount = amount / (1 + taxRate);
+		
+		amount = amount / exchange; // 转换为凭证货币
+		excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
+		cost = cost / exchange;  // 转换为凭证货币
+		wtwCost = wtwCost / exchange;  // 转换为凭证货币
 
 		setMaterialGroupMargin(group, amount, excludingTaxAmount, cost, wtwCost);
 	}

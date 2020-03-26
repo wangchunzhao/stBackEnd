@@ -628,6 +628,7 @@ create table k_order_info
    discount             double(4,2) comment '合并折扣',
    is_longterm          integer comment '是否为长期折扣',
    is_special           integer default 0 comment '是否特批折扣/非标折扣，1 非标折扣， 0',
+   is_special_order     integer comment '是否特批下单',
    payment_type         varchar(512) comment '结算方式，经销商',
    is_term1             integer comment '柜体控制阀门件是否甲供',
    is_term2             integer comment '分体柜是否远程监控',

@@ -46,6 +46,7 @@
 		<result column="discount" property="discount" jdbcType="DOUBLE" />
 		<result column="is_longterm" property="isLongterm" jdbcType="INTEGER" />
 		<result column="is_special" property="isSpecial" jdbcType="INTEGER" />
+		<result column="is_special_order" property="isSpecialOrder" jdbcType="INTEGER" />
 		<result column="payment_type" property="paymentType" jdbcType="VARCHAR" />
 		<result column="is_term1" property="isTerm1" jdbcType="INTEGER" />
 		<result column="is_term2" property="isTerm2" jdbcType="INTEGER" />
@@ -95,7 +96,7 @@
 			contactor2_id, contactor2_tel, contactor3_id, 
 			contactor3_tel, body_discount, approved_body_discount, 
 			main_discount, approved_main_discount, discount, 
-			is_longterm, is_special, payment_type, 
+			is_longterm, is_special, is_special_order, payment_type, 
 			is_term1, is_term2, is_term3, 
 			install_fee, material_fee, electrical_fee, 
 			refrigeratory_fee, maintenance_fee, additional_freight, earliest_delivery_date, 
@@ -118,7 +119,7 @@
 			#{contactor2Id, jdbcType=VARCHAR}, #{contactor2Tel, jdbcType=VARCHAR}, #{contactor3Id, jdbcType=VARCHAR}, 
 			#{contactor3Tel, jdbcType=VARCHAR}, #{bodyDiscount, jdbcType=DOUBLE}, #{approvedBodyDiscount, jdbcType=DOUBLE}, 
 			#{mainDiscount, jdbcType=DOUBLE}, #{approvedMainDiscount, jdbcType=DOUBLE}, #{discount, jdbcType=DOUBLE}, 
-			#{isLongterm, jdbcType=INTEGER}, #{isSpecial, jdbcType=INTEGER}, #{paymentType, jdbcType=VARCHAR}, 
+			#{isLongterm, jdbcType=INTEGER}, #{isSpecial, jdbcType=INTEGER}, #{isSpecialOrder, jdbcType=INTEGER}, #{paymentType, jdbcType=VARCHAR}, 
 			#{isTerm1, jdbcType=INTEGER}, #{isTerm2, jdbcType=INTEGER}, #{isTerm3, jdbcType=INTEGER}, 
 			#{installFee, jdbcType=DECIMAL}, #{materialFee, jdbcType=DECIMAL}, #{electricalFee, jdbcType=DECIMAL}, 
 			#{refrigeratoryFee, jdbcType=DECIMAL}, #{maintenanceFee, jdbcType=DECIMAL}, #{additionalFreight, jdbcType=DECIMAL}, #{earliestDeliveryDate, jdbcType=DATE}, 
@@ -175,6 +176,7 @@
 			discount = #{discount, jdbcType=DOUBLE}, 
 			is_longterm = #{isLongterm, jdbcType=INTEGER}, 
 			is_special = #{isSpecial, jdbcType=INTEGER}, 
+			is_special_order = #{isSpecialOrder, jdbcType=INTEGER}, 
 			payment_type = #{paymentType, jdbcType=VARCHAR}, 
 			is_term1 = #{isTerm1, jdbcType=INTEGER}, 
 			is_term2 = #{isTerm2, jdbcType=INTEGER}, 
@@ -217,7 +219,7 @@
 		k_order_info.group_code, k_order_info.warranty, k_order_info.install_type, k_order_info.receive_type, k_order_info.transfer_type, 
 		k_order_info.freight, k_order_info.contactor1_id, k_order_info.contactor1_tel, k_order_info.contactor2_id, k_order_info.contactor2_tel, 
 		k_order_info.contactor3_id, k_order_info.contactor3_tel, k_order_info.body_discount, k_order_info.approved_body_discount, k_order_info.main_discount, 
-		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.payment_type, 
+		k_order_info.approved_main_discount, k_order_info.discount, k_order_info.is_longterm, k_order_info.is_special, k_order_info.is_special_order, k_order_info.payment_type, 
 		k_order_info.is_term1, k_order_info.is_term2, k_order_info.is_term3, k_order_info.install_fee, k_order_info.material_fee, 
 		k_order_info.electrical_fee, k_order_info.refrigeratory_fee, k_order_info.maintenance_fee, k_order_info.additional_freight, k_order_info.earliest_delivery_date, k_order_info.earliest_product_date, 
 		k_order_info.is_b2c, k_order_info.is_bulk_cargo, 

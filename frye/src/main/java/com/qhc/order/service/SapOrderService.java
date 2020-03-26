@@ -208,7 +208,9 @@ public class SapOrderService {
 			// 实卖价合计
 			double actualPriceSum = item.getActualPrice() * quantity + item.getOptionalActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
 			// 转移价合计
-			double transferPriceSum = (item.getTransactionPrice() * quantity + item.getOptionalTransactionPrice() * quantity + item.getB2cEstimatedCost()) / exchange; // 转换未凭证货币
+			double transferPriceSum = (item.getTransactionPrice() * quantity + item.getOptionalTransactionPrice() * quantity + item.getB2cEstimatedCost());
+			actualPriceSum = actualPriceSum / exchange; // 转换未凭证货币
+			transferPriceSum = transferPriceSum / exchange; // 转换未凭证货币
 			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
@@ -250,15 +252,15 @@ public class SapOrderService {
 //		材料费  BG1GDB00000-X	  9902
 		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, ObjectUtils.defaultIfNull(order.getMaterialFee(), 0D) / exchange);
 //		销售运费  BG1P7E00000-X	9903
-		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D) / exchange;
-		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, freight);
-		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D) / exchange;
+		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D);
+		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
+		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D);
 		if (freight > 0 && additionalFreight > 0) {
 			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
 			SapOrderPrice price3 = new SapOrderPrice();
 			price3.setPosnr(9903);
 			price3.setKschl("ZH12");
-			price3.setKbetr(BigDecimal.valueOf(additionalFreight));
+			price3.setKbetr(BigDecimal.valueOf(additionalFreight / exchange));
 			sapPrices.add(price3);
 		}
 		
