@@ -3,7 +3,9 @@
  */
 package com.qhc.sap.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,10 +21,10 @@ public class Characteristic {
 	/* 颜色特征 */
 	private boolean color = false;
 	
-	private Set<Configuration> configs;
+	private List<Configuration> configs;
 	
 	public Characteristic() {
-		configs = new HashSet<Configuration>();
+		configs = new ArrayList<Configuration>();
 	}
 
 	public String getClassCode() {
@@ -65,11 +67,11 @@ public class Characteristic {
 		this.color = color;
 	}
 
-	public Set<Configuration> getConfigs() {
+	public List<Configuration> getConfigs() {
 		return configs;
 	}
 
-	public void setConfigs(Set<Configuration> configs) {
+	public void setConfigs(List<Configuration> configs) {
 		this.configs = configs;
 	}
 	

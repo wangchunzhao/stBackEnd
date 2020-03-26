@@ -550,6 +550,9 @@ public class OrderService {
 								}
 							});
 							
+							if (StringUtils.isEmpty(itemColor.getColorCode())) {
+								itemColor.setColorCode(c.getConfigs().get(0).getCode());
+							}
 							itemColorMapper.insert(itemColor);
 							colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
 						} else {
@@ -563,6 +566,9 @@ public class OrderService {
 								}
 							});
 							
+							if (StringUtils.isEmpty(cs.getValueCode())) {
+								cs.setValueCode(c.getConfigs().get(0).getCode());
+							}
 							characteristicsMapper.insert(cs);
 						}
 					}
