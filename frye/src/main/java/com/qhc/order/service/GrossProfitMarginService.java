@@ -47,9 +47,9 @@ public class GrossProfitMarginService {
 		// 查询所有物料类型sap_material_group isenable != 0
 		List<MaterialGroups> groups = materialGroupsRepository.findByIsenableNotOrderByCode(0);
 		List<ItemDto> items = order.getItems();
-		double freight = 0;
-		String transferType = order.getTransferType();
-		String saleType = order.getSaleType();
+		double freight = order.getFreight();
+		String transferType = StringUtils.trimToEmpty(order.getTransferType());
+		String saleType = StringUtils.trimToEmpty(order.getSaleType());
 		// 计算运费
 		// 自提不计算运费，销售类型为出口也不计算运费
 		if (!transferType.equals("02") && !saleType.equals("20")) {
@@ -61,9 +61,10 @@ public class GrossProfitMarginService {
 	//		ZCTF	 = 客户送货费
 			freight = calculateFreight(items);
 			order.setFreight(freight);
-		} 
+		}
 		if (transferType.equals("02")) {
-			order.setFreight(0);
+			freight = 0;
+			order.setFreight(freight);
 		}
 		if (saleType.equals("20")) {
 			// 出口外销运费手工填写
