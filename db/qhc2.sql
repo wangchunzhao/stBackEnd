@@ -970,8 +970,8 @@ create table sap_materials
 (
    code                 varchar(18) not null comment 'code',
    description          varchar(64) not null comment '描述',
-   is_configurable      TINYINT(1) not null comment '可配置',
-   is_purchased         TINYINT(1) not null comment '物料属性，采购',
+   is_configurable      TINYINT(1) not null comment '是否可配置，1是可配置，0是不可配置',
+   is_purchased         TINYINT(1) not null comment '物料属性，1是自制生产 0是外部采购',
    stand_price          decimal(13,2) not null comment '标准价格moving_average_price',
    opt_time             datetime not null comment '操作时间',
    material_size        double(13,3) not null comment '物料体积',
