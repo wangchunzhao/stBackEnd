@@ -60,7 +60,7 @@ public class SapOrderService {
 	 * @param sequenceNumber
 	 * @return //
 	 */
-	public SapOrder assembleSapOrder(OrderDto order) {
+	private SapOrder assembleSapOrder(OrderDto order) {
 		Integer orderInfoId = order.getId();
 //		String orderType = order.getOrderType();
 		double exchange = order.getCurrencyExchange();
@@ -135,14 +135,15 @@ public class SapOrderService {
 			int rowNumber = item.getRowNum();
 			double quantity = item.getQuantity();
 			String itemStatus = StringUtils.trimToEmpty(item.getItemStatus());
+			
+			SapOrderItem sapItem = new SapOrderItem();
 			if (isUpdate) {
 				if (itemStatus.equals("") || itemStatus.equals("00")) {
-					header.setUpdateflag("I");
+					sapItem.setUpdateflag("I");
 				} else {
-					header.setUpdateflag("U");
+					sapItem.setUpdateflag("U");
 				}
 			}
-			SapOrderItem sapItem = new SapOrderItem();
 			// Ship-to PO item/送达方-采购订单编号项目
 			sapItem.setPosnr(rowNumber);
 			// Material Number/物料编码
