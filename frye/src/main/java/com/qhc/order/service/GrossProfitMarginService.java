@@ -153,7 +153,12 @@ public class GrossProfitMarginService {
 				setMaterialGroupMargin(mgroup, 0, 0, additionalFreight, additionalFreight);
 				break;
 			case "9101": // "B2C"
-				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
+				double b2cEstimatedCost = 0d;
+				for (ItemDto item : items) {
+					b2cEstimatedCost += item.getB2cEstimatedCost();
+				}
+				b2cEstimatedCost /=  exchange; // 转换为凭证货币
+				setMaterialGroupMargin(mgroup, 0, 0, b2cEstimatedCost, b2cEstimatedCost);
 				break;
 			case "9102": // "可选项"
 				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
@@ -257,9 +262,9 @@ public class GrossProfitMarginService {
 				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
 				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();
 				// 成本（销售）
-				cost += item.getTransactionPrice() * item.getQuantity(); // 转换为凭证货币
+				cost += item.getTransactionPrice() * item.getQuantity(); 
 				// 成本（生产）
-				wtwCost += item.getStandardPrice() * item.getQuantity(); // 转换为凭证货币
+				wtwCost += item.getStandardPrice() * item.getQuantity(); 
 			}
 		}
 
