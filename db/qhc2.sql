@@ -477,7 +477,7 @@ create table k_item
    b2c_comments         varchar(64) comment 'B2C备注',
    special_comments     varchar(64) comment '特殊备注',
    volume_cube          decimal(13,2) comment '体积',
-   freight              decimal(13,2) comment '运费，待定',
+   freight              decimal(13,2) comment '运费，未使用，订单中保存合计运费',
    is_virtual           integer not null default 0 comment '工程虚拟物料
             0:由销售录入的行项目
             1: 非销售部门录入的行项目',
@@ -493,7 +493,7 @@ create table k_item
    config_transfer_price decimal(13,2) comment '，待定',
    config_retail_price  decimal(13,2) comment '，待定',
    is_configurable      integer not null comment '是否是可配置物料，1/0，来自物料信息',
-   clazz_code           varchar(45) comment '物料分类代码',
+   clazz_code           varchar(45) comment '物料分类代码，sap_clazz',
    comments             varchar(64) comment '备注，位于配置页面',
    item_status          varchar(10) comment '行项目状态，00 草稿，10 下推SAP，Z2 取消
             Z7 订单关闭',
@@ -598,7 +598,10 @@ create table k_order_info
    is_reformed          integer comment '是否是改造店',
    is_new               integer comment '是不是新店',
    contract_number      varchar(45) comment '合同号，结算号',
-   sale_type            varchar(2) comment '销售类型',
+   sale_type            varchar(2) comment '销售类型, sap_sales_type
+            10	内销
+            20	出口
+            30	冷库',
    tax_rate             double comment '税率',
    incoterm             varchar(45) comment '国际贸易条件code',
    incoterm_contect     varchar(64) comment '国际贸易条件内容',
@@ -608,12 +611,19 @@ create table k_order_info
    currency_exchange    double(10,5) comment '汇率',
    items_amount         decimal(13,2) comment '购销明细金额合计',
    contract_manager     varchar(45) not null comment '支持经理，合同管理员',
-   office_code          varchar(45) comment '表单里的大区code',
-   group_code           varchar(45) comment '中心code',
+   office_code          varchar(45) comment '表单里的大区, sap_sales_office',
+   group_code           varchar(45) comment '中心, sap_sales_group',
    warranty             integer comment '保修年限',
-   install_type         varchar(10) comment '安装code',
-   receive_type         varchar(10) comment '收货方式 code',
-   transfer_type        varchar(45) comment '运输类型代码code',
+   install_type         varchar(10) comment '安装, sap_installation_terms
+            10	招标
+            20	自装自提',
+   receive_type         varchar(10) comment '收货方式, sap_receive_terms
+            01	盖章接货
+            02	授权人签字
+            03	其它',
+   transfer_type        varchar(45) comment '运输类型代码, sap_shipping_type
+            01	非自提
+            02	自提',
    freight              decimal(13,2) comment '运费合计',
    contactor1_id        varchar(64) comment '第一联系人身份证',
    contactor1_tel       varchar(16) comment '第一联系人电话',
@@ -626,9 +636,9 @@ create table k_order_info
    main_discount        double(4,2) comment '机组折扣',
    approved_main_discount double(4,2) comment '批准的机组折扣',
    discount             double(4,2) comment '合并折扣',
-   is_longterm          integer comment '是否为长期折扣',
-   is_special           integer default 0 comment '是否特批折扣/非标折扣，1 非标折扣， 0',
-   is_special_order     integer comment '是否特批下单',
+   is_longterm          integer default 0 comment '是否为长期折扣，1 长期折扣， 0 非长期折扣',
+   is_special           integer default 0 comment '是否特批折扣/非标折扣，1 非标折扣， 0 标准折扣',
+   is_special_order     integer default 0 comment '是否特批下单，1 特批下单， 0 正常下单',
    payment_type         varchar(512) comment '结算方式，经销商',
    is_term1             integer comment '柜体控制阀门件是否甲供',
    is_term2             integer comment '分体柜是否远程监控',
