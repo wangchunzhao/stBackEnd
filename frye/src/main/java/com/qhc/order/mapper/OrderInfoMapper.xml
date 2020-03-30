@@ -327,6 +327,7 @@
         LEFT JOIN sap_customer c on c.code = o.customer_code
         LEFT JOIN sap_sales_office s on oi.office_code = s.code
         LEFT JOIN sap_sales_group g on oi.group_code = g.code
+        LEFT JOIN b_user u on u.user_identity=oi.creater
     </sql>
     
 	<!-- 按参数统计 -->
@@ -364,7 +365,7 @@
 				AND oi.is_b2c = #{b2c}
 			</if>
 			<if test="salesName != null and salesName != ''" >
-				AND UPPER(su.name) = '%${salesName.toUpperCase()}%'
+				AND u.name like CONCAT('%',#{salesName},'%') 
 			</if>
 			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="createTime != null and createTime != ''" >

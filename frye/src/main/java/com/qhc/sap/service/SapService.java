@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -392,7 +393,7 @@ public class SapService {
 					System.out.println(obj.getString("matnr") + ":计量单位不能为空");
 				} else if (pingGuLei.indexOf(obj.getString("bklas")) == -1) {
 					Boolean configurable = ("X".equals(obj.getString("kzkfg"))) ? true : false;
-					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? false : true;
+					Boolean purchased = ("E".equals(obj.getString("beskz"))) ? true : false;
 					String clazzCode = ("".equals(obj.getString("class"))) ? "unconfigurable" : obj.getString("class");
 
 					MaterialDto material = new MaterialDto();
@@ -782,5 +783,6 @@ public class SapService {
 
 		return d;
 	}
+	
 	
 }

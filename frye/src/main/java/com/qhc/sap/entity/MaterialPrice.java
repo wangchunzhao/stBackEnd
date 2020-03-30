@@ -3,11 +3,14 @@
  */
 package com.qhc.sap.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -17,27 +20,27 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="sap_materials_price")
-public class MaterialPrice {
+@IdClass(MaterialPriceKey.class)
+public class MaterialPrice  implements Serializable{
 	
 	@Id
-	@NotNull
-	@Column(name="price",columnDefinition="DECIMAL",precision = 13 ,scale=2)
-	private double price;
-	
-	
 	@NotNull
 	@Column(name="sap_price_type_code",columnDefinition ="CHAR",length=4)
 	private String type;
 	
-	
+	@Id
 	@NotNull      
 	@Column(name="sap_materials_code",length=18)
 	private String materialCode;
 	
+	@Id
 	@NotNull      
 	@Column(name="sap_industry_code",length=4)
 	private String industryCode;
 	
+	@NotNull
+	@Column(name="price",columnDefinition="DECIMAL",precision = 13 ,scale=2)
+	private double price;
 	
 	public double getPrice() {
 		return price;
