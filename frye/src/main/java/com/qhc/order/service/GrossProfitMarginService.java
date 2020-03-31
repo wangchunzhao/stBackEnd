@@ -153,12 +153,17 @@ public class GrossProfitMarginService {
 				setMaterialGroupMargin(mgroup, 0, 0, additionalFreight, additionalFreight);
 				break;
 			case "9101": // "B2C"
+				double b2cEstimatedAmount = 0d;
+				double b2cEstimatedExcludingTaxAmount = 0d;
 				double b2cEstimatedCost = 0d;
 				for (ItemDto item : items) {
+					b2cEstimatedAmount += item.getB2cEstimatedPrice() * item.getQuantity();
 					b2cEstimatedCost += item.getB2cEstimatedCost();
 				}
+				b2cEstimatedAmount /= exchange; // 转换为凭证货币
+				b2cEstimatedExcludingTaxAmount = b2cEstimatedAmount / (1 + order.getTaxRate()) / exchange; // 转换为凭证货币
 				b2cEstimatedCost /=  exchange; // 转换为凭证货币
-				setMaterialGroupMargin(mgroup, 0, 0, b2cEstimatedCost, b2cEstimatedCost);
+				setMaterialGroupMargin(mgroup, b2cEstimatedAmount, b2cEstimatedExcludingTaxAmount, b2cEstimatedCost, b2cEstimatedCost);
 				break;
 			case "9102": // "可选项"
 				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
@@ -260,7 +265,8 @@ public class GrossProfitMarginService {
 			String itemMaterialGroupCode = item.getMaterialGroupCode();
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
 				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
-				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();
+//				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();
+				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() ) * item.getQuantity();
 				// 成本（销售）
 				cost += item.getTransactionPrice() * item.getQuantity(); 
 				// 成本（生产）
