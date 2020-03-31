@@ -14,6 +14,8 @@ public class OrderItem {
 	/* 物料属性 */
 	private String materialAttribute;
 	/* 类型 */
+	private String materialGroup;
+	/* 类型 */
 	private String materialGroupName;
 	/* 数量 */
 	private double quantity;
@@ -110,6 +112,14 @@ public class OrderItem {
 
 	public void setMaterialAttribute(String materialAttribute) {
 		this.materialAttribute = materialAttribute;
+	}
+
+	public String getMaterialGroup() {
+		return materialGroup;
+	}
+
+	public void setMaterialGroup(String materialGroup) {
+		this.materialGroup = materialGroup;
 	}
 
 	public String getMaterialGroupName() {
@@ -330,19 +340,19 @@ public class OrderItem {
 
 	@Override
 	public String toString() {
-		return "OrderItem [rowNumber=" + rowNumber + ", materialName=" + materialName + ", materialCode="
-				+ materialCode + ", materialAttribute=" + materialAttribute + ", materialGroupName="
-				+ materialGroupName + ", quantity=" + quantity + ", measureUnitName=" + measureUnitName
-				+ ", acturalPrice=" + acturalPrice + ", acturalAmount=" + acturalAmount + ", transfterPrice="
-				+ transfterPrice + ", acturalPriceOfOptional=" + acturalPriceOfOptional + ", acturalAmountOfOptional="
-				+ acturalAmountOfOptional + ", transactionPriceOfOptional=" + transactionPriceOfOptional
-				+ ", b2cPriceEstimated=" + b2cPriceEstimated + ", b2cAmountEstimated=" + b2cAmountEstimated
-				+ ", b2cCostOfEstimated=" + b2cCostOfEstimated + ", retailPrice=" + retailPrice + ", retailAmount="
-				+ retailAmount + ", discount=" + discount + ", itemCategoryName=" + itemCategoryName
+		return "OrderItem [rowNumber=" + rowNumber + ", materialName=" + materialName + ", materialCode=" + materialCode
+				+ ", materialAttribute=" + materialAttribute + ", materialGroup=" + materialGroup
+				+ ", materialGroupName=" + materialGroupName + ", quantity=" + quantity + ", measureUnitName="
+				+ measureUnitName + ", acturalPrice=" + acturalPrice + ", acturalAmount=" + acturalAmount
+				+ ", transfterPrice=" + transfterPrice + ", acturalPriceOfOptional=" + acturalPriceOfOptional
+				+ ", acturalAmountOfOptional=" + acturalAmountOfOptional + ", transactionPriceOfOptional="
+				+ transactionPriceOfOptional + ", b2cPriceEstimated=" + b2cPriceEstimated + ", b2cAmountEstimated="
+				+ b2cAmountEstimated + ", b2cCostOfEstimated=" + b2cCostOfEstimated + ", retailPrice=" + retailPrice
+				+ ", retailAmount=" + retailAmount + ", discount=" + discount + ", itemCategoryName=" + itemCategoryName
 				+ ", itemRequirementPlanName=" + itemRequirementPlanName + ", period=" + period + ", deliveryDate="
 				+ deliveryDate + ", produceDate=" + produceDate + ", shippDate=" + shippDate + ", address=" + address
 				+ ", onStoreDate=" + onStoreDate + ", b2cComments=" + b2cComments + ", specialComments="
-				+ specialComments + ", colorComments=" + colorComments + "]";
+				+ specialComments + ", colorComments=" + colorComments + ", standardCost=" + standardCost + "]";
 	}
 
 }
