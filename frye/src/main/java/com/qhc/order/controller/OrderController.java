@@ -207,16 +207,17 @@ public class OrderController {
 	 * @return
 	 */
 	@ApiOperation(value = "BPM callback", notes = "BPM callback")
-	@PutMapping(value = "order/callback")
+	@PostMapping(value = "order/callback")
 	@ResponseBody
-	public boolean bpmCallback(@RequestBody Map data) {
+	public boolean bpmCallback(@RequestBody List<Map> data) {
 		try {
-			String status = String.valueOf(data.get("status"));
-			String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
-			Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
-			Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
-
-			this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
+			
+//			String status = String.valueOf(data.get("status"));
+//			String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
+//			Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
+//			Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
+			System.out.println("=================================1111111111111=============================");
+//			this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
 
 			return true;
 		} catch (Throwable e) {
