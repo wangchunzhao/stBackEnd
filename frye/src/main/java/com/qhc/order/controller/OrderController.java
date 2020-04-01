@@ -207,7 +207,7 @@ public class OrderController {
 	 * @return
 	 */
 	@ApiOperation(value = "BPM callback", notes = "BPM callback")
-	@PutMapping(value = "order/callback")
+	@PostMapping(value = "order/callback")
 	@ResponseBody
 	public boolean bpmCallback(@RequestBody List<Map> datas) {
 		try {
