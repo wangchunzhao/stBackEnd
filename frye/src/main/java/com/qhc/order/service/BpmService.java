@@ -20,7 +20,7 @@ public class BpmService {
 		JaxWsDynamicClientFactory dcflient = JaxWsDynamicClientFactory.newInstance();
 		Client client = dcflient.createClient(bpmUrl);
 		try {
-			logger.info("Order Data: {}", json);
+			logger.info("提交BPM信息: {}", json);
 			Object[] objects = client.invoke("StartProcess", new Object[] { json });
 			logger.info(new StringBuilder().append("*******").append(objects[0].toString()).toString());
 			if ((objects != null) && (objects.length > 0) && (objects[0].toString().equalsIgnoreCase("true")))
