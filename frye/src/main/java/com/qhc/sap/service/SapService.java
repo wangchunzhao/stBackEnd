@@ -367,7 +367,7 @@ public class SapService {
 	public List<MaterialDto> getNewestMaterialsFromSap() {
 		List<MaterialDto> mlist = new ArrayList<MaterialDto>();
 		try {
-			String pingGuLei = "1000,3101,3102,3104,3105,3109,3212,3233,3235,3237,9101,9102,9103";
+			String pingGuLei = "1000,3101,3102,3103,3104,3105,3109,3212,3231,3233,3234,3235,3236,3237,9101,9102,9103";
 			String dateParameter = DateUtil.convert2String(this.getLastUpdated(MaterialDto.MATERIAL_CODE), "yyyyMMddHHmmss");
 
 			// 接口请求参数
