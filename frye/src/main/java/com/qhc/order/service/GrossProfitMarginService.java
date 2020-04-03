@@ -158,7 +158,7 @@ public class GrossProfitMarginService {
 				double b2cEstimatedCost = 0d;
 				for (ItemDto item : items) {
 					b2cEstimatedAmount += item.getB2cEstimatedPrice() * item.getQuantity();
-					b2cEstimatedCost += item.getB2cEstimatedCost();
+					b2cEstimatedCost += item.getB2cEstimatedCost() * item.getQuantity();
 				}
 				b2cEstimatedAmount /= exchange; // 转换为凭证货币
 				b2cEstimatedExcludingTaxAmount = b2cEstimatedAmount / (1 + order.getTaxRate()) / exchange; // 转换为凭证货币

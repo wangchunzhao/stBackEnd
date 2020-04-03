@@ -1166,7 +1166,7 @@ public class OrderService {
 				bpmItem.setAddress(StringUtils.trimToEmpty(itemDto.getAddress()));
 				bpmItem.setB2cAmountEstimated(itemDto.getB2cEstimatedPrice() * itemDto.getQuantity());
 				bpmItem.setB2cComments(StringUtils.trimToEmpty(itemDto.getB2cComments()));
-				bpmItem.setB2cCostOfEstimated(itemDto.getB2cEstimatedCost());
+				bpmItem.setB2cCostOfEstimated(itemDto.getB2cEstimatedCost() * itemDto.getQuantity());
 				bpmItem.setB2cPriceEstimated(itemDto.getB2cEstimatedPrice());
 				bpmItem.setColorComments(StringUtils.trimToEmpty(itemDto.getColorComments()));
 				bpmItem.setDeliveryDate(itemDto.getDeliveryDate());

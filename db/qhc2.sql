@@ -457,7 +457,7 @@ create table k_item
    item_category        varchar(45) not null comment '行项目类别',
    item_requirement_plan varchar(45) not null comment '需求计划',
    b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
-   b2c_estimated_cost   decimal(13,2) comment 'B2C评估成本',
+   b2c_estimated_cost   decimal(13,2) comment 'B2C评估成本单价',
    delivery_address_seq integer comment '发货地址序号',
    delivery_address_id  integer comment '发货地址ID，这个字段可以不用',
    standard_price       decimal(13,2) comment '移动平均价，即成本价格',
@@ -969,7 +969,7 @@ alter table sap_material_product_class comment '物料产品系列号关系';
 create table sap_materials
 (
    code                 varchar(18) not null comment 'code',
-   description          varchar(64) not null comment '描述',
+   description          varchar(64) not null comment '描述，规格型号',
    is_configurable      TINYINT(1) not null comment '是否可配置，1是可配置，0是不可配置',
    is_purchased         TINYINT(1) not null comment '物料属性，1是自制生产 0是外部采购',
    stand_price          decimal(13,2) not null comment '标准价格moving_average_price',

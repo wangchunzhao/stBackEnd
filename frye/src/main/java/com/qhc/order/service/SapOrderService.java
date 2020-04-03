@@ -209,7 +209,7 @@ public class SapOrderService {
 			// 实卖价合计
 			double actualPriceSum = item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
 			// 转移价合计
-			double transferPriceSum = (item.getTransactionPrice() + item.getOptionalTransactionPrice()) * quantity + item.getB2cEstimatedCost();
+			double transferPriceSum = item.getTransactionPrice() + item.getOptionalTransactionPrice()+ item.getB2cEstimatedCost();
 			transferPriceSum /= quantity;
 			actualPriceSum = actualPriceSum / exchange; // 转换未凭证货币
 			transferPriceSum = transferPriceSum / exchange; // 转换未凭证货币
