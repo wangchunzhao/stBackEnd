@@ -207,9 +207,11 @@ public class SapOrderService {
 
 			// add price condition
 			// 实卖价合计
-			double actualPriceSum = item.getActualPrice() * quantity + item.getOptionalActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
+//			double actualPriceSum = item.getActualPrice() * quantity + item.getOptionalActualPrice() + item.getB2cEstimatedPrice();
+			double actualPriceSum = item.getActualPrice() + item.getOptionalActualPrice();
 			// 转移价合计
-			double transferPriceSum = (item.getTransactionPrice() * quantity + item.getOptionalTransactionPrice() * quantity + item.getB2cEstimatedCost());
+//			double transferPriceSum = (item.getTransactionPrice() * quantity + item.getOptionalTransactionPrice() * quantity + item.getB2cEstimatedCost());
+			double transferPriceSum = item.getTransactionPrice() + item.getOptionalTransactionPrice();
 			actualPriceSum = actualPriceSum / exchange; // 转换未凭证货币
 			transferPriceSum = transferPriceSum / exchange; // 转换未凭证货币
 			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
