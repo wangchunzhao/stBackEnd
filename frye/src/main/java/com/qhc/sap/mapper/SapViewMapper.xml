@@ -106,7 +106,7 @@
 				AND (c.sap_customer_class_code = #{clazzCode} OR c.sap_customer_class_code = '03')
 			</if>
 			<if test="name != null and name != ''" >
-				AND c.name like '%${name}%'
+				AND UPPER(c.name) like UPPER('%${name}%')
 			</if>
 		</trim>
 	</select>
