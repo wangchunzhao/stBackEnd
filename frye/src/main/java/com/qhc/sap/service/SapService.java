@@ -96,6 +96,7 @@ public class SapService {
 	@Value("${sap.color.addr}")
 	String colorUrl;
 	
+	
 	@Autowired
 	private SapLastUpdatedRepository lastUpdate;
 	
