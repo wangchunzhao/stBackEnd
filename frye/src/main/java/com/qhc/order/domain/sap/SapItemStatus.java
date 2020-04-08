@@ -10,7 +10,7 @@ public class SapItemStatus {
 	// SO item/订单编号项目
 	private String rowNum;
 	// Material Number/物料编码
-	private Integer materialCode;
+	private String materialCode;
 	// Order quantity/订单数量
 	private double quantity;
 	// Unit/销售单位
@@ -81,16 +81,17 @@ public class SapItemStatus {
 	 * Finally GI date/完全GI日期
 	 */
 	private double finallyIssueDate;
+	
 	public String getRowNum() {
 		return rowNum;
 	}
 	public void setRowNum(String rowNum) {
 		this.rowNum = rowNum;
 	}
-	public Integer getMaterialCode() {
+	public String getMaterialCode() {
 		return materialCode;
 	}
-	public void setMaterialCode(Integer materialCode) {
+	public void setMaterialCode(String materialCode) {
 		this.materialCode = materialCode;
 	}
 	public double getQuantity() {
@@ -183,5 +184,5 @@ public class SapItemStatus {
 	public void setFinallyIssueDate(double finallyIssueDate) {
 		this.finallyIssueDate = finallyIssueDate;
 	}
-
+	
 }

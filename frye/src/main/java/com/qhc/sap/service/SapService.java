@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.qhc.order.domain.sap.SapItemStatus;
+import com.qhc.order.domain.sap.SapOrderStatus;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomBodyParam;
@@ -681,7 +682,8 @@ public class SapService {
 	}
 	
 	//订单状态查询
-	public List<SapItemStatus> getOrderStatus(String contractNo){
+	public SapOrderStatus getOrderStatus(String contractNo){
+		SapOrderStatus sapOrderStatus = new SapOrderStatus();
 		List<SapItemStatus> list = new ArrayList<SapItemStatus>();
 		try {
 			Parameter parameter1 = new Parameter();
@@ -697,14 +699,19 @@ public class SapService {
 			JSONArray orderArray = JSONArray.parseArray(order.toString());
 			for (int i = 0; i < orderArray.size();i++) { 
 				JSONObject obj = (JSONObject)orderArray.get(i);
-				
+				if(i == 0) {
+					sapOrderStatus.setBlockStatus(obj.getString("spstg"));
+					sapOrderStatus.setOverviewStatus(obj.getString("gbstk"));
+					sapOrderStatus.setReleaseStatus(obj.getString("user_line"));
+				}
+
 				SapItemStatus pa = new SapItemStatus();
 				pa.setRowNum(obj.getString("posnr"));
-				pa.setMaterialCode(obj.getInteger("matnr"));
+				pa.setMaterialCode(obj.getString("matnr"));
 				pa.setQuantity(obj.getDouble("kwmeng"));
 				pa.setUnitCode(obj.getString("vrkme"));
 				pa.setRejectedCode(obj.getString("abgru"));
-				pa.setStatus(obj.getString("spstg"));
+				pa.setStatus(obj.getString("gbsta"));
 				pa.setPurchaseType(obj.getString("beskz"));
 				pa.setGroupCode(obj.getString("bklas"));
 				pa.setPlannedOrder(obj.getString("plnum"));
@@ -716,13 +723,13 @@ public class SapService {
 				pa.setIssuedQuantity(obj.getDouble("zmenge11"));
 				pa.setFirstIssueDate(obj.getDouble("erdat1"));
 				pa.setFinallyIssueDate(obj.getDouble("erdat2"));
-				
 				list.add(pa);
 			}
+			sapOrderStatus.setItems(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return sapOrderStatus;
 	}
 	
 	

@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.qhc.order.domain.sap.SapOrderStatus;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
 import com.qhc.sap.domain.ColorDto;
@@ -207,6 +209,14 @@ public class SapSyncController {
 		List<ColorDto> pamappList = sapService.getColorPamapp();
 		characteristicService.savePamappColor(pamappList);
 	}
+	
+//	@ApiOperation(value = "同步")
+//	@GetMapping(value = "syc")
+//	@ResponseStatus(HttpStatus.OK)
+//	public void sycorder() throws Exception {
+//		SapOrderStatus defaultList = sapService.getOrderStatus("QHCAA11130");
+//		System.out.println("1111111");
+//	}
 	
 	
 	/*	
