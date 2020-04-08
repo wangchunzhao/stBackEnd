@@ -20,6 +20,7 @@ import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.OrderVersion;
+import com.qhc.order.domain.sap.SapOrderStatus;
 import com.qhc.order.service.GrossProfitMarginService;
 import com.qhc.order.service.OrderService;
 import com.qhc.sap.entity.MaterialGroups;
@@ -341,6 +342,31 @@ public class OrderController {
 			result = Result.error("订单的公共可选择失败！");
 		}
 
+		return result;
+	}
+    
+	/**
+	 * 查询订单在SAP的实时状态
+	 * 
+	 * @param contractNumber 合同编号
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "查询订单在SAP的实时状态", notes = "查询订单在SAP的实时状态")
+	@GetMapping(value = "{contractNumber}/sapstatus")
+	@ResponseBody
+	public Result getOrderSapStatus(@PathVariable("contractNumber") String contractNumber)
+			throws Exception {
+		Result result;
+		
+		try {
+			SapOrderStatus sapOrderStatus = orderService.getOrderSapStatus(contractNumber);
+			result = Result.ok(sapOrderStatus);
+		} catch (Exception e) {
+			logger.error("订单在SAP的实时状态", e);
+			result = Result.error(e.getMessage());
+		}
+		
 		return result;
 	}
 

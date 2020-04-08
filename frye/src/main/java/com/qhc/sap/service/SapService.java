@@ -700,6 +700,9 @@ public class SapService {
 			for (int i = 0; i < orderArray.size();i++) { 
 				JSONObject obj = (JSONObject)orderArray.get(i);
 				if(i == 0) {
+					// SO number/销售订单编号
+					sapOrderStatus.setContractNumber(obj.getString("vbeln"));
+					// Block status/冻结状态
 					sapOrderStatus.setBlockStatus(obj.getString("spstg"));
 					sapOrderStatus.setOverviewStatus(obj.getString("gbstk"));
 					sapOrderStatus.setReleaseStatus(obj.getString("user_line"));

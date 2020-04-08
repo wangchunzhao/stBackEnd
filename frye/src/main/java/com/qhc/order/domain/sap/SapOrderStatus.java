@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class SapOrderStatus {
 	// SO number/销售订单编号
-	private String sequenceNumber;
+	private String contractNumber;
 	/**
 	 * Block status/冻结状态
 	 * 
@@ -42,12 +42,12 @@ public class SapOrderStatus {
 	// 行项目状态列表
 	private List<SapItemStatus> items;
 
-	public String getSequenceNumber() {
-		return sequenceNumber;
+	public String getContractNumber() {
+		return contractNumber;
 	}
 
-	public void setSequenceNumber(String sequenceNumber) {
-		this.sequenceNumber = sequenceNumber;
+	public void setContractNumber(String contractNumber) {
+		this.contractNumber = contractNumber;
 	}
 
 	public String getBlockStatus() {

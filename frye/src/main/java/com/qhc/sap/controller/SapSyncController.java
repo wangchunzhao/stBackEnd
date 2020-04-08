@@ -1,16 +1,13 @@
 package com.qhc.sap.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.domain.sap.SapOrderStatus;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
 import com.qhc.sap.domain.ColorDto;

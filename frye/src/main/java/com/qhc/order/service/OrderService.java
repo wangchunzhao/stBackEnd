@@ -36,7 +36,7 @@ import com.qhc.order.domain.bpm.OrderAttachment;
 import com.qhc.order.domain.bpm.OrderHeader;
 import com.qhc.order.domain.bpm.OrderItem;
 import com.qhc.order.domain.bpm.OrderMargin;
-import com.qhc.order.domain.sap.SapOrder;
+import com.qhc.order.domain.sap.SapOrderStatus;
 import com.qhc.order.entity.Attachment;
 import com.qhc.order.entity.BillingPlan;
 import com.qhc.order.entity.BpmDicision;
@@ -66,11 +66,11 @@ import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
-import com.qhc.sap.entity.ProductClass;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
 import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.sap.service.MaterialService;
+import com.qhc.sap.service.SapService;
 import com.qhc.system.dao.AreaRepository;
 import com.qhc.system.dao.CityRepository;
 import com.qhc.system.dao.ProvinceRepository;
@@ -176,6 +176,9 @@ public class OrderService {
 	
 	@Autowired
 	private SapOrderService sapOrderService;
+	
+	@Autowired
+	private SapService sapService;
 	
 	@Autowired
 	private com.qhc.sap.mapper.SapOrderMapper sapOrderMapper;
@@ -1423,6 +1426,15 @@ public class OrderService {
 		order.setQuoteStatus(quoteStatus);
 		orderMapper.update(order);
 		return null;
+	}
+
+	/**
+	 * 查询订单在SAP的实时状态
+	 * @param contractNumber 合同号
+	 * @return
+	 */
+	public SapOrderStatus getOrderSapStatus(String contractNumber) {
+		return sapService.getOrderStatus(contractNumber);
 	}
 
 }
