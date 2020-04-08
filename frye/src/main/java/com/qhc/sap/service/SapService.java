@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.qhc.order.domain.sap.SapItemStatus;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
 import com.qhc.sap.domain.Bom;
 import com.qhc.sap.domain.BomBodyParam;
@@ -95,6 +96,9 @@ public class SapService {
 	
 	@Value("${sap.color.addr}")
 	String colorUrl;
+	
+	@Value("${sap.queryOrderStatus.addr}")
+	String queryOrderStatusUrl;
 	
 	
 	@Autowired
@@ -675,6 +679,54 @@ public class SapService {
 		}
 		return list;
 	}
+	
+	//订单状态查询
+	public List<SapItemStatus> getOrderStatus(String contractNo){
+		List<SapItemStatus> list = new ArrayList<SapItemStatus>();
+		try {
+			Parameter parameter1 = new Parameter();
+			parameter1.setKey("VBELN");
+			parameter1.setValue(contractNo);
+			List<Parameter> parList = new ArrayList<Parameter>();
+			parList.add(parameter1);
+			String characteristicParam = JSONObject.toJSONString(parList);
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(queryOrderStatusUrl, characteristicParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object order = parseObject.get("data");
+			JSONArray orderArray = JSONArray.parseArray(order.toString());
+			for (int i = 0; i < orderArray.size();i++) { 
+				JSONObject obj = (JSONObject)orderArray.get(i);
+				
+				SapItemStatus pa = new SapItemStatus();
+				pa.setRowNum(obj.getString("posnr"));
+				pa.setMaterialCode(obj.getInteger("matnr"));
+				pa.setQuantity(obj.getDouble("kwmeng"));
+				pa.setUnitCode(obj.getString("vrkme"));
+				pa.setRejectedCode(obj.getString("abgru"));
+				pa.setStatus(obj.getString("spstg"));
+				pa.setPurchaseType(obj.getString("beskz"));
+				pa.setGroupCode(obj.getString("bklas"));
+				pa.setPlannedOrder(obj.getString("plnum"));
+				pa.setProductionOrder(obj.getString("aufnr"));
+				pa.setProductionStartdate(obj.getString("erdat"));
+				pa.setReceiptDate(obj.getString("bldat"));
+				pa.setReceiptQuantity(obj.getDouble("menge"));
+				pa.setPlannedIssueQuantity(obj.getDouble("zmenge10"));
+				pa.setIssuedQuantity(obj.getDouble("zmenge11"));
+				pa.setFirstIssueDate(obj.getDouble("erdat1"));
+				pa.setFinallyIssueDate(obj.getDouble("erdat2"));
+				
+				list.add(pa);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	
+	
 
 	// BOM
 	public Map<String, List<Bom>> getBomExplosion(Map<String, String> mapParam) {
