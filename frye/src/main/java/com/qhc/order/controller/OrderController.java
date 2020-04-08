@@ -104,6 +104,22 @@ public class OrderController {
 		return result;
 	}
 
+	@ApiOperation(value = "删除", notes = "删除")
+	@PostMapping(value = "order/{orderInfoId}/delete/{user}")
+	@ResponseBody
+	public Result delete(@PathVariable(name="user", required = true) String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
+		Result result = null;
+		try {
+			orderService.delete(user, orderInfoId);
+			result = Result.ok("删除成功");
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+
+		return result;
+	}
+
 	@ApiOperation(value = "提交", notes = "提交")
 	@PostMapping(value = "order/submit/{user}")
 	public Result submit(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {
@@ -121,7 +137,7 @@ public class OrderController {
 
 	@ApiOperation(value = "驳回", notes = "驳回")
 	@PostMapping(value = "order/{orderInfoId}/reject/{user}")
-	public Result reject(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
+	public Result reject(@PathVariable("user") String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
 			orderService.reject(user, orderInfoId);
@@ -137,7 +153,7 @@ public class OrderController {
 	@ApiOperation(value = "变更", notes = "变更")
 	@PostMapping(value = "order/{orderInfoId}/upgrade/{user}")
 	@ResponseBody
-	public Result upgrade(@PathVariable("user") String user, @PathVariable(required = true) Integer orderInfoId) {
+	public Result upgrade(@PathVariable("user") String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
 			orderService.upgrade(user, orderInfoId);

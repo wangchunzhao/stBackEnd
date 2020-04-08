@@ -277,6 +277,52 @@ public class OrderService {
 	}
 
 	/**
+	 * 删除订单
+	 * 
+	 * @param user
+	 * @param orderInfoId
+	 * @return
+	 */
+	public void delete(String user, Integer orderInforId) {
+		OrderInfo orderInfo = orderInfoMapper.findById(orderInforId);
+		if (orderInfo == null) {
+			throw new RuntimeException("订单不存在-" + orderInforId);
+		}
+		Integer orderId = orderInfo.getOrderId();
+		String status = orderInfo.getStatus();
+		switch (status) {
+		case OrderDto.ORDER_STATUS_DRAFT:
+		case OrderDto.ORDER_STATUS_REJECT:
+			int versionNum = orderInfo.getVersionNum();
+			deleteItems(orderInforId);
+			attachmentMapper.deleteByOrderInfoId(orderInforId);
+			billingPlanMapper.deleteByOrderInfoId(orderInforId);
+			deliveryAddressMapper.deleteByOrderInfoId(orderInforId);
+			orderInfoMapper.deleteById(orderInforId);
+			if (versionNum > 1) {
+				// 将最后一版本的active设置为1
+				Map<String, Object> params = new HashMap<String, Object>() {
+					{
+						put("orderId", orderId);
+						put("orderByClause", "create_time desc");
+					}
+				};
+				List<OrderInfo> historys = orderInfoMapper.findByParams(params);
+				if (historys != null && historys.size() > 0) {
+					OrderInfo last = historys.get(0);
+					last.setIsActive(1);
+					orderInfoMapper.update(last);
+				}
+			} else {
+				orderMapper.deleteById(orderId);
+			}
+			break;
+		default:
+			throw new RuntimeException("订单当前状态【" + status + "】不可删除");
+		}
+	}
+
+	/**
 	 * 檢查合同號
 	 * @param orderDto
 	 */
@@ -354,6 +400,7 @@ public class OrderService {
 		order.setId(null);
 		order.setOrderId(null);
 		order.setCreater(user);
+		order.setSalesCode(user);
 		order.setAttachments(null); // 清除订单附件
 		order.setContractNumber(""); // 合同號
 		for (ItemDto item : order.getItems()) { 
@@ -638,7 +685,7 @@ public class OrderService {
 			order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
 			break;
 		default:
-			throw new RuntimeException("Unknown status for submit order.");
+			throw new RuntimeException("未知订单状态【" + status + "】");
 		}
 		
 		status = order.getStatus();

@@ -44,7 +44,9 @@ public class SapOrderService {
 	public String orderCreationUrl;
 	@Value("${sap.sapChangeOrder.addr}")
 	public String orderChangeUrl;
-	
+
+	@Autowired
+	private ConstantService constantService;
 	@Autowired
 	private CharacteristicsMapper characteristicsMapper;
 	@Autowired
@@ -104,7 +106,7 @@ public class SapOrderService {
 		header.setInco1(StringUtils.trimToEmpty(order.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
 		header.setVbbkz120(String.valueOf(order.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
-		header.setVbbkz121(order.getSalesCode()); // Sale rep./签约人 -- 客户经理
+		header.setVbbkz121(order.getSalesName()); // Sale rep./签约人 -- 客户经理
 		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 支持经理
 		String contactorInfo = StringUtils.trimToEmpty(order.getContactor1Id()) + "/" + StringUtils.trimToEmpty(order.getContactor1Tel())
 				+ StringUtils.trimToEmpty(order.getContactor2Id()) + "/" + StringUtils.trimToEmpty(order.getContactor2Tel())
@@ -119,7 +121,9 @@ public class SapOrderService {
 		vbbkz122 += order.getIsTerm3() == 1 ? "/" + "立柜柜体在地下室" : "";
 		vbbkz122 = vbbkz122.length() > 0 ? vbbkz122.substring(1) : "";
 		header.setVbbkz122(vbbkz122); // Survey info. for header /调研表相关内容 -- 调研表相关内容3个字段
-		header.setVbbkz106(order.getReceiveType()); // Receiving method /收货方式 -- 收货方式
+		String receiveTypeName = constantService.findReceiveTerms().get(StringUtils.trimToEmpty(order.getReceiveType()));
+		receiveTypeName = StringUtils.trimToEmpty(receiveTypeName);
+		header.setVbbkz106(receiveTypeName); // Receiving method /收货方式 -- 收货方式
 		String deliveryDate = order.getEarliestDeliveryDate() == null ? ""
 				: new SimpleDateFormat("yyyyMMdd").format(order.getEarliestDeliveryDate());
 		header.setVdatu(deliveryDate); // 交货日期 -- 要求发货日期
