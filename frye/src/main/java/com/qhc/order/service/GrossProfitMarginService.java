@@ -67,12 +67,13 @@ public class GrossProfitMarginService {
 			order.setFreight(freight);
 		}
 		if (saleType.equals("20")) {
-			// 出口外销运费手工填写
+			// 出口外销运费手工填写，为凭证货币不需要转换
+		} else {
+			freight = freight / exchange; // 转换为凭证货币，用于毛利率计算
 		}
 		
 		int warranty = order.getWarranty();
 		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
-		freight = freight / exchange; // 转换为凭证货币，用于毛利率计算
 		double installFee = ObjectUtils.defaultIfNull(order.getInstallFee(), 0d) / exchange; // 转换为凭证货币
 		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d) / exchange; // 转换为凭证货币
 		double electricalFee = ObjectUtils.defaultIfNull(order.getElectricalFee(), 0d) / exchange; // 转换为凭证货币
