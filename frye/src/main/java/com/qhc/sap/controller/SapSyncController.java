@@ -2,12 +2,16 @@ package com.qhc.sap.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.order.service.SapOrderService;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
 import com.qhc.sap.domain.ColorDto;
@@ -33,6 +37,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @Api(value = "同步sap数据进入销售工具", description = "同步sap数据进入销售工具")
 public class SapSyncController {
+	
+	private static Logger logger = LoggerFactory.getLogger(SapSyncController.class);
 	
 	@Autowired
 	SapService sapService;
@@ -230,44 +236,59 @@ public class SapSyncController {
 	11.defaultCharacteristic 
 	12.color
 	*/
-//	@Scheduled(cron = "0 */1 * * * ?")
+	//每天凌晨1点执行一次
+	@Scheduled(cron = "0 0 1 * * ?")
 	@ApiOperation(value = "同步sap数据进入销售工具")
 	@GetMapping(value = "SapToSellingTool")
 	@ResponseStatus(HttpStatus.OK)
 	public void sapToSellingTool() {
 		try {
+			logger.info("每日自动同步sap数据开始==============================================");
+			logger.info("同步currency数据");
 			//currency
 			List<CurrencyDto> temp = sapService.getCurrencyFromSap();
 			currencyService.saveCurrency(temp);
+			logger.info("同步incoterm数据");
 			//incoterm
 			List<IncotermDto> incotermtTemp = sapService.getIncotermFromSap();
 			currencyService.saveIncoterm(incotermtTemp);
+			logger.info("同步class数据");
 			//class
 			List<Clazz> clazz = sapService.getClassesFromSap();
 			characteristicService.saveClass(clazz);
+			logger.info("同步customer数据");
 			//customer
 			List<CustomerDto> customerTemp = sapService.getCustomersFromSap();
 			customerService.saveCustomers(customerTemp);
+			logger.info("同步offices数据");
 			//offices
 			List<SalesGroup> SalesGroupTemp = sapService.getSalesgroupFromSAP();
 			locationService.put(SalesGroupTemp);
+			logger.info("同步paymentPlan数据");
 			//paymentPlan
 			List<PaymentPlanDto> lp = sapService.getPaymentFromSAP();
 			currencyService.savePaymentPlan(lp);
+			logger.info("同步CharacteristicValue数据");
 			//CharacteristicValue
 			List<CharacteristicValueDto>  values = sapService.getClassesAndCharacteristicValueFromSap();
 			characteristicService.saveCharacteristicValue(values);
+			logger.info("同步materials数据");
 			//materials
 			this.sycMaterials();
+			logger.info("同步price数据");
 			//price
 			this.sycPrices();
+			logger.info("同步priceA数据");
 			//priceA
 			this.sycPricesA();
+			logger.info("同步defaultCharacteristic数据");
 			//defaultCharacteristic
 			List<DefaultCharacteristicsDto> defaultList = sapService.getDefaultCharacteristics();
 			characteristicService.saveCharacteristicDefault(defaultList);
-			//
+			logger.info("同步color数据");
+			//color
 			this.sycColor();
+			logger.info("每日自动同步sap数据结束=============================================");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
