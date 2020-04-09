@@ -353,7 +353,7 @@ public class OrderController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "查询订单在SAP的实时状态", notes = "查询订单在SAP的实时状态")
-	@GetMapping(value = "{contractNumber}/sapstatus")
+	@GetMapping(value = "order/{contractNumber}/sapstatus")
 	@ResponseBody
 	public Result getOrderSapStatus(@PathVariable("contractNumber") String contractNumber)
 			throws Exception {
