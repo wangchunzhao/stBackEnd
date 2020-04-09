@@ -703,7 +703,21 @@ public class OrderService {
 	 */
 	@Transactional
 	public void reject(String user, Integer orderInfoId) throws Exception {
-		orderInfoMapper.updateStatus(orderInfoId, user, OrderDto.ORDER_STATUS_REJECT, null, null, null, null);
+		OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
+		if (orderInfo == null) {
+			throw new RuntimeException("订单不存在，id=" + orderInfoId);
+		}
+		String status = orderInfo.getStatus();
+		switch (status) {
+		case OrderDto.ORDER_STATUS_B2C:
+		case OrderDto.ORDER_STATUS_ENGINER:
+		case OrderDto.ORDER_STATUS_MANAGER:
+			String rejectStatus = OrderDto.ORDER_STATUS_REJECT;
+			orderInfoMapper.updateStatus(orderInfoId, user, rejectStatus, null, null, null, null);
+			break;
+		default:
+			throw new RuntimeException("订单当前状态【" + status + "】不能驳回");
+		}
 	}
 
 	/**
