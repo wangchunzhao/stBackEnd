@@ -144,7 +144,7 @@ public class CurrencyService {
 			temp.setMaterialCode(pri.getMaterialCode());
 			temp.setIndustryCode(pri.getIndustryCode());
 			dps.add(temp);
-			lastUpdated.setLastUpdate(DateUtil.convert2Date(pri.getLastDate(), "yyyyMMddhhmmss"));
+			lastUpdated.setLastUpdate(DateUtil.convert2Date(pri.getLastDate(), "yyyyMMddHHmmss"));
 		}
 		priceRepo.saveAll(dps);
 		lastUpdatedRepo.save(lastUpdated);
