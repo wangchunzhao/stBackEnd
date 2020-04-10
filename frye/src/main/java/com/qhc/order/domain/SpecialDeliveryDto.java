@@ -7,7 +7,7 @@ import java.util.Date;
  * @author lizuoshan
  *
  */
-public class SpecialDeliveryVo implements Serializable {
+public class SpecialDeliveryDto {
 	
 	/* Id */
 	private Integer id = null;
@@ -58,6 +58,11 @@ public class SpecialDeliveryVo implements Serializable {
 	private String stOrderType;
 
 	private Date createTime;
+
+	/**
+	 * order status
+	 */
+	private String status;
 	
 	private String salesCode;//客户经理 Customer manager
 //	private String salesName;//客户经理 Customer manager
@@ -196,6 +201,14 @@ public class SpecialDeliveryVo implements Serializable {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getSalesCode() {

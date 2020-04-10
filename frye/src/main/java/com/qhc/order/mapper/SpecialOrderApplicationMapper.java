@@ -3,6 +3,7 @@ package com.qhc.order.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.qhc.order.domain.SpecialDeliveryDto;
 import com.qhc.order.entity.SpecialOrderApplication;
 
 /**
@@ -38,7 +39,7 @@ public interface SpecialOrderApplicationMapper {
 	 * @param params 查询参数
 	 * @return SpecialOrderApplication列表
 	 */
-	List<SpecialOrderApplication> findByParams(Map<String, Object> params);
+	List<SpecialDeliveryDto> findByParams(Map<String, Object> params);
 
 	/**
 	 * 

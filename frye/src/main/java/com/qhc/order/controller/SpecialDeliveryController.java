@@ -1,6 +1,6 @@
 package com.qhc.order.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qhc.order.domain.SpecialDeliveryVo;
+import com.qhc.order.domain.OrderDto;
+import com.qhc.order.domain.OrderQuery;
+import com.qhc.order.domain.SpecialDeliveryDto;
 import com.qhc.order.entity.SpecialOrderApplication;
 import com.qhc.order.service.SpecialDeliveryService;
 import com.qhc.system.domain.PageHelper;
+import com.qhc.system.domain.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,41 +39,53 @@ public class SpecialDeliveryController {
 	SpecialDeliveryService specialDeliveryService;
 
 	@ApiOperation(value = "修改或者新增特批发货 ", notes = "修改或者新增特批发货")
-	@PostMapping(value = "")
+	@PostMapping(value = "{user}")
 	@ResponseStatus(HttpStatus.OK)
-	public SpecialOrderApplication updateRoleOperations(@RequestBody SpecialOrderApplication sd) throws Exception {
-		return specialDeliveryService.saveOrUpdate(sd);
+	public Result save(@PathVariable("user") String user, @RequestBody SpecialDeliveryDto sd) {
+		Result result = null;
+		try {
+			SpecialDeliveryDto dto = specialDeliveryService.save(user, sd);
+			result = Result.ok(dto);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 
 	@ApiOperation(value = "根据申请ID查询 ", notes = "根据申请ID查询")
 	@GetMapping("{applyId}")
 	@ResponseStatus(HttpStatus.OK)
-	public SpecialOrderApplication findById(@PathVariable Integer applyId) throws Exception {
-		return specialDeliveryService.findById(applyId);
+	public Result findById(@PathVariable Integer applyId) throws Exception {
+		Result result = null;
+		try {
+			SpecialDeliveryDto dto = specialDeliveryService.findById(applyId);
+			result = Result.ok(dto);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 
 	@ApiOperation(value = "分页查询特批发货列表", notes = "分页查询特批发货列表")
-	@GetMapping(value = "specialDeliveryVoInfo/{pageNo}/{pageSize}")
+	@GetMapping(value = "")
 	@ResponseStatus(HttpStatus.OK)
-	public PageHelper<SpecialDeliveryVo> findPagingList(@PathVariable int pageNo, @PathVariable int pageSize,
-			@RequestParam("sequenceNumber") String sequenceNumber, @RequestParam("startTime") String startTime,
-			@RequestParam("endTime") String endTime, @RequestParam("ownerDomainId") String ownerDomainId,
-			@RequestParam("officeCode") String officeCode, @RequestParam("orderTypeCode") String orderTypeCode)
-			throws Exception {
-		PageHelper<SpecialDeliveryVo> pageHelper = new PageHelper<SpecialDeliveryVo>();
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		SpecialDeliveryVo sdv = new SpecialDeliveryVo();
-		sdv.setSequenceNumber(sequenceNumber);
-//		sdv.setStartTime(startTime);
-//		sdv.setEndTime(endTime);
-//		sdv.setOrderTypeCode(orderTypeCode);
-//		sdv.setOwnerDomainId(ownerDomainId);
-//		sdv.setOfficeCode(officeCode);
-		Page<SpecialDeliveryVo> page = null; // specialDeliveryService.getInfoByConditions(sdv, pageable);
-
-		pageHelper.setTotal(Integer.valueOf(page.getTotalElements() + ""));
-		pageHelper.setRows(page.getContent());
-		return pageHelper;
+//	public PageHelper<SpecialDeliveryDto> findPagingList(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize,
+//			@RequestParam("sequenceNumber") String sequenceNumber, @RequestParam("orderInfoId") String orderInfoId, @RequestParam("startTime") String startTime,
+//			@RequestParam("endTime") String endTime, @RequestParam("ownerDomainId") String ownerDomainId,
+//			@RequestParam("officeCode") String officeCode, @RequestParam("orderTypeCode") String orderTypeCode)
+	public Result find(@RequestBody Map params) {
+		Result result = null;
+		try {
+			PageHelper<SpecialDeliveryDto> page = new PageHelper<SpecialDeliveryDto>(
+					specialDeliveryService.find(params));
+			result = Result.ok(page);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 
 }
