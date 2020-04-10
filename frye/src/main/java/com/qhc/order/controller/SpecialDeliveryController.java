@@ -88,4 +88,19 @@ public class SpecialDeliveryController {
 		return result;
 	}
 
+	@ApiOperation(value = "提交特批发货 ", notes = "提交特批发货")
+	@PostMapping(value = "submit/{user}")
+	@ResponseStatus(HttpStatus.OK)
+	public Result submit(@PathVariable("user") String user, @RequestBody SpecialDeliveryDto sd) {
+		Result result = null;
+		try {
+			specialDeliveryService.submit(user, sd);
+			result = Result.ok("");
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
+	}
+
 }

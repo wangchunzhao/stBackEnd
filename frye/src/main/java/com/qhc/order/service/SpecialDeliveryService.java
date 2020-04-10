@@ -22,6 +22,9 @@ public class SpecialDeliveryService {
 
 	@Autowired
 	private SpecialOrderApplicationMapper specialOrderApplicationMapper;
+	
+	@Autowired
+	private OrderService orderService;
 
 	public PageInfo<SpecialDeliveryDto> find(Map<String, Object> params) {
 		// 设置分页信息
@@ -59,5 +62,21 @@ public class SpecialDeliveryService {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * 提交特批发货
+	 * @param user
+	 * @param sd
+	 * @return
+	 * @throws Exception 
+	 */
+	public void submit(String user, SpecialDeliveryDto sd) throws Exception {
+		sd = save(user, sd);
+		Integer orderInfoId = sd.getOrderInfoId();
+		OrderDto order = orderService.findOrder(orderInfoId);
+		orderService.submitBpm(user, order);
+		sd.setApplyStatus(1);
+		this.save(user, sd);
 	}
 }

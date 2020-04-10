@@ -1323,7 +1323,7 @@ public class OrderService {
 			if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals("1")) {
 				if (status.equals("1")) {
 					// 审批通过
-					specialOrderApplication.setApplyStatus(21);
+					specialOrderApplication.setApplyStatus(2);
 				} else {
 					// 审批拒绝
 					specialOrderApplication.setApplyStatus(3);
