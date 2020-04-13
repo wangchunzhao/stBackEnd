@@ -1100,6 +1100,8 @@ public class OrderService {
 
 			// customerclazz
 			order.setCustomerClazzName(constService.findCustomerClazzByCode(order.getCustomerClazz()));
+			
+			order.setTransferTypeName(constService.findShippingTypes().get(order.getTransferType()));
 
 			if (includeDetail) {
 				assembleOrderDetail(order);
