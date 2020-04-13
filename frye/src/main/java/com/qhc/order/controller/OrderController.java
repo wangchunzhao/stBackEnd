@@ -201,6 +201,7 @@ public class OrderController {
 
 	@ApiOperation(value = "提交到BPM", notes = "提交到BPM")
 	@PostMapping(value = "order/submitbpm/{user}")
+    @ResponseBody
 	public Result submitBpm(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {
 		Result result = null;
 		try {

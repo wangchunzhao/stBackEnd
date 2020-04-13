@@ -1384,7 +1384,7 @@ public class OrderService {
 
 				orderInfoMapper.update(orderInfo);
 			} else {
-				orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, bodyDiscount, unitDiscount);
+				orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, orderInfo.getBodyDiscount(), orderInfo.getMainDiscount());
 			}
 		} else {
 			// 审批拒绝
