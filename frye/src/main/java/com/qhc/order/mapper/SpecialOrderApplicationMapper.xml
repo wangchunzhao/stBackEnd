@@ -83,20 +83,24 @@
 	<sql id="Where_By_Params" >
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			oi.status in ('05', '06') AND o.st_order_type in ('1', '2', '4')
-			<if test="sequenceNumber != null" >
+			<if test="list != null and list != ''" >
+				<!-- 查询列表数据 -->
+				AND (soa.apply_status is null or soa.apply_status in (0, 1, 3))
+			</if>
+			<if test="sequenceNumber != null and sequenceNumber != ''" >
 				AND o.sequence_number like '%${sequenceNumber, jdbcType=INTEGER}%'
 			</if>
-			<if test="orderStartCreateTime != null" >
+			<if test="orderStartCreateTime != null and orderStartCreateTime != ''" >
 			<![CDATA[
 				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{orderStartCreateTime, jdbcType=VARCHAR}
 			]]>
 			</if>
-			<if test="orderEndCreateTime != null" >
+			<if test="orderEndCreateTime != null and orderEndCreateTime != ''" >
 			<![CDATA[
 				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{orderEndCreateTime, jdbcType=VARCHAR}
 			]]>
 			</if>
-			<if test="orderStatus != null" >
+			<if test="orderStatus != null and orderStatus != ''" >
 				AND oi.status = #{orderStatus, jdbcType=VARCHAR}
 			</if>
 			<if test="id != null" >

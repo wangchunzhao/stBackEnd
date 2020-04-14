@@ -75,7 +75,7 @@ public class SpecialDeliveryController {
 //			@RequestParam("sequenceNumber") String sequenceNumber, @RequestParam("orderInfoId") String orderInfoId, @RequestParam("startTime") String startTime,
 //			@RequestParam("endTime") String endTime, @RequestParam("ownerDomainId") String ownerDomainId,
 //			@RequestParam("officeCode") String officeCode, @RequestParam("orderTypeCode") String orderTypeCode)
-	public Result find(@RequestBody Map params) {
+	public Result find(Map params) {
 		Result result = null;
 		try {
 			PageHelper<SpecialDeliveryDto> page = new PageHelper<SpecialDeliveryDto>(
