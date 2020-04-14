@@ -1205,7 +1205,7 @@ public class OrderService {
 		bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
 		bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
 		bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
-		bpmHeader.setIsUrgentDelivery(order.getIsUrgentDelivery());
+		bpmHeader.setIsUrgentDelivery(ObjectUtils.defaultIfNull(order.getIsUrgentDelivery(), 0));
 		bpmHeader.setIsSpecialOrder(order.getIsSpecialOrder());
 
 		// set bpm order attachements
