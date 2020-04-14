@@ -420,7 +420,7 @@
 		update k_order_info set is_active = 0 
 		where exists ( select 1 from k_order 
 					where k_order.id = k_order_info.order_id 
-					and k_order.sequnce_number=#{value} )
+					and k_order.sequence_number=#{value} )
 	</update>
 	
 	<!-- 修改订单状态 -->
