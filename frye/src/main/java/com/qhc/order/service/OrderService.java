@@ -409,6 +409,7 @@ public class OrderService {
 		order.setContractNumber(""); // 合同號
 		for (ItemDto item : order.getItems()) { 
 			item.setAttachments(null); // 清除调研表附件
+			item.setItemStatus("00");
 		}
 		// new version
 		String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
