@@ -251,8 +251,9 @@ public class OrderService {
 			orderInfo.setUpdater(user);
 
 			if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
-				String sequenceNumber = "QHC" + version;
-				order.setSequenceNumber(sequenceNumber.toUpperCase());
+			  // 由前台生成
+//				String sequenceNumber = "QHC" + version;
+//				order.setSequenceNumber(sequenceNumber.toUpperCase());
 				order.setSalesCode(user);
 
 				orderMapper.insert(order);
