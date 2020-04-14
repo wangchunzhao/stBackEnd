@@ -1122,6 +1122,9 @@ public class OrderService {
 	 */
 	@Transactional
 	public void submitBpm(String user, OrderDto order) throws Exception {
+	  if (StringUtils.trimToEmpty(order.getContractNumber()).length() == 0) {
+	    throw new RuntimeException("合同号不能为空");
+	  }
 		order = save(user, order);
 		List<ItemDto> items = order.getItems();
 		if (items == null) {
@@ -1304,8 +1307,8 @@ public class OrderService {
 			bpmService.callSendProcess(json);
 			orderInfoMapper.updateStatus(order.getId(), user, OrderDto.ORDER_STATUS_BPM, null, new Date(), null, null);
 		} catch (Exception e) {
-			logger.error("Submit order to BPM is failed.", e);
-			throw new RuntimeException("Submit order to BPM is failed." + e.getMessage());
+			logger.error("提交 BPM 失败", e);
+			throw new RuntimeException("提交 BPM 失败 - " + e.getMessage());
 		}
 	}
 
