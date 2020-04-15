@@ -318,8 +318,8 @@ public class GrossProfitMarginService {
 		mgroup.setExcludingTaxAmount(toBigDecimal(excludingTaxAmount, 2));
 		mgroup.setWtwCost(toBigDecimal(wtwCost, 2));
 		mgroup.setCost(toBigDecimal(cost, 2));
-		mgroup.setWtwGrossProfit(toBigDecimal(wtwGrossProfit, 2));
-		mgroup.setGrossProfit(toBigDecimal(grossProfit, 2));
+		mgroup.setWtwGrossProfit(toBigDecimal(wtwGrossProfit, 4));
+		mgroup.setGrossProfit(toBigDecimal(grossProfit, 4));
 		mgroup.setWtwGrossProfitMargin(wtwGrossProfitMargin);
 		mgroup.setGrossProfitMargin(grossProfitMargin);
 	}
