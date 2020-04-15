@@ -344,7 +344,7 @@ public class OrderService {
 				throw new RuntimeException("合同号已存在或格式不正确");
 			}
 			params.clear();
-			params.put("id", orderDto.getId());
+			params.put("orderId", orderDto.getOrderId());
 			params.put("contractNumber", contractNumber);
 			List<String> existsConstractNumberList =  orderInfoMapper.checkContractNumber(params);
 			if (existsConstractNumberList.size() > 0) {
