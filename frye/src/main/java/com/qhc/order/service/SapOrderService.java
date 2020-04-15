@@ -105,7 +105,7 @@ public class SapOrderService {
 		header.setInco1(StringUtils.trimToEmpty(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
 		header.setInco1(StringUtils.trimToEmpty(order.getIncotermName())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
 //		// 折扣
-		header.setVbbkz120(String.valueOf(order.getContractRmbValue())); // Contract amount/合同金额 -- 合同金额
+		header.setVbbkz120(String.valueOf(order.getContractValue())); // Contract amount/合同金额 -- 合同金额
 		header.setVbbkz121(order.getSalesName()); // Sale rep./签约人 -- 客户经理
 		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 支持经理
 		String contactorInfo = StringUtils.trimToEmpty(order.getContactor1Id()) + "/" + StringUtils.trimToEmpty(order.getContactor1Tel())
