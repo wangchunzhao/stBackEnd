@@ -1259,16 +1259,17 @@ public class OrderService {
     // set bpm order item
     if (items.size() > 0) {
       StringBuilder strGroupName = new StringBuilder(256);
+      double exchange = bpmHeader.getExchange();
       for (ItemDto itemDto : items) {
         strGroupName.append(",").append(itemDto.getMaterialGroupName());
         OrderItem bpmItem = new OrderItem();
         bpmItems.add(bpmItem);
 
-        bpmItem.setActuralAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+        bpmItem.setActuralAmount(itemDto.getActualPrice() * itemDto.getQuantity() / exchange); // 凭证货币
         bpmItem
-            .setActuralAmountOfOptional(itemDto.getOptionalActualPrice() * itemDto.getQuantity());
-        bpmItem.setActuralPrice(itemDto.getActualPrice());
-        bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrice());
+            .setActuralAmountOfOptional(itemDto.getOptionalActualPrice() * itemDto.getQuantity() / exchange); // 凭证货币
+        bpmItem.setActuralPrice(itemDto.getActualPrice() / exchange); // 凭证货币
+        bpmItem.setActuralPriceOfOptional(itemDto.getOptionalActualPrice() / exchange); // 凭证货币
         bpmItem.setAddress(StringUtils.trimToEmpty(itemDto.getAddress()));
         bpmItem.setB2cAmountEstimated(itemDto.getB2cEstimatedPrice() * itemDto.getQuantity());
         bpmItem.setB2cComments(StringUtils.trimToEmpty(itemDto.getB2cComments()));
@@ -1296,11 +1297,11 @@ public class OrderService {
         bpmItem.setRowNumber(itemDto.getRowNum());
         bpmItem.setShippDate(itemDto.getShippDate());
         bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
-        bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice());
-        bpmItem.setTransfterPrice(itemDto.getTransactionPrice());
+        bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice() / exchange); // 凭证货币
+        bpmItem.setTransfterPrice(itemDto.getTransactionPrice() / exchange); // 凭证货币
         double standardCost = itemDto.getStandardPrice()
             + (itemDto.getOptionalStandardPrice() == null ? 0 : itemDto.getOptionalStandardPrice());
-        bpmItem.setStandardCost(standardCost);
+        bpmItem.setStandardCost(standardCost / exchange); // 凭证货币
       }
       bpmHeader.setMaterialGroupNames(strGroupName.length() > 0 ? strGroupName.substring(1) : "");
     }

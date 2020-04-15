@@ -393,8 +393,8 @@
 			<if test="contracterName != null and contracterName != ''" >
 				AND UPPER(c.name) like '%${contracterName.toUpperCase()}%'
 			</if>
-			<if test="customerCode != null and customerCode != ''" >
-				AND o.customer_code = #{customerCode, jdbcType=CHAR}
+			<if test="customerCode != null and customerCode.trim() != ''" >
+				AND UPPER(o.customer_code) like '%${customerCode.trim().toUpperCase()}%'
 			</if>
 			<if test="statusList != null and statusList.size() > 0" >
 				<choose>
