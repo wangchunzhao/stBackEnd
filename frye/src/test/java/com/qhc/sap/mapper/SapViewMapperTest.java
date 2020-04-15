@@ -1,10 +1,11 @@
 package com.qhc.sap.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import com.qhc.sap.entity.ClazzCharacteristicValueView;
 
 @SpringBootTest
 class SapViewMapperTest {
@@ -19,7 +20,8 @@ class SapViewMapperTest {
 
 	@Test
 	void testFindCharacteristicValueByClazzCode() {
-		mapper.findCharacteristicValueByClazzCode("");
+	  List<ClazzCharacteristicValueView> list = mapper.findCharacteristicValueByClazzCode("Z4", "BG1QCQ00000");
+	  System.out.println(list);
 	}
 
 	@Test

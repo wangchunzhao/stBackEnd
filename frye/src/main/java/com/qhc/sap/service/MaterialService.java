@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.qhc.exception.NotMatchException;
-import com.qhc.sap.dao.CharacteristicDefaultRepository;
 import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.PriceRepository;
 import com.qhc.sap.dao.SapLastUpdatedRepository;
@@ -65,9 +64,6 @@ public class MaterialService {
 
 	@Autowired
 	private SapViewMapper sapViewMapper;
-
-	@Autowired
-	private CharacteristicDefaultRepository defaultCharacterRep;
 
 	@Autowired
 	private MaterialProductClassMapper materialProductClassMapper;
@@ -228,13 +224,8 @@ public class MaterialService {
 		Material m = materialRepo.findById(materialCode).get();
 		// 物料特征分组
 		String clazzCode = m.getClazzCode();
-		List<ClazzCharacteristicValueView> allmc = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode);
+		List<ClazzCharacteristicValueView> allmc = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode, materialCode);
 		if (allmc != null && allmc.size() > 0) {
-			List<SapCharacteristicDefault> defaultValues = defaultCharacterRep.findbyMaterialCode(materialCode);
-			Set<Integer> defaultIds = new HashSet<Integer>();
-			for (SapCharacteristicDefault dc : defaultValues) {
-				defaultIds.add(dc.getValueId());
-			}
 			// template variable
 			Map<String, Characteristic> cmap = new HashMap<String, Characteristic>();
 			for (ClazzCharacteristicValueView mcview : allmc) {
@@ -253,11 +244,8 @@ public class MaterialService {
 				mc.getConfigs().add(mcValues);
 				mcValues.setCode(mcview.getValueCode());
 				mcValues.setName(mcview.getValueName());
-				if (defaultIds.contains(mcview.getId())) {
-					mcValues.setDefault(true);
-				} else {
-					mcValues.setDefault(false);
-				}
+				boolean defaultValue =  mcview.getValueId().equals(mcview.getDefaultValueId());
+				mcValues.setDefault(defaultValue);
 			}
 		}
 

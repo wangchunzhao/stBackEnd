@@ -208,8 +208,11 @@ public class OrderService {
 		if (orderDto.getAdditionalFreight() == null ) {
 			orderDto.setAdditionalFreight(0D);
 		}
-		for(ItemDto item : items) {
-		}
+      for (ItemDto item : items) {
+        if (StringUtils.isEmpty(item.getItemStatus())) {
+          item.setItemStatus("00");
+        }
+      }
 		
 		// 檢查合同號
 		checkContractNumber(orderDto);
@@ -217,7 +220,9 @@ public class OrderService {
 		// is b2c
 		if (items != null) {
 			items.forEach(i -> {
-				if (StringUtils.isNotEmpty(i.getB2cComments())) {
+	            String status = i.getItemStatus();
+	            // 取消状态的行项目不在累计范围
+				if (StringUtils.isNotEmpty(i.getB2cComments()) && !status.equals("Z2")) {
 					orderDto.setIsB2c(1);
 				}
 			});
@@ -226,6 +231,10 @@ public class OrderService {
 		// 行项目金额合计
 		double itemsAmount = 0; 
 		for (ItemDto itemDto : items) {
+          // 取消状态的行项目不在累计范围
+		  if (itemDto.getItemStatus().equals("Z2")) {
+		    continue;
+		  }
 			double discount = itemDto.getDiscount();
 			itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
 		}
@@ -534,11 +543,7 @@ public class OrderService {
 		if (items == null || items.size() == 0) {
 			return;
 		}
-		for (ItemDto itemDto : items) {
-			if ( StringUtils.isEmpty(itemDto.getItemStatus())) {
-				itemDto.setItemStatus("00");
-			}
-			
+		for (ItemDto itemDto : items) {			
 			String materialCode = itemDto.getMaterialCode();
 			// BG1GD1000000-X  其他项目收费，成本固定1元，清除用户输入的标准价和转移价
 			if (materialCode.equals("BG1GD1000000-X")) {
@@ -1377,6 +1382,10 @@ public class OrderService {
 				updateBpmDicount(items, bodyDiscount, unitDiscount);
 				double itemsAmount = 0; // 行项目金额合计
 				for (ItemDto itemDto : items) {
+		          // 取消状态的行项目不在累计范围
+		          if (itemDto.getItemStatus().equals("Z2")) {
+		            continue;
+		          }
 					double discount = itemDto.getDiscount();
 					itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
 				}
@@ -1414,6 +1423,10 @@ public class OrderService {
 	private void updateBpmDicount(List<ItemDto> items, Double bodyDiscount, Double unitDiscount)
 			throws IllegalAccessException, InvocationTargetException {
 		for (ItemDto itemDto : items) {
+          // 取消状态的行项目不在累计范围
+          if (itemDto.getItemStatus().equals("Z2")) {
+            continue;
+          }
 			String stGroup = itemDto.getStMaterialGroupCode();
 			if (stGroup.equals("T101") || stGroup.equals("T102")) {
 				// 机柜

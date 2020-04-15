@@ -31,7 +31,7 @@ public interface SapViewMapper {
 	 * @param clazzCode
 	 * @return
 	 */
-	public List<ClazzCharacteristicValueView> findCharacteristicValueByClazzCode(@Param("clazzCode")String clazzCode);
+	public List<ClazzCharacteristicValueView> findCharacteristicValueByClazzCode(@Param("clazzCode")String clazzCode, @Param("materialCode")String materialCode);
 	
 	/**
 	 * 查询物料特征默认值信息

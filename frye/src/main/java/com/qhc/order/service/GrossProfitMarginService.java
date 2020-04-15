@@ -264,6 +264,11 @@ public class GrossProfitMarginService {
 		double wtwCost = 0;
 		for (ItemDto item : items) {
 			String itemMaterialGroupCode = item.getMaterialGroupCode();
+			String status = item.getItemStatus();
+			// 取消状态的行项目不在累计范围
+			if (status.equals("Z2")) {
+			  continue;
+			}
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
 				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
 //				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();

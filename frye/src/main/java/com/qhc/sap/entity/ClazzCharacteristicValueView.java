@@ -3,11 +3,6 @@
  */
 package com.qhc.sap.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * @author Walker
  *
@@ -25,6 +20,10 @@ public class ClazzCharacteristicValueView {
 	private String keyCode;
 	
 	private String keyName;
+    
+    private Integer valueId;
+    
+    private Integer defaultValueId;
 
 	public int getId() {
 		return id;
@@ -74,9 +73,26 @@ public class ClazzCharacteristicValueView {
 		this.keyName = keyName;
 	}
 
-	@Override
-	public String toString() {
-		return "ClazzCharacteristicValueView [id=" + id + ", valueCode=" + valueCode + ", valueName=" + valueName
-				+ ", classCode=" + classCode + ", keyCode=" + keyCode + ", keyName=" + keyName + "]";
-	}
+	public Integer getValueId() {
+    return valueId;
+  }
+
+  public void setValueId(Integer valueId) {
+    this.valueId = valueId;
+  }
+
+  public Integer getDefaultValueId() {
+    return defaultValueId;
+  }
+
+  public void setDefaultValueId(Integer defaultValueId) {
+    this.defaultValueId = defaultValueId;
+  }
+
+  @Override
+  public String toString() {
+    return "ClazzCharacteristicValueView [id=" + id + ", valueCode=" + valueCode + ", valueName="
+        + valueName + ", classCode=" + classCode + ", keyCode=" + keyCode + ", keyName=" + keyName
+        + ", valueId=" + valueId + ", defaultValueId=" + defaultValueId + "]";
+  }
 }
