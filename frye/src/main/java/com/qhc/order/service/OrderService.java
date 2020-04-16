@@ -725,7 +725,7 @@ public class OrderService {
   }
 
   /**
-   * 驳回订单
+   * 驳回订单，逐级驳回
    * 
    * @param order
    * @throws Exception
@@ -736,17 +736,34 @@ public class OrderService {
     if (orderInfo == null) {
       throw new RuntimeException("订单不存在，id=" + orderInfoId);
     }
+    Order order = orderMapper.findById(orderInfo.getOrderId());
     String status = orderInfo.getStatus();
+    String rejectStatus = "";
     switch (status) {
       case OrderDto.ORDER_STATUS_B2C:
+        rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+        break;
       case OrderDto.ORDER_STATUS_ENGINER:
+        if (orderInfo.getIsB2c() == 1) {
+          rejectStatus = OrderDto.ORDER_STATUS_B2C;
+        } else {
+          rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+        }
+        break;
       case OrderDto.ORDER_STATUS_MANAGER:
-        String rejectStatus = OrderDto.ORDER_STATUS_REJECT;
-        orderInfoMapper.updateStatus(orderInfoId, user, rejectStatus, null, null, null, null);
+        if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_KEY_ACCOUNT_CODE)) {
+          // 大客户
+          rejectStatus = OrderDto.ORDER_STATUS_ENGINER;
+        } else if (orderInfo.getIsB2c() == 1) {
+          rejectStatus = OrderDto.ORDER_STATUS_B2C;
+        } else {
+          rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+        }
         break;
       default:
         throw new RuntimeException("订单当前状态【" + status + "】不能驳回");
     }
+    orderInfoMapper.updateStatus(orderInfoId, user, rejectStatus, null, null, null, null);
   }
 
   /**
@@ -1364,7 +1381,15 @@ public class OrderService {
   @Transactional
   public void updateBpmStatus(String user, String sequenceNumber, String status,
       Double bodyDiscount, Double unitDiscount) throws Exception {
-    OrderInfo orderInfo = orderInfoMapper.findByParams(null, sequenceNumber, null, "1").get(0);
+    if (StringUtils.isEmpty(sequenceNumber)) {
+      throw new RuntimeException("sequenceNumber is empty.");
+    }
+    OrderQuery query = new OrderQuery();
+    query.setLast(true);
+    query.setSequenceNumber(sequenceNumber);
+    List<OrderDto> orders = orderInfoMapper.findOrderViewByParams(query);
+    OrderDto orderDto = orders.get(0);
+    OrderInfo orderInfo = orderInfoMapper.findById(orderDto.getId());
     Order order = orderMapper.findById(orderInfo.getOrderId());
 
     String orderStatus = orderInfo.getStatus();
@@ -1418,7 +1443,6 @@ public class OrderService {
         orderInfo.setApprovedBodyDiscount(bodyDiscount);
         orderInfo.setApprovedMainDiscount(unitDiscount);
 
-        OrderDto orderDto = this.findOrder(orderInfo.getId());
         List<ItemDto> items = orderDto.getItems();
         // 更新行项目的discount
         updateBpmDicount(items, bodyDiscount, unitDiscount);
@@ -1447,7 +1471,7 @@ public class OrderService {
       }
     } else {
       // 审批拒绝
-      status = OrderDto.ORDER_STATUS_REJECT_BPM;
+      status = OrderDto.ORDER_STATUS_MANAGER; // OrderDto.ORDER_STATUS_REJECT_BPM;
       bpmDicision.setIsPassed(0);
       orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, null, null);
     }

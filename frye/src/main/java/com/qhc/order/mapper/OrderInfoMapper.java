@@ -75,16 +75,6 @@ public interface OrderInfoMapper {
 
 	/**
 	 * 
-	 * 按参数查询OrderInfo信息.
-	 * 
-	 * @param params 查询参数
-	 * @return OrderInfo列表
-	 */
-	List<OrderInfo> findByParams(@Param("id") Integer id, @Param("sequenceNumber") String sequenceNumber,
-			@Param("version") String version, @Param("isActive") String isActive);
-
-	/**
-	 * 
 	 * 修改OrderInfo状态.
 	 * 
 	 * @param orderInfo 修改的OrderInfo对象

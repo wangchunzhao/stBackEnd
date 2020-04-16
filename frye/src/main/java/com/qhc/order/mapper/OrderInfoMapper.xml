@@ -434,10 +434,10 @@
 			, bpm_submit_time = now()
 		</if>
 		<if test="approvedBodyDiscount != null">
-			, approved_body_discount = approvedBodyDiscount
+			, approved_body_discount = #{approvedBodyDiscount, jdbcType=NUMERIC}
 		</if>
 		<if test="approvedMainDiscount != null">
-			, approved_main_discount = approvedMainDiscount
+			, approved_main_discount = #{approvedMainDiscount, jdbcType=NUMERIC}
 		</if>
 		<if test="user != null">
 			, updater = #{user, jdbcType=VARCHAR}

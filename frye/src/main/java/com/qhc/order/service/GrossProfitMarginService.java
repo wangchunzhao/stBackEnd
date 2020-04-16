@@ -40,8 +40,8 @@ public class GrossProfitMarginService {
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
 		double exchange = order.getCurrencyExchange();
-		// 报价单不需要计算毛利率
-		if ("3".equals(stOrderType)) {
+		// 报价单、备货订单不需要计算毛利率
+		if ("3".equals(stOrderType) || "5".equals(stOrderType)) {
 			return null;
 		}
 		// 查询所有物料类型sap_material_group isenable != 0
