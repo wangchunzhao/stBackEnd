@@ -157,7 +157,11 @@ public class MaterialService {
 		}
 		String code = m.getCode();
 		double standardPrice = m.getStandardPrice();
+		// 年采价
 		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
+		// 零售价及转移百分比转移价，经销商客户会重复
+        List<MaterialPrice> prices2 = priceRepository.findByMaterialCodeAndIndustryCode(code, "unkn");
+        prices.addAll(prices2);
 		for (MaterialPrice materialPrice : prices) {
 			String priceTypeCode = materialPrice.getType();
 			switch (priceTypeCode) {
