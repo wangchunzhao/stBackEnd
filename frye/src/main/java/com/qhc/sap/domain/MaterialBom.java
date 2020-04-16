@@ -2,6 +2,8 @@ package com.qhc.sap.domain;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.apache.commons.lang3.ObjectUtils;
+import io.netty.util.internal.ObjectUtil;
 
 /**
  * @author Walker
@@ -22,7 +24,7 @@ public class MaterialBom {
 		for (Bom bom : optional) {
 			if (bom.isMarked()) {
 				double standardPrice = bom.getPrice();
-				double retailPrice = bom.getRetailPrice();
+				double retailPrice = getPrice(bom);
 				double transferPrice = bom.getTransferPrice();
 				
 				this.standardPrice += standardPrice * bom.getQuantity();
@@ -34,18 +36,27 @@ public class MaterialBom {
 		for (Bom bom : standard) {
 			if (bom.isMarked()) {
 				double standardPrice = bom.getPrice();
-				double retailPrice = bom.getRetailPrice();
+				double retailPrice = getPrice(bom);
 				double transferPrice = bom.getTransferPrice();
 				
-				this.standardPrice += standardPrice * bom.getQuantity();
-				this.retailPrice += retailPrice * bom.getQuantity();
-				this.transferPrice += transferPrice * bom.getQuantity();
+				this.standardPrice -= standardPrice * bom.getQuantity();
+				this.retailPrice -= retailPrice * bom.getQuantity();
+				this.transferPrice -= transferPrice * bom.getQuantity();
 			}
 		}
 		
 		standardPrice = BigDecimal.valueOf(standardPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		retailPrice = BigDecimal.valueOf(retailPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		transferPrice = BigDecimal.valueOf(transferPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+	
+	private double getPrice(Bom bom) {
+	  double price = ObjectUtils.defaultIfNull(bom.getRetailPrice(), 0d);
+	  double annualPrice = ObjectUtils.defaultIfNull(bom.getAnnualPrice(), 0d);
+	  if (annualPrice > 0) {
+	    price = annualPrice;
+	  }
+	  return price;
 	}
 	
 	public List<Bom> getStandard() {
