@@ -157,8 +157,8 @@ public class OrderController {
 	public Result upgrade(@PathVariable("user") String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
-			orderService.upgrade(user, orderInfoId);
-			result = Result.ok("");
+			OrderDto order = orderService.upgrade(user, orderInfoId);
+			result = Result.ok(order);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
