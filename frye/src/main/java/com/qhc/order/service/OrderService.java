@@ -1067,6 +1067,10 @@ public class OrderService {
     order.setItems(items);
     for (ItemDto item : items) {
       Integer itemId = item.getId();
+      
+      if (!item.getItemStatus().equals("00")) {
+        order.setHasSendSap(true);
+      }
 
       MaterialDto m = sapViewMapper.findMaterialInfo(item.getMaterialCode(), null).get(0);
 
