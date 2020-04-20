@@ -199,18 +199,13 @@ public class SapOrderService {
 			}
 			sapItem.setVbbpz121(sb.length() > 0 ? sb.substring(1) : "");
 			// Special note/特殊备注
-			sapItem.setVbbpz117(item.getSpecialComments());
+			sapItem.setVbbpz117(StringUtils.trimToEmpty(item.getSpecialComments()));
 			// Color option/颜色可选项
-			String colorOption = StringUtils.trimToEmpty(item.getColorOptions());
-            String colorComment = StringUtils.trimToEmpty(item.getColorComments());
-            if (colorComment.length() != 0) {
-              colorOption += "\n" + colorComment;
-            }
-			sapItem.setVbbpz120(colorOption);
+			sapItem.setVbbpz120(StringUtils.trimToEmpty(item.getColorOptions()));
 			// Survey info. Note/调研表备注
-			sapItem.setVbbp0007(item.getComments());
+			sapItem.setVbbp0007(StringUtils.trimToEmpty(item.getComments()));
 			// Color Note/颜色备注
-			sapItem.setVbbpz118(item.getColorComments());
+			sapItem.setVbbpz118(StringUtils.trimToEmpty(item.getColorComments()));
 
 			sapItems.add(sapItem);
 
