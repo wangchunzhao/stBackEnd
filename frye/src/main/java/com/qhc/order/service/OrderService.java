@@ -582,6 +582,8 @@ public class OrderService {
     String colorOptions = "";
     List<CharacteristicDto> configs = itemDto.getConfigs();
     if (configs == null || configs.size() == 0) {
+      configs = new ArrayList<>();
+      itemDto.setConfigs(configs);
       // 没有配置调研表，取默认值颜色选项和物料特征
       List<Characteristic> characs =
           materialService.getCharactersByClazzCode(itemDto.getMaterialCode());
@@ -589,32 +591,24 @@ public class OrderService {
         for (Characteristic c : characs) {
           boolean configurable = c.getConfigs() != null && c.getConfigs().size() > 0;
           boolean isColor = c.isColor();
-          if (isColor) {
-            ItemColor itemColor = new ItemColor();
-            itemColor.setItemId(item.getId());
-            itemColor.setPaintingClass(c.getCode());
-            c.getConfigs().forEach(e -> {
-              if (e.isDefault()) {
-                itemColor.setColorCode(e.getCode());
-                if (e.getCode().equals("-")) {
-                  itemColor.setColorCode("");
-                }
+          CharacteristicDto characDto = new CharacteristicDto();
+          configs.add(characDto);
+          characDto.setColor(isColor);
+          characDto.setConfigurable(configurable);
+          characDto.setKeyCode(c.getCode());
+          characDto.setKeyName(c.getName());
+          characDto.setOptional(c.isOptional());
+          characDto.setValueCode("");
+          characDto.setValueName("");
+          c.getConfigs().forEach(e -> {
+            if (e.isDefault()) {
+              characDto.setValueCode(e.getCode());
+              characDto.setValueName(e.getName());
+              if (e.getCode().equals("-")) {
+                characDto.setValueCode("");
               }
-            });
-          } else {
-            Characteristics cs = new Characteristics();
-            cs.setItemId(item.getId());
-            cs.setIsConfigurable(configurable ? 1 : 0);
-            cs.setKeyCode(c.getCode());
-            c.getConfigs().forEach(e -> {
-              if (e.isDefault()) {
-                cs.setValueCode(e.getCode());
-                if (e.getCode().equals("-")) {
-                  cs.setValueCode("");
-                }
-              }
-            });
-          }
+            }
+          });
         }
       }
     }
@@ -630,12 +624,10 @@ public class OrderService {
         colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
       } else {
         Characteristics c = new Characteristics();
-
-        BeanUtils.copyProperties(c, dto);
-        c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
-
-        c.setId(null);
         c.setItemId(item.getId());
+        c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
+        c.setKeyCode(dto.getKeyCode());
+        c.setValueCode(dto.getValueCode());
 
         characteristicsMapper.insert(c);
       }
