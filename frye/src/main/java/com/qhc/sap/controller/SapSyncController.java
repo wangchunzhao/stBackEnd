@@ -191,6 +191,8 @@ public class SapSyncController {
 		}
 	}
 	
+	//每天12点执行一次
+	@Scheduled(cron = "0 0 12 * * ?")
 	@ApiOperation(value = "同步sap的默认特征信息并写入销售工具数据库")
 	@GetMapping(value = "sycDefaultCharacteristic")
 	@ResponseStatus(HttpStatus.OK)

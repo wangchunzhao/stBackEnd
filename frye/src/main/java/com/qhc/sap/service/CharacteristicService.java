@@ -183,12 +183,12 @@ public class CharacteristicService {
 		for(DefaultCharacteristicsDto cd: defaultChavalue) {
 			try {
 				//根据特征值的code和特征的code查询出特征值的ID，因为默认特征的表和特征值的表是根据自增长的ID关联的
-				int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
+//				int valueId =  charaValueRepo.selectId(cd.getCharacterValue(), cd.getCharacteristic());
 				//
 				SapCharacteristicDefault defaultCh = new SapCharacteristicDefault();
 				defaultCh.setMaterialsCode(cd.getMaterialCode());
 				defaultCh.setCharacteristicCode(cd.getCharacteristic());
-				defaultCh.setValueId(valueId);
+				defaultCh.setValueId(cd.getCharacterValue());
 				dcs.add(defaultCh);
 			} catch (Exception e) {
 				System.out.println("查不到特征值的数据");

@@ -12,7 +12,7 @@ public class SapCharacteristicDefaultKey implements Serializable{
 	
 	private String characteristicCode;
 	
-	private int valueId;
+	private String valueId;
 
 	public String getMaterialsCode() {
 		return materialsCode;
@@ -30,11 +30,11 @@ public class SapCharacteristicDefaultKey implements Serializable{
 		this.characteristicCode = characteristicCode;
 	}
 
-	public int getValueId() {
+	public String getValueId() {
 		return valueId;
 	}
 
-	public void setValueId(int valueId) {
+	public void setValueId(String valueId) {
 		this.valueId = valueId;
 	}
 
@@ -44,7 +44,7 @@ public class SapCharacteristicDefaultKey implements Serializable{
 		int result = 1;
 		result = prime * result + ((characteristicCode == null) ? 0 : characteristicCode.hashCode());
 		result = prime * result + ((materialsCode == null) ? 0 : materialsCode.hashCode());
-		result = prime * result + valueId;
+		result = prime * result + ((valueId == null) ? 0 : valueId.hashCode());
 		return result;
 	}
 
@@ -72,7 +72,7 @@ public class SapCharacteristicDefaultKey implements Serializable{
 		return true;
 	}
 
-	public SapCharacteristicDefaultKey(String materialsCode, String characteristicCode, int valueId) {
+	public SapCharacteristicDefaultKey(String materialsCode, String characteristicCode, String valueId) {
 		super();
 		this.materialsCode = materialsCode;
 		this.characteristicCode = characteristicCode;
