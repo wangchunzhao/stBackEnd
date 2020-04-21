@@ -465,6 +465,7 @@ public class OrderService {
     order.setAttachments(null); // 清除订单附件
     for (ItemDto item : order.getItems()) {
       item.setAttachments(null); // 清除调研表附件
+      item.setItemStatus("00");
     }
     order.setCreater(user);
     // new version
