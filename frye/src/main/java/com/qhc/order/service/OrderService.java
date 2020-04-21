@@ -476,6 +476,7 @@ public class OrderService {
     order.setSubmitTime(null);
     order.setIsActive(1);
     order.setVersionNum(1);
+    order.setContractNumber("");
 
     order = this.save(user, order);
 
