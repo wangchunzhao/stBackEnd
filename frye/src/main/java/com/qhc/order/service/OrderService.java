@@ -221,7 +221,8 @@ public class OrderService {
     }
 
     // 檢查合同號
-    checkContractNumber(orderDto);
+    orderDto.setContractNumber(StringUtils.trimToEmpty(orderDto.getContractNumber()));
+    checkContractNumber(orderDto.getOrderId(), orderDto.getContractNumber());
 
     // is b2c
     if (items != null) {
@@ -336,8 +337,7 @@ public class OrderService {
    * 
    * @param orderDto
    */
-  private void checkContractNumber(final OrderDto orderDto) {
-    String contractNumber = StringUtils.trimToEmpty(orderDto.getContractNumber());
+  private void checkContractNumber(Integer orderId, String contractNumber) {
     if (contractNumber.length() > 0) {
       contractNumber = contractNumber.toUpperCase();
       if (contractNumber.length() > 10) {
@@ -350,13 +350,12 @@ public class OrderService {
         throw new RuntimeException("合同号已存在或格式不正确");
       }
       params.clear();
-      params.put("orderId", orderDto.getOrderId());
+      params.put("orderId", orderId);
       params.put("contractNumber", contractNumber);
       List<String> existsConstractNumberList = orderInfoMapper.checkContractNumber(params);
       if (existsConstractNumberList.size() > 0) {
         throw new RuntimeException("合同号已存在或格式不正确");
       }
-      orderDto.setContractNumber(contractNumber);
     }
   }
 
@@ -1579,6 +1578,19 @@ public class OrderService {
    */
   public SapOrderStatus getOrderSapStatus(String contractNumber) {
     return sapService.getOrderStatus(contractNumber);
+  }
+
+  /**
+   * 修改订单合同号
+   * @param orderInfoId
+   * @param contractNumber
+   */
+  public void updateContractNumber(Integer orderInfoId, String contractNumber) {
+    String tempContractNumber = StringUtils.trimToEmpty(contractNumber);
+    OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
+    checkContractNumber(orderInfo.getOrderId(), tempContractNumber);
+    orderInfo.setContractNumber(tempContractNumber);
+    orderInfoMapper.update(orderInfo);
   }
 
 }

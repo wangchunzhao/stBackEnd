@@ -4,3 +4,6 @@ CHANGE COLUMN `is_configurable` `is_configurable` INT(11) NULL COMMENT '可配�
 
 ALTER TABLE `k_item_color` 
 CHANGE COLUMN `color_code` `color_code` VARCHAR(10) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL COMMENT '颜色编码' ;
+
+ALTER TABLE `k_order_info` 
+CHANGE COLUMN `contract_manager` `contract_manager` VARCHAR(45) NULL COMMENT '支持经理，合同管理员' ;

@@ -610,7 +610,7 @@ create table k_order_info
    currency             varchar(3) comment '外币code',
    currency_exchange    double(10,5) comment '汇率',
    items_amount         decimal(13,2) comment '购销明细金额合计',
-   contract_manager     varchar(45) not null comment '支持经理，合同管理员',
+   contract_manager     varchar(45) comment '支持经理，合同管理员',
    office_code          varchar(45) comment '表单里的大区, sap_sales_office',
    group_code           varchar(45) comment '中心, sap_sales_group',
    warranty             integer comment '保修年限',

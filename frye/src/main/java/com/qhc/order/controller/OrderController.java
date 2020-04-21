@@ -252,7 +252,7 @@ public class OrderController {
 	 * @return
 	 * @throws Throwable
 	 */
-	@ApiOperation(value = "根据sequenceNumber组装订单并同步SAP", notes = "根据sequenceNumber组装订单并同步SAP")
+	@ApiOperation(value = "根据orderInfoId组装订单并同步SAP", notes = "根据orderInfoId组装订单并同步SAP")
 	@PostMapping(value = "order/{orderInfoId}/sap/{user}")
 	@ResponseStatus(HttpStatus.OK)
 	public Result sendOrderToSap(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("user") String user)
@@ -263,11 +263,35 @@ public class OrderController {
 			result = Result.ok(res);
 		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
-			result = Result.error("订单下发SAP失败！" + e.getMessage());
+			result = Result.error(e.getMessage());
 		}
 		
 		return result;
 	}
+
+    /**
+     * 经销商非标折扣订单下推sap时修改合同号
+     * 
+     * @param sequenceNumber
+     * @return
+     * @throws Throwable
+     */
+    @ApiOperation(value = "经销商非标折扣订单下推sap时修改合同号", notes = "经销商非标折扣订单下推sap时修改合同号")
+    @PostMapping(value = "order/{orderInfoId}/contractnumber/{contractNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public Result updateContractNumber(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("contractNumber") String contractNumber)
+            throws Throwable {
+        Result result = null;
+        try {
+            orderService.updateContractNumber(orderInfoId, contractNumber);
+            result = Result.ok("");
+        } catch (Throwable e) {
+            logger.error("修改合同号失败", e);
+            result = Result.error(e.getMessage());
+        }
+        
+        return result;
+    }
 
 	/**
 	 * 根据流水号获取销售订单详情并同步SAP
