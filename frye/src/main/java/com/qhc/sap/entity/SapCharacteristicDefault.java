@@ -25,7 +25,7 @@ public class SapCharacteristicDefault implements Serializable{
 	
 	@Id
     @Column(name="sap_characteristic_value_id",length=11)
-	private int valueId;
+	private String valueId;
 
 	public String getMaterialsCode() {
 		return materialsCode;
@@ -43,11 +43,11 @@ public class SapCharacteristicDefault implements Serializable{
 		this.characteristicCode = characteristicCode;
 	}
 
-	public int getValueId() {
+	public String getValueId() {
 		return valueId;
 	}
 
-	public void setValueId(int valueId) {
+	public void setValueId(String valueId) {
 		this.valueId = valueId;
 	}
 

@@ -578,33 +578,10 @@ public class OrderService {
   }
 
   // 保存行项目特征及附件
-  private void saveItemCharacteristic(ItemDto itemDto, Item item)
-      throws Exception {
+  private void saveItemCharacteristic(ItemDto itemDto, Item item) throws Exception {
     String colorOptions = "";
     List<CharacteristicDto> configs = itemDto.getConfigs();
-    if (configs != null && configs.size() > 0) {
-      for (CharacteristicDto dto : configs) {
-        if (dto.isColor()) {
-          ItemColor itemColor = new ItemColor();
-          itemColor.setItemId(item.getId());
-          itemColor.setPaintingClass(dto.getKeyCode());
-          itemColor.setColorCode(dto.getValueCode());
-
-          itemColorMapper.insert(itemColor);
-          colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
-        } else {
-          Characteristics c = new Characteristics();
-
-          BeanUtils.copyProperties(c, dto);
-          c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
-
-          c.setId(null);
-          c.setItemId(item.getId());
-
-          characteristicsMapper.insert(c);
-        }
-      }
-    } else {
+    if (configs == null || configs.size() == 0) {
       // 没有配置调研表，取默认值颜色选项和物料特征
       List<Characteristic> characs =
           materialService.getCharactersByClazzCode(itemDto.getMaterialCode());
@@ -619,14 +596,11 @@ public class OrderService {
             c.getConfigs().forEach(e -> {
               if (e.isDefault()) {
                 itemColor.setColorCode(e.getCode());
+                if (e.getCode().equals("-")) {
+                  itemColor.setColorCode("");
+                }
               }
             });
-
-            if (StringUtils.isEmpty(itemColor.getColorCode())) {
-              itemColor.setColorCode(c.getConfigs().get(0).getCode());
-            }
-            itemColorMapper.insert(itemColor);
-            colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
           } else {
             Characteristics cs = new Characteristics();
             cs.setItemId(item.getId());
@@ -635,28 +609,48 @@ public class OrderService {
             c.getConfigs().forEach(e -> {
               if (e.isDefault()) {
                 cs.setValueCode(e.getCode());
+                if (e.getCode().equals("-")) {
+                  cs.setValueCode("");
+                }
               }
             });
-
-            if (StringUtils.isEmpty(cs.getValueCode())) {
-              cs.setValueCode(c.getConfigs().get(0).getCode());
-            }
-            characteristicsMapper.insert(cs);
           }
         }
       }
     }
-    colorOptions = colorOptions.length() > 0 ? colorOptions.substring(1) : colorOptions;
-    item.setColorOptions(colorOptions);
-    itemMapper.update(item);
 
-    // 保存调研表附件
-    List<ItemAttachment> attachments = itemDto.getAttachments();
-    if (attachments != null && attachments.size() > 0) {
-      for (ItemAttachment itemAttachment : attachments) {
-        itemAttachment.setItemId(item.getId());
-        itemAttachment.setOrderInfoId(item.getOrderInfoId());
-        itemAttachmentMapper.insert(itemAttachment);
+    for (CharacteristicDto dto : configs) {
+      if (dto.isColor()) {
+        ItemColor itemColor = new ItemColor();
+        itemColor.setItemId(item.getId());
+        itemColor.setPaintingClass(dto.getKeyCode());
+        itemColor.setColorCode(dto.getValueCode());
+
+        itemColorMapper.insert(itemColor);
+        colorOptions += "," + itemColor.getPaintingClass() + ":" + itemColor.getColorCode();
+      } else {
+        Characteristics c = new Characteristics();
+
+        BeanUtils.copyProperties(c, dto);
+        c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
+
+        c.setId(null);
+        c.setItemId(item.getId());
+
+        characteristicsMapper.insert(c);
+      }
+      colorOptions = colorOptions.length() > 0 ? colorOptions.substring(1) : colorOptions;
+      item.setColorOptions(colorOptions);
+      itemMapper.update(item);
+
+      // 保存调研表附件
+      List<ItemAttachment> attachments = itemDto.getAttachments();
+      if (attachments != null && attachments.size() > 0) {
+        for (ItemAttachment itemAttachment : attachments) {
+          itemAttachment.setItemId(item.getId());
+          itemAttachment.setOrderInfoId(item.getOrderInfoId());
+          itemAttachmentMapper.insert(itemAttachment);
+        }
       }
     }
   }

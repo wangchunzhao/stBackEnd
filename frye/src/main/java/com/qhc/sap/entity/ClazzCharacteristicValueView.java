@@ -21,9 +21,11 @@ public class ClazzCharacteristicValueView {
 	
 	private String keyName;
     
-    private Integer valueId;
+	/*特征值*/
+    private String valueId;
     
-    private Integer defaultValueId;
+    /*默认特征值*/
+    private String defaultValueId;
 
 	public int getId() {
 		return id;
@@ -73,19 +75,19 @@ public class ClazzCharacteristicValueView {
 		this.keyName = keyName;
 	}
 
-	public Integer getValueId() {
+	public String getValueId() {
     return valueId;
   }
 
-  public void setValueId(Integer valueId) {
+  public void setValueId(String valueId) {
     this.valueId = valueId;
   }
 
-  public Integer getDefaultValueId() {
+  public String getDefaultValueId() {
     return defaultValueId;
   }
 
-  public void setDefaultValueId(Integer defaultValueId) {
+  public void setDefaultValueId(String defaultValueId) {
     this.defaultValueId = defaultValueId;
   }
 

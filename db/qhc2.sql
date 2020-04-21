@@ -361,8 +361,8 @@ create table k_characteristics
    id                   integer unsigned not null auto_increment,
    item_id              integer not null,
    key_code             varchar(45) not null comment '选定的特征代码',
-   value_code           varchar(45) not null comment '选定的特征值的代码',
-   is_configurable      integer not null comment '可配置，无用',
+   value_code           varchar(45) comment '选定的特征值的代码',
+   is_configurable      integer comment '可配置，无用',
    primary key (id),
    key character_unique (key_code)
 );
@@ -527,7 +527,7 @@ create table k_item_color
    item_id              integer not null comment '行项目ID',
    product_class        varchar(10) not null comment '产品颜色系列号',
    painting_class       varchar(10) not null comment '喷粉分组',
-   color_code           varchar(10) not null comment '颜色编码',
+   color_code           varchar(10) comment '颜色编码',
    primary key (id)
 );
 
@@ -930,7 +930,7 @@ create table sap_material_default_characteristic
 (
    sap_materials_code   varchar(18) not null,
    sap_characteristic_code varchar(30) not null,
-   sap_characteristic_value_id integer not null,
+   sap_characteristic_value_id VARCHAR(10),
    primary key (sap_characteristic_code, sap_materials_code)
 );
 

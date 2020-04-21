@@ -3,10 +3,11 @@ package com.qhc.sap.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -231,8 +232,10 @@ public class MaterialService {
 		List<ClazzCharacteristicValueView> allmc = sapViewMapper.findCharacteristicValueByClazzCode(clazzCode, materialCode);
 		if (allmc != null && allmc.size() > 0) {
 			// template variable
-			Map<String, Characteristic> cmap = new HashMap<String, Characteristic>();
+			Map<String, Characteristic> cmap = new LinkedHashMap<String, Characteristic>();
 			for (ClazzCharacteristicValueView mcview : allmc) {
+			    String valueId = StringUtils.trimToEmpty(mcview.getValueId());
+                String defaultValueId = StringUtils.trimToEmpty(mcview.getDefaultValueId());
 				Characteristic mc = cmap.get(mcview.getKeyCode());
 				if (mc == null) {
 					mc = new Characteristic();
@@ -244,12 +247,19 @@ public class MaterialService {
 					cmap.put(mcview.getKeyCode(), mc);
 					chas.add(mc);
 				}
-				Configuration mcValues = new Configuration();
-				mc.getConfigs().add(mcValues);
-				mcValues.setCode(mcview.getValueCode());
-				mcValues.setName(mcview.getValueName());
-				boolean defaultValue =  mcview.getValueId().equals(mcview.getDefaultValueId());
-				mcValues.setDefault(defaultValue);
+				List<Configuration> configs = mc.getConfigs();
+				if (configs.size() == 0) {
+				  Configuration mcEmptyValue = new Configuration();
+				  configs.add(mcEmptyValue);
+				  mcEmptyValue.setCode("-");
+				  mcEmptyValue.setName("-");
+				  mcEmptyValue.setDefault(defaultValueId.equals(""));
+				}
+				Configuration mcValue = new Configuration();
+				configs.add(mcValue);
+				mcValue.setCode(mcview.getValueCode());
+				mcValue.setName(mcview.getValueName());
+				mcValue.setDefault(valueId.equals(defaultValueId));
 			}
 		}
 
