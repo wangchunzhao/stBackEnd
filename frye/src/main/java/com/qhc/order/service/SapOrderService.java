@@ -63,6 +63,10 @@ public class SapOrderService {
 	 * @return //
 	 */
 	private SapOrder assembleSapOrder(OrderDto order) {
+	  if (StringUtils.trimToEmpty(order.getContractNumber()).length() == 0) {
+	    throw new RuntimeException("合同号不能为空");
+	  }
+	  
 		Integer orderInfoId = order.getId();
 //		String orderType = order.getOrderType();
 		double exchange = order.getCurrencyExchange();
