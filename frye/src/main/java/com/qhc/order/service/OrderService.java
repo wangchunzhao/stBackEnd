@@ -1176,6 +1176,9 @@ public class OrderService {
         throw new RuntimeException("合同号不能为空");
       }
     }
+    if (!order.getStatus().equals(OrderDto.ORDER_STATUS_MANAGER)) {
+      throw new RuntimeException("订单当前状态不能提交BPM");
+    }
     order = save(user, order);
     List<ItemDto> items = order.getItems();
     if (items == null) {
