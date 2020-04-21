@@ -103,7 +103,7 @@ public class SapOrderService {
 		header.setKunnr_we(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/送达方 -- 签约单位
 		header.setWaerk(StringUtils.trimToEmpty(order.getCurrency())); // Currency/币别 -- 币别
 		header.setInco1(StringUtils.trimToEmpty(order.getIncoterm())); // Incoterms/国际贸易条款 -- 国际贸易条件 code
-		header.setInco1(StringUtils.trimToEmpty(order.getIncotermContect())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2 name
+		header.setInco1(StringUtils.trimToEmpty(order.getIncotermContect())); // Incoterms2/国际贸易条款2 -- 国际贸易条件2
 //		// 折扣
 		header.setVbbkz120(String.valueOf(order.getContractValue())); // Contract amount/合同金额 -- 合同金额
 		header.setVbbkz121(order.getSalesName()); // Sale rep./签约人 -- 客户经理
