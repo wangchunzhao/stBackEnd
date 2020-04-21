@@ -685,21 +685,22 @@ public class OrderService {
   public void submit(String user, OrderDto order) throws Exception {
     order = save(user, order);
     String status = order.getStatus();
+    String stOrderType = order.getStOrderType();
     switch (status) {
       case OrderDto.ORDER_STATUS_DRAFT:
       case OrderDto.ORDER_STATUS_REJECT:
         if (order.getIsB2c() == 1) {
           order.setStatus(OrderDto.ORDER_STATUS_B2C);
-        } else if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_KEY_ACCOUNT_CODE)) {
-          // 大客户
+        } else if (stOrderType.equals("3") || stOrderType.equals("4")) {
+          // 直销客户订单和直销客户报价单
           order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
         } else {
           order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
         }
         break;
       case OrderDto.ORDER_STATUS_B2C:
-        if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_KEY_ACCOUNT_CODE)) {
-          // 大客户
+        if (stOrderType.equals("3") || stOrderType.equals("4")) {
+          // 直销客户订单和直销客户报价单
           order.setStatus(OrderDto.ORDER_STATUS_ENGINER);
         } else {
           order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
@@ -730,6 +731,7 @@ public class OrderService {
     }
     Order order = orderMapper.findById(orderInfo.getOrderId());
     String status = orderInfo.getStatus();
+    String stOrderType = order.getStOrderType();
     String rejectStatus = "";
     switch (status) {
       case OrderDto.ORDER_STATUS_B2C:
@@ -743,8 +745,8 @@ public class OrderService {
         }
         break;
       case OrderDto.ORDER_STATUS_MANAGER:
-        if (order.getCustomerClazz().equals(OrderDto.ORDER_CUSTOMER_KEY_ACCOUNT_CODE)) {
-          // 大客户
+        if (stOrderType.equals("3") || stOrderType.equals("4")) {
+          // 直销客户订单和直销客户报价单
           rejectStatus = OrderDto.ORDER_STATUS_ENGINER;
         } else if (orderInfo.getIsB2c() == 1) {
           rejectStatus = OrderDto.ORDER_STATUS_B2C;
