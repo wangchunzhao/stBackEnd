@@ -245,8 +245,12 @@ public class OrderService {
     }
     // merge discount
     orderDto.setItemsAmount(itemsAmount);
+    if (orderDto.getContractRmbValue() == 0) {
+      orderDto.setDiscount(1D);
+    } else {
     orderDto.setDiscount(BigDecimal.valueOf(itemsAmount / orderDto.getContractRmbValue())
         .setScale(4, RoundingMode.HALF_UP).doubleValue());
+    }
 
     // calculate gross profit margin
     List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
@@ -1461,8 +1465,12 @@ public class OrderService {
         }
         // merge discount
         orderInfo.setItemsAmount(itemsAmount);
+        if (orderInfo.getContractRmbValue() == 0) {
+          orderInfo.setDiscount(1D);
+        } else {
         orderInfo.setDiscount(BigDecimal.valueOf(itemsAmount / orderInfo.getContractRmbValue())
             .setScale(4, RoundingMode.HALF_UP).doubleValue());
+        }
 
         // calculate gross profit margin
         List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
