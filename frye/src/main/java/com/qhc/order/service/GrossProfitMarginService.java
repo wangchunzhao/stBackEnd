@@ -56,7 +56,7 @@ public class GrossProfitMarginService {
 		    // 销售类型为出口也不计算运费
 		    && !saleType.equals("20") 
 		    // 报价单不计算运费
-		    && !stOrderType.equals("3") 
+//		    && !stOrderType.equals("3") 
 		    // 备货单不计算运费
 		    && !stOrderType.equals("5")) {
 	//		•	预估运费 = Volume * ZCTP* + ZCTF*
