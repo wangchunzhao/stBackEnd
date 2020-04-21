@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -233,23 +234,9 @@ public class OrderService {
       });
     }
 
-    // 行项目金额合计
-    double itemsAmount = 0;
-    for (ItemDto itemDto : items) {
-      // 取消状态的行项目不在累计范围
-      if (itemDto.getItemStatus().equals("Z2")) {
-        continue;
-      }
-      double discount = itemDto.getDiscount();
-      itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
-    }
-    // merge discount
-    orderDto.setItemsAmount(itemsAmount);
-    if (orderDto.getContractRmbValue() == 0) {
-      orderDto.setDiscount(1D);
-    } else {
-    orderDto.setDiscount(BigDecimal.valueOf(itemsAmount / orderDto.getContractRmbValue())
-        .setScale(4, RoundingMode.HALF_UP).doubleValue());
+    // 经销商非标折扣，计算合并折扣和行项目金额
+    if (orderDto.getStOrderType().equals("2")) {
+      this.calcMergeDiscount(orderDto);
     }
 
     // calculate gross profit margin
@@ -1397,15 +1384,13 @@ public class OrderService {
     query.setSequenceNumber(sequenceNumber);
     List<OrderDto> orders = orderInfoMapper.findOrderViewByParams(query);
     OrderDto orderDto = orders.get(0);
-    OrderInfo orderInfo = orderInfoMapper.findById(orderDto.getId());
-    Order order = orderMapper.findById(orderInfo.getOrderId());
 
-    String orderStatus = orderInfo.getStatus();
+    String orderStatus = orderDto.getStatus();
     // 如果定状态已经是bpm审批通过，而存在未审批通过的特批发货申请，则修改特批发货申请状态
     if (OrderDto.ORDER_STATUS_APPROVED_UPDATE.equals(orderStatus)
         || OrderDto.ORDER_STATUS_APPROVED.equals(orderStatus)) {
       SpecialOrderApplication specialOrderApplication =
-          specialOrderApplicationMapper.findByOrderInfo(orderInfo.getId());
+          specialOrderApplicationMapper.findByOrderInfo(orderDto.getId());
       if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals("1")) {
         if (status.equals("1")) {
           // 审批通过
@@ -1426,12 +1411,12 @@ public class OrderService {
 
     // 更新订单信息
     BpmDicision bpmDicision = new BpmDicision();
-    bpmDicision.setOrderInfoId(orderInfo.getId());
-    bpmDicision.setBodyDiscount(orderInfo.getBodyDiscount());
-    bpmDicision.setMainDiccount(orderInfo.getMainDiscount());
+    bpmDicision.setOrderInfoId(orderDto.getId());
+    bpmDicision.setBodyDiscount(orderDto.getBodyDiscount());
+    bpmDicision.setMainDiccount(orderDto.getMainDiscount());
     if (status.equals("1")) {
       // 审批通过
-      if (orderInfo.getVersionNum() > 1) {
+      if (orderDto.getVersionNum() > 1) {
         status = OrderDto.ORDER_STATUS_APPROVED_UPDATE;
       } else {
         status = OrderDto.ORDER_STATUS_APPROVED;
@@ -1441,53 +1426,87 @@ public class OrderService {
       bpmDicision.setApprovedMainDiscount(unitDiscount);
 
       // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
-      if (order.getStOrderType().equals("2")
-          && (orderInfo.getBodyDiscount() != bodyDiscount
-              || orderInfo.getMainDiscount() != unitDiscount)
-          && (ObjectUtils.defaultIfNull(orderInfo.getIsLongterm(), 0) != 1)) {
+      if (orderDto.getStOrderType().equals("2")
+          && (orderDto.getBodyDiscount() != bodyDiscount
+              || orderDto.getMainDiscount() != unitDiscount)
+          && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1)) {
         // 修改订单行项目折扣，重新计算订单毛利率
-        orderInfo.setStatus(status);
-        orderInfo.setUpdater(user);
-        orderInfo.setApprovedBodyDiscount(bodyDiscount);
-        orderInfo.setApprovedMainDiscount(unitDiscount);
+        orderDto.setStatus(status);
+        orderDto.setUpdater(user);
+        orderDto.setApprovedBodyDiscount(bodyDiscount);
+        orderDto.setApprovedMainDiscount(unitDiscount);
 
         List<ItemDto> items = orderDto.getItems();
         // 更新行项目的discount
         updateBpmDicount(items, bodyDiscount, unitDiscount);
-        double itemsAmount = 0; // 行项目金额合计
-        for (ItemDto itemDto : items) {
-          // 取消状态的行项目不在累计范围
-          if (itemDto.getItemStatus().equals("Z2")) {
-            continue;
-          }
-          double discount = itemDto.getDiscount();
-          itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity() * discount;
-        }
-        // merge discount
-        orderInfo.setItemsAmount(itemsAmount);
-        if (orderInfo.getContractRmbValue() == 0) {
-          orderInfo.setDiscount(1D);
-        } else {
-        orderInfo.setDiscount(BigDecimal.valueOf(itemsAmount / orderInfo.getContractRmbValue())
-            .setScale(4, RoundingMode.HALF_UP).doubleValue());
-        }
+        // 计算合并折扣和行项目金额
+        calcMergeDiscount(orderDto);
 
         // calculate gross profit margin
         List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
-        orderInfo.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
+        orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
+        OrderInfo orderInfo = new OrderInfo();
+        BeanUtils.copyProperties(orderInfo, orderDto);
+//        Order order = orderMapper.findById(orderInfo.getOrderId());
         orderInfoMapper.update(orderInfo);
       } else {
-        orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null,
-            orderInfo.getBodyDiscount(), orderInfo.getMainDiscount());
+        orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null,
+            orderDto.getBodyDiscount(), orderDto.getMainDiscount());
       }
     } else {
       // 审批拒绝
       status = OrderDto.ORDER_STATUS_MANAGER; // OrderDto.ORDER_STATUS_REJECT_BPM;
       bpmDicision.setIsPassed(0);
-      orderInfoMapper.updateStatus(orderInfo.getId(), user, status, null, null, null, null);
+      orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null, null, null);
     }
     dicisionMapper.insert(bpmDicision);
+  }
+
+  /**
+   * 经销商非标折扣订单计算合计金额和折扣
+   * @param orderDto
+   */
+  private void calcMergeDiscount(OrderDto orderDto) {
+    List<String> specialMaterials =
+        Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
+            "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
+    // 行项目折扣金额合计
+    double itemsAmount = 0;
+    double itemsDicountAmount = 0;
+    double itemsNonDicountAmount = 0;
+    
+    List<ItemDto> items = orderDto.getItems();
+    // 行项目折扣前金额合计
+    for (ItemDto itemDto : items) {
+      String mcode = itemDto.getMaterialCode();
+      // 取消状态的行项目不在累计范围
+      if (itemDto.getItemStatus().equals("Z2")) {
+        continue;
+      }
+
+      double discount = itemDto.getDiscount();
+      // 特殊物料，只合计购销明细金额
+      if (specialMaterials.contains(mcode)) {
+        itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity();
+      } else {
+        itemsAmount += itemDto.getRetailPrice() * itemDto.getQuantity() * discount;
+        itemsDicountAmount += itemDto.getRetailPrice() * itemDto.getQuantity() * discount;
+        itemsNonDicountAmount += itemDto.getRetailPrice() * itemDto.getQuantity();
+      }
+    }
+    // 凭证货币
+    orderDto.setItemsAmount(itemsAmount / orderDto.getCurrencyExchange());
+    // 凭证货币
+    orderDto.setContractValue(itemsAmount / orderDto.getCurrencyExchange());
+    orderDto.setContractRmbValue(itemsAmount);
+    // merge discount
+    if (itemsNonDicountAmount == 0) {
+      orderDto.setDiscount(1D);
+    } else {
+      orderDto.setDiscount(BigDecimal.valueOf(itemsDicountAmount / itemsNonDicountAmount)
+          .setScale(4, RoundingMode.HALF_UP).doubleValue());
+    }
   }
 
   /**
