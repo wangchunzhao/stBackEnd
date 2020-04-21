@@ -1092,9 +1092,19 @@ public class OrderService {
 
       // colors
       List<CharacteristicDto> colors = itemColorMapper.findByItemId(itemId);
+      colors.forEach(e -> {
+        if (StringUtils.trimToEmpty(e.getValueCode()).equals("")) {
+          e.setValueCode("-");
+        }
+      });
       configs.addAll(colors);
       // characteristics
       List<CharacteristicDto> characteristics = characteristicsMapper.findByItemId(itemId);
+      characteristics.forEach(e -> {
+        if (StringUtils.trimToEmpty(e.getValueCode()).equals("")) {
+          e.setValueCode("-");
+        }
+      });
       configs.addAll(characteristics);
 
       // item attachment
