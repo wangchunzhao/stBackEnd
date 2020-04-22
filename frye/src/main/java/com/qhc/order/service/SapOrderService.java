@@ -211,7 +211,7 @@ public class SapOrderService {
 			// Color Note/颜色备注
 			sapItem.setVbbpz118(StringUtils.trimToEmpty(item.getColorComments()));
 			// 拼接方式
-			sapItem.setVbbkz116(StringUtils.trimToEmpty(item.getAttachedImage()));
+			sapItem.setVbbpz119(StringUtils.trimToEmpty(item.getAttachedImage()));
 
 			sapItems.add(sapItem);
 
