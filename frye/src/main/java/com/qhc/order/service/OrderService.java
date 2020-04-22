@@ -422,6 +422,8 @@ public class OrderService {
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
     order.setVersion(version);
+    String sequenceNumber = "QHC" + version;
+    order.setSequenceNumber(sequenceNumber.toUpperCase());
     order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
     order.setSubmitBpmTime(null);
     order.setSubmitTime(null);
