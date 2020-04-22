@@ -1,6 +1,5 @@
 package com.qhc.order.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -51,21 +50,28 @@ public class SpecialDeliveryDto {
 	private String enclosureName = null;
 
 	/* 订单信息 */
-	private String sequenceNumber;
+    private String sequenceNumber;
+    private String contractNumber;
+    private String customerClazz;
 
-	private String orderType;
+    // 订单类型，性质分类，ZH0D  经销商订单/  ZH0M    备货订单/ZH0T   大客户订单，固定
+    private String orderType;
 
-	private String stOrderType;
+    private String stOrderType;
 
-	private Date createTime;
+    private Date createTime;
 
-	/**
-	 * order status
-	 */
-	private String status;
-	
-	private String salesCode;//客户经理 Customer manager
-//	private String salesName;//客户经理 Customer manager
+    /**
+     * order status
+     */
+    private String status;
+    
+    private String salesCode;//客户经理 Customer manager
+//  private String salesName;//客户经理 Customer manager
+    private String customerCode;//签约单位 Contract unit
+    private String customerName;//签约单位 Contract Name
+    
+    private double discount;//合并折扣
 
 	public Integer getId() {
 		return id;
@@ -218,5 +224,45 @@ public class SpecialDeliveryDto {
 	public void setSalesCode(String salesCode) {
 		this.salesCode = salesCode;
 	}
+
+  public String getContractNumber() {
+    return contractNumber;
+  }
+
+  public String getCustomerClazz() {
+    return customerClazz;
+  }
+
+  public String getCustomerCode() {
+    return customerCode;
+  }
+
+  public String getCustomerName() {
+    return customerName;
+  }
+
+  public double getDiscount() {
+    return discount;
+  }
+
+  public void setContractNumber(String contractNumber) {
+    this.contractNumber = contractNumber;
+  }
+
+  public void setCustomerClazz(String customerClazz) {
+    this.customerClazz = customerClazz;
+  }
+
+  public void setCustomerCode(String customerCode) {
+    this.customerCode = customerCode;
+  }
+
+  public void setCustomerName(String customerName) {
+    this.customerName = customerName;
+  }
+
+  public void setDiscount(double discount) {
+    this.discount = discount;
+  }
 
 }
