@@ -202,6 +202,16 @@ public class OrderService {
     if (orderDto.getStatus().equals(OrderDto.ORDER_STATUS_MANAGER)) {
       orderDto.setContractManager(user);
     }
+    
+    // 转换折扣数据存储格式，48.0 -> 0.480
+    orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() / 100);
+    orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() / 100);
+    orderDto.setBodyDiscount(orderDto.getBodyDiscount() / 100);
+    orderDto.setMainDiscount(orderDto.getMainDiscount() / 100);
+    orderDto.setDiscount(orderDto.getDiscount() / 100);
+    items.forEach(e -> {
+      e.setDiscount(e.getDiscount() / 100);
+    });
 
     // 报价单状态
     if (orderDto.getStOrderType().equals("3")) {
@@ -472,6 +482,8 @@ public class OrderService {
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
     order.setVersion(version);
+    String sequenceNumber = "QHC" + version;
+    order.setSequenceNumber(sequenceNumber.toUpperCase());
     order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
     order.setSubmitBpmTime(null);
     order.setSubmitTime(null);
@@ -982,22 +994,22 @@ public class OrderService {
    * @return
    * @throws Exception
    */
-  public OrderDto findOrder(String sequenceNumber, String version) throws Exception {
-    OrderDto order = null;
-    OrderQuery orderQuery = new OrderQuery();
-    orderQuery.setSequenceNumber(sequenceNumber);
-    orderQuery.setVersion(version);
-    orderQuery.setIncludeDetail(true);
-
-    PageInfo<OrderDto> page = queryOrderView(orderQuery);
-    List<OrderDto> orderViews = page.getList();
-
-    if (orderViews.size() > 0) {
-      order = orderViews.get(0);
-    }
-
-    return order;
-  }
+//  public OrderDto findOrder(String sequenceNumber, String version) throws Exception {
+//    OrderDto order = null;
+//    OrderQuery orderQuery = new OrderQuery();
+//    orderQuery.setSequenceNumber(sequenceNumber);
+//    orderQuery.setVersion(version);
+//    orderQuery.setIncludeDetail(true);
+//
+//    PageInfo<OrderDto> page = queryOrderView(orderQuery);
+//    List<OrderDto> orderViews = page.getList();
+//
+//    if (orderViews.size() > 0) {
+//      order = orderViews.get(0);
+//    }
+//
+//    return order;
+//  }
 
   /**
    * 查询订单
@@ -1149,6 +1161,21 @@ public class OrderService {
 
       if (includeDetail) {
         assembleOrderDetail(order);
+      }
+    }
+    
+    for (OrderDto orderDto : orders) {
+      // 转换折扣数据存储格式，0.480 -> 48.0
+      orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() * 100);
+      orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() * 100);
+      orderDto.setBodyDiscount(orderDto.getBodyDiscount() * 100);
+      orderDto.setMainDiscount(orderDto.getMainDiscount() * 100);
+      orderDto.setDiscount(orderDto.getDiscount() * 100);
+      List<ItemDto> items = orderDto.getItems();
+      if (items != null && items.size() > 0) {
+        items.forEach(e -> {
+          e.setDiscount(e.getDiscount() / 100);
+        });
       }
     }
 
@@ -1378,6 +1405,11 @@ public class OrderService {
   /**
    * 更新BPM审批状态和折扣
    * 
+   * @param user
+   * @param sequenceNumber
+   * @param status
+   * @param bodyDiscount 格式48.0，除了非标折扣订单，其他都为0
+   * @param unitDiscount 格式48.0，除了非标折扣订单，其他都为0
    * @throws Exception
    */
   @Transactional
@@ -1440,12 +1472,16 @@ public class OrderService {
         // 修改订单行项目折扣，重新计算订单毛利率
         orderDto.setStatus(status);
         orderDto.setUpdater(user);
-        orderDto.setApprovedBodyDiscount(bodyDiscount);
-        orderDto.setApprovedMainDiscount(unitDiscount);
+        // 转换折扣数据存储格式，48.0 -> 0.480
+        orderDto.setApprovedBodyDiscount(bodyDiscount / 100);
+        orderDto.setApprovedMainDiscount(unitDiscount / 100);
+        orderDto.setBodyDiscount(orderDto.getBodyDiscount() / 100);
+        orderDto.setMainDiscount(orderDto.getMainDiscount() / 100);
+        orderDto.setDiscount(orderDto.getDiscount() / 100);
 
         List<ItemDto> items = orderDto.getItems();
         // 更新行项目的discount
-        updateBpmDicount(items, bodyDiscount, unitDiscount);
+        updateBpmItemDicount(items, bodyDiscount / 100, unitDiscount / 100);
         // 计算合并折扣和行项目金额
         calcMergeDiscount(orderDto);
 
@@ -1525,7 +1561,7 @@ public class OrderService {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  private void updateBpmDicount(List<ItemDto> items, Double bodyDiscount, Double unitDiscount)
+  private void updateBpmItemDicount(List<ItemDto> items, Double bodyDiscount, Double unitDiscount)
       throws IllegalAccessException, InvocationTargetException {
     for (ItemDto itemDto : items) {
       // 取消状态的行项目不在累计范围
