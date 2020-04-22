@@ -39,6 +39,8 @@ public class SapOrderItem {
 	private String vbbp0007;
 	// Color Note/颜色备注
 	private String vbbpz118;
+	// 拼接方式
+	private String vbbkz116;
 	// 变更状态
 	private String updateflag;
 	
@@ -138,7 +140,13 @@ public class SapOrderItem {
 	public void setVbbpz118(String vbbpz118) {
 		this.vbbpz118 = vbbpz118;
 	}
-	public String getUpdateflag() {
+	public String getVbbkz116() {
+    return vbbkz116;
+  }
+  public void setVbbkz116(String vbbkz116) {
+    this.vbbkz116 = vbbkz116;
+  }
+  public String getUpdateflag() {
 		return updateflag;
 	}
 	public void setUpdateflag(String updateflag) {

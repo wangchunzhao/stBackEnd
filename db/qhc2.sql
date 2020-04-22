@@ -484,7 +484,7 @@ create table k_item
    color_comments       varchar(64) comment '颜色备注',
    color_options        varchar(512) comment '最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1',
    mosaic_image         varchar(512) comment '拼接图备注',
-   attached_image       varchar(256) comment '拼接图附件',
+   attached_image       varchar(512) comment '拼接图方式',
    config_comments      varchar(512) comment '配置表备注(配置表页面)，待定',
    request_brand        varchar(64) comment '，待定',
    request_package      varchar(64) comment '，待定',
