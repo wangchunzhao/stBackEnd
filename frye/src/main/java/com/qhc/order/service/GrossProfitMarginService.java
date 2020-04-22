@@ -54,11 +54,11 @@ public class GrossProfitMarginService {
 		// 自提不计算运费
 		if (!transferType.equals("02")
 		    // 销售类型为出口也不计算运费
-		    && !saleType.equals("20") 
+		    && !saleType.equals("20") ) {
 		    // 报价单不计算运费
 //		    && !stOrderType.equals("3") 
 		    // 备货单不计算运费
-		    && !stOrderType.equals("5")) {
+//		    && !stOrderType.equals("5")) {
 	//		•	预估运费 = Volume * ZCTP* + ZCTF*
 	//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
 	//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’

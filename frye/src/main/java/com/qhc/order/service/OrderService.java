@@ -1163,8 +1163,8 @@ public class OrderService {
   @Transactional
   public void submitBpm(String user, OrderDto order) throws Exception {
     if (StringUtils.trimToEmpty(order.getContractNumber()).length() == 0) {
-      // 经销商非标准折扣下单
-      if (!order.getStOrderType().equals("2")) {
+      // 经销商非标准折扣下单、直签报价单
+      if (!order.getStOrderType().equals("2") && !order.getStOrderType().equals("3")) {
         throw new RuntimeException("合同号不能为空");
       }
     }
