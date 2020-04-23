@@ -106,7 +106,11 @@ public class SapOrderService {
 		header.setBstzd(ObjectUtils.defaultIfNull(order.getWarranty(), "").toString()); // Additional/附加的 -- 保修年限
 		header.setBstkdE(StringUtils.trimToEmpty(order.getRecordCode()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号
 		header.setVsart(StringUtils.trimToEmpty(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
-		header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空，dealer取billing_plan的第一条code（唯一一条）
+		if (order.getStOrderType().equals("4")) {
+		  header.setVbbkz114(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户不为空，直签订单
+		} else {
+		  header.setZterm(order.getPaymentType()); // Payment terms/付款条款 -- 结算方式 大客户为空
+		}
 		header.setKunnr(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/售达方 -- 签约单位
 		header.setKunnr_re(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/开票方 -- 签约单位
 		header.setKunnr_rg(StringUtils.trimToEmpty(order.getCustomerCode())); // Sold-to party/付款方 -- 签约单位

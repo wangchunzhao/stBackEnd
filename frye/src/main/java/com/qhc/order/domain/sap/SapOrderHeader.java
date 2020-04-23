@@ -36,6 +36,8 @@ public class SapOrderHeader {
 	private String vsart;
 	// Payment terms/付款条款 -- Selling tool 结算方式
 	private String zterm;
+	// Payment terms/付款条款 -- Selling tool 结算方式，直签订单
+	private String vbbkz114;
 	// Sold-to party/售达方 -- Selling tool 签约单位
 	private String kunnr;
 	// Sold-to party/开票方 -- Selling tool 签约单位
@@ -166,7 +168,13 @@ public class SapOrderHeader {
 	public void setZterm(String zterm) {
 		this.zterm = zterm;
 	}
-	public String getKunnr() {
+	public String getVbbkz114() {
+    return vbbkz114;
+  }
+  public void setVbbkz114(String vbbkz114) {
+    this.vbbkz114 = vbbkz114;
+  }
+  public String getKunnr() {
 		return kunnr;
 	}
 	public void setKunnr(String kunnr) {
