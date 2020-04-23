@@ -1,7 +1,9 @@
 package com.qhc.sap.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +17,10 @@ class SapViewMapperTest {
 
 	@Test
 	void testFindMaterialInfoByMaterialId() {
-		mapper.findMaterialInfo("000000000004077722", "金");
+      Map<String, Object> params = new HashMap<>();
+      params.put("code", "000000000004077722");
+      params.put("name", "金");
+      mapper.findMaterialInfo(params);
 	}
 
 	@Test

@@ -387,6 +387,9 @@
 			<if test="orderType != null and orderType != ''" >
 				AND o.order_type = #{orderType, jdbcType=CHAR}
 			</if>
+			<if test="stOrderType != null and stOrderType != ''" >
+				AND o.st_order_type = #{stOrderType, jdbcType=CHAR}
+			</if>
 			<if test="contractNumber != null and contractNumber != ''" >
 				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%'
 			</if>
