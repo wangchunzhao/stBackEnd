@@ -97,6 +97,8 @@ public class MaterialService {
 			dm.setMaterialSize(ma.getMaterialSize());
 			dm.setMaterialType(ma.getMaterialType());
 			dm.setClazzCode(ma.getClazzCode());
+			dm.setMaterialStatus(ma.getMaterialStatus());
+			dm.setDistributionStatus(ma.getDistributionStatus());
 			mset.add(dm);
 
 			if (ma.getClazzCode() != null && !ma.getClazzCode().isEmpty()) {

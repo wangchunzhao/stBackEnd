@@ -61,6 +61,12 @@ public class Material {
 	@NotNull
     @Column(name="sap_clazz_code",columnDefinition="CHAR",length=18)
 	private String clazzCode;
+	
+	@Column(name="sap_material_status",columnDefinition="CHAR",length=10)
+	private String materialStatus;
+	
+	@Column(name="sap_distribution_status",columnDefinition="CHAR",length=10)
+	private String distributionStatus;
 
 	public String getCode() {
 		return code;
@@ -150,5 +156,23 @@ public class Material {
 	public void setMaterialType(String materialType) {
 		this.materialType = materialType;
 	}
+
+	public String getMaterialStatus() {
+		return materialStatus;
+	}
+
+	public void setMaterialStatus(String materialStatus) {
+		this.materialStatus = materialStatus;
+	}
+
+	public String getDistributionStatus() {
+		return distributionStatus;
+	}
+
+	public void setDistributionStatus(String distributionStatus) {
+		this.distributionStatus = distributionStatus;
+	}
+	
+	
 
 }

@@ -415,6 +415,8 @@ public class SapService {
 					material.setClazzCode(clazzCode);
 					material.setMaterialSize(StrToDouble(obj.getString("volum")));
 					material.setMaterialType(obj.getString("mtart"));
+					material.setMaterialStatus(obj.getString("mstae"));
+					material.setDistributionStatus(obj.getString("mstav"));
 					mlist.add(material);
 					System.out.println(obj.getString("matnr") + ":评估类不正确");
 				} else {
@@ -438,6 +440,8 @@ public class SapService {
 					material.setClazzCode(clazzCode);
 					material.setMaterialSize(StrToDouble(obj.getString("volum")));
 					material.setMaterialType(obj.getString("mtart"));
+					material.setMaterialStatus(obj.getString("mstae"));
+					material.setDistributionStatus(obj.getString("mstav"));
 					mlist.add(material);
 				}
 

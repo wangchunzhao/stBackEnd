@@ -102,7 +102,7 @@ public class CharacteristicService {
 		}	
 		characterRepo.saveAll(dcs);
 		//因为特征值的表有自增长的id，两表有关联，所以要先删除
-		CharacterDefaultRep.deleteAll();
+//		CharacterDefaultRep.deleteAll();
 		charaValueRepo.deleteAll();
 		//
 		charaValueRepo.saveAll(dcvs);
