@@ -59,6 +59,14 @@ public class GrossProfitMarginService {
 //		    && !stOrderType.equals("3") 
 		    // 备货单不计算运费
 //		    && !stOrderType.equals("5")) {
+          // 备货单省市区默认山东-青岛-黄岛区，发货方式默认自提
+          if (stOrderType.equals("5")) {
+            items.forEach(e -> {
+              e.setProvinceCode("20");
+              e.setCityCode("20.11");
+              e.setDistrictCode("20.11.13");
+            });
+          }
 	//		•	预估运费 = Volume * ZCTP* + ZCTF*
 	//				o	Case 1: Volume <=20m3, corresponding conditions were ‘ZCTP1/ZCTF1’
 	//				o	Case 2: Volume >20<50m3, corresponding conditions were ‘ZCTP2/ZCTF2’
