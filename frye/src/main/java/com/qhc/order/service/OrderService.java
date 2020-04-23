@@ -656,18 +656,18 @@ public class OrderService {
 
         characteristicsMapper.insert(c);
       }
-      colorOptions = colorOptions.length() > 0 ? colorOptions.substring(1) : colorOptions;
-      item.setColorOptions(colorOptions);
-      itemMapper.update(item);
+    }
+    colorOptions = colorOptions.length() > 0 ? colorOptions.substring(1) : colorOptions;
+    item.setColorOptions(colorOptions);
+    itemMapper.update(item);
 
-      // 保存调研表附件
-      List<ItemAttachment> attachments = itemDto.getAttachments();
-      if (attachments != null && attachments.size() > 0) {
-        for (ItemAttachment itemAttachment : attachments) {
-          itemAttachment.setItemId(item.getId());
-          itemAttachment.setOrderInfoId(item.getOrderInfoId());
-          itemAttachmentMapper.insert(itemAttachment);
-        }
+    // 保存调研表附件
+    List<ItemAttachment> attachments = itemDto.getAttachments();
+    if (attachments != null && attachments.size() > 0) {
+      for (ItemAttachment itemAttachment : attachments) {
+        itemAttachment.setItemId(item.getId());
+        itemAttachment.setOrderInfoId(item.getOrderInfoId());
+        itemAttachmentMapper.insert(itemAttachment);
       }
     }
   }
