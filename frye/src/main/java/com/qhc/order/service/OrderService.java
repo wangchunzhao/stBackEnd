@@ -1196,7 +1196,7 @@ public class OrderService {
     List<ItemDto> items = orderDto.getItems();
     if (items != null && items.size() > 0) {
       items.forEach(e -> {
-        e.setDiscount(e.getDiscount() / 100);
+        e.setDiscount(e.getDiscount() * 100);
       });
     }
   }
