@@ -1084,7 +1084,9 @@ public class OrderService {
         order.setHasSendSap(true);
       }
 
-      MaterialDto m = sapViewMapper.findMaterialInfo(item.getMaterialCode(), null).get(0);
+      params = new HashMap<>();
+      params.put("code", item.getMaterialCode());
+      MaterialDto m = sapViewMapper.findMaterialInfo(params).get(0);
 
       item.setMaterialName(m.getDescription());
       item.setMaterialGroupCode(m.getGroupCode());

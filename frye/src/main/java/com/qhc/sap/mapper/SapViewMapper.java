@@ -23,7 +23,7 @@ public interface SapViewMapper {
 	 * @param code
 	 * @return
 	 */
-	public List<MaterialDto> findMaterialInfo(@Param("code")String code, @Param("name")String name);
+	public List<MaterialDto> findMaterialInfo(Map<String, Object> params);
 	
 	/**
 	 * 查询物料特征信息

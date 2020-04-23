@@ -123,7 +123,10 @@ public class MaterialService {
 	public PageInfo<MaterialDto> findMaterialsByName(String name, String industryCode, int pageNo, int pageSize) {
 		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 
-		List<MaterialDto> list = sapViewMapper.findMaterialInfo(null, name);
+        Map<String, Object> params = new HashMap<>();
+        params.put("list", true);
+        params.put("name", name);
+        List<MaterialDto> list = sapViewMapper.findMaterialInfo(params);
 
 		for (MaterialDto materialDto : list) {
 			fillMaterialPrice(materialDto, industryCode);
@@ -140,7 +143,9 @@ public class MaterialService {
 	 */
 	public MaterialDto getMaterialsById(String code, String industryCode) {
 		MaterialDto m = null;
-		List<MaterialDto> list = sapViewMapper.findMaterialInfo(code, null);
+		Map<String, Object> params = new HashMap<>();
+		params.put("code", code);
+		List<MaterialDto> list = sapViewMapper.findMaterialInfo(params);
 		if (list.size() > 0) {
 			m = list.get(0);
 		} else {

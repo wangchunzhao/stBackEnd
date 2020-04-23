@@ -979,6 +979,8 @@ create table sap_materials
    sap_unit_of_measurement_code varchar(3) not null comment '计量单位',
    sap_material_groups_code varchar(4) not null comment '物料分组',
    sap_clazz_code       varchar(18) not null comment '特征分组',
+   sap_material_status  varchar(10) comment '跨工厂物料状态',
+   sap_distribution_status varchar(10) comment '跨分销链状态',
    primary key (code),
    key code_UNIQUE (code)
 );
