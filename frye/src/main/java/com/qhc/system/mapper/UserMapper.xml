@@ -75,6 +75,14 @@
 		where b_user.id = #{value, jdbcType=INTEGER}
 	</select>
 	
+	<!-- 按主键查询 -->
+	<select id="findByLoginName" resultMap="UserMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from b_user 
+		where b_user.user_identity = #{value, jdbcType=INTEGER}
+	</select>
+	
 	<!-- 按参数查询 -->
 	<select id="findByParams" resultMap="UserMap" parameterType="Map" >
 		select 

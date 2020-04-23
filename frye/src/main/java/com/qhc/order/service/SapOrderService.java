@@ -34,6 +34,8 @@ import com.qhc.order.mapper.BillingPlanMapper;
 import com.qhc.order.mapper.CharacteristicsMapper;
 import com.qhc.system.entity.ProvinceMap;
 import com.qhc.system.mapper.ProvinceMapMapper;
+import com.qhc.system.mapper.UserMapper;
+import com.qhc.system.service.UserService;
 import com.qhc.utils.HttpUtil;
 
 @Service
@@ -55,6 +57,8 @@ public class SapOrderService {
 	private BillingPlanMapper billingPlanMapper;
 	@Autowired
 	private ProvinceMapMapper provinceMapMapper;
+	@Autowired
+	private UserMapper userMapper;
 
 	public SapOrderService() {
 	}
@@ -113,7 +117,12 @@ public class SapOrderService {
 //		// 折扣
 		header.setVbbkz120(String.valueOf(order.getContractValue())); // Contract amount/合同金额 -- 合同金额
 		header.setVbbkz121(order.getSalesName()); // Sale rep./签约人 -- 客户经理
-		header.setVbbkz109(order.getContractManager()); // Order clerk/合同管理员 -- 支持经理
+		String contractManager = StringUtils.trimToEmpty(order.getContractManager());
+		String contractManagerName = contractManager;
+		if (contractManager.length() > 0) {
+		  contractManagerName = userMapper.findByLoginName(contractManager).getName();
+		}
+		header.setVbbkz109(contractManagerName); // Order clerk/合同管理员 -- 支持经理
 		String contactorInfo = StringUtils.trimToEmpty(order.getContactor1Id()) + "/" + StringUtils.trimToEmpty(order.getContactor1Tel())
 				+ StringUtils.trimToEmpty(order.getContactor2Id()) + "/" + StringUtils.trimToEmpty(order.getContactor2Tel())
 				+ StringUtils.trimToEmpty(order.getContactor3Id()) + "/" + StringUtils.trimToEmpty(order.getContactor3Tel());

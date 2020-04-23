@@ -22,6 +22,13 @@ public interface UserMapper {
    * @return User对象
    */
 	User findById(Integer id);
+	
+	/**
+	 * 按identity查找.
+	 * @param loginName
+	 * @return
+	 */
+	User findByLoginName(String loginName);
 
   /**
    * 
