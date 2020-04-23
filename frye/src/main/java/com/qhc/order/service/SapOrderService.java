@@ -1,10 +1,11 @@
 package com.qhc.order.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.sap.SapOrder;
+import com.qhc.order.domain.sap.SapOrderChangeItem;
 import com.qhc.order.domain.sap.SapOrderCharacteristics;
 import com.qhc.order.domain.sap.SapOrderHeader;
 import com.qhc.order.domain.sap.SapOrderItem;
@@ -417,11 +419,25 @@ public class SapOrderService {
 	 * 
 	 * @param orderDto
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws Exception
 	 */
-	public String updateOrder(OrderDto orderDto) {
+	public String updateOrder(OrderDto orderDto) throws Exception {
 		// 1. 根据sequenceNumber组装数据
 		SapOrder sapOrder = assembleSapOrder(orderDto);
+		List<SapOrderItem> items = sapOrder.getItZitem();
+		List<SapOrderItem> tempItems = new ArrayList<>();
+		for (SapOrderItem sapOrderItem : items) {
+          SapOrderChangeItem item = new SapOrderChangeItem();
+          tempItems.add(item);
+          BeanUtils.copyProperties(item, sapOrderItem);
+          // 拒绝原因
+//          item.setAbgru(abgru);
+//          // 销售运费
+          if (item.getPosnr().equals("9903")) {
+            
+          }
+        }
+		sapOrder.setItZitem(tempItems);
 		return this.sendToSap(sapOrder, orderChangeUrl);
 	}
 

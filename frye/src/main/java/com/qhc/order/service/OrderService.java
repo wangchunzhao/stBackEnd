@@ -204,14 +204,7 @@ public class OrderService {
     }
     
     // 转换折扣数据存储格式，48.0 -> 0.480
-    orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() / 100);
-    orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() / 100);
-    orderDto.setBodyDiscount(orderDto.getBodyDiscount() / 100);
-    orderDto.setMainDiscount(orderDto.getMainDiscount() / 100);
-    orderDto.setDiscount(orderDto.getDiscount() / 100);
-    items.forEach(e -> {
-      e.setDiscount(e.getDiscount() / 100);
-    });
+    convertDiscountToDecimal(orderDto);
 
     // 报价单状态
     if (orderDto.getStOrderType().equals("3")) {
@@ -294,6 +287,24 @@ public class OrderService {
     OrderDto dto = this.findOrder(orderInfo.getId());
 
     return dto;
+  }
+
+  /**
+   * 转换折扣数据存储格式，48.0 -> 0.480
+   * @param orderDto
+   */
+  private void convertDiscountToDecimal(final OrderDto orderDto) {
+    orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() / 100);
+    orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() / 100);
+    orderDto.setBodyDiscount(orderDto.getBodyDiscount() / 100);
+    orderDto.setMainDiscount(orderDto.getMainDiscount() / 100);
+    orderDto.setDiscount(orderDto.getDiscount() / 100);
+    List<ItemDto> items = orderDto.getItems();
+    if (items != null && items.size() > 0) {
+      items.forEach(e -> {
+        e.setDiscount(e.getDiscount() / 100);
+      });
+    }
   }
 
   /**
@@ -932,7 +943,7 @@ public class OrderService {
       throw new RuntimeException("当前状态不能下发SAP");
     }
 
-    if (orderDto.getVersionNum() > 1) {
+    if (orderDto.isHasSendSap()) {
       sapOrderService.updateOrder(orderDto);
     } else {
       sapOrderService.createOrder(orderDto);
@@ -1166,20 +1177,28 @@ public class OrderService {
     
     for (OrderDto orderDto : orders) {
       // 转换折扣数据存储格式，0.480 -> 48.0
-      orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() * 100);
-      orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() * 100);
-      orderDto.setBodyDiscount(orderDto.getBodyDiscount() * 100);
-      orderDto.setMainDiscount(orderDto.getMainDiscount() * 100);
-      orderDto.setDiscount(orderDto.getDiscount() * 100);
-      List<ItemDto> items = orderDto.getItems();
-      if (items != null && items.size() > 0) {
-        items.forEach(e -> {
-          e.setDiscount(e.getDiscount() / 100);
-        });
-      }
+      convertDiscountToInteger(orderDto);
     }
 
     return new PageInfo<>(orders);
+  }
+
+  /**
+   * 转换折扣数据存储格式，0.480 -> 48.0
+   * @param orderDto
+   */
+  private void convertDiscountToInteger(OrderDto orderDto) {
+    orderDto.setApprovedBodyDiscount(orderDto.getApprovedBodyDiscount() * 100);
+    orderDto.setApprovedMainDiscount(orderDto.getApprovedMainDiscount() * 100);
+    orderDto.setBodyDiscount(orderDto.getBodyDiscount() * 100);
+    orderDto.setMainDiscount(orderDto.getMainDiscount() * 100);
+    orderDto.setDiscount(orderDto.getDiscount() * 100);
+    List<ItemDto> items = orderDto.getItems();
+    if (items != null && items.size() > 0) {
+      items.forEach(e -> {
+        e.setDiscount(e.getDiscount() / 100);
+      });
+    }
   }
 
   /**
@@ -1464,6 +1483,11 @@ public class OrderService {
       bpmDicision.setApprovedBodyDiscount(bodyDiscount);
       bpmDicision.setApprovedMainDiscount(unitDiscount);
 
+      // 转换折扣格式为小数，用于计算
+      bodyDiscount = bodyDiscount / 100;
+      unitDiscount = unitDiscount / 100;
+      // 转换折扣格式为小数，用于计算
+      convertDiscountToDecimal(orderDto);
       // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
       if (orderDto.getStOrderType().equals("2")
           && (orderDto.getBodyDiscount() != bodyDiscount
@@ -1472,16 +1496,12 @@ public class OrderService {
         // 修改订单行项目折扣，重新计算订单毛利率
         orderDto.setStatus(status);
         orderDto.setUpdater(user);
-        // 转换折扣数据存储格式，48.0 -> 0.480
-        orderDto.setApprovedBodyDiscount(bodyDiscount / 100);
-        orderDto.setApprovedMainDiscount(unitDiscount / 100);
-        orderDto.setBodyDiscount(orderDto.getBodyDiscount() / 100);
-        orderDto.setMainDiscount(orderDto.getMainDiscount() / 100);
-        orderDto.setDiscount(orderDto.getDiscount() / 100);
+        orderDto.setApprovedBodyDiscount(bodyDiscount);
+        orderDto.setApprovedMainDiscount(unitDiscount);
 
         List<ItemDto> items = orderDto.getItems();
         // 更新行项目的discount
-        updateBpmItemDicount(items, bodyDiscount / 100, unitDiscount / 100);
+        updateBpmItemDicount(items, bodyDiscount, unitDiscount);
         // 计算合并折扣和行项目金额
         calcMergeDiscount(orderDto);
 
