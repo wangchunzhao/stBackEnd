@@ -54,6 +54,9 @@ public class MaterialDto implements Serializable{
 	private double materialSize;
 	private String materialType;
 	
+	private String materialStatus;//跨工厂物料状态
+	private String distributionStatus;//跨分销链状态
+	
 	
 	public String getCode() {
 		return code;
@@ -169,6 +172,19 @@ public class MaterialDto implements Serializable{
 	public void setMaterialType(String materialType) {
 		this.materialType = materialType;
 	}
+	public String getMaterialStatus() {
+		return materialStatus;
+	}
+	public void setMaterialStatus(String materialStatus) {
+		this.materialStatus = materialStatus;
+	}
+	public String getDistributionStatus() {
+		return distributionStatus;
+	}
+	public void setDistributionStatus(String distributionStatus) {
+		this.distributionStatus = distributionStatus;
+	}
+	
 }
 
           
