@@ -718,6 +718,13 @@ public class OrderService {
         }
         break;
       case OrderDto.ORDER_STATUS_ENGINER:
+        if (order.getElectricalFee() == null 
+        || order.getInstallFee() == null 
+        || order.getMaintenanceFee() == null 
+        || order.getMaterialFee() == null 
+        || order.getRefrigeratoryFee() == null ) {
+          throw new RuntimeException("安装费、材料费、电器费、冷库费、维保费，都不能为空");
+        }
         order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
         break;
       default:
