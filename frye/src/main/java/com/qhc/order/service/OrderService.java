@@ -194,6 +194,7 @@ public class OrderService {
     List<ItemDto> items = orderDto.getItems();
     Order order = new Order();
     OrderInfo orderInfo = new OrderInfo();
+    String stOrderType = orderDto.getStOrderType();
 
     if (StringUtils.isEmpty(orderDto.getStatus())) {
       orderDto.setStatus(OrderDto.ORDER_STATUS_DRAFT);
@@ -207,7 +208,7 @@ public class OrderService {
     convertDiscountToDecimal(orderDto);
 
     // 报价单状态
-    if (orderDto.getStOrderType().equals("3")) {
+    if (stOrderType.equals("3")) {
       if (StringUtils.isEmpty(orderDto.getQuoteStatus())) {
         orderDto.setQuoteStatus("00");
       }
@@ -238,8 +239,10 @@ public class OrderService {
       });
     }
 
-    // 经销商非标折扣，计算合并折扣和行项目金额
-    if (orderDto.getStOrderType().equals("2")) {
+    // 经销商非标折扣订单，计算合并折扣和行项目金额
+    if (stOrderType.equals("2")) {
+      // 特批折扣
+      orderDto.setIsSpecial(1);
       this.calcMergeDiscount(orderDto);
     }
 
