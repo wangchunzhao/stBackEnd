@@ -239,11 +239,12 @@ public class OrderService {
       });
     }
 
-    // 经销商非标折扣订单，计算合并折扣和行项目金额
+    // 经销商非标折扣订单
     if (stOrderType.equals("2")) {
       // 特批折扣
       orderDto.setIsSpecial(1);
-      this.calcMergeDiscount(orderDto);
+      // 计算合并折扣和行项目金额
+     //  this.calcMergeDiscount(orderDto);
     }
 
     // calculate gross profit margin
@@ -655,6 +656,9 @@ public class OrderService {
         c.setItemId(item.getId());
         c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
         c.setKeyCode(dto.getKeyCode());
+        if (StringUtils.trimToEmpty(dto.getValueCode()).length() == 0) {
+          throw new RuntimeException("物料【" + itemDto.getMaterialName() + "】特征【" + dto.getKeyCode() + "】没有选择特征值");
+        }
         c.setValueCode(dto.getValueCode());
 
         characteristicsMapper.insert(c);
@@ -1543,9 +1547,13 @@ public class OrderService {
    * @param orderDto
    */
   private void calcMergeDiscount(OrderDto orderDto) {
+    // 特殊物料
     List<String> specialMaterials =
         Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
             "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
+    // 退货行项目分类
+    List<String> returnCategorys =
+        Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
     // 行项目折扣金额合计
     double itemsAmount = 0;
     double itemsDicountAmount = 0;
@@ -1561,13 +1569,26 @@ public class OrderService {
       }
 
       double discount = itemDto.getDiscount();
+      String category = itemDto.getItemCategory();
       // 特殊物料，只合计购销明细金额
       if (specialMaterials.contains(mcode)) {
-        itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity();
+        // 退货
+        if (returnCategorys.contains(category)) {
+          itemsAmount -= itemDto.getActualPrice() * itemDto.getQuantity();
+        } else {
+          itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity();
+        }
       } else {
-        itemsAmount += itemDto.getRetailPrice() * itemDto.getQuantity() * discount;
-        itemsDicountAmount += itemDto.getRetailPrice() * itemDto.getQuantity() * discount;
-        itemsNonDicountAmount += itemDto.getRetailPrice() * itemDto.getQuantity();
+        // 退货
+        if (returnCategorys.contains(category)) {
+          itemsAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsDicountAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsNonDicountAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+        } else {
+          itemsAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsDicountAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsNonDicountAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+        }
       }
     }
     // 凭证货币
@@ -1610,6 +1631,9 @@ public class OrderService {
         if (itemDto.getStMaterialGroupCode().equals("T102")) {
           itemDto.setDiscount(unitDiscount);
         }
+        itemDto.setActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+        // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 
         Item item = new Item();
         BeanUtils.copyProperties(item, itemDto);

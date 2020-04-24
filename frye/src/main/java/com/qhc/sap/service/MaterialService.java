@@ -259,7 +259,7 @@ public class MaterialService {
 				  Configuration mcEmptyValue = new Configuration();
 				  configs.add(mcEmptyValue);
 				  mcEmptyValue.setCode("-");
-				  mcEmptyValue.setName("-");
+				  mcEmptyValue.setName("- 请选择 -");
 				  mcEmptyValue.setDefault(defaultValueId.equals(""));
 				}
 				Configuration mcValue = new Configuration();

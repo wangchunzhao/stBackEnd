@@ -2,6 +2,7 @@ package com.qhc.order.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class GrossProfitMarginService {
 	
 	@Autowired
 	private AreaRepository areaRepository;
+	
+    // 退货行项目分类
+    private static List<String> returnCategorys = Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
 
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
@@ -281,13 +285,27 @@ public class GrossProfitMarginService {
 			  continue;
 			}
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
-				// 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
-//				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() + item.getB2cEstimatedPrice() ) * item.getQuantity();
-				amount +=  ( item.getActualPrice() + item.getOptionalActualPrice() ) * item.getQuantity();
-				// 成本（销售）
-				cost += item.getTransactionPrice() * item.getQuantity(); 
-				// 成本（生产）
-				wtwCost += item.getStandardPrice() * item.getQuantity(); 
+              if (returnCategorys.contains(item.getItemCategory())) {
+                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
+                // amount -= ( item.getActualPrice() + item.getOptionalActualPrice() +
+                // item.getB2cEstimatedPrice() ) * item.getQuantity();
+                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
+                amount -= (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
+                // 成本（销售）
+                cost -= item.getTransactionPrice() * item.getQuantity();
+                // 成本（生产）
+                wtwCost -= item.getStandardPrice() * item.getQuantity();
+              } else {
+                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
+                // amount += ( item.getActualPrice() + item.getOptionalActualPrice() +
+                // item.getB2cEstimatedPrice() ) * item.getQuantity();
+                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
+                amount += (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
+                // 成本（销售）
+                cost += item.getTransactionPrice() * item.getQuantity();
+                // 成本（生产）
+                wtwCost += item.getStandardPrice() * item.getQuantity();
+              }
 			}
 		}
 
