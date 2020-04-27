@@ -301,7 +301,7 @@ public class OrderController {
 	 * @throws Throwable
 	 */
 	@ApiOperation(value = "修改报价单报价状态", notes = "修改报价单报价状态")
-	@PostMapping(value = "order/quote/{user},{orderInfoId},{status}")
+	@PostMapping(value = "order/quote/{user}/{orderInfoId}/{status}")
 	@ResponseStatus(HttpStatus.OK)
 	public Result updateQuoteStatus(@PathVariable("orderInfoId") Integer orderInfoId, @PathVariable("status") String status, @PathVariable("user") String user)
 			throws Throwable {
