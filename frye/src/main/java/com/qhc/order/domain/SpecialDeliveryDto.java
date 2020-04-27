@@ -27,8 +27,9 @@ public class SpecialDeliveryDto {
 	private Date approvalTime = null;
 
 	/* 0: 新建
-            1：同意
-            2：驳回 */
+            1：提交BPM
+            2：同意
+            3：驳回 */
 	private Integer applyStatus = null;
 
 	/* ReceiveMailTime */
