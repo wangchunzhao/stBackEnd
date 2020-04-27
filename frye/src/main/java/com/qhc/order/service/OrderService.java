@@ -947,6 +947,10 @@ public class OrderService {
     // this.save(user, orderDto);
     String stOrderType = orderDto.getStOrderType();
     String status = orderDto.getStatus();
+    
+    if (StringUtils.trimToEmpty(orderDto.getContractNumber()).length() == 0) {
+      throw new RuntimeException("合同号不能为空");
+    }
 
     if ("3".equals(stOrderType)) {
       throw new RuntimeException("直销客户投标报价单不能下发SAP");
@@ -1227,8 +1231,8 @@ public class OrderService {
   @Transactional
   public void submitBpm(String user, OrderDto order) throws Exception {
     if (StringUtils.trimToEmpty(order.getContractNumber()).length() == 0) {
-      // 经销商非标准折扣下单、直签报价单
-      if (!order.getStOrderType().equals("2") && !order.getStOrderType().equals("3")) {
+      // 经销商非标准折扣下单、直签报价单、直签订单提交BPM时不校验合同号
+      if (!order.getStOrderType().equals("2") && !order.getStOrderType().equals("3") && !order.getStOrderType().equals("4")) {
         throw new RuntimeException("合同号不能为空");
       }
     }

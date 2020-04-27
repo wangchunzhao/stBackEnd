@@ -28,14 +28,8 @@
 	    LEFT JOIN sap_unit_of_measurement u ON u.code = m.sap_unit_of_measurement_code
 	    LEFT JOIN sap_material_groups mg ON mg.code = m.sap_material_groups_code
 	    LEFT JOIN b_material_group_order mgo ON mgo.code = mg.b_material_group_order_code
-	    <!-- LEFT JOIN (select sap_materials_code, sap_industry_code, 
-				sum(case when sap_price_type_code='ZH01' then price else 0 end) as retail_price, 
-				sum(case when sap_price_type_code='ZH02' then price else 0 end) as annual_price, 
-				sum(case when sap_price_type_code='ZH06' then price else 0 end) as transcation_price
-				from sap_materials_price
-				group by sap_materials_code, sap_industry_code ) p ON p.sap_materials_code = m.code -->
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-<!--		    AND m.stand_price!='0'   -->
+				AND (m.code not like '%-F' AND m.code not like '%-SF' AND m.code not like '%-U')
 			<if test="list" >
 				AND (m.sap_material_status is null or m.sap_material_status = '') 
 				AND (m.sap_distribution_status is null or m.sap_distribution_status = '')

@@ -83,8 +83,7 @@ public class ItemDto {
 	
 	private List<CharacteristicDto> configs;//配置表数据(配置表页面)
 	
-	// TODO 经销商不涉及，待定
-	private String configComments;//配置表备注(配置表页面)
+	private String configComments;//配置表备注/调研表备注(配置表页面)
 	private String mosaicImage;//拼接图备注(配置表页面)
 	private String attachedImage;//拼接图附件(配置表页面)
 	private int isVirtual;//工程虚拟物料

@@ -222,7 +222,7 @@ public class SapOrderService {
 			// Color option/颜色可选项
 			sapItem.setVbbpz120(StringUtils.trimToEmpty(item.getColorOptions()));
 			// Survey info. Note/调研表备注
-			sapItem.setVbbp0007(StringUtils.trimToEmpty(item.getComments()));
+			sapItem.setVbbp0007(StringUtils.trimToEmpty(item.getConfigComments()));
 			// Color Note/颜色备注
 			sapItem.setVbbpz118(StringUtils.trimToEmpty(item.getColorComments()));
 			// 拼接方式
