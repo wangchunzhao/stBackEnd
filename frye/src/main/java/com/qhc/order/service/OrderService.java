@@ -728,9 +728,9 @@ public class OrderService {
         if (order.getElectricalFee() == null 
         || order.getInstallFee() == null 
 //        || order.getMaintenanceFee() == null 
-        || order.getMaterialFee() == null 
-        || order.getRefrigeratoryFee() == null ) {
-          throw new RuntimeException("安装费、材料费、电器费、冷库费不能为空");
+        || order.getMaterialFee() == null ) {
+//        || order.getRefrigeratoryFee() == null ) {
+          throw new RuntimeException("安装费、材料费、电器费不能为空");
         }
         order.setStatus(OrderDto.ORDER_STATUS_MANAGER);
         break;
