@@ -438,10 +438,10 @@ public class OrderService {
     order.setOrderId(null);
     order.setCreater(user);
     order.setSalesCode(user);
-    order.setAttachments(null); // 清除订单附件
+    // order.setAttachments(null); // 清除订单附件
     order.setContractNumber(""); // 合同號
     for (ItemDto item : order.getItems()) {
-      item.setAttachments(null); // 清除调研表附件
+      // item.setAttachments(null); // 清除调研表附件
       item.setItemStatus("00");
     }
     // new version
@@ -488,9 +488,9 @@ public class OrderService {
     order.setId(null);
     order.setOrderId(null);
     order.setStOrderType("4"); // 下单，转为【直签客户下定单】
-    order.setAttachments(null); // 清除订单附件
+    // order.setAttachments(null); // 清除订单附件
     for (ItemDto item : order.getItems()) {
-      item.setAttachments(null); // 清除调研表附件
+      // item.setAttachments(null); // 清除调研表附件
       item.setItemStatus("00");
     }
     order.setCreater(user);
