@@ -218,9 +218,16 @@ public class OrderService {
     if (orderDto.getAdditionalFreight() == null) {
       orderDto.setAdditionalFreight(0D);
     }
+    
     for (ItemDto item : items) {
       if (StringUtils.isEmpty(item.getItemStatus())) {
         item.setItemStatus("00");
+      }
+      // 冷库，将订单头冷库费用设置到冷库物料行项目的转移价和标准价
+      if (item.getMaterialCode().equals("BG1R8R00000-X")) {
+        double refrigeratoryFee = ObjectUtils.defaultIfNull(orderDto.getRefrigeratoryFee(), 0d);
+        item.setStandardPrice(refrigeratoryFee);
+        item.setTransactionPrice(refrigeratoryFee);
       }
     }
 
@@ -1244,6 +1251,23 @@ public class OrderService {
     if (items == null) {
       items = new ArrayList<ItemDto>();
     }
+    
+    // 冷库处理
+    double refrigeratoryFee = ObjectUtils.defaultIfNull(order.getRefrigeratoryFee(), 0d);
+    boolean hasRefrigeratoryItem = false;
+    for (ItemDto item : items) {
+      if (item.getMaterialCode().equals("BG1R8R00000-X")) {
+        hasRefrigeratoryItem = true;
+        break;
+      }
+    }
+    if (hasRefrigeratoryItem && refrigeratoryFee <= 0) {
+      throw new RuntimeException("冷库行项目，冷库费用必须有值");
+    }
+    if (!hasRefrigeratoryItem && refrigeratoryFee > 0) {
+      throw new RuntimeException("有冷库费用，没添加冷库行项目");
+    }
+    
     List<Attachment> attachments = order.getAttachments();
     if (attachments == null) {
       attachments = new ArrayList<Attachment>();

@@ -58,15 +58,24 @@ public class HttpUtil {
                 httpUrlConn.disconnect();
         }
     }
-
-
     
-
-
     /**
      *调用内部系统post接口
      */
-    public static  String postbody(String tourl,String body)
+    public static  String postbody(String tourl,String body) 
+        throws Exception {
+      return postbody(tourl, body, 120);
+    }
+    
+    /**
+     * 调用内部系统post接口
+     * @param tourl
+     * @param body
+     * @param timeout second
+     * @return
+     * @throws Exception
+     */
+    public static  String postbody(String tourl,String body, int timeout)
             throws Exception {
         URL  url=null;
         logger.info("POST请求调用：" + tourl.toString());
@@ -82,6 +91,8 @@ public class HttpUtil {
 //            String plainCredentials = "ST2SAP:Dalian11!";
 //            String base64Credentials = new String(org.apache.tomcat.util.codec.binary.Base64.encodeBase64(plainCredentials.getBytes()));
 //            httpUrlConn.setRequestProperty("Authorization", "Basic " + base64Credentials);
+            httpUrlConn.setConnectTimeout(timeout * 1000); // 毫秒
+            httpUrlConn.setReadTimeout(timeout * 1000); // 毫秒
             httpUrlConn.setDoOutput(true);
             httpUrlConn.setDoInput(true);
             httpUrlConn.setUseCaches(false);
