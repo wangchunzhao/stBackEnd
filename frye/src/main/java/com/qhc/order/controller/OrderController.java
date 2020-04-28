@@ -189,8 +189,8 @@ public class OrderController {
 	public Result transferToOrder(@PathVariable(name="user", required = true) String user, @PathVariable(name="orderInfoId", required = true) Integer orderInfoId) {
 		Result result = null;
 		try {
-			orderService.transfer(user, orderInfoId);
-			result = Result.ok("");
+			OrderDto order = orderService.transfer(user, orderInfoId);
+			result = Result.ok(order);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
