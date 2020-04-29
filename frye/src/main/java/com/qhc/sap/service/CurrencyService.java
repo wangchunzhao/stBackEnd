@@ -114,6 +114,7 @@ public class CurrencyService {
 			temp.setSapSalesTypeCode(inco.getSapSalesTypeCode());
 			incos.add(temp);
 		}
+		incotermRepo.deleteAll();
 		incotermRepo.saveAll(incos);
 	}
 	/**
@@ -205,6 +206,7 @@ public class CurrencyService {
 			temp.setIsPaymentTerm(inco.getPaymentTerm());
 			incos.add(temp);
 		}
+		PaymentTermRepo.deleteAll();
 		PaymentTermRepo.saveAll(incos);
 	}
 	
