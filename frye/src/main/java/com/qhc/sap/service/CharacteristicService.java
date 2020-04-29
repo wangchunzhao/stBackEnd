@@ -82,6 +82,7 @@ public class CharacteristicService {
 			dc.setReserved(false);
 			dcs.add(dc);
 		}
+		clazzRepo.deleteAll();
 		clazzRepo.saveAll(dcs);
 	}
 	/**
@@ -121,6 +122,7 @@ public class CharacteristicService {
 			mpc.setProductClass(cl.getProductClass());
 			mpclist.add(mpc);
 		}
+		sapMaterialProductClassRep.deleteAll();
 		sapMaterialProductClassRep.saveAll(mpclist);
 	}
 	/**
@@ -139,6 +141,7 @@ public class CharacteristicService {
 			cc.setColorDescription(cl.getMaterialDesc());
 			cclist.add(cc);
 		}
+		sapColorClassRep.deleteAll();
 		sapColorClassRep.saveAll(cclist);
 	}
 	/**
@@ -153,6 +156,7 @@ public class CharacteristicService {
 			pc.setPaintingParts(cl.getClassName());
 			palist.add(pc);
 		}
+		sapPaintingClassRep.deleteAll();
 		sapPaintingClassRep.saveAll(palist);
 	}
 	/**
@@ -171,6 +175,7 @@ public class CharacteristicService {
 			sp.setDefaultColor(cl.getColorCodePam());
 			palist.add(sp);
 		}
+		sapProductClassRep.deleteAll();
 		sapProductClassRep.saveAll(palist);
 	}
 	
@@ -195,6 +200,7 @@ public class CharacteristicService {
 				continue;
 			}
 		}
+		CharacterDefaultRep.deleteAll();
 		CharacterDefaultRep.saveAll(dcs);
 	}
 	
