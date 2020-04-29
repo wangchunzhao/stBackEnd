@@ -227,7 +227,10 @@ public class OrderService {
       if (item.getMaterialCode().equals("BG1R8R00000-X")) {
         double refrigeratoryFee = ObjectUtils.defaultIfNull(orderDto.getRefrigeratoryFee(), 0d);
         item.setStandardPrice(refrigeratoryFee);
-        item.setTransactionPrice(refrigeratoryFee);
+        // 冷库转移价=冷库费用*1.05
+        Settings rateSetting = settingsService.findByCode("refrigeratory_transaction_rate");
+        double refrigeratoryTransactionRate = Double.valueOf(rateSetting.getPreValue());
+        item.setTransactionPrice(refrigeratoryFee * refrigeratoryTransactionRate);
       }
     }
 
@@ -331,6 +334,7 @@ public class OrderService {
       throw new RuntimeException("订单不存在-" + orderInforId);
     }
     Integer orderId = orderInfo.getOrderId();
+    Order order = orderMapper.findById(orderId);
     String status = orderInfo.getStatus();
     switch (status) {
       case OrderDto.ORDER_STATUS_DRAFT:
@@ -356,7 +360,14 @@ public class OrderService {
             orderInfoMapper.update(last);
           }
         } else {
+          // 删除订单
           orderMapper.deleteById(orderId);
+          // 如果是直签订单并且是报价单下单来的，删除时恢复原报价单状态为已中标
+          if (order.getStOrderType().equals("4") && order.getQuoteOrderId() != null) {
+            Order quoteOrder = orderMapper.findById(order.getQuoteOrderId());
+            quoteOrder.setQuoteStatus("01");
+            orderMapper.update(quoteOrder);
+          }
         }
         break;
       default:
@@ -411,7 +422,8 @@ public class OrderService {
     }
 
     order.setId(null);
-    order.setCreater(user);
+    // order.setCreater(user);
+    order.setUpdater(user);
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
     order.setVersion(version);
@@ -492,6 +504,8 @@ public class OrderService {
       throw new RuntimeException("报价单未审批通过，不允许下单");
     }
 
+    // 下单后的订单保存报价单的orderId，删除时恢复原报价单状态为已中标
+    order.setQuoteOrderId(order.getOrderId());
     order.setId(null);
     order.setOrderId(null);
     order.setStOrderType("4"); // 下单，转为【直签客户下定单】
@@ -500,7 +514,9 @@ public class OrderService {
       // item.setAttachments(null); // 清除调研表附件
       item.setItemStatus("00");
     }
-    order.setCreater(user);
+    // 下推到SAP的签约人应为直签投标报价订单最开始的创建者
+//    order.setCreater(user); 
+    order.setUpdater(user);
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
     order.setVersion(version);
@@ -640,9 +656,6 @@ public class OrderService {
             if (e.isDefault()) {
               characDto.setValueCode(e.getCode());
               characDto.setValueName(e.getName());
-              if (e.getCode().equals("-")) {
-                characDto.setValueCode("");
-              }
             }
           });
         }
@@ -663,6 +676,10 @@ public class OrderService {
         c.setItemId(item.getId());
         c.setIsConfigurable(dto.isConfigurable() ? 1 : 0);
         c.setKeyCode(dto.getKeyCode());
+        // 如果特征值选择为"-"
+        if (dto.getValueCode().equals("-")) {
+          dto.setValueCode("");
+        }
         if (StringUtils.trimToEmpty(dto.getValueCode()).length() == 0) {
           throw new RuntimeException("物料【" + itemDto.getMaterialName() + "】特征【" + dto.getKeyCode() + "】没有选择特征值");
         }
@@ -1144,6 +1161,7 @@ public class OrderService {
       configs.addAll(colors);
       // characteristics
       List<CharacteristicDto> characteristics = characteristicsMapper.findByItemId(itemId);
+      // 将特征值为空的转换为 - 号
       characteristics.forEach(e -> {
         if (StringUtils.trimToEmpty(e.getValueCode()).equals("")) {
           e.setValueCode("-");
@@ -1262,10 +1280,10 @@ public class OrderService {
       }
     }
     if (hasRefrigeratoryItem && refrigeratoryFee <= 0) {
-      throw new RuntimeException("冷库行项目，冷库费用必须有值");
+      throw new RuntimeException("有冷库行项目，冷库费用必须有值");
     }
     if (!hasRefrigeratoryItem && refrigeratoryFee > 0) {
-      throw new RuntimeException("有冷库费用，没添加冷库行项目");
+      throw new RuntimeException("有冷库费用，没有冷库行项目");
     }
     
     List<Attachment> attachments = order.getAttachments();

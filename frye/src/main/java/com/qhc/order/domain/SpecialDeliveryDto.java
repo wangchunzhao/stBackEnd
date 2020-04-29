@@ -32,17 +32,17 @@ public class SpecialDeliveryDto {
             3：驳回 */
 	private Integer applyStatus = null;
 
-	/* ReceiveMailTime */
-	private String receiveMailTime = null;
+    /* 收到电子订单或其他订单确认文件的时间 */
+    private String receiveMailTime = null;
 
-	/* ContractTime */
-	private String contractTime = null;
+    /* 合同中要求的完工日期 */
+    private String contractTime = null;
 
-	/* PayAdvancePaymentTime */
-	private String payAdvancePaymentTime = null;
+    /* 预计合同原件、预付款到达时间 */
+    private String payAdvancePaymentTime = null;
 
-	/* Remark */
-	private String remark = null;
+    /* 备注 */
+    private String remark = null;
 
 	/* EnclosurePath */
 	private String enclosurePath = null;

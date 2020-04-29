@@ -10,6 +10,7 @@
 		<result column="sales_code" property="salesCode" jdbcType="VARCHAR" />
 		<result column="st_order_type" property="stOrderType" jdbcType="VARCHAR" />
 		<result column="quote_status" property="quoteStatus" jdbcType="VARCHAR" />
+		<result column="quote_order_id" property="quoteOrderId" jdbcType="INTEGER" />
 	</resultMap>
 
 	<resultMap id="OrderMap" type="com.qhc.order.entity.Order" extends="OrderBaseMap" >
@@ -23,10 +24,10 @@
 		</selectKey>
 		insert into k_order ( id, order_type, sequence_number, 
 			customer_code, customer_clazz, sales_code, 
-			st_order_type, quote_status )
+			st_order_type, quote_status, quote_order_id )
 		values ( #{id, jdbcType=INTEGER}, #{orderType, jdbcType=VARCHAR}, #{sequenceNumber, jdbcType=VARCHAR}, 
 			#{customerCode, jdbcType=VARCHAR}, #{customerClazz, jdbcType=VARCHAR}, #{salesCode, jdbcType=VARCHAR}, 
-			#{stOrderType, jdbcType=VARCHAR}, #{quoteStatus, jdbcType=VARCHAR} )
+			#{stOrderType, jdbcType=VARCHAR}, #{quoteStatus, jdbcType=VARCHAR}, #{quoteOrderId, jdbcType=INTEGER} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -50,7 +51,7 @@
 
 	<sql id="Base_Column_List" >
 		k_order.id, k_order.order_type, k_order.sequence_number, k_order.customer_code, k_order.customer_clazz, 
-		k_order.sales_code, k_order.st_order_type, k_order.quote_status
+		k_order.sales_code, k_order.st_order_type, k_order.quote_status, k_order.quote_order_id
 	</sql>
 	
 	<sql id="Column_List">
@@ -113,6 +114,9 @@
 			</if>
 			<if test="quoteStatus != null and quoteStatus != ''" >
 				AND k_order.quote_status = #{quoteStatus, jdbcType=VARCHAR}
+			</if>
+			<if test="quoteOrderId != null" >
+				AND k_order.quote_order_id = #{quoteOrderId, jdbcType=INTEGER}
 			</if>
 			
 			<include refid="Where_Clause" />

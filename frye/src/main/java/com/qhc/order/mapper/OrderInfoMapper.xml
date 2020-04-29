@@ -314,6 +314,7 @@
         o.customer_code,
         o.customer_clazz,
         o.sales_code,
+        o.quote_order_id,
         u.name as sales_name,
         u.name as creater_name,
         o.st_order_type,

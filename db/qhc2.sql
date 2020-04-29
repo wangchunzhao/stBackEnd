@@ -454,7 +454,26 @@ create table k_item
    row_num              integer not null comment '行号',
    material_code        varchar(45) not null comment '物料代码',
    quantity             double(13,2) not null comment '数量',
-   item_category        varchar(45) not null comment '行项目类别',
+   item_category        varchar(45) not null comment '行项目类别
+            // ZH0D/ZH01 可配置
+            put("ZHD1","标准");
+            put("ZHD3","免费");
+            put("ZHR3","退货");
+            // ZH0D/ZH02 不可配置
+            put("ZHD2","标准");
+            put("ZHD4","免费");
+            put("ZHR4","退货");
+            // ZH0T/ZH01 可配置
+            put("ZHT1","标准");
+            put("ZHT3","免费");
+            put("ZHR1","退货");
+            // ZH0D/ZH02 可配置
+            put("ZHT2","标准");
+            put("ZHT6","免费");
+            put("ZHR2","退货");
+            // 不可预估费，其他项目收付费
+            put("ZH97","ZH97");
+            put("ZH98","ZH98");',
    item_requirement_plan varchar(45) not null comment '需求计划',
    b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
    b2c_estimated_cost   decimal(13,2) comment 'B2C评估成本单价',
@@ -485,13 +504,13 @@ create table k_item
    color_options        varchar(512) comment '最终颜色可选项数据格式：喷粉部位:颜色选项,   P01:1,P06:1,P07:1',
    mosaic_image         varchar(512) comment '拼接图方式',
    attached_image       varchar(512) comment '拼接图附件',
-   config_comments      varchar(512) comment '配置表备注(配置表页面)，待定',
+   config_comments      varchar(512) comment '配置表备注(配置表页面)，调研表备注/文本',
    request_brand        varchar(64) comment '，待定',
    request_package      varchar(64) comment '，待定',
    request_nameplate    varchar(64) comment '，待定',
    request_circult      varchar(64) comment '，待定',
-   config_transfer_price decimal(13,2) comment '，待定',
-   config_retail_price  decimal(13,2) comment '，待定',
+   config_transfer_price decimal(13,2) comment '可选项转移价，停用',
+   config_retail_price  decimal(13,2) comment '可选项零售价，停用',
    is_configurable      integer not null comment '是否是可配置物料，1/0，来自物料信息',
    clazz_code           varchar(45) comment '物料分类代码，sap_clazz',
    comments             varchar(64) comment '备注，位于配置页面',
@@ -556,7 +575,10 @@ create table k_order
    quote_status         varchar(10) comment '报价单状态
             00 报价单
             01 已中标
-            02 已下单',
+            02 已下单
+            05 未中标
+            ',
+   quote_order_id       integer comment '关联的报价单ID，报价单下单后的订单需要关联原有报价单',
    primary key (id),
    key sequence_number_UNIQUE (sequence_number)
 );
@@ -700,12 +722,12 @@ create table k_special_order_application
             1：提交bpm
             2：同意
             3：驳回',
-   receive_mail_time    varchar(64) not null comment '收到邮件时间',
-   contract_time        varchar(64) not null,
-   pay_advance_payment_time varchar(64) not null,
-   remark               varchar(64),
-   enclosure_path       varchar(64),
-   enclosure_name       varchar(64),
+   receive_mail_time    varchar(512) not null comment '收到电子订单或其他订单确认文件的时间',
+   contract_time        varchar(512) not null comment '合同中要求的完工日期',
+   pay_advance_payment_time varchar(512) not null comment '预计合同原件、预付款到达时间',
+   remark               varchar(512) comment '备注',
+   enclosure_path       varchar(512),
+   enclosure_name       varchar(512),
    primary key (id)
 );
 
