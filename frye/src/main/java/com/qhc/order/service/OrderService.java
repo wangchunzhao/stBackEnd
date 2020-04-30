@@ -229,7 +229,7 @@ public class OrderService {
         item.setStandardPrice(refrigeratoryFee);
         // 冷库转移价=冷库费用*1.05
         Settings rateSetting = settingsService.findByCode("refrigeratory_transaction_rate");
-        double refrigeratoryTransactionRate = Double.valueOf(rateSetting.getPreValue());
+        double refrigeratoryTransactionRate = Double.valueOf(rateSetting.getsValue());
         item.setTransactionPrice(refrigeratoryFee * refrigeratoryTransactionRate);
       }
     }

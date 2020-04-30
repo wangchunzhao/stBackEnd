@@ -102,9 +102,17 @@ public class SettingsService {
 				if (after != null ) {
 					parameter.setAfterValue(after.getsValue());
 					parameter.setAfterEnableDate(after.getEnableDate());
-					after.setPreValue(parameter.getsValue());
-					after.setPreEnableDate(parameter.getEnableDate());
 				}
+			}
+			if (key.endsWith("_aft")) {
+			  Settings pre = map.get(code + "_pre");
+			  if (pre == null) {
+			    ps.add(parameter);
+                parameter.setAfterValue(parameter.getsValue());
+                parameter.setAfterEnableDate(parameter.getEnableDate());
+                parameter.setsValue(null);
+                parameter.setEnableDate(null);
+			  }
 			}
 		}
 		 

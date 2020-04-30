@@ -52,16 +52,16 @@ public class Settings implements Serializable{
 	public String optTime;
 	
 	
-	@Transient
-	public String preValue;
+//	@Transient
+//	public String preValue;
 	
 	@Transient
 	public String afterValue;
 	
-	@Transient
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Date preEnableDate;
+//	@Transient
+//	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//	public Date preEnableDate;
 	
 	@Transient
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -69,12 +69,12 @@ public class Settings implements Serializable{
 	public Date afterEnableDate;
 	
 	
-	public String getPreValue() {
-		return preValue;
-	}
-	public void setPreValue(String preValue) {
-		this.preValue = preValue;
-	}
+//	public String getPreValue() {
+//		return preValue;
+//	}
+//	public void setPreValue(String preValue) {
+//		this.preValue = preValue;
+//	}
 	public String getAfterValue() {
 		return afterValue;
 	}
@@ -119,12 +119,12 @@ public class Settings implements Serializable{
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public Date getPreEnableDate() {
-		return preEnableDate;
-	}
-	public void setPreEnableDate(Date preEnableDate) {
-		this.preEnableDate = preEnableDate;
-	}
+//	public Date getPreEnableDate() {
+//		return preEnableDate;
+//	}
+//	public void setPreEnableDate(Date preEnableDate) {
+//		this.preEnableDate = preEnableDate;
+//	}
 	public Date getAfterEnableDate() {
 		return afterEnableDate;
 	}
