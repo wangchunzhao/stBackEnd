@@ -44,7 +44,7 @@
 		set order_info_id = #{orderInfoId, jdbcType=INTEGER}, 
 			applyer = #{applyer, jdbcType=VARCHAR}, 
 			approver = #{approver, jdbcType=VARCHAR}, 
-			apply_time = #{applyTime, jdbcType=TIMESTAMP}, 
+			apply_time = now(), 
 			approval_time = #{approvalTime, jdbcType=TIMESTAMP}, 
 			apply_status = #{applyStatus, jdbcType=INTEGER}, 
 			receive_mail_time = #{receiveMailTime, jdbcType=VARCHAR}, 
@@ -140,7 +140,20 @@
 	<!-- 按参数查询 -->
 	<select id="findByParams" resultType="com.qhc.order.domain.SpecialDeliveryDto" parameterType="Map" >
 		select 
-			soa.*,
+			soa.id, 
+			<!-- soa.order_info_id,  -->
+			soa.applyer, 
+			soa.approver, 
+			soa.apply_time, 
+			soa.approval_time, 
+			soa.apply_status, 
+			soa.receive_mail_time, 
+			soa.contract_time, 
+			soa.pay_advance_payment_time, 
+			soa.remark, 
+			soa.enclosure_path, 
+			soa.enclosure_name,
+			oi.id as order_info_id,
 	        oi.contract_number,
 	        o.sequence_number,
 	        o.customer_code,
