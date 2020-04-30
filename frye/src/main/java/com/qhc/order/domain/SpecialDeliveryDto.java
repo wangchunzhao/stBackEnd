@@ -1,6 +1,8 @@
 package com.qhc.order.domain;
 
 import java.util.Date;
+import java.util.List;
+import com.qhc.order.entity.SpecialAttachment;
 
 /**
  * @author lizuoshan
@@ -61,6 +63,11 @@ public class SpecialDeliveryDto {
     private String stOrderType;
 
     private Date createTime;
+    
+    /**
+     * 附件信息 Attachment information
+     */
+    private List<SpecialAttachment> attachments;
 
     /**
      * order status
@@ -210,7 +217,15 @@ public class SpecialDeliveryDto {
 		this.createTime = createTime;
 	}
 
-	public String getStatus() {
+	public List<SpecialAttachment> getAttachments() {
+    return attachments;
+  }
+
+  public void setAttachments(List<SpecialAttachment> attachments) {
+    this.attachments = attachments;
+  }
+
+  public String getStatus() {
 		return status;
 	}
 

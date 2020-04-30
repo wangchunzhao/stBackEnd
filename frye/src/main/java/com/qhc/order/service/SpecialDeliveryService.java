@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.SpecialDeliveryDto;
+import com.qhc.order.entity.SpecialAttachment;
 import com.qhc.order.entity.SpecialOrderApplication;
 import com.qhc.order.mapper.SpecialOrderApplicationMapper;
 import com.qhc.system.entity.User;
@@ -47,6 +48,7 @@ public class SpecialDeliveryService {
 		} else {
 			specialOrderApplicationMapper.update(entity);
 		}
+		List<SpecialAttachment> attachments = sd.getAttachments();
 		return findById(entity.getId());
 	}
 
