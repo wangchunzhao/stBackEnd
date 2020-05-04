@@ -85,6 +85,12 @@ public class OrderHeader {
 	private Integer isUrgentDelivery = null;
 	/* 是否特批下单 */
 	private Integer isSpecialOrder = 0;
+    
+    private int isLongterm;//是否为长期折扣
+    
+    private int isSpecial; // 是否非标准折扣，默认为0，经销商非标下单为1
+    
+    private int isNonUniform; // 是否非統一折扣，默认为0，非統一折扣为1
 
 	public String getSalesCode() {
 		return salesCode;
@@ -398,22 +404,50 @@ public class OrderHeader {
 		this.isSpecialOrder = isSpecialOrder;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel + ", orderType=" + orderType
-				+ ", sequenceNumber=" + sequenceNumber + ", discount=" + discount + ", customerName=" + customerName
-				+ ", contractNumber=" + contractNumber + ", shopName=" + shopName + ", contractRmbAmount="
-				+ contractRmbAmount + ", contractAmount=" + contractAmount + ", currencyName=" + currencyName
-				+ ", exchange=" + exchange + ", receiveTypeName=" + receiveTypeName + ", sapOffice=" + sapOffice
-				+ ", saleType=" + saleType + ", paymentTypeName=" + paymentTypeName + ", taxRate=" + taxRate
-				+ ", bodyDiscount=" + bodyDiscount + ", unitDiscount=" + unitDiscount + ", mergeDiscount="
-				+ mergeDiscount + ", approvalDiscount=" + approvalDiscount + ", earliestDeliveryDate="
-				+ earliestDeliveryDate + ", dealer=" + dealer + ", specialDiscount=" + specialDiscount + ", b2c=" + b2c
-				+ ", createTime=" + createTime + ", margin=" + margin + ", wtwMargin=" + wtwMargin + ", status="
-				+ status + ", comments=" + comments + ", installFee=" + installFee + ", materialFee=" + materialFee
-				+ ", electricalFee=" + electricalFee + ", refrigeratoryFee=" + refrigeratoryFee + ", maintenanceFee="
-				+ maintenanceFee + ", address=" + address + ", materialGroupNames=" + materialGroupNames
-				+ ", isUrgentDelivery=" + isUrgentDelivery + ", isSpecialOrder=" + isSpecialOrder + "]";
-	}
+	public int getIsLongterm() {
+    return isLongterm;
+  }
+
+  public int getIsSpecial() {
+    return isSpecial;
+  }
+
+  public int getIsNonUniform() {
+    return isNonUniform;
+  }
+
+  public void setIsLongterm(int isLongterm) {
+    this.isLongterm = isLongterm;
+  }
+
+  public void setIsSpecial(int isSpecial) {
+    this.isSpecial = isSpecial;
+  }
+
+  public void setIsNonUniform(int isNonUniform) {
+    this.isNonUniform = isNonUniform;
+  }
+
+  @Override
+  public String toString() {
+    return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel + ", orderType="
+        + orderType + ", sequenceNumber=" + sequenceNumber + ", discount=" + discount
+        + ", customerName=" + customerName + ", contractNumber=" + contractNumber + ", shopName="
+        + shopName + ", contractRmbAmount=" + contractRmbAmount + ", contractAmount="
+        + contractAmount + ", currencyName=" + currencyName + ", exchange=" + exchange
+        + ", receiveTypeName=" + receiveTypeName + ", sapOffice=" + sapOffice + ", saleType="
+        + saleType + ", paymentTypeName=" + paymentTypeName + ", taxRate=" + taxRate
+        + ", bodyDiscount=" + bodyDiscount + ", unitDiscount=" + unitDiscount + ", mergeDiscount="
+        + mergeDiscount + ", approvalDiscount=" + approvalDiscount + ", earliestDeliveryDate="
+        + earliestDeliveryDate + ", dealer=" + dealer + ", specialDiscount=" + specialDiscount
+        + ", b2c=" + b2c + ", createTime=" + createTime + ", margin=" + margin + ", wtwMargin="
+        + wtwMargin + ", status=" + status + ", comments=" + comments + ", installFee=" + installFee
+        + ", materialFee=" + materialFee + ", electricalFee=" + electricalFee
+        + ", refrigeratoryFee=" + refrigeratoryFee + ", maintenanceFee=" + maintenanceFee
+        + ", address=" + address + ", materialGroupNames=" + materialGroupNames
+        + ", isUrgentDelivery=" + isUrgentDelivery + ", isSpecialOrder=" + isSpecialOrder
+        + ", isLongterm=" + isLongterm + ", isSpecial=" + isSpecial + ", isNonUniform="
+        + isNonUniform + "]";
+  }
 
 }

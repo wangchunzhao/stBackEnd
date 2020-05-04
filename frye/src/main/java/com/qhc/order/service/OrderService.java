@@ -252,7 +252,7 @@ public class OrderService {
     // 经销商非标折扣订单
     if (stOrderType.equals("2")) {
       // 特批折扣
-      orderDto.setIsSpecial(1);
+//      orderDto.setIsSpecial(1);
       // 计算合并折扣和行项目金额
      //  this.calcMergeDiscount(orderDto);
     }
@@ -1366,13 +1366,18 @@ public class OrderService {
     bpmHeader.setSapOffice(StringUtils.trimToEmpty(order.getOfficeName()));
     bpmHeader.setSequenceNumber(StringUtils.trimToEmpty(order.getSequenceNumber()));
     bpmHeader.setShopName(StringUtils.trimToEmpty(order.getShopName()));
-    bpmHeader.setSpecialDiscount(String.valueOf(order.getIsSpecial()));
+    bpmHeader.setSpecialDiscount(order.getStOrderType().equals("2") ? "1" : "0");
+    // TODO 非统一折扣
+//    bpmHeader.setNonUniformDiscount(order.getIsSpecial());
     bpmHeader.setStatus(StringUtils.trimToEmpty(order.getStatus()));
     bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
     bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
     bpmHeader.setWtwMargin(ObjectUtils.defaultIfNull(sumMargin.getWtwGrossProfitMargin(), 0d));
     bpmHeader.setIsUrgentDelivery(ObjectUtils.defaultIfNull(order.getIsUrgentDelivery(), 0));
-    bpmHeader.setIsSpecialOrder(order.getIsSpecialOrder());
+    bpmHeader.setIsSpecialOrder(order.getIsSpecialOrder()); // 特批下单
+    bpmHeader.setIsLongterm(order.getIsLongterm()); // 长期折扣
+    bpmHeader.setIsSpecial(order.getStOrderType().equals("2") ? 1 : 0); // 经销商非标折扣
+    bpmHeader.setIsNonUniform(order.getIsSpecial()); //  经销商非标折扣订单非统一折扣
 
     // set bpm order attachements
     for (Attachment attachment : attachments) {
@@ -1511,7 +1516,7 @@ public class OrderService {
         || OrderDto.ORDER_STATUS_APPROVED.equals(orderStatus)) {
       SpecialOrderApplication specialOrderApplication =
           specialOrderApplicationMapper.findByOrderInfo(orderDto.getId());
-      if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals("1")) {
+      if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals(1)) {
         if (status.equals("1")) {
           // 审批通过
           specialOrderApplication.setApplyStatus(2);
@@ -1554,7 +1559,8 @@ public class OrderService {
       if (orderDto.getStOrderType().equals("2")
           && (orderDto.getBodyDiscount() != bodyDiscount
               || orderDto.getMainDiscount() != unitDiscount)
-          && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1)) {
+          && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1) ) {
+//          && orderDto.getIsSpecial() != 1) { // TODO 非统一折扣，长期折扣，需要单独处理
         // 修改订单行项目折扣，重新计算订单毛利率
         orderDto.setStatus(status);
         orderDto.setUpdater(user);
@@ -1614,7 +1620,6 @@ public class OrderService {
         continue;
       }
 
-      double discount = itemDto.getDiscount();
       String category = itemDto.getItemCategory();
       // 特殊物料，只合计购销明细金额
       if (specialMaterials.contains(mcode)) {
@@ -1629,11 +1634,11 @@ public class OrderService {
         if (returnCategorys.contains(category)) {
           itemsAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
           itemsDicountAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsNonDicountAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsNonDicountAmount -= (itemDto.getRetailPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
         } else {
           itemsAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
           itemsDicountAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsNonDicountAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+          itemsNonDicountAmount += (itemDto.getRetailPrice() + itemDto.getOptionalRetailPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
         }
       }
     }
@@ -1678,8 +1683,9 @@ public class OrderService {
           itemDto.setDiscount(unitDiscount);
         }
         itemDto.setActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+        itemDto.setOptionalActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
         // 合计金额、合计价，可以不用，其他地方都是以单价来计算
-        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+//        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 
         Item item = new Item();
         BeanUtils.copyProperties(item, itemDto);
