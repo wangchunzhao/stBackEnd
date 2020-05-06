@@ -95,6 +95,11 @@ public class OrderController {
 	public Result saveOrder(@PathVariable("user") String user, @RequestBody(required = true) OrderDto order) {
 		Result result = null;
 		try {
+		  if (order.getOrderId() == null) {
+		    order.setSalesCode(user);
+		    order.setCreater(user);
+		  }
+		  order.setUpdater(user);
 			orderService.save(user, order);
 			result = Result.ok("");
 		} catch (Throwable e) {

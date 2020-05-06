@@ -191,9 +191,8 @@ public class OrderService {
 
   @Transactional
   public OrderDto save(String user, final OrderDto orderDto) throws Exception {
+    orderDto.setUpdater(user);
     List<ItemDto> items = orderDto.getItems();
-    Order order = new Order();
-    OrderInfo orderInfo = new OrderInfo();
     String stOrderType = orderDto.getStOrderType();
 
     if (StringUtils.isEmpty(orderDto.getStatus())) {
@@ -261,6 +260,8 @@ public class OrderService {
     List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
     orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
 
+    Order order = new Order();
+    OrderInfo orderInfo = new OrderInfo();
     BeanUtils.copyProperties(order, orderDto);
     BeanUtils.copyProperties(orderInfo, orderDto);
 
@@ -270,14 +271,11 @@ public class OrderService {
       orderInfo.setVersion(version.toUpperCase());
       orderInfo.setIsActive(1);
       orderInfo.setVersionNum(1);
-      orderInfo.setCreater(user);
-      orderInfo.setUpdater(user);
 
       if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
         // 由前台生成
         // String sequenceNumber = "QHC" + version;
         // order.setSequenceNumber(sequenceNumber.toUpperCase());
-        order.setSalesCode(user);
 
         orderMapper.insert(order);
 
@@ -286,7 +284,6 @@ public class OrderService {
 
       orderInfoMapper.insert(orderInfo);
     } else {
-      orderInfo.setUpdater(user);
       orderInfoMapper.update(orderInfo);
       orderMapper.update(order);
     }
@@ -362,10 +359,10 @@ public class OrderService {
         } else {
           // 删除订单
           orderMapper.deleteById(orderId);
-          // 如果是直签订单并且是报价单下单来的，删除时恢复原报价单状态为已中标
+          // 如果是直签订单并且是报价单下单来的，删除时恢复原报价单状态为草稿
           if (order.getStOrderType().equals("4") && order.getQuoteOrderId() != null) {
             Order quoteOrder = orderMapper.findById(order.getQuoteOrderId());
-            quoteOrder.setQuoteStatus("01");
+            quoteOrder.setQuoteStatus("00");
             orderMapper.update(quoteOrder);
           }
         }
@@ -457,6 +454,7 @@ public class OrderService {
     order.setOrderId(null);
     order.setCreater(user);
     order.setSalesCode(user);
+    order.setUpdater(user);
     // order.setAttachments(null); // 清除订单附件
     order.setContractNumber(""); // 合同號
     for (ItemDto item : order.getItems()) {

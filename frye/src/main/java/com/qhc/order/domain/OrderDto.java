@@ -168,7 +168,7 @@ public class OrderDto {
 	
 	private int isLongterm;//是否为长期折扣
 	
-	private int isSpecial; // 是否非标准折扣，默认为0，经销商非标下单为1
+	private int isSpecial; // 是否非统一折扣，默认为0，非统一为1
 
 	/* 是否特批下单，1 特批， 0 */
 	private int isSpecialOrder = 0;
