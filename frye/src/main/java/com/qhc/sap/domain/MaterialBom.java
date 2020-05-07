@@ -3,6 +3,8 @@ package com.qhc.sap.domain;
 import java.math.BigDecimal;
 import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
+import com.qhc.system.entity.Settings;
+import com.qhc.system.service.SettingsService;
 import io.netty.util.internal.ObjectUtil;
 
 /**
@@ -16,34 +18,38 @@ public class MaterialBom {
 	private double standardPrice = 0;
 	private double retailPrice = 0;
 	private double transferPrice = 0;
-
-	/**
-	 * 计算差异物料价格
-	 */
-	public void calculatePriceGap() {
+    
+   /**
+    * 计算差异物料价格
+    * @param transferRate 转移价比率
+    */
+    public void calculatePriceGap(double transferRate) {
 		for (Bom bom : optional) {
 			if (bom.isMarked()) {
 				double standardPrice = bom.getPrice();
-				double retailPrice = getPrice(bom);
-				double transferPrice = bom.getTransferPrice();
+//				double retailPrice = getPrice(bom);
+//				double transferPrice = bom.getTransferPrice();
 				
 				this.standardPrice += standardPrice * bom.getQuantity();
-				this.retailPrice += retailPrice * bom.getQuantity();
-				this.transferPrice += transferPrice * bom.getQuantity();
+//				this.retailPrice += retailPrice * bom.getQuantity();
+//				this.transferPrice += transferPrice * bom.getQuantity();
 			}
 		}
 
 		for (Bom bom : standard) {
 			if (bom.isMarked()) {
 				double standardPrice = bom.getPrice();
-				double retailPrice = getPrice(bom);
-				double transferPrice = bom.getTransferPrice();
+//				double retailPrice = getPrice(bom);
+//				double transferPrice = bom.getTransferPrice();
 				
 				this.standardPrice -= standardPrice * bom.getQuantity();
-				this.retailPrice -= retailPrice * bom.getQuantity();
-				this.transferPrice -= transferPrice * bom.getQuantity();
+//				this.retailPrice -= retailPrice * bom.getQuantity();
+//				this.transferPrice -= transferPrice * bom.getQuantity();
 			}
 		}
+		
+		// 转移价差 = 标准价差 * 转移价比率
+		transferPrice = standardPrice * transferRate;
 		
 		standardPrice = BigDecimal.valueOf(standardPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		retailPrice = BigDecimal.valueOf(retailPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

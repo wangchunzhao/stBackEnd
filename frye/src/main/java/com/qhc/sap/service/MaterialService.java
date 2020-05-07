@@ -35,6 +35,8 @@ import com.qhc.sap.mapper.ColorClassMapper;
 import com.qhc.sap.mapper.MaterialProductClassMapper;
 import com.qhc.sap.mapper.ProductClassMapper;
 import com.qhc.sap.mapper.SapViewMapper;
+import com.qhc.system.entity.Settings;
+import com.qhc.system.service.SettingsService;
 
 @Service
 public class MaterialService {
@@ -53,6 +55,9 @@ public class MaterialService {
 	
 	@Autowired
 	private SapService sapService;
+	
+	@Autowired
+	private SettingsService settingsService;
 
 	@Autowired
 	private MaterialRepository materialRepo;
@@ -294,8 +299,13 @@ public class MaterialService {
 		MaterialBom mb = new MaterialBom();
 		mb.setOptional(optional);
 		mb.setStandard(standard);
-		
-		mb.calculatePriceGap();
+
+        double transferRate = 1.05;
+        Settings rateSetting = settingsService.findByCode("refrigeratory_transaction_rate");
+        if (rateSetting != null && StringUtils.isNoneEmpty(rateSetting.getsValue()) ) {
+          transferRate = Double.valueOf(rateSetting.getsValue()); 
+        }
+		mb.calculatePriceGap(transferRate);
 		
 		return mb;
 	}
