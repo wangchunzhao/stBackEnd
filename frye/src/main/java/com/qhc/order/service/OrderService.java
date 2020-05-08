@@ -1412,7 +1412,7 @@ public class OrderService {
         bpmItem
             .setItemRequirementPlanName(StringUtils.trimToEmpty(itemDto.getItemRequirementPlan()));
         bpmItem.setMaterialCode(StringUtils.trimToEmpty(itemDto.getMaterialCode()));
-        bpmItem.setMaterialAttribute(itemDto.getIsPurchased() ? "采购" : "生产");
+        bpmItem.setMaterialAttribute(itemDto.getIsPurchased() ? "生产" : "采购");
         bpmItem.setMaterialGroup(itemDto.getMaterialGroupCode());
         bpmItem.setMaterialGroupName(StringUtils.trimToEmpty(itemDto.getMaterialGroupName()));
         bpmItem.setMaterialName(StringUtils.trimToEmpty(itemDto.getMaterialName()));
