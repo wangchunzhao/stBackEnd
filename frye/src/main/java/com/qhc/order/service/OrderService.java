@@ -679,7 +679,7 @@ public class OrderService {
           dto.setValueCode("");
         }
         if (StringUtils.trimToEmpty(dto.getValueCode()).length() == 0) {
-          throw new RuntimeException("物料【" + itemDto.getMaterialName() + "】特征【" + dto.getKeyCode() + "】没有选择特征值");
+          throw new RuntimeException("行号【" + itemDto.getRowNum() + "】物料【" + itemDto.getMaterialName() + "】特征【" + dto.getKeyCode() + "】没有选择特征值");
         }
         c.setValueCode(dto.getValueCode());
 
@@ -1725,7 +1725,7 @@ public class OrderService {
    * @param contractNumber
    */
   public void updateContractNumber(Integer orderInfoId, String contractNumber) {
-    String tempContractNumber = StringUtils.trimToEmpty(contractNumber);
+    String tempContractNumber = StringUtils.trimToEmpty(contractNumber).toUpperCase();
     OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
     checkContractNumber(orderInfo.getOrderId(), tempContractNumber);
     orderInfo.setContractNumber(tempContractNumber);

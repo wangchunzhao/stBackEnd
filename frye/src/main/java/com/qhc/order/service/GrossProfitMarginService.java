@@ -182,7 +182,7 @@ public class GrossProfitMarginService {
 				setMaterialGroupMargin(mgroup, b2cEstimatedAmount, b2cEstimatedExcludingTaxAmount, b2cEstimatedCost, b2cEstimatedCost);
 				break;
 			case "9102": // "可选项"
-				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
+			  calcItemOptionalMargin(mgroup, order);
 				break;
 			case "9999": // "不可用物料类别"
 				setMaterialGroupMargin(mgroup, 0, 0, 0, 0);
@@ -285,27 +285,19 @@ public class GrossProfitMarginService {
 			  continue;
 			}
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
-              if (returnCategorys.contains(item.getItemCategory())) {
-                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
-                // amount -= ( item.getActualPrice() + item.getOptionalActualPrice() +
-                // item.getB2cEstimatedPrice() ) * item.getQuantity();
-                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
-                amount -= (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
-                // 成本（销售）
-                cost -= item.getTransactionPrice() * item.getQuantity();
-                // 成本（生产）
-                wtwCost -= item.getStandardPrice() * item.getQuantity();
-              } else {
+			  // 退货，减去
+			  double flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
                 // amount += ( item.getActualPrice() + item.getOptionalActualPrice() +
                 // item.getB2cEstimatedPrice() ) * item.getQuantity();
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
-                amount += (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
+//                amount += (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
+                // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣
+                amount += flag * (item.getActualPrice()) * item.getQuantity();
                 // 成本（销售）
-                cost += item.getTransactionPrice() * item.getQuantity();
+                cost += flag * item.getTransactionPrice() * item.getQuantity();
                 // 成本（生产）
-                wtwCost += item.getStandardPrice() * item.getQuantity();
-              }
+                wtwCost += flag * item.getStandardPrice() * item.getQuantity();
 			}
 		}
 
@@ -319,6 +311,48 @@ public class GrossProfitMarginService {
 
 		setMaterialGroupMargin(group, amount, excludingTaxAmount, cost, wtwCost);
 	}
+
+    /**
+     * 计算行项目可选项毛利率
+     * 
+     * @param taxRate
+     * @param group
+     * @param items
+     */
+    private void calcItemOptionalMargin(MaterialGroups group, OrderDto order) {
+        double exchange = order.getCurrencyExchange();
+        List<ItemDto> items = order.getItems();
+        double taxRate = order.getTaxRate();
+        double amount = 0;
+        double excludingTaxAmount = 0;
+        double cost = 0;
+        double wtwCost = 0;
+        for (ItemDto item : items) {
+            String status = item.getItemStatus();
+            // 取消状态的行项目不在累计范围
+            if (status.equals("Z2")) {
+              continue;
+            }
+            // 退货，减去
+            double flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
+            // 1. 金额= sum（可选项实卖金额合计），可选项实卖金额=可选项实卖价*数量，可选项实卖价=可选项零售价*折扣
+            amount += flag * (item.getOptionalActualPrice()) * item.getQuantity();
+            // 成本（销售）
+            cost += flag * item.getOptionalTransactionPrice() * item.getQuantity();
+            // 成本（生产）
+            wtwCost += flag * item.getOptionalStandardPrice() * item.getQuantity();
+        }
+
+        // 2. 不含税金额=金额/(1+税率)
+        excludingTaxAmount = amount / (1 + taxRate);
+        
+        amount = amount / exchange; // 转换为凭证货币
+        excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
+        cost = cost / exchange;  // 转换为凭证货币
+        wtwCost = wtwCost / exchange;  // 转换为凭证货币
+
+        setMaterialGroupMargin(group, amount, excludingTaxAmount, cost, wtwCost);
+    }
 
 	private BigDecimal toBigDecimal(double amount, int scale) {
 		return BigDecimal.valueOf(amount).setScale(scale, BigDecimal.ROUND_HALF_UP);
