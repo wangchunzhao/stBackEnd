@@ -1366,8 +1366,8 @@ public class OrderService {
     bpmHeader.setSequenceNumber(StringUtils.trimToEmpty(order.getSequenceNumber()));
     bpmHeader.setShopName(StringUtils.trimToEmpty(order.getShopName()));
     bpmHeader.setSpecialDiscount(order.getStOrderType().equals("2") ? "1" : "0");
-    // TODO 非统一折扣
-//    bpmHeader.setNonUniformDiscount(order.getIsSpecial());
+    // 非统一折扣
+    bpmHeader.setIsNonUniform(order.getIsSpecial());
     bpmHeader.setStatus(StringUtils.trimToEmpty(order.getStatus()));
     bpmHeader.setTaxRate(ObjectUtils.defaultIfNull(order.getTaxRate(), 0d));
     bpmHeader.setUnitDiscount(ObjectUtils.defaultIfNull(order.getMainDiscount(), 0d));
@@ -1499,15 +1499,21 @@ public class OrderService {
    */
   @Transactional
   public void updateBpmStatus(String user, String sequenceNumber, String status,
-      Double bodyDiscount, Double unitDiscount) throws Exception {
+      Double bodyDiscount, Double unitDiscount, List<Map<String, Object>> approvalItems) throws Exception {
     if (StringUtils.isEmpty(sequenceNumber)) {
       throw new RuntimeException("sequenceNumber is empty.");
     }
     OrderQuery query = new OrderQuery();
     query.setLast(true);
+    query.setIncludeDetail(true);
     query.setSequenceNumber(sequenceNumber);
-    List<OrderDto> orders = orderInfoMapper.findOrderViewByParams(query);
+    List<OrderDto> orders = this.findOrders(query).getList();
     OrderDto orderDto = orders.get(0);
+
+    // 订单审批历史
+    BpmDicision bpmDicision = new BpmDicision();
+    bpmDicision.setOrderInfoId(orderDto.getId());
+    bpmDicision.setIsPassed(status.equals("1") ? 1 : 0);
 
     String orderStatus = orderDto.getStatus();
     // 如果定状态已经是bpm审批通过，而存在未审批通过的特批发货申请，则修改特批发货申请状态
@@ -1516,81 +1522,128 @@ public class OrderService {
       SpecialOrderApplication specialOrderApplication =
           specialOrderApplicationMapper.findByOrderInfo(orderDto.getId());
       if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals(1)) {
-        if (status.equals("1")) {
-          // 审批通过
-          specialOrderApplication.setApplyStatus(2);
-        } else {
-          // 审批拒绝
-          specialOrderApplication.setApplyStatus(3);
-        }
-
-        specialOrderApplication.setApprovalTime(new Date());
-        specialOrderApplication.setApprover(user);
-
-        specialOrderApplicationMapper.update(specialOrderApplication);
+        updateBpmUrgenDeliveryStatus(user, status, bpmDicision, specialOrderApplication);
+        bpmDicision.setRemark("特批发货申请审批。sequenceNumber: " + orderDto.getSequenceNumber() );
       }
-
-      return;
+    }  else {
+      if (status.equals("1")) {
+        // 审批通过
+        if (orderDto.getVersionNum() > 1) {
+          status = OrderDto.ORDER_STATUS_APPROVED_UPDATE;
+        } else {
+          status = OrderDto.ORDER_STATUS_APPROVED;
+        }
+  
+        // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
+        if (orderDto.getStOrderType().equals("2") 
+            && (orderDto.getBodyDiscount() != ObjectUtils.defaultIfNull(bodyDiscount, orderDto.getBodyDiscount())
+                || orderDto.getMainDiscount() != ObjectUtils.defaultIfNull(unitDiscount, orderDto.getMainDiscount())
+                || approvalItems != null) ) {
+          orderDto.setStatus(status);
+          orderDto.setUpdater(user);
+          // 转换折扣格式为小数，用于计算
+          convertDiscountToDecimal(orderDto);
+          List<ItemDto> items = orderDto.getItems();
+          
+          // 修改订单行项目折扣，重新计算订单毛利率
+          if (approvalItems != null) {
+//            && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1)
+//            && orderDto.getIsSpecial() != 1) { // 非统一折扣，长期折扣，需要单独处理
+            // 非统一折扣，长期折扣
+            // 更新行项目的discount
+            updateBpmItemDiscount2(orderDto, approvalItems);
+            bpmDicision.setRemark("经销商非标折扣长期折扣非统一折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ", " + new ObjectMapper().writeValueAsString(approvalItems));
+          } else {
+            // 修改订单行项目折扣，重新计算订单毛利率
+            // 转换折扣格式为小数，用于计算
+            bodyDiscount = bodyDiscount / 100;
+            unitDiscount = unitDiscount / 100;
+            orderDto.setApprovedBodyDiscount(bodyDiscount);
+            orderDto.setApprovedMainDiscount(unitDiscount);
+            // 更新行项目的discount
+            updateBpmItemDicount(orderDto, bodyDiscount, unitDiscount);
+            bpmDicision.setRemark("经销商非标折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ",bodyDiscount: " + bodyDiscount + ", unitDiscount: " + unitDiscount);
+          }
+          // 计算合并折扣和行项目金额
+          calcMergeDiscount(orderDto);
+  
+          // calculate gross profit margin
+          List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
+          orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
+  
+          OrderInfo orderInfo = new OrderInfo();
+          BeanUtils.copyProperties(orderInfo, orderDto);
+  //        Order order = orderMapper.findById(orderInfo.getOrderId());
+          orderInfoMapper.update(orderInfo);
+        } else {
+          orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null,
+              ObjectUtils.defaultIfNull(orderDto.getBodyDiscount(), 0D), ObjectUtils.defaultIfNull(orderDto.getMainDiscount(), 0D));
+        }
+      } else {
+        // 审批拒绝
+        status = OrderDto.ORDER_STATUS_MANAGER; // OrderDto.ORDER_STATUS_REJECT_BPM;
+        orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null, null, null);
+      }
+      bpmDicision.setBodyDiscount(ObjectUtils.defaultIfNull(orderDto.getBodyDiscount(), 0D));
+      bpmDicision.setMainDiccount(ObjectUtils.defaultIfNull(orderDto.getMainDiscount(), 0D));
+      bpmDicision.setApprovedBodyDiscount(ObjectUtils.defaultIfNull(bodyDiscount, 0D));
+      bpmDicision.setApprovedMainDiscount(ObjectUtils.defaultIfNull(unitDiscount, 0D));
     }
+    
+    // save approval log
+    dicisionMapper.insert(bpmDicision);
+  }
 
-    // 更新订单信息
-    BpmDicision bpmDicision = new BpmDicision();
-    bpmDicision.setOrderInfoId(orderDto.getId());
-    bpmDicision.setBodyDiscount(orderDto.getBodyDiscount());
-    bpmDicision.setMainDiccount(orderDto.getMainDiscount());
+  private void updateBpmItemDiscount2(OrderDto order, List<Map<String, Object>> approvalItems) throws IllegalAccessException, InvocationTargetException {
+    List<ItemDto> items = order.getItems();
+    for (ItemDto itemDto : items) {
+      String rowNum = String.valueOf(itemDto.getRowNum());
+      for (Map map : approvalItems) {
+        String lineNum = (String)map.get("lineNum");
+        Double discount = (Double)map.get("discount");
+        if (lineNum.equals(rowNum)) {
+          itemDto.setDiscount(discount / 100);
+          itemDto.setActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+          itemDto.setOptionalActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+          // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+//                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+          
+          Item item = new Item();
+          BeanUtils.copyProperties(item, itemDto);
+          item.setOrderInfoId(order.getId());
+          itemMapper.update(item);
+        }
+      }
+    }
+  }
+
+  /**
+   * 更新紧急发货申请bpm审批状态
+   * 
+   * @param user
+   * @param status
+   * @param bpmDicision
+   * @param specialOrderApplication
+   */
+  private void updateBpmUrgenDeliveryStatus(String user, String status, BpmDicision bpmDicision,
+      SpecialOrderApplication specialOrderApplication) {
     if (status.equals("1")) {
       // 审批通过
-      if (orderDto.getVersionNum() > 1) {
-        status = OrderDto.ORDER_STATUS_APPROVED_UPDATE;
-      } else {
-        status = OrderDto.ORDER_STATUS_APPROVED;
-      }
-      bpmDicision.setIsPassed(1);
-      bpmDicision.setApprovedBodyDiscount(bodyDiscount);
-      bpmDicision.setApprovedMainDiscount(unitDiscount);
-
-      // 转换折扣格式为小数，用于计算
-      bodyDiscount = bodyDiscount / 100;
-      unitDiscount = unitDiscount / 100;
-      // 转换折扣格式为小数，用于计算
-      convertDiscountToDecimal(orderDto);
-      // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
-      if (orderDto.getStOrderType().equals("2")
-          && (orderDto.getBodyDiscount() != bodyDiscount
-              || orderDto.getMainDiscount() != unitDiscount)
-          && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1) ) {
-//          && orderDto.getIsSpecial() != 1) { // TODO 非统一折扣，长期折扣，需要单独处理
-        // 修改订单行项目折扣，重新计算订单毛利率
-        orderDto.setStatus(status);
-        orderDto.setUpdater(user);
-        orderDto.setApprovedBodyDiscount(bodyDiscount);
-        orderDto.setApprovedMainDiscount(unitDiscount);
-
-        List<ItemDto> items = orderDto.getItems();
-        // 更新行项目的discount
-        updateBpmItemDicount(items, bodyDiscount, unitDiscount);
-        // 计算合并折扣和行项目金额
-        calcMergeDiscount(orderDto);
-
-        // calculate gross profit margin
-        List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
-        orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
-
-        OrderInfo orderInfo = new OrderInfo();
-        BeanUtils.copyProperties(orderInfo, orderDto);
-//        Order order = orderMapper.findById(orderInfo.getOrderId());
-        orderInfoMapper.update(orderInfo);
-      } else {
-        orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null,
-            orderDto.getBodyDiscount(), orderDto.getMainDiscount());
-      }
+      specialOrderApplication.setApplyStatus(2);
     } else {
       // 审批拒绝
-      status = OrderDto.ORDER_STATUS_MANAGER; // OrderDto.ORDER_STATUS_REJECT_BPM;
-      bpmDicision.setIsPassed(0);
-      orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null, null, null);
+      specialOrderApplication.setApplyStatus(3);
     }
-    dicisionMapper.insert(bpmDicision);
+
+    specialOrderApplication.setApprovalTime(new Date());
+    specialOrderApplication.setApprover(user);
+
+    specialOrderApplicationMapper.update(specialOrderApplication);
+    
+    bpmDicision.setBodyDiscount(-1D);
+    bpmDicision.setMainDiccount(-1D);
+    bpmDicision.setApprovedBodyDiscount(-1D);
+    bpmDicision.setApprovedMainDiscount(-1D);
   }
 
   /**
@@ -1620,25 +1673,16 @@ public class OrderService {
       }
 
       String category = itemDto.getItemCategory();
+      // 退货
+      double flag = returnCategorys.contains(category) ? -1 : 1;
       // 特殊物料，只合计购销明细金额
       if (specialMaterials.contains(mcode)) {
         // 退货
-        if (returnCategorys.contains(category)) {
-          itemsAmount -= itemDto.getActualPrice() * itemDto.getQuantity();
-        } else {
-          itemsAmount += itemDto.getActualPrice() * itemDto.getQuantity();
-        }
+        itemsAmount += flag * itemDto.getActualPrice() * itemDto.getQuantity();
       } else {
-        // 退货
-        if (returnCategorys.contains(category)) {
-          itemsAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsDicountAmount -= (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsNonDicountAmount -= (itemDto.getRetailPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-        } else {
-          itemsAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsDicountAmount += (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-          itemsNonDicountAmount += (itemDto.getRetailPrice() + itemDto.getOptionalRetailPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
-        }
+        itemsAmount += flag * (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+        itemsDicountAmount += flag * (itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
+        itemsNonDicountAmount += flag * (itemDto.getRetailPrice() + ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) + itemDto.getB2cEstimatedPrice()) * itemDto.getQuantity();
       }
     }
     // 凭证货币
@@ -1664,8 +1708,9 @@ public class OrderService {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  private void updateBpmItemDicount(List<ItemDto> items, Double bodyDiscount, Double unitDiscount)
+  private void updateBpmItemDicount(OrderDto order, Double bodyDiscount, Double unitDiscount)
       throws IllegalAccessException, InvocationTargetException {
+    List<ItemDto> items = order.getItems();
     for (ItemDto itemDto : items) {
       // 取消状态的行项目不在累计范围
       if (itemDto.getItemStatus().equals("Z2")) {
@@ -1688,6 +1733,7 @@ public class OrderService {
 
         Item item = new Item();
         BeanUtils.copyProperties(item, itemDto);
+        item.setOrderInfoId(order.getId());
         itemMapper.update(item);
       }
     }

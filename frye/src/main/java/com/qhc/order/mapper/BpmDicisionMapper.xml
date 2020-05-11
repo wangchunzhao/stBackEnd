@@ -9,6 +9,8 @@
 		<result column="approved_body_discount" property="approvedBodyDiscount" jdbcType="DOUBLE" />
 		<result column="main_diccount" property="mainDiccount" jdbcType="DOUBLE" />
 		<result column="approved_main_discount" property="approvedMainDiscount" jdbcType="DOUBLE" />
+		<result column="approved_time" property="approvedTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="BpmDicisionMap" type="com.qhc.order.entity.BpmDicision" extends="BpmDicisionBaseMap" >
@@ -22,10 +24,10 @@
 		</selectKey>
 		insert into k_bpm_dicision ( id, order_info_id, is_passed, 
 			body_discount, approved_body_discount, main_diccount, 
-			approved_main_discount )
+			approved_main_discount, approved_time, remark )
 		values ( #{id, jdbcType=INTEGER}, #{orderInfoId, jdbcType=INTEGER}, #{isPassed, jdbcType=INTEGER}, 
 			#{bodyDiscount, jdbcType=DOUBLE}, #{approvedBodyDiscount, jdbcType=DOUBLE}, #{mainDiccount, jdbcType=DOUBLE}, 
-			#{approvedMainDiscount, jdbcType=DOUBLE} )
+			#{approvedMainDiscount, jdbcType=DOUBLE}, now(), #{remark, jdbcType=VARCHAR} )
 	</insert>
 	
 	<!-- 修改 -->
@@ -36,7 +38,9 @@
 			body_discount = #{bodyDiscount, jdbcType=DOUBLE}, 
 			approved_body_discount = #{approvedBodyDiscount, jdbcType=DOUBLE}, 
 			main_diccount = #{mainDiccount, jdbcType=DOUBLE}, 
-			approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}
+			approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}, 
+			approved_time = #{approvedTime, jdbcType=TIMESTAMP}, 
+			remark = #{remark, jdbcType=VARCHAR}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	
@@ -48,7 +52,7 @@
 
 	<sql id="Base_Column_List" >
 		k_bpm_dicision.id, k_bpm_dicision.order_info_id, k_bpm_dicision.is_passed, k_bpm_dicision.body_discount, k_bpm_dicision.approved_body_discount, 
-		k_bpm_dicision.main_diccount, k_bpm_dicision.approved_main_discount
+		k_bpm_dicision.main_diccount, k_bpm_dicision.approved_main_discount, k_bpm_dicision.approved_time, k_bpm_dicision.remark
 	</sql>
 	
 	<sql id="Column_List">
@@ -61,6 +65,29 @@
 		<include refid="Column_List" />
 		from k_bpm_dicision 
 		where k_bpm_dicision.id = #{value, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="BpmDicisionMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from k_bpm_dicision
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by id
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from k_bpm_dicision
+		<include refid="Where_By_Params" />
 	</select>
 	
 	<sql id="Where_By_Params" >
@@ -86,6 +113,12 @@
 			<if test="approvedMainDiscount != null" >
 				AND k_bpm_dicision.approved_main_discount = #{approvedMainDiscount, jdbcType=DOUBLE}
 			</if>
+			<if test="approvedTime != null" >
+				AND k_bpm_dicision.approved_time = #{approvedTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null and remark != ''" >
+				AND k_bpm_dicision.remark = #{remark, jdbcType=VARCHAR}
+			</if>
 			
 			<include refid="Where_Clause" />
 		</trim>
@@ -94,29 +127,6 @@
 	<sql id="Where_Clause">
 		
 	</sql>
-	
-	<!-- 按参数统计 -->
-	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
-		select count(1) 
-		from k_bpm_dicision
-		<include refid="Where_By_Params" />
-	</select>
-	
-	<!-- 按参数查询 -->
-	<select id="findByParams" resultMap="BpmDicisionMap" parameterType="Map" >
-		select 
-		<include refid="Column_List" />
-		from k_bpm_dicision
-		<include refid="Where_By_Params" />
-		<choose>
-			<when test="orderByClause != null">
-				order by ${orderByClause}
-			</when>
-			<otherwise>
-				order by id
-			</otherwise>
-		</choose>
-	</select>
 	
 	<select id="findByOrderInfoId" resultMap="BpmDicisionMap" parameterType="Integer" >
 		select 

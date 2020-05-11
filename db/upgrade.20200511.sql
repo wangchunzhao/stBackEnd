@@ -16,3 +16,9 @@ create table b_operate_log
 );
 
 alter table b_operate_log comment '操作日志';
+
+ALTER TABLE `qhc2`.`k_bpm_dicision` 
+ADD COLUMN `approved_time` DATETIME NULL COMMENT '审批时间' AFTER `approved_main_discount`,
+ADD COLUMN `remark` VARCHAR(512) NULL AFTER `approved_time`,
+CHANGE COLUMN `body_discount` `body_discount` DOUBLE(4,2) NULL COMMENT '申请柜体折扣' ,
+CHANGE COLUMN `main_diccount` `main_diccount` DOUBLE(4,2) NULL COMMENT '申请机组折扣' ;

@@ -363,10 +363,12 @@ create table k_bpm_dicision
    id                   integer unsigned not null auto_increment,
    order_info_id        integer not null,
    is_passed            integer not null,
-   body_discount        double(4,2) not null comment '申请柜体折扣',
+   body_discount        double(4,2) comment '申请柜体折扣',
    approved_body_discount double(4,2) comment '批准柜体折扣',
-   main_diccount        double(4,2) not null comment '申请机组折扣',
+   main_diccount        double(4,2) comment '申请机组折扣',
    approved_main_discount double(4,2) comment '批准机组折扣',
+   approved_time        datetime comment '审批时间',
+   remark               varchar(512),
    primary key (id)
 );
 

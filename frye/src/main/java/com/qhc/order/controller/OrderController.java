@@ -1,8 +1,10 @@
 package com.qhc.order.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -302,6 +304,12 @@ public class OrderController {
 	 * <li>bodyDiscount</li>
 	 * <li>unitDiscount</li>
 	 * 
+	 * 这是原来那个回调接口样式：
+	 * [{"sequenceNumber":"QHC202058100811376","status":"1","bodyDiscount":0,"unitDiscount":0}]
+	 * 长期折扣、非统一折扣：
+	 * [{"sequenceNumber":"QHC202058100811376","status":"1","lineNum":"10","discount":45},{"sequenceNumber":"QHC202058100811376","status":"1","lineNum":"20","discount":43}]
+
+	 * 
 	 * @return
 	 */
 	@ApiOperation(value = "BPM callback", notes = "BPM callback")
@@ -309,14 +317,32 @@ public class OrderController {
 	@ResponseBody
 	public boolean bpmCallback(@RequestBody List<Map> datas) {
 		try {
-			for (Map data : datas) {
-				String status = String.valueOf(data.get("status"));
-				String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
-				Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
-				Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
-
-				this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
-			} 
+		  if (datas != null && datas.size() > 0) {
+		    if (datas.get(0).get("lineNum") != null) {
+		      String sequenceNumber = String.valueOf(datas.get(0).get("sequenceNumber"));
+		      String status = String.valueOf(datas.get(0).get("status"));
+		      List<Map<String, Object>> items = new ArrayList<>();
+              for (Map data : datas) {
+                Map<String, Object> item = new HashMap<String, Object>();
+                items.add(item);
+                String lineNum = StringUtils.trimToEmpty(String.valueOf(data.get("lineNum")));
+                Double discount = Double.valueOf(String.valueOf(data.get("discount")));
+                item.put("lineNum", lineNum);
+                item.put("discount", discount);
+              } 
+              
+              this.orderService.updateBpmStatus("admin", sequenceNumber, status, null, null, items);
+		    } else {
+		      for (Map data : datas) {
+		        String status = String.valueOf(data.get("status"));
+		        String sequenceNumber = String.valueOf(data.get("sequenceNumber"));
+		        Double bodyDiscount = Double.valueOf(String.valueOf(data.get("bodyDiscount")));
+		        Double unitDiscount = Double.valueOf(String.valueOf(data.get("unitDiscount")));
+		        
+		        this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount, null);
+		      } 
+		    }
+		  }
             
             // 记录操作日志
             OperateLog operateLog = new OperateLog();
