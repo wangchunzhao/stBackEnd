@@ -38,8 +38,8 @@
 	</update>
 	
 	<!-- 按主键删除 -->
-	<delete id="deleteById" parameterType="" >
-		delete from b_operate_log
+	<delete id="deleteById" parameterType="Integer" >
+		delete from b_operate_log where  id = #{id, jdbcType=INTEGER}
 	</delete>
 
 	<sql id="Base_Column_List" >
@@ -52,7 +52,7 @@
 	</sql>
 	
 	<!-- 按主键查询 -->
-	<select id="findById" resultMap="OperateLogMap" parameterType="" >
+	<select id="findById" resultMap="OperateLogMap" parameterType="Integer" >
 		select 
 		<include refid="Column_List" />
 		from b_operate_log 
