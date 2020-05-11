@@ -288,7 +288,7 @@ public class GrossProfitMarginService {
 			  // 退货，减去
 			  double flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
-                // amount += ( item.getActualPrice() + item.getOptionalActualPrice() +
+                // amount += ( item.getActualPrice() + ObjectUtils.defaultIfNull(item.getOptionalActualPrice(), 0D) +
                 // item.getB2cEstimatedPrice() ) * item.getQuantity();
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
 //                amount += (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
@@ -340,7 +340,7 @@ public class GrossProfitMarginService {
             // 成本（销售）
             cost += flag * item.getOptionalTransactionPrice() * item.getQuantity();
             // 成本（生产）
-            wtwCost += flag * item.getOptionalStandardPrice() * item.getQuantity();
+            wtwCost += flag * ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * item.getQuantity();
         }
 
         // 2. 不含税金额=金额/(1+税率)
