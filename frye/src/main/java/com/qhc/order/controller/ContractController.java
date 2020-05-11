@@ -39,6 +39,7 @@ import com.qhc.order.service.ContractService;
 import com.qhc.system.domain.PageHelper;
 import com.qhc.system.domain.Result;
 import com.qhc.system.entity.OperateLog;
+import com.qhc.system.service.OperateLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -57,6 +58,9 @@ public class ContractController {
 
 	@Autowired
 	private BestsignService bestsignService;
+	
+	@Autowired
+	private OperateLogService operateLogService;
 
 	@Value("${contract.bestsign.contractDir}")
 	private String contractDir;
@@ -95,6 +99,7 @@ public class ContractController {
             operateLog.setObjectName("contract");
             operateLog.setObjectKey(view.getId() + "");
             operateLog.setRemark("修改合同 " + view.getId());
+            operateLogService.save(operateLog);
 		} catch (Exception e) {
 			logger.error("保存或修改合同", e);
 			result = Result.error(e.getMessage());
@@ -156,6 +161,7 @@ public class ContractController {
 //	        operateLog.setObjectName("contract");
 //	        operateLog.setObjectKey(view.getId() + "");
 //	        operateLog.setRemark("发送合同 " + view.getId());
+//            operateLogService.save(operateLog);
 		} catch (Exception e) {
 			String msg = "更新合同PDF文档hashcode信息，合同ID=" + contractId + "， FileHashCode=" + hashcode;
 			logger.error(msg, e);
@@ -228,6 +234,7 @@ public class ContractController {
 //        operateLog.setObjectName("contract");
 //        operateLog.setObjectKey(view.getId() + "");
 //        operateLog.setRemark("签署合同 " + view.getId());
+//        operateLogService.save(operateLog);
 		return r;
 	}
 

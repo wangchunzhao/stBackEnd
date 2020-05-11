@@ -113,6 +113,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(order.getId() + "");
             operateLog.setRemark("修改订单 " + order.getId());
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -161,6 +162,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(order.getId()));
             operateLog.setRemark("提交订单 " + order.getId());
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -184,6 +186,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(orderInfoId));
             operateLog.setRemark("驳回订单 " + orderInfoId);
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -208,6 +211,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(orderInfoId));
             operateLog.setRemark("订单变更 " + orderInfoId + " -> " + order.getId());
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -257,6 +261,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(orderInfoId));
             operateLog.setRemark("报价单下单，" + orderInfoId + " -> " + order.getId());
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -281,6 +286,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(order.getId()));
             operateLog.setRemark("提交到BPM " + order.getId());
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -352,6 +358,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(orderInfoId));
             operateLog.setRemark("下推SAP " + orderInfoId);
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error(e.getMessage());
@@ -408,6 +415,7 @@ public class OrderController {
             operateLog.setObjectName("order");
             operateLog.setObjectKey(String.valueOf(orderInfoId));
             operateLog.setRemark("修改报价单报价状态 -> " + status);
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error("订单下发SAP失败！");
