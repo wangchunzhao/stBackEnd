@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,7 +25,8 @@ import com.qhc.order.service.OrderService;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.system.domain.PageHelper;
 import com.qhc.system.domain.Result;
-
+import com.qhc.system.entity.OperateLog;
+import com.qhc.system.service.OperateLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -45,6 +45,9 @@ public class OrderController {
 	
 	@Autowired
 	private GrossProfitMarginService grossProfitMarginService;
+	
+	@Autowired
+	private OperateLogService operateLogService;
 
 	/**
 	 * 查询订单
@@ -102,6 +105,14 @@ public class OrderController {
 		  order.setUpdater(user);
 			orderService.save(user, order);
 			result = Result.ok("");
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("update");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(order.getId() + "");
+            operateLog.setRemark("修改订单 " + order.getId());
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -118,6 +129,15 @@ public class OrderController {
 		try {
 			orderService.delete(user, orderInfoId);
 			result = Result.ok("删除成功");
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("delete");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("删除订单 -> " + orderInfoId);
+            operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -133,6 +153,14 @@ public class OrderController {
 		try {
 			orderService.submit(user, order);
 			result = Result.ok("");
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("submit");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(order.getId()));
+            operateLog.setRemark("提交订单 " + order.getId());
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -148,6 +176,14 @@ public class OrderController {
 		try {
 			orderService.reject(user, orderInfoId);
 			result = Result.ok("");
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("reject");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("驳回订单 " + orderInfoId);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -164,6 +200,14 @@ public class OrderController {
 		try {
 			OrderDto order = orderService.upgrade(user, orderInfoId);
 			result = Result.ok(order);
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("upgrade");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("订单变更 " + orderInfoId + " -> " + order.getId());
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -180,6 +224,15 @@ public class OrderController {
 		try {
 			OrderDto order = orderService.copy(user, orderInfoId);
 			result = Result.ok(order);
+	        
+	        // 记录操作日志
+	        OperateLog operateLog = new OperateLog();
+	        operateLog.setOperator(user);
+	        operateLog.setOperateType("copy");
+	        operateLog.setObjectName("order");
+	        operateLog.setObjectKey(String.valueOf(order.getId()));
+	        operateLog.setRemark("复制订单 " + orderInfoId + " -> " + order.getId());
+	        operateLogService.save(operateLog);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -196,6 +249,14 @@ public class OrderController {
 		try {
 			OrderDto order = orderService.transfer(user, orderInfoId);
 			result = Result.ok(order);
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("update");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("报价单下单，" + orderInfoId + " -> " + order.getId());
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -212,6 +273,14 @@ public class OrderController {
 		try {
 			orderService.submitBpm(user, order);
 			result = Result.ok("");
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("tobpm");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(order.getId()));
+            operateLog.setRemark("提交到BPM " + order.getId());
 		} catch (Throwable e) {
 			e.printStackTrace();
 			result = Result.error(e.getMessage());
@@ -242,6 +311,15 @@ public class OrderController {
 
 				this.orderService.updateBpmStatus("admin", sequenceNumber, status, bodyDiscount, unitDiscount);
 			} 
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator("admin");
+            operateLog.setOperateType("copy");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey("");
+            operateLog.setRemark("BPM回调 " + datas);
+            operateLogService.save(operateLog);
 
 			return true;
 		} catch (Throwable e) {
@@ -266,6 +344,14 @@ public class OrderController {
 		try {
 			String res = orderService.sendToSap(user, orderInfoId);
 			result = Result.ok(res);
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("tosap");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("下推SAP " + orderInfoId);
 		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error(e.getMessage());
@@ -314,6 +400,14 @@ public class OrderController {
 		try {
 			String res = orderService.updateQuoteStatus(user, orderInfoId, status);
 			result = Result.ok(res);
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(user);
+            operateLog.setOperateType("update");
+            operateLog.setObjectName("order");
+            operateLog.setObjectKey(String.valueOf(orderInfoId));
+            operateLog.setRemark("修改报价单报价状态 -> " + status);
 		} catch (Throwable e) {
 			logger.error("订单下发SAP失败", e);
 			result = Result.error("订单下发SAP失败！");

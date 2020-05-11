@@ -14,17 +14,13 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,9 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qhc.order.domain.ContractDto;
 import com.qhc.order.entity.Contract;
@@ -45,7 +38,7 @@ import com.qhc.order.service.BestsignService;
 import com.qhc.order.service.ContractService;
 import com.qhc.system.domain.PageHelper;
 import com.qhc.system.domain.Result;
-
+import com.qhc.system.entity.OperateLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -94,6 +87,14 @@ public class ContractController {
 			contract = contractService.save(contract);
 			view.setId(contract.getId());
 			result = Result.ok(view);
+            
+            // 记录操作日志
+            OperateLog operateLog = new OperateLog();
+            operateLog.setOperator(view.getCreater());
+            operateLog.setOperateType(view.getId() == null ? "create" : "update");
+            operateLog.setObjectName("contract");
+            operateLog.setObjectKey(view.getId() + "");
+            operateLog.setRemark("修改合同 " + view.getId());
 		} catch (Exception e) {
 			logger.error("保存或修改合同", e);
 			result = Result.error(e.getMessage());
@@ -147,6 +148,14 @@ public class ContractController {
 			c.setStatus("03");
 			contractService.updateStatus(c);
 			result = Result.ok(c);
+	        
+	        // 记录操作日志
+//	        OperateLog operateLog = new OperateLog();
+//	        operateLog.setOperator(view.getCreater());
+//	        operateLog.setOperateType("send");
+//	        operateLog.setObjectName("contract");
+//	        operateLog.setObjectKey(view.getId() + "");
+//	        operateLog.setRemark("发送合同 " + view.getId());
 		} catch (Exception e) {
 			String msg = "更新合同PDF文档hashcode信息，合同ID=" + contractId + "， FileHashCode=" + hashcode;
 			logger.error(msg, e);
@@ -211,6 +220,14 @@ public class ContractController {
 		} else {
 			r = Result.error("");
 		}
+        
+        // 记录操作日志
+//        OperateLog operateLog = new OperateLog();
+//        operateLog.setOperator(view.getCreater());
+//        operateLog.setOperateType(view.getId() == null ? "create" : "update");
+//        operateLog.setObjectName("contract");
+//        operateLog.setObjectKey(view.getId() + "");
+//        operateLog.setRemark("签署合同 " + view.getId());
 		return r;
 	}
 

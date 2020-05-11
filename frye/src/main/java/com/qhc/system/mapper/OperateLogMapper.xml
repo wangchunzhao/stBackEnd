@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.system.mapper.OperateLogMapper" >
+	<resultMap id="OperateLogBaseMap" type="com.qhc.system.entity.OperateLog" >
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+		<result column="operate_type" property="operateType" jdbcType="VARCHAR" />
+		<result column="object_name" property="objectName" jdbcType="VARCHAR" />
+		<result column="object_key" property="objectKey" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="OperateLogMap" type="com.qhc.system.entity.OperateLog" extends="OperateLogBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.system.entity.OperateLog">
+		insert into b_operate_log ( id, operator, operate_time, 
+			operate_type, object_name, object_key, 
+			remark )
+		values ( #{id, jdbcType=INTEGER}, #{operator, jdbcType=VARCHAR}, now(), 
+			#{operateType, jdbcType=VARCHAR}, #{objectName, jdbcType=VARCHAR}, #{objectKey, jdbcType=VARCHAR}, 
+			#{remark, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.system.entity.OperateLog" >
+		update b_operate_log
+		set id = #{id, jdbcType=INTEGER}, 
+			operator = #{operator, jdbcType=VARCHAR}, 
+			<!-- operate_time = #{operateTime, jdbcType=TIMESTAMP},  -->
+			operate_type = #{operateType, jdbcType=VARCHAR}, 
+			object_name = #{objectName, jdbcType=VARCHAR}, 
+			object_key = #{objectKey, jdbcType=VARCHAR}, 
+			remark = #{remark, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="" >
+		delete from b_operate_log
+	</delete>
+
+	<sql id="Base_Column_List" >
+		b_operate_log.id, b_operate_log.operator, b_operate_log.operate_time, b_operate_log.operate_type, b_operate_log.object_name, 
+		b_operate_log.object_key, b_operate_log.remark
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="OperateLogMap" parameterType="" >
+		select 
+		<include refid="Column_List" />
+		from b_operate_log 
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="OperateLogMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from b_operate_log
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from b_operate_log
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="id != null" >
+				AND b_operate_log.id = #{id, jdbcType=INTEGER}
+			</if>
+			<if test="operator != null and operator != ''" >
+				AND b_operate_log.operator = #{operator, jdbcType=VARCHAR}
+			</if>
+			<if test="operateTime != null" >
+				AND b_operate_log.operate_time = #{operateTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="operateType != null and operateType != ''" >
+				AND b_operate_log.operate_type = #{operateType, jdbcType=VARCHAR}
+			</if>
+			<if test="objectName != null and objectName != ''" >
+				AND b_operate_log.object_name = #{objectName, jdbcType=VARCHAR}
+			</if>
+			<if test="objectKey != null and objectKey != ''" >
+				AND b_operate_log.object_key = #{objectKey, jdbcType=VARCHAR}
+			</if>
+			<if test="remark != null and remark != ''" >
+				AND b_operate_log.remark = #{remark, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>

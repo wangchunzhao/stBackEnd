@@ -71,6 +71,7 @@ import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.TermianlIndustryCode;
+import com.qhc.sap.mapper.SapOrderMapper;
 import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.sap.service.MaterialService;
 import com.qhc.sap.service.SapService;
@@ -187,7 +188,7 @@ public class OrderService {
   private SapService sapService;
 
   @Autowired
-  private com.qhc.sap.mapper.SapOrderMapper sapOrderMapper;
+  private SapOrderMapper sapOrderMapper;
 
   @Transactional
   public OrderDto save(String user, final OrderDto orderDto) throws Exception {
