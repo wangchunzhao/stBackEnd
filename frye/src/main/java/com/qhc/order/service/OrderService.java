@@ -1423,6 +1423,9 @@ public class OrderService {
         bpmItem.setPeriod(ObjectUtils.defaultIfNull(itemDto.getPeriod(), 0));
         bpmItem.setProduceDate(itemDto.getProduceDate());
         bpmItem.setQuantity(itemDto.getQuantity());
+        bpmItem.setTotalSellingPrice(itemDto.getActualPrice() + itemDto.getOptionalActualPrice() + itemDto.getB2cEstimatedPrice());
+        bpmItem.setTotalSellingAmount(bpmItem.getTotalSellingPrice() * itemDto.getQuantity());
+        bpmItem.setTotalTransferAmount((itemDto.getTransactionPrice() + itemDto.getOptionalTransactionPrice() + itemDto.getB2cEstimatedCost()) * itemDto.getQuantity());
         bpmItem.setRetailAmount(itemDto.getRetailPrice() * itemDto.getQuantity());
         bpmItem.setRetailPrice(itemDto.getRetailPrice());
         bpmItem.setRowNumber(itemDto.getRowNum());

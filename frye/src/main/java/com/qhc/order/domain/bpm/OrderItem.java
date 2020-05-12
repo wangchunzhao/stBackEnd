@@ -40,11 +40,11 @@ public class OrderItem {
 	/* B2C预估成本 */
 	private double b2cCostOfEstimated;
 	/* 实卖价合计 */
-//	 private String 		;
+	 private double totalSellingPrice;
 	/* 实卖金额合计 */
-//	 private String 		;
+     private double totalSellingAmount;
 	/* 转移价合计 */
-//	 private String 		;
+     private double totalTransferAmount;
 	/* 市场零售价 */
 	private double retailPrice;
 	/* 市场零售金额 */
@@ -218,7 +218,31 @@ public class OrderItem {
 		this.b2cCostOfEstimated = b2cCostOfEstimated;
 	}
 
-	public double getRetailPrice() {
+	public double getTotalSellingPrice() {
+    return totalSellingPrice;
+  }
+
+  public double getTotalSellingAmount() {
+    return totalSellingAmount;
+  }
+
+  public double getTotalTransferAmount() {
+    return totalTransferAmount;
+  }
+
+  public void setTotalSellingPrice(double totalSellingPrice) {
+    this.totalSellingPrice = totalSellingPrice;
+  }
+
+  public void setTotalSellingAmount(double totalSellingAmount) {
+    this.totalSellingAmount = totalSellingAmount;
+  }
+
+  public void setTotalTransferAmount(double totalTransferAmount) {
+    this.totalTransferAmount = totalTransferAmount;
+  }
+
+  public double getRetailPrice() {
 		return retailPrice;
 	}
 
