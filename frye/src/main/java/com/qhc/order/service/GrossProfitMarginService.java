@@ -400,7 +400,7 @@ public class GrossProfitMarginService {
 			margin = (amount - cost) / amount;
 		}
 		
-		margin = toBigDecimal(margin, 2).doubleValue();
+		margin = toBigDecimal(margin, 4).doubleValue();
 
 		return margin;
 	}
