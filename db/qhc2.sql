@@ -656,7 +656,7 @@ create table k_order_info
    contract_manager     varchar(45) comment '支持经理，合同管理员',
    office_code          varchar(45) comment '表单里的大区, sap_sales_office',
    group_code           varchar(45) comment '中心, sap_sales_group',
-   warranty             integer comment '保修年限',
+   warranty             decimal(3,1) comment '保修年限',
    install_type         varchar(10) comment '安装, sap_installation_terms
             10	招标
             20	自装自提',

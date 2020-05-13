@@ -52,6 +52,13 @@ public class ItemDto {
 	private double discount;//折扣，商品折扣，柜体和机组有，其他默认为100
 	
 	private String itemCategory;//行项目类别
+    /* 需求计划 
+     * "004" 物料需求计划
+     * "001" B2C
+     * "002" 消化
+     * "003" 调发
+     * "005" 替换
+     * */
 	private String itemRequirementPlan;//需求计划
 	private int period;//生产、采购周期
 	

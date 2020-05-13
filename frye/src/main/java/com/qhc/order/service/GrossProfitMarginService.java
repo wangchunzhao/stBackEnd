@@ -87,7 +87,7 @@ public class GrossProfitMarginService {
 			freight = freight / exchange; // 转换为凭证货币，用于毛利率计算
 		}
 		
-		int warranty = order.getWarranty();
+		double warranty = order.getWarranty();
 		double withholdRatio = Double.valueOf(settingsService.findByCode("withhold_ratio").getsValue()).doubleValue();
 		double installFee = ObjectUtils.defaultIfNull(order.getInstallFee(), 0d) / exchange; // 转换为凭证货币
 		double materialFee = ObjectUtils.defaultIfNull(order.getMaterialFee(), 0d) / exchange; // 转换为凭证货币

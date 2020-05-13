@@ -1,10 +1,11 @@
 package com.qhc.order.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +36,6 @@ import com.qhc.order.mapper.CharacteristicsMapper;
 import com.qhc.system.entity.ProvinceMap;
 import com.qhc.system.mapper.ProvinceMapMapper;
 import com.qhc.system.mapper.UserMapper;
-import com.qhc.system.service.UserService;
 import com.qhc.utils.HttpUtil;
 
 @Service
@@ -59,6 +59,32 @@ public class SapOrderService {
 	private ProvinceMapMapper provinceMapMapper;
 	@Autowired
 	private UserMapper userMapper;
+	
+	private Map<String, String> needplanMap = new HashMap<String, String>() {
+	  {
+	 // 大客户订单
+	    put("4-004", "CP"); // 物料需求计划
+	    put("4-001", "Z1"); // B2C
+	    put("4-002", "Z2"); // 消化
+	    put("4-003", "Z3"); // 调发
+	    put("4-005", "ZA"); // 替换
+	    // 经销商订单
+	    put("1-004", "ZP"); // 物料需求计划(经销商）
+	    put("1-001", "Z4"); // B2C （经销商）
+	    put("1-002", "Z5"); // 消化（经销商）
+	    put("1-003", "Z6"); // 调发（经销商）
+	    put("1-005", "Z0"); // 替换（经销商）
+	    // 经销商非标订单
+	    put("2-004", "ZP"); // 物料需求计划(经销商）
+	    put("2-001", "Z4"); // B2C （经销商）
+	    put("2-002", "Z5"); // 消化（经销商）
+	    put("2-003", "Z6"); // 调发（经销商）
+	    put("2-005", "Z0"); // 替换（经销商）
+	    // 备货订单
+	    put("5-004", "ZP"); // 物料需求计划(经销商）
+	    put("5-001", "Z1"); // B2C
+	  }
+	};
 
 	public SapOrderService() {
 	}
@@ -103,7 +129,12 @@ public class SapOrderService {
 		header.setKvgr1(ObjectUtils.defaultIfNull(order.getIsConvenientStore(), "").toString()); // Customer grp.1/客户组1 -- 是否便利店
 		header.setKvgr2(ObjectUtils.defaultIfNull(order.getIsNew(), "").toString()); // Customer grp.2/客户组2 -- 是否新客户
 		header.setKvgr3(ObjectUtils.defaultIfNull(order.getIsReformed(), "").toString()); // Customer grp.3/客户组3 -- 是否改造店
-		header.setBstzd(ObjectUtils.defaultIfNull(order.getWarranty(), "").toString()); // Additional/附加的 -- 保修年限
+		
+		String warranty = BigDecimal.valueOf(order.getWarranty()).setScale(1).toString();
+		if (warranty.endsWith(".0")) {
+		  warranty = warranty.substring(warranty.length() - 2);
+		}
+		header.setBstzd(warranty); // Additional/附加的 -- 保修年限
 		header.setBstkdE(StringUtils.trimToEmpty(order.getRecordCode()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号
 		header.setVsart(StringUtils.trimToEmpty(order.getTransferType())); // Shipping type/装运类型 -- 运输类型
 		if (order.getStOrderType().equals("4")) {
@@ -180,7 +211,22 @@ public class SapOrderService {
 			// Item category/行项目类别 -- 项目类别
 			sapItem.setPstyv(item.getItemCategory());
 			// Item usage/项目用途 -- 项目需求计划
-			sapItem.setVkaus(item.getItemRequirementPlan());
+//			转换规则：
+//			业务场景 计划行类别  项目需求计划
+//			大客户订单   CP  物料需求计划
+//                			    Z1  B2C
+//                			    Z2  消化
+//                			    Z3  调发
+//                			    ZA  替换
+//			经销商订单  ZP  物料需求计划(经销商）
+//                			    Z4  B2C （经销商）
+//                			    Z5  消化（经销商）
+//                			    Z6  调发（经销商）
+//                			    Z0  替换（经销商）
+//			备货订单    ZP  物料需求计划(经销商）
+//			                  Z1  B2C
+			String itemUsage = needplanMap.get(order.getStOrderType() + "-" + item.getItemRequirementPlan());
+			sapItem.setVkaus(itemUsage);
 
 			// 2020/03/05 行项目不传地址
 //			// 出口定单的时候，省市区我记得是默认置灰，只填具体地址。
