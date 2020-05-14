@@ -495,7 +495,12 @@ create table k_item
             // 不可预估费，其他项目收付费
             put("ZH97","ZH97");
             put("ZH98","ZH98");',
-   item_requirement_plan varchar(45) not null comment '需求计划',
+   item_requirement_plan varchar(45) not null comment '需求计划
+            "004" 物料需求计划
+            "001" B2C
+            "002" 消化
+            "003" 调发
+            "005" 替换',
    b2c_estimated_price  decimal(13,2) comment 'B2C评估价',
    b2c_estimated_cost   decimal(13,2) comment 'B2C评估成本单价',
    delivery_address_seq integer comment '发货地址序号',
@@ -1024,6 +1029,7 @@ create table sap_materials
    sap_clazz_code       varchar(18) not null comment '特征分组',
    sap_material_status  varchar(10) comment '跨工厂物料状态',
    sap_distribution_status varchar(10) comment '跨分销链状态',
+   special_purchase_type varchar(10) comment '特殊采购类型',
    primary key (code),
    key code_UNIQUE (code)
 );

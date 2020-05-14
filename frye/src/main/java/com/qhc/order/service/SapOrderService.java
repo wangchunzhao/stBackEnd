@@ -60,6 +60,7 @@ public class SapOrderService {
 	@Autowired
 	private UserMapper userMapper;
 	
+	// Item usage/项目用途 -- 项目需求计划 映射关系
 	private Map<String, String> needplanMap = new HashMap<String, String>() {
 	  {
 	 // 大客户订单
