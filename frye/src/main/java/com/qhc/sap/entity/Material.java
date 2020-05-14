@@ -67,6 +67,9 @@ public class Material {
 	
 	@Column(name="sap_distribution_status",columnDefinition="CHAR",length=10)
 	private String distributionStatus;
+	
+	@Column(name="special_purchase_type",columnDefinition="CHAR",length=10)
+	private String specialPurchaseType;
 
 	public String getCode() {
 		return code;
@@ -171,6 +174,14 @@ public class Material {
 
 	public void setDistributionStatus(String distributionStatus) {
 		this.distributionStatus = distributionStatus;
+	}
+
+	public String getSpecialPurchaseType() {
+		return specialPurchaseType;
+	}
+
+	public void setSpecialPurchaseType(String specialPurchaseType) {
+		this.specialPurchaseType = specialPurchaseType;
 	}
 	
 	

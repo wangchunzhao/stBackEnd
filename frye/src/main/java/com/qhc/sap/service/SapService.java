@@ -417,6 +417,7 @@ public class SapService {
 					material.setMaterialType(obj.getString("mtart"));
 					material.setMaterialStatus(obj.getString("mstae"));
 					material.setDistributionStatus(obj.getString("mstav"));
+					material.setSpecialPurchaseType(obj.getString("sobsl"));
 					mlist.add(material);
 					System.out.println(obj.getString("matnr") + ":评估类不正确");
 				} else {
@@ -442,6 +443,7 @@ public class SapService {
 					material.setMaterialType(obj.getString("mtart"));
 					material.setMaterialStatus(obj.getString("mstae"));
 					material.setDistributionStatus(obj.getString("mstav"));
+					material.setSpecialPurchaseType(obj.getString("sobsl"));
 					mlist.add(material);
 				}
 
@@ -476,7 +478,7 @@ public class SapService {
 			}
 			Parameter parameter4 = new Parameter();
 			parameter4.setKey("TCODE");
-			parameter4.setValue("VK11");
+			parameter4.setValue("VK11,VK12,VK13");
 			List<Parameter> parList = new ArrayList<Parameter>();
 			parList.add(parameter1);
 			parList.add(parameter2);

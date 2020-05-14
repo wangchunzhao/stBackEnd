@@ -104,6 +104,7 @@ public class MaterialService {
 			dm.setClazzCode(ma.getClazzCode());
 			dm.setMaterialStatus(ma.getMaterialStatus());
 			dm.setDistributionStatus(ma.getDistributionStatus());
+			dm.setSpecialPurchaseType(ma.getSpecialPurchaseType());
 			mset.add(dm);
 
 			if (ma.getClazzCode() != null && !ma.getClazzCode().isEmpty()) {
