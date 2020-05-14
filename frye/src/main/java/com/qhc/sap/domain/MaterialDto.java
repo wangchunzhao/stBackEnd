@@ -56,7 +56,7 @@ public class MaterialDto implements Serializable{
 	
 	private String materialStatus;//跨工厂物料状态
 	private String distributionStatus;//跨分销链状态
-	
+	private String specialPurchaseType;//特殊采购类型
 	
 	public String getCode() {
 		return code;
@@ -183,6 +183,12 @@ public class MaterialDto implements Serializable{
 	}
 	public void setDistributionStatus(String distributionStatus) {
 		this.distributionStatus = distributionStatus;
+	}
+	public String getSpecialPurchaseType() {
+		return specialPurchaseType;
+	}
+	public void setSpecialPurchaseType(String specialPurchaseType) {
+		this.specialPurchaseType = specialPurchaseType;
 	}
 	
 }
