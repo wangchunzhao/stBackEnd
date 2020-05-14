@@ -61,7 +61,7 @@
 	    FROM `sap_clazz_and_character` `i` 
     	INNER JOIN `sap_characteristic` `c` ON `c`.`code` = `i`.`sap_characteristic_code` 
         INNER JOIN `sap_characteristic_value` `v` ON `v`.`sap_characteristic_code` = `c`.`code` 
-        LEFT JOIN `sap_material_default_characteristic` `d` ON d.sap_materials_code = #{materialCode, jdbcType=VARCHAR} AND `d`.`sap_characteristic_code` = `c`.`code`
+        INNER JOIN `sap_material_default_characteristic` `d` ON d.sap_materials_code = #{materialCode, jdbcType=VARCHAR} AND `d`.`sap_characteristic_code` = `c`.`code`
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
 			AND i.sap_clazz_code = #{clazzCode, jdbcType=VARCHAR}
 		</trim>
