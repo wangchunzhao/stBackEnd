@@ -226,6 +226,7 @@ public class SapOrderService {
 //			备货订单    ZP  物料需求计划(经销商）
 //			                  Z1  B2C
 			String itemUsage = needplanMap.get(order.getStOrderType() + "-" + item.getItemRequirementPlan());
+			itemUsage = item.getItemRequirementPlan();
 			sapItem.setVkaus(itemUsage);
 
 			// 2020/03/05 行项目不传地址
