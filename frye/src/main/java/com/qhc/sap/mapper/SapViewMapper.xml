@@ -33,6 +33,7 @@
 			<if test="list" >
 				AND (m.sap_material_status is null or m.sap_material_status = '') 
 				AND (m.sap_distribution_status is null or m.sap_distribution_status = '')
+				AND (m.special_purchase_type is null || m.special_purchase_type != '50')
 			</if>
 			<if test="code != null and code != ''" >
 				AND m.code = #{code, jdbcType=VARCHAR}
