@@ -15,6 +15,7 @@ import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.SpecialDeliveryDto;
 import com.qhc.order.entity.SpecialAttachment;
 import com.qhc.order.entity.SpecialOrderApplication;
+import com.qhc.order.mapper.SpecialAttachmentMapper;
 import com.qhc.order.mapper.SpecialOrderApplicationMapper;
 import com.qhc.system.entity.User;
 
@@ -23,6 +24,9 @@ public class SpecialDeliveryService {
 
 	@Autowired
 	private SpecialOrderApplicationMapper specialOrderApplicationMapper;
+
+    @Autowired
+    private SpecialAttachmentMapper specialAttachmentMapper;
 	
 	@Autowired
 	private OrderService orderService;
@@ -34,6 +38,10 @@ public class SpecialDeliveryService {
 
 		com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		List<SpecialDeliveryDto> specials = specialOrderApplicationMapper.findByParams(params);
+		for (SpecialDeliveryDto specialDeliveryDto : specials) {
+		  List<SpecialAttachment> attachments = specialAttachmentMapper.findBySpecialId(specialDeliveryDto.getId());
+		  specialDeliveryDto.setAttachments(attachments);
+        }
 
 		return new PageInfo<>(specials);
 	}
@@ -49,6 +57,12 @@ public class SpecialDeliveryService {
 			specialOrderApplicationMapper.update(entity);
 		}
 		List<SpecialAttachment> attachments = sd.getAttachments();
+		specialAttachmentMapper.deleteBySpecialId(sd.getId());
+		for (SpecialAttachment specialAttachment : attachments) {
+		  specialAttachment.setSpecialId(entity.getId());
+		  specialAttachment.setOrderInfoId(entity.getOrderInfoId());
+		  specialAttachmentMapper.insert(specialAttachment);
+        }
 		return findById(entity.getId());
 	}
 
