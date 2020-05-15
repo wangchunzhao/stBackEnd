@@ -59,6 +59,7 @@ public class SpecialDeliveryService {
 		List<SpecialAttachment> attachments = sd.getAttachments();
 		specialAttachmentMapper.deleteBySpecialId(sd.getId());
 		for (SpecialAttachment specialAttachment : attachments) {
+		  specialAttachment.setId(null);
 		  specialAttachment.setSpecialId(entity.getId());
 		  specialAttachment.setOrderInfoId(entity.getOrderInfoId());
 		  specialAttachmentMapper.insert(specialAttachment);
