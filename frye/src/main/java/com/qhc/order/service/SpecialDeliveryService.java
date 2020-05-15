@@ -88,12 +88,13 @@ public class SpecialDeliveryService {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Transactional
 	public void submit(String user, SpecialDeliveryDto sd) throws Exception {
+	    sd.setApplyStatus(1);
 		sd = save(user, sd);
 		Integer orderInfoId = sd.getOrderInfoId();
 		OrderDto order = orderService.findOrder(orderInfoId);
-		orderService.submitBpm(user, order);
-		sd.setApplyStatus(1);
-		this.save(user, sd);
+		order.setIsUrgentDelivery(1);
+		orderService.sendToBpm(user, order);
 	}
 }

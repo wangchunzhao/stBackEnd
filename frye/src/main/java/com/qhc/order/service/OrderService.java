@@ -21,8 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.order.domain.CharacteristicDto;
@@ -1285,6 +1286,22 @@ public class OrderService {
       throw new RuntimeException("有冷库费用，没有冷库行项目");
     }
     
+    sendToBpm(user, order);
+    // 修改订单状态
+    orderInfoMapper.updateStatus(order.getId(), user, OrderDto.ORDER_STATUS_BPM, null, new Date(),
+        null, null);
+  }
+
+  /**
+   * 提交订单到BPM
+   * @param user
+   * @param order
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public void sendToBpm(String user, OrderDto order)
+      throws JsonProcessingException, JsonMappingException {
+    List<ItemDto> items = order.getItems();
     List<Attachment> attachments = order.getAttachments();
     if (attachments == null) {
       attachments = new ArrayList<Attachment>();
@@ -1482,8 +1499,6 @@ public class OrderService {
     try {
       String json = new ObjectMapper().writeValueAsString(bpmOrder);
       bpmService.callSendProcess(json);
-      orderInfoMapper.updateStatus(order.getId(), user, OrderDto.ORDER_STATUS_BPM, null, new Date(),
-          null, null);
     } catch (Exception e) {
       logger.error("提交 BPM 失败", e);
       throw new RuntimeException("提交 BPM 失败 - " + e.getMessage());
