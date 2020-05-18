@@ -1365,6 +1365,31 @@ public class OrderService {
 
     bpmHeader.setMergeDiscount(ObjectUtils.defaultIfNull(bpmHeader.getDiscount(), 0d));
     bpmHeader.setOrderType(StringUtils.trimToEmpty(order.getOrderType()));
+//    1 经销商标准折扣下单
+//    2 经销商非标准折扣下单
+//    3 直签客户投标报价
+//    4 直签客户下定单
+//    5 备货 
+    String stOrderType = order.getStOrderType();
+    String stOrderTypeDesc = "";
+    switch (stOrderType) {
+      case "1" :
+        stOrderTypeDesc = "经销商标准折扣下单";
+        break;
+      case "2" :
+        stOrderTypeDesc = "经销商非标准折扣下单";
+        break;
+      case "3" :
+        stOrderTypeDesc = "直签客户投标报价";
+        break;
+      case "4" :
+        stOrderTypeDesc = "直签客户下定单";
+        break;
+      case "5" :
+        stOrderTypeDesc = "备货";
+        break;
+    }
+    bpmHeader.setStOrderType(stOrderTypeDesc);
     // 结算方式
     String paymentType = StringUtils.trimToEmpty(order.getPaymentType());
     String paymentTypeName = constService.findDealerPaymentTerms().get(paymentType);
