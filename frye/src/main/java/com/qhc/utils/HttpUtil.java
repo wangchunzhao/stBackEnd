@@ -122,8 +122,7 @@ public class HttpUtil {
             	throw new Exception(reqmsg);
             }
         } catch (Exception e){
-            e.printStackTrace();
-            throw new Exception("error");
+            throw e;
         } finally {
             if (outputStream != null) {
                 outputStream.close();

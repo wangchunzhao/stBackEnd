@@ -11,6 +11,8 @@ public class OrderHeader {
 	private String salesTel;
 	/* 订单类型 */
 	private String orderType;
+    /* 订单类型 */
+    private String stOrderType;
 	/* 需求流水号 */
 	private String sequenceNumber;
 	/* 折扣 */
@@ -116,7 +118,15 @@ public class OrderHeader {
 		this.orderType = orderType;
 	}
 
-	public String getSequenceNumber() {
+	public String getStOrderType() {
+    return stOrderType;
+  }
+
+  public void setStOrderType(String stOrderType) {
+    this.stOrderType = stOrderType;
+  }
+
+  public String getSequenceNumber() {
 		return sequenceNumber;
 	}
 

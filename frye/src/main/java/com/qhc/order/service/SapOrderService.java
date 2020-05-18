@@ -133,7 +133,7 @@ public class SapOrderService {
 		
 		String warranty = BigDecimal.valueOf(order.getWarranty()).setScale(1).toString();
 		if (warranty.endsWith(".0")) {
-		  warranty = warranty.substring(warranty.length() - 2);
+		  warranty = warranty.substring(0, warranty.length() - 2);
 		}
 		header.setBstzd(warranty); // Additional/附加的 -- 保修年限
 		header.setBstkdE(StringUtils.trimToEmpty(order.getRecordCode()).toUpperCase()); // Ship-to PO/送达方-采购订单编号 -- 项目报备编号
