@@ -28,12 +28,17 @@ public class CustomerDto implements InterEntityToEntity,Serializable {
 	private Date changedDate;
 	private String address; // 地址
 	//private String groupCode;
-	private String clazzCode; // 客户分类
+	/**
+	 * SAP客户类型
+	 * 10  直销
+	 * 20  经销商
+	 */
+	private String clazzCode; // 客户类型
 	private String clazzName;
 	private String levelCode;
 	private String affiliationCode; 
 	private String affiliationName;
-	private String industryCodeCode; // 客户级别
+	private String industryCodeCode; // 客户分类
 	private String industryCodeName;
 	private String industryCode; // 大客户，隶属关系
 	private String industryName;

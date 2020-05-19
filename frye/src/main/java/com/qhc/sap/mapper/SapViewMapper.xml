@@ -85,8 +85,8 @@
 		</trim>
 	</select>
 	
-	<!-- 查询物料特征默认值 -->
-	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" >
+	<!-- 查询客户信息 -->
+	<select id="findCustomer" resultType="com.qhc.sap.domain.CustomerDto" parameterType="Map" >
 		SELECT 
 	        c.code, 
 	        c.change_date as changeDate, 
@@ -104,6 +104,9 @@
 	    LEFT JOIN sap_industry_and_customer iac on iac.sap_customer_code = c.code
 	    LEFT JOIN sap_industry i on i.code = iac.sap_industry_code
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND (c.code = #{code})
+			</if>
 			<if test="clazzCode != null and clazzCode != ''" >
 				AND (c.sap_customer_class_code = #{clazzCode} OR c.sap_customer_class_code = '03')
 			</if>

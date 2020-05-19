@@ -6,8 +6,10 @@ package com.qhc.sap.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -79,7 +81,10 @@ public class CustomerService {
 	 */
 	public PageInfo<CustomerDto> searchCustomers(String clazzCode,String name,int pageNo,int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		List<CustomerDto> list = sapViewMapper.findCustomer(clazzCode, name);	
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("clazzCode", clazzCode);
+		params.put("name", name);
+		List<CustomerDto> list = sapViewMapper.findCustomer(params);	
 		return new PageInfo(list);
 	}
 

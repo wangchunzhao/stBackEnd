@@ -47,5 +47,5 @@ public interface SapViewMapper {
 	 * @param name
 	 * @return
 	 */
-	public List<CustomerDto> findCustomer(@Param("clazzCode")String clazzCode, @Param("name")String name);
+	public List<CustomerDto> findCustomer(Map<String, Object> params);
 } 

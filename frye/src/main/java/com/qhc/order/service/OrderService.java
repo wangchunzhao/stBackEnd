@@ -66,6 +66,7 @@ import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.TerminalIndustryCodeRepository;
 import com.qhc.sap.domain.Characteristic;
+import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.MaterialGroups;
@@ -1212,6 +1213,19 @@ public class OrderService {
 
       // customerclazz
       order.setCustomerClazzName(constService.findCustomerClazzByCode(order.getCustomerClazz()));
+
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("code", order.getCustomerCode());
+      List<CustomerDto> customers = sapViewMapper.findCustomer(params);
+      CustomerDto customer = customers.get(0);
+      // customer class name
+      order.setCustomerClazzName(customer.getClazzName());
+      // customer industry code
+      order.setCustomerIndustryCode(customer.getIndustryCodeCode());
+      order.setCustomerIndustryCodeName(customer.getIndustryCodeName());
+      // customer industry
+      order.setCustomerIndustry(customer.getIndustryCode());
+      order.setCustomerIndustryName(customer.getIndustryName());
 
       order.setTransferTypeName(constService.findShippingTypes().get(order.getTransferType()));
 
