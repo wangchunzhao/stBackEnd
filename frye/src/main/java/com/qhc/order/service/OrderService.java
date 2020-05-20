@@ -1616,7 +1616,9 @@ public class OrderService {
             bodyDiscount = bodyDiscount / 100;
             unitDiscount = unitDiscount / 100;
             orderDto.setApprovedBodyDiscount(bodyDiscount);
+            orderDto.setBodyDiscount(bodyDiscount);
             orderDto.setApprovedMainDiscount(unitDiscount);
+            orderDto.setMainDiscount(unitDiscount);
             // 更新行项目的discount
             updateBpmItemDicount(orderDto, bodyDiscount, unitDiscount);
             bpmDicision.setRemark("经销商非标折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ",bodyDiscount: " + bodyDiscount + ", unitDiscount: " + unitDiscount);
@@ -1657,11 +1659,11 @@ public class OrderService {
       String rowNum = String.valueOf(itemDto.getRowNum());
       for (Map map : approvalItems) {
         String lineNum = (String)map.get("lineNum");
-        Double discount = (Double)map.get("discount");
+        Double discount = (Double)map.get("discount") / 100;
         if (lineNum.equals(rowNum)) {
-          itemDto.setDiscount(discount / 100);
-          itemDto.setActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
-          itemDto.setOptionalActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+          itemDto.setDiscount(discount);
+          itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+          itemDto.setOptionalActualPrice(itemDto.getOptionalRetailPrice() * discount);
           // 合计金额、合计价，可以不用，其他地方都是以单价来计算
 //                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
           
@@ -1783,8 +1785,9 @@ public class OrderService {
         if (itemDto.getStMaterialGroupCode().equals("T102")) {
           itemDto.setDiscount(unitDiscount);
         }
-        itemDto.setActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
-        itemDto.setOptionalActualPrice(itemDto.getRetailPrice() * itemDto.getDiscount());
+        double discount = itemDto.getDiscount();
+        itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+        itemDto.setOptionalActualPrice(itemDto.getOptionalRetailPrice() * discount);
         // 合计金额、合计价，可以不用，其他地方都是以单价来计算
 //        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 
