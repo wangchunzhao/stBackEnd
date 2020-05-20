@@ -36,7 +36,10 @@ class SapViewMapperTest {
 
 	@Test
 	void testFindCustomer() {
-		mapper.findCustomer("0000001004", "01");
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("clazzCode", "0000001004");
+      params.put("name", "01");
+		mapper.findCustomer(params);
 	}
 
 }
