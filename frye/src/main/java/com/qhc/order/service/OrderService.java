@@ -1127,7 +1127,7 @@ public class OrderService {
     for (ItemDto item : items) {
       Integer itemId = item.getId();
       
-      if (!item.getItemStatus().equals("00")) {
+      if (item.getItemStatus().equals("10")) {
         order.setHasSendSap(true);
       }
 
