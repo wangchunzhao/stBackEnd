@@ -191,6 +191,14 @@ public class OrderService {
 
   @Autowired
   private SapOrderMapper sapOrderMapper;
+  
+  // 特殊物料
+  List<String> specialMaterials =
+      Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
+          "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
+  // 退货行项目分类
+  List<String> returnCategorys =
+      Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
 
   @Transactional
   public OrderDto save(String user, final OrderDto orderDto) throws Exception {
@@ -1656,6 +1664,10 @@ public class OrderService {
   private void updateBpmItemDiscount2(OrderDto order, List<Map<String, Object>> approvalItems) throws IllegalAccessException, InvocationTargetException {
     List<ItemDto> items = order.getItems();
     for (ItemDto itemDto : items) {
+      // 特殊物料，只合计购销明细金额
+      if (specialMaterials.contains(itemDto.getMaterialCode())) {
+        continue;
+      }
       String rowNum = String.valueOf(itemDto.getRowNum());
       for (Map map : approvalItems) {
         String lineNum = (String)map.get("lineNum");
@@ -1710,13 +1722,6 @@ public class OrderService {
    * @param orderDto
    */
   private void calcMergeDiscount(OrderDto orderDto) {
-    // 特殊物料
-    List<String> specialMaterials =
-        Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
-            "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
-    // 退货行项目分类
-    List<String> returnCategorys =
-        Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
     // 行项目折扣金额合计
     double itemsAmount = 0;
     double itemsDicountAmount = 0;
@@ -1771,6 +1776,10 @@ public class OrderService {
       throws IllegalAccessException, InvocationTargetException {
     List<ItemDto> items = order.getItems();
     for (ItemDto itemDto : items) {
+      // 特殊物料，只合计购销明细金额
+      if (specialMaterials.contains(itemDto.getMaterialCode())) {
+        continue;
+      }
       // 取消状态的行项目不在累计范围
       if (itemDto.getItemStatus().equals("Z2")) {
         continue;
