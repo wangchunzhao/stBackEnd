@@ -199,6 +199,9 @@ public class OrderService {
   // 退货行项目分类
   List<String> returnCategorys =
       Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
+  // 免费行项目分类
+  List<String> freeCategorys =
+      Arrays.asList("ZHD3", "ZHD4", "ZHT3", "ZHT6");
 
   @Transactional
   public OrderDto save(String user, final OrderDto orderDto) throws Exception {
@@ -1794,11 +1797,14 @@ public class OrderService {
         if (itemDto.getStMaterialGroupCode().equals("T102")) {
           itemDto.setDiscount(unitDiscount);
         }
-        double discount = itemDto.getDiscount();
-        itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-        itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
-        // 合计金额、合计价，可以不用，其他地方都是以单价来计算
-//        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+        // 非免费类别计算实卖价
+        if (!freeCategorys.contains(itemDto.getItemCategory())) {
+          double discount = itemDto.getDiscount();
+          itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+          itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
+          // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+  //        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+        }
 
         Item item = new Item();
         BeanUtils.copyProperties(item, itemDto);
