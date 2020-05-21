@@ -1663,7 +1663,7 @@ public class OrderService {
         if (lineNum.equals(rowNum)) {
           itemDto.setDiscount(discount);
           itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-          itemDto.setOptionalActualPrice(itemDto.getOptionalRetailPrice() * discount);
+          itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
           // 合计金额、合计价，可以不用，其他地方都是以单价来计算
 //                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
           
@@ -1787,7 +1787,7 @@ public class OrderService {
         }
         double discount = itemDto.getDiscount();
         itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-        itemDto.setOptionalActualPrice(itemDto.getOptionalRetailPrice() * discount);
+        itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
         // 合计金额、合计价，可以不用，其他地方都是以单价来计算
 //        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 
