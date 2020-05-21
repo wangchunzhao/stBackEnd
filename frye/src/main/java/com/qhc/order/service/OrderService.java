@@ -1678,12 +1678,10 @@ public class OrderService {
         if (lineNum.equals(rowNum)) {
           itemDto.setDiscount(discount);
           // 非免费类别计算实卖价
-          if (!freeCategorys.contains(itemDto.getItemCategory())) {
-            itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-            itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
-            // 合计金额、合计价，可以不用，其他地方都是以单价来计算
-  //                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
-          }
+          itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+          itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
+          // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+//                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
           
           Item item = new Item();
           BeanUtils.copyProperties(item, itemDto);
@@ -1800,14 +1798,11 @@ public class OrderService {
         if (itemDto.getStMaterialGroupCode().equals("T102")) {
           itemDto.setDiscount(unitDiscount);
         }
-        // 非免费类别计算实卖价
-        if (!freeCategorys.contains(itemDto.getItemCategory())) {
-          double discount = itemDto.getDiscount();
-          itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-          itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
-          // 合计金额、合计价，可以不用，其他地方都是以单价来计算
-  //        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
-        }
+        double discount = itemDto.getDiscount();
+        itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+        itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
+        // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+//        itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
 
         Item item = new Item();
         BeanUtils.copyProperties(item, itemDto);
