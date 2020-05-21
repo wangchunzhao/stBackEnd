@@ -1677,10 +1677,13 @@ public class OrderService {
         Double discount = (Double)map.get("discount") / 100;
         if (lineNum.equals(rowNum)) {
           itemDto.setDiscount(discount);
-          itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
-          itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
-          // 合计金额、合计价，可以不用，其他地方都是以单价来计算
-//                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+          // 非免费类别计算实卖价
+          if (!freeCategorys.contains(itemDto.getItemCategory())) {
+            itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
+            itemDto.setOptionalActualPrice(ObjectUtils.defaultIfNull(itemDto.getOptionalRetailPrice(), 0D) * discount);
+            // 合计金额、合计价，可以不用，其他地方都是以单价来计算
+  //                  itemDto.setActualAmount(itemDto.getActualPrice() * itemDto.getQuantity());
+          }
           
           Item item = new Item();
           BeanUtils.copyProperties(item, itemDto);
