@@ -18,6 +18,22 @@ mybatis:
    configuration: 
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+#for email setting
+mail:
+#the directory for temp files
+    files:
+        path: "d:/qhc/mail/files"
+########### test profile ###########
+    debug: true
+    host: 159.82.101.253
+    username: 
+    password: 
+    smtp:
+        from: ricoh-4000@carrier.utc.com
+        auth: false
+        timeout: 120000
+        port: 25
+
 # Bestsign config
 contract: 
     bestsign:

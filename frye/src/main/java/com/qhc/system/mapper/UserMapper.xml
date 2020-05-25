@@ -144,6 +144,9 @@
 			<if test="tel != null and tel != ''" >
 				AND b_user.tel like #{tel, jdbcType=VARCHAR}
 			</if>
+			<if test="roleId != null and roleId != ''" >
+				AND exists (select 1 from b_user_role where b_user_role.user_id = b_user.id and role_id = #{roleId, jdbcType=VARCHAR} )
+			</if>
 			
 			<include refid="Where_Clause" />
 		</trim>

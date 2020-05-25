@@ -26,9 +26,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
+import com.qhc.Constant;
 import com.qhc.order.domain.CharacteristicDto;
 import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
+import com.qhc.order.domain.Mail;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderOption;
 import com.qhc.order.domain.OrderQuery;
@@ -86,6 +88,7 @@ import com.qhc.system.entity.City;
 import com.qhc.system.entity.Province;
 import com.qhc.system.entity.Settings;
 import com.qhc.system.entity.User;
+import com.qhc.system.mapper.UserMapper;
 import com.qhc.system.service.SettingsService;
 import com.qhc.system.service.UserService;
 
@@ -191,6 +194,12 @@ public class OrderService {
 
   @Autowired
   private SapOrderMapper sapOrderMapper;
+  
+  @Autowired
+  private MailService mailService;
+
+  @Autowired
+  private UserMapper userMapper;
   
   // 特殊物料
   List<String> specialMaterials =
@@ -776,6 +785,58 @@ public class OrderService {
 
     status = order.getStatus();
     orderInfoMapper.updateStatus(order.getId(), user, status, new Date(), null, null, null);
+
+    // send mail to notification
+    try {
+      String to = "";
+      switch (status) {
+        case OrderDto.ORDER_STATUS_B2C:
+          to = getRoleUserMails(Constant.ROLE_B2C);
+          break;
+        case OrderDto.ORDER_STATUS_ENGINER:
+          to = getRoleUserMails(Constant.ROLE_ENGINEER);
+          break;
+        case OrderDto.ORDER_STATUS_MANAGER:
+          to = getRoleUserMails(Constant.ROLE_MANAGER);
+          break;
+        case OrderDto.ORDER_STATUS_DRAFT:
+        case OrderDto.ORDER_STATUS_REJECT:
+        default:
+          logger.error("未知订单状态，发送邮件失败");
+          return;
+      }
+      if (to.length() == 0) {
+        logger.error("发送邮件失败！没有找到对应的用户");
+        return;
+      }
+      sendApproveNoticeMail(order, to);
+    } catch (Exception e) {
+      logger.error("发送邮件失败", e);
+    }
+  }
+
+  /**
+   * 发送订单审批通知邮件
+   * @param order
+   * @param to
+   */
+  private void sendApproveNoticeMail(OrderDto order, String to) {
+    Mail mail = new Mail();
+//    mail.setId(UUID.randomUUID().toString());
+    mail.setFrom(null);
+    mail.setTo(to);
+    Map<String, Object> valMap = new ObjectMapper().convertValue(order, Map.class);
+    String body = mailService.render("/order-" + order.getStOrderType() + "-notice.html", "HTML5", valMap);
+    mail.setBody(body);
+    String subject = mailService.render("/order-" + order.getStOrderType() + "-subject.html", "HTML5", valMap);
+    mail.setSubject(subject);
+
+    logger.debug("order mail: \n" + mail);
+    boolean sendStatus = mailService.send(mail);
+    
+    if (!sendStatus) {
+      logger.error("发送邮件失败！");
+    }
   }
 
   /**
@@ -786,12 +847,11 @@ public class OrderService {
    */
   @Transactional
   public void reject(String user, Integer orderInfoId) throws Exception {
-    OrderInfo orderInfo = orderInfoMapper.findById(orderInfoId);
-    if (orderInfo == null) {
+    OrderDto order = this.findOrder(orderInfoId);
+    if (order == null) {
       throw new RuntimeException("订单不存在，id=" + orderInfoId);
     }
-    Order order = orderMapper.findById(orderInfo.getOrderId());
-    String status = orderInfo.getStatus();
+    String status = order.getStatus();
     String stOrderType = order.getStOrderType();
     String rejectStatus = "";
     switch (status) {
@@ -799,7 +859,7 @@ public class OrderService {
         rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
         break;
       case OrderDto.ORDER_STATUS_ENGINER:
-        if (orderInfo.getIsB2c() == 1) {
+        if (order.getIsB2c() == 1) {
           rejectStatus = OrderDto.ORDER_STATUS_B2C;
         } else {
           rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
@@ -809,7 +869,7 @@ public class OrderService {
         if (stOrderType.equals("3") || stOrderType.equals("4")) {
           // 直销客户订单和直销客户报价单
           rejectStatus = OrderDto.ORDER_STATUS_ENGINER;
-        } else if (orderInfo.getIsB2c() == 1) {
+        } else if (order.getIsB2c() == 1) {
           rejectStatus = OrderDto.ORDER_STATUS_B2C;
         } else {
           rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
@@ -819,6 +879,63 @@ public class OrderService {
         throw new RuntimeException("订单当前状态【" + status + "】不能驳回");
     }
     orderInfoMapper.updateStatus(orderInfoId, user, rejectStatus, null, null, null, null);
+
+    // send mail to notification
+    try {
+      String to = "";
+      switch (rejectStatus) {
+        case OrderDto.ORDER_STATUS_B2C:
+          to = getRoleUserMails(Constant.ROLE_B2C);
+          break;
+        case OrderDto.ORDER_STATUS_ENGINER:
+          to = getRoleUserMails(Constant.ROLE_ENGINEER);
+          break;
+        case OrderDto.ORDER_STATUS_MANAGER:
+          to = getRoleUserMails(Constant.ROLE_MANAGER);
+          break;
+        case OrderDto.ORDER_STATUS_DRAFT:
+        case OrderDto.ORDER_STATUS_REJECT:
+          to = userMapper.findByLoginName(order.getSalesCode()).getUserMail();
+          String manager = order.getContractManager();
+          if (StringUtils.isNotEmpty(manager)) {
+            to += ";" + userMapper.findByLoginName(manager).getUserMail();
+          }
+          break;
+        default:
+          logger.error("未知订单状态，发送邮件失败");
+          return;
+      }
+      if (to.length() == 0) {
+        logger.error("发送邮件失败！没有找到对应的用户");
+        return;
+      }
+      sendApproveNoticeMail(order, to);
+    } catch (Exception e) {
+      logger.error("发送邮件失败", e);
+    }
+  }
+
+  /**
+   * 返回角色包含的所有用户的邮箱地址
+   * @param toRoleId
+   * @return
+   */
+  public String getRoleUserMails(Integer toRoleId) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("roleId", toRoleId);
+    List<User> users = userMapper.findByParams(params);
+    StringBuilder to = new StringBuilder(256);
+    for (User u : users) {
+      String name = u.getName();
+      String mail = u.getUserMail();
+//      to.append(";").append("<").append(name).append(">").append(mail);
+      to.append(";").append(mail);
+    }
+    if (to.length() > 0) {
+      return to.substring(1);
+    } else {
+      return "";
+    }
   }
 
   /**
@@ -1662,6 +1779,20 @@ public class OrderService {
     
     // save approval log
     dicisionMapper.insert(bpmDicision);
+
+    // send mail
+    try {
+      String to = "";
+      to = userMapper.findByLoginName(orderDto.getSalesCode()).getUserMail();
+      to += ";" + userMapper.findByLoginName(orderDto.getContractManager()).getUserMail();
+      if (to.length() == 0) {
+        logger.error("发送邮件失败！没有找到对应的用户");
+        return;
+      }
+      sendApproveNoticeMail(orderDto, to);
+    } catch (Exception e) {
+      logger.error("发送邮件失败", e);
+    }
   }
 
   private void updateBpmItemDiscount2(OrderDto order, List<Map<String, Object>> approvalItems) throws IllegalAccessException, InvocationTargetException {
