@@ -28,10 +28,11 @@ public class SpecialDeliveryDto {
 	/* ApprovalTime */
 	private Date approvalTime = null;
 
-	/* 0: 新建
-            1：提交BPM
-            2：同意
-            3：驳回 */
+    /* 申请单状态 
+     * 0: 新建
+     * 1：提交bpm
+     * 2：同意
+     * 3：驳回 */
 	private Integer applyStatus = null;
 
     /* 收到电子订单或其他订单确认文件的时间 */
