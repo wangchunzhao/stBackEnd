@@ -88,7 +88,7 @@
 				<!-- AND (soa.apply_status is null or soa.apply_status in (0, 1, 2, 3)) -->
 			</if>
 			<if test="sequenceNumber != null and sequenceNumber != ''" >
-				AND o.sequence_number like '%${sequenceNumber, jdbcType=INTEGER}%'
+				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%'
 			</if>
 			<if test="orderStartCreateTime != null and orderStartCreateTime != ''" >
 			<![CDATA[
@@ -106,7 +106,7 @@
 			<if test="id != null" >
 				AND soa.id = #{id, jdbcType=INTEGER}
 			</if>
-			<if test="orderInfoId != null" >
+			<if test="orderInfoId != null and orderInfoId != ''" >
 				AND soa.order_info_id = #{orderInfoId, jdbcType=INTEGER}
 			</if>
 			<if test="applyer != null and applyer != ''" >

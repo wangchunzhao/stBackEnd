@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.OrderQuery;
 import com.qhc.order.domain.SpecialDeliveryDto;
+import com.qhc.order.domain.SpecialDeliveryQuery;
 import com.qhc.order.entity.SpecialOrderApplication;
 import com.qhc.order.service.SpecialDeliveryService;
 import com.qhc.system.domain.PageHelper;
@@ -70,14 +72,15 @@ public class SpecialDeliveryController {
 
 	@ApiOperation(value = "分页查询特批发货列表", notes = "分页查询特批发货列表")
 	@GetMapping(value = "")
-	@ResponseStatus(HttpStatus.OK)
+	  @ResponseBody
 //	public PageHelper<SpecialDeliveryDto> findPagingList(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize,
 //			@RequestParam("sequenceNumber") String sequenceNumber, @RequestParam("orderInfoId") String orderInfoId, @RequestParam("startTime") String startTime,
 //			@RequestParam("endTime") String endTime, @RequestParam("ownerDomainId") String ownerDomainId,
 //			@RequestParam("officeCode") String officeCode, @RequestParam("orderTypeCode") String orderTypeCode)
-	public Result find(Map params) {
+	public Result find(SpecialDeliveryQuery query) {
 		Result result = null;
 		try {
+		    Map params = new ObjectMapper().convertValue(query, Map.class);
 			PageHelper<SpecialDeliveryDto> page = new PageHelper<SpecialDeliveryDto>(
 					specialDeliveryService.find(params));
 			result = Result.ok(page);
