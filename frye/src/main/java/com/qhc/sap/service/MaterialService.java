@@ -171,11 +171,7 @@ public class MaterialService {
 		}
 		String code = m.getCode();
 		double standardPrice = m.getStandardPrice();
-		// 年采价
-		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
-		// 零售价及转移百分比转移价，经销商客户会重复
-        List<MaterialPrice> prices2 = priceRepository.findByMaterialCodeAndIndustryCode(code, "unkn");
-        prices.addAll(prices2);
+		List<MaterialPrice> prices = findMaterialPrices(code, industryCode);
 		for (MaterialPrice materialPrice : prices) {
 			String priceTypeCode = materialPrice.getType();
 			switch (priceTypeCode) {
@@ -196,11 +192,25 @@ public class MaterialService {
 			}
 		}
 		
-		// 对于所有以’H008’开头的物料转移价格的计算公式：标准价格*107%
+		// 对于所有以’H008’开头的物料转移价格的计算公式：标准价格*119%
 		if (code.startsWith("H008")) {
-			m.setTranscationPrice(standardPrice * 107 / 100);
+	        double h008transferRate = 1.19;
+	        Settings rateSetting = settingsService.findByCode("h008_transaction_rate");
+	        if (rateSetting != null && StringUtils.isNoneEmpty(rateSetting.getsValue()) ) {
+	            h008transferRate = Double.valueOf(rateSetting.getsValue()); 
+	        }
+			m.setTranscationPrice(standardPrice * h008transferRate);
 		}
 	}
+
+    public List<MaterialPrice> findMaterialPrices(String code, String industryCode) {
+        // 年采价
+		List<MaterialPrice> prices = priceRepository.findByMaterialCodeAndIndustryCode(code, industryCode);
+		// 零售价及转移百分比转移价，经销商客户会重复
+        List<MaterialPrice> prices2 = priceRepository.findByMaterialCodeAndIndustryCode(code, "unkn");
+        prices.addAll(prices2);
+        return prices;
+    }
 
 	/**
 	 * 
@@ -287,6 +297,7 @@ public class MaterialService {
 	 */
 	public MaterialBom findBomPrice(Map<String, String> pars) {
 		String industryCode = pars.remove("industry");
+		String materialCode = pars.get("bom_code");
 		industryCode = industryCode == null ? "unkn" : industryCode;
 		
 		Map<String, List<Bom>> boms = sapService.getBomExplosion(pars);
@@ -301,10 +312,15 @@ public class MaterialService {
 		mb.setOptional(optional);
 		mb.setStandard(standard);
 
-        double transferRate = 1.05;
-        Settings rateSetting = settingsService.findByCode("refrigeratory_transaction_rate");
-        if (rateSetting != null && StringUtils.isNoneEmpty(rateSetting.getsValue()) ) {
-          transferRate = Double.valueOf(rateSetting.getsValue()); 
+		// 父物料转移加价百分比
+		double transferRate = 1.05;
+        List<MaterialPrice> prices = findMaterialPrices(materialCode, industryCode);
+        for (MaterialPrice materialPrice : prices) {
+            String priceTypeCode = materialPrice.getType();
+            if (priceTypeCode.equals(MATERIAL_PRICE_TYPE_TRANSACTION_PERCENTAGE_PRICE)) {
+                transferRate = materialPrice.getPrice() / 100;
+                break;
+            }
         }
 		mb.calculatePriceGap(transferRate);
 		
