@@ -133,6 +133,9 @@
 			<if test="salesName != null and salesName.trim() != ''" >
 				AND UPPER(u.name) like '%${salesName.trim().toUpperCase()}%'
 			</if>
+			<if test="salesCode != null and salesCode.trim() != ''" >
+				AND o.sales_code = #{salesCode, jdbcType=VARCHAR}
+			</if>
 			<if test="officeCode != null and officeCode != ''" >
 				AND oi.office_code = #{officeCode, jdbcType=VARCHAR}
 			</if>
