@@ -9,6 +9,7 @@ INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operate
 INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (6,'schedule_minute','0','2019-01-01','定时更新任务-分','wangch','2019-01-01 00:00:00');
 INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (7,'fuzzy_query_output_limit','50','2019-01-01','模糊查询-输出限制','wangch','2019-01-01 00:00:00');
 INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (8,'refrigeratory_transaction_rate','1.05','2019-01-01','冷库转移价比率','wangch','2019-01-01 00:00:00');
+INSERT INTO `b_settings` (`id`,`code`,`s_value`,`enable_date`,`comment`,`operater`,`opt_time`) VALUES (9,'h008_transaction_rate','1.19','2019-01-01','H008物料转移价比率','wangch','2019-01-01 00:00:00');
 
 /*
 -- Query: select * from b_province_map

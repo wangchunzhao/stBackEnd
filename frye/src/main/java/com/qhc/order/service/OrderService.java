@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.Constant;
+import com.qhc.exception.NotMatchException;
 import com.qhc.order.domain.CharacteristicDto;
 import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
@@ -483,6 +484,36 @@ public class OrderService {
     for (ItemDto item : order.getItems()) {
       // item.setAttachments(null); // 清除调研表附件
       item.setItemStatus("00");
+      
+      String materialCode = item.getMaterialCode();
+      // 特殊物料不处理
+      if (specialMaterials.contains(materialCode)) {
+          continue;
+      }
+      MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
+      item.setStandardPrice(materialDto.getStandardPrice());
+      item.setTransactionPrice(materialDto.getTranscationPrice());
+      item.setRetailPrice(materialDto.getRetailPrice());
+      item.setOptionalStandardPrice(item.getOptionalStandardPrice());
+      item.setOptionalTransactionPrice(item.getOptionalStandardPrice() * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
+      item.setOptionalRetailPrice(item.getOptionalRetailPrice());
+      if (freeCategorys.contains(item.getItemCategory())) {
+          // 免费
+          item.setActualPrice(0);
+          item.setOptionalActualPrice(0);
+      } else {
+          item.setActualPrice(item.getRetailPrice() * item.getDiscount());
+          item.setOptionalActualPrice(ObjectUtils.defaultIfNull(item.getOptionalRetailPrice(), 0D) * item.getDiscount());
+      }
+      
+      List<CharacteristicDto> configs = item.getConfigs();
+      // 没有特征值跳过
+      if (configs == null) {
+          configs = new ArrayList<>();
+      }
+      // 同步行项目特征
+      configs = syncItemCharacter(materialCode, configs);
+      item.setConfigs(configs);
     }
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
@@ -498,6 +529,55 @@ public class OrderService {
     order = this.save(user, order);
 
     return order;
+  }
+  
+  /**
+   * 同步物料特征表
+   * @param materialCode
+   * @param oldConfigs
+   * @return
+   * @throws Exception
+   */
+  private List<CharacteristicDto> syncItemCharacter(String materialCode, List<CharacteristicDto> oldConfigs) throws Exception {
+      List<CharacteristicDto> tempConfigs = new ArrayList<>();
+      List<Characteristic> characs = materialService.getCharactersByClazzCode(materialCode);
+      if (characs != null && characs.size() > 0) {
+          for (Characteristic c : characs) {
+            boolean configurable = c.getConfigs() != null && c.getConfigs().size() > 0;
+            boolean isColor = c.isColor();
+            CharacteristicDto characDto = new CharacteristicDto();
+            tempConfigs.add(characDto);
+            characDto.setColor(isColor);
+            characDto.setConfigurable(configurable);
+            characDto.setKeyCode(c.getCode());
+            characDto.setKeyName(c.getName());
+            characDto.setOptional(c.isOptional());
+            characDto.setValueCode("");
+            characDto.setValueName("");
+            oldConfigs.forEach(e -> {
+                // 如果原来的行项目调研表有相同特征，复制原有特征的特征值
+                if (e.getKeyCode().equals(c.getCode())) {
+                    characDto.setValueCode(e.getValueCode());
+                    characDto.setValueName(e.getValueName());
+                }
+            });
+            // 如果原来的行项目调研表没有有相同特征，或值为空，取默认特征值
+            if (StringUtils.trimToEmpty(characDto.getValueCode()).length() == 0) {
+                c.getConfigs().forEach(e -> {
+                  if (e.isDefault()) {
+                    characDto.setValueCode(e.getCode());
+                    characDto.setValueName(e.getName());
+                  }
+                });
+            }
+            // 如果是新的特征并且默认特征值为空，设置为特殊值，以便能够保存
+            if (StringUtils.trimToEmpty(characDto.getValueCode()).equals("-") || StringUtils.trimToEmpty(characDto.getValueCode()).equals("")) {
+                characDto.setValueCode("UNKNOWN");
+            }
+          }
+        }
+
+        return tempConfigs;
   }
 
   /**
@@ -746,6 +826,17 @@ public class OrderService {
    */
   @Transactional
   public void submit(String user, OrderDto order) throws Exception {
+      // 同步行项目物料最新特征
+      for (ItemDto item : order.getItems()) {
+          List<CharacteristicDto> configs = item.getConfigs();
+          // 没有特征值跳过
+          if (configs == null) {
+              configs = new ArrayList<>();
+          }
+          // 同步行项目特征
+          configs = syncItemCharacter(item.getMaterialCode(), configs);
+          item.setConfigs(configs);
+    }
     order = save(user, order);
     String status = order.getStatus();
     String stOrderType = order.getStOrderType();
@@ -1283,7 +1374,8 @@ public class OrderService {
       // colors
       List<CharacteristicDto> colors = itemColorMapper.findByItemId(itemId);
       colors.forEach(e -> {
-        if (StringUtils.trimToEmpty(e.getValueCode()).equals("")) {
+          // UNKNOWN为同步物料特征表出现的新特征
+        if (StringUtils.trimToEmpty(e.getValueCode()).equals("") || StringUtils.trimToEmpty(e.getValueCode()).equals("UNKNOWN")) {
           e.setValueCode("-");
         }
       });
@@ -1292,7 +1384,8 @@ public class OrderService {
       List<CharacteristicDto> characteristics = characteristicsMapper.findByItemId(itemId);
       // 将特征值为空的转换为 - 号
       characteristics.forEach(e -> {
-        if (StringUtils.trimToEmpty(e.getValueCode()).equals("")) {
+          // UNKNOWN为同步物料特征表出现的新特征
+        if (StringUtils.trimToEmpty(e.getValueCode()).equals("") || StringUtils.trimToEmpty(e.getValueCode()).equals("UNKNOWN")) {
           e.setValueCode("-");
         }
       });
