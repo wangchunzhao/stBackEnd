@@ -922,7 +922,7 @@ public class OrderService {
     String subject = mailService.render("/order-" + order.getStOrderType() + "-subject.html", "HTML5", valMap);
     mail.setSubject(subject);
 
-    logger.debug("order mail: \n" + mail);
+    logger.info("order mail: \n" + mail);
     boolean sendStatus = mailService.send(mail);
     
     if (!sendStatus) {

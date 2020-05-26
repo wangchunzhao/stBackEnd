@@ -191,7 +191,7 @@ public class MailService {
 	 * @return
 	 */
 	public static String render(String templateName, String mode, Map<String, Object> variables) {
-		try (InputStream in = "".getClass().getResourceAsStream(templateName)) {
+		try (InputStream in = MailService.class.getResourceAsStream(templateName)) {
 			byte[] data = new byte[5192];
 			int size = 0;
 			StringBuilder content = new StringBuilder(1024);
@@ -201,7 +201,7 @@ public class MailService {
 			String h = content.toString().trim();
 			for (Map.Entry<String, Object> e : variables.entrySet()) {
 				String k = "\\$\\{" + e.getKey() + "\\}";
-				String v = StringUtils.trimToEmpty((String)e.getValue());
+                String v = e.getValue() == null ? "" : e.getValue().toString();
 				h = h.replaceAll(k, v);
 //				while (h.indexOf(k) >= 0) {
 //					h = h.re

@@ -52,6 +52,11 @@ public class SpecialDeliveryDto {
 
 	/* EnclosureName */
 	private String enclosureName = null;
+    
+    /**
+     * 附件信息 Attachment information
+     */
+    private List<SpecialAttachment> attachments;
 
 	/* 订单信息 */
     private String sequenceNumber;
@@ -64,11 +69,6 @@ public class SpecialDeliveryDto {
     private String stOrderType;
 
     private Date createTime;
-    
-    /**
-     * 附件信息 Attachment information
-     */
-    private List<SpecialAttachment> attachments;
 
     /**
      * order status
