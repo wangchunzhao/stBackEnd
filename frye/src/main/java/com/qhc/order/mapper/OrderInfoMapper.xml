@@ -420,11 +420,9 @@
 		</trim>
 	</sql>
 	
-	<update id="inactive" parameterType="String" >
+	<update id="inactive" parameterType="Integer" >
 		update k_order_info set is_active = 0 
-		where exists ( select 1 from k_order 
-					where k_order.id = k_order_info.order_id 
-					and k_order.sequence_number=#{value} )
+		where order_id = #{value, jdbcType=INTEGER}
 	</update>
 	
 	<!-- 修改订单状态 -->

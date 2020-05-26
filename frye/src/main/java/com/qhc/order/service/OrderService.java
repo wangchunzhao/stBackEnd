@@ -289,29 +289,32 @@ public class OrderService {
     BeanUtils.copyProperties(order, orderDto);
     BeanUtils.copyProperties(orderInfo, orderDto);
 
-    if (orderDto.getId() == null || orderDto.getId() == 0) {
-      // new version
-      String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
-      orderInfo.setVersion(version.toUpperCase());
-      orderInfo.setIsActive(1);
-      orderInfo.setVersionNum(1);
-
-      if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
+    if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
         // 由前台生成
         // String sequenceNumber = "QHC" + version;
         // order.setSequenceNumber(sequenceNumber.toUpperCase());
-
         orderMapper.insert(order);
-
+        orderDto.setOrderId(order.getId());
         orderInfo.setOrderId(order.getId());
-      }
+    } else {
+        orderMapper.update(order);
+    }
+    if (orderDto.getId() == null || orderDto.getId() == 0) {
+        if (StringUtils.trimToEmpty(orderInfo.getVersion()).length() == 0) {
+            // new version
+            String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
+            orderInfo.setVersion(version.toUpperCase());
+        }
+        if (orderInfo.getVersionNum() == null || orderInfo.getVersionNum() == 0) {
+            orderInfo.setVersionNum(1);
+        }
+        orderInfo.setIsActive(1);
 
       orderInfoMapper.insert(orderInfo);
+      orderDto.setId(orderInfo.getId());
     } else {
       orderInfoMapper.update(orderInfo);
-      orderMapper.update(order);
     }
-    orderDto.setId(orderInfo.getId());
 
     saveAttachments(orderDto);
     saveBillingPlans(orderDto);
@@ -442,20 +445,22 @@ public class OrderService {
       throw new RuntimeException("订单当前状态不允许变更");
     }
 
+    // 将其他版本的active设置为0
+    orderInfoMapper.inactive(order.getOrderId());
+
     order.setId(null);
     // order.setCreater(user);
     order.setUpdater(user);
     // new version
     String version = new SimpleDateFormat("yyyyMMddHHssmmSSS").format(new Date());
     order.setVersion(version);
+//    String sequenceNumber = "QHC" + version;
+//    order.setSequenceNumber(sequenceNumber);
+    order.setIsActive(1);
+    order.setVersionNum(order.getVersionNum() + 1);
     order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
     order.setSubmitBpmTime(null);
     order.setSubmitTime(null);
-    order.setIsActive(1);
-    order.setVersionNum(order.getVersionNum() + 1);
-
-    // 将其他版本的active设置为0
-    orderInfoMapper.inactive(order.getSequenceNumber());
 
     order = this.save(user, order);
 
@@ -520,11 +525,11 @@ public class OrderService {
     order.setVersion(version);
     String sequenceNumber = "QHC" + version;
     order.setSequenceNumber(sequenceNumber.toUpperCase());
+    order.setIsActive(1);
+    order.setVersionNum(1);
     order.setStatus(OrderDto.ORDER_STATUS_DRAFT);
     order.setSubmitBpmTime(null);
     order.setSubmitTime(null);
-    order.setIsActive(1);
-    order.setVersionNum(1);
 
     order = this.save(user, order);
 

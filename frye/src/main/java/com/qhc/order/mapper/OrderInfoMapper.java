@@ -88,10 +88,10 @@ public interface OrderInfoMapper {
 	/**
 	 * 将其他版本is_active设置为0
 	 * 
-	 * @param sequenceNumber
+	 * @param orderId
 	 * @return
 	 */
-	int inactive(String sequenceNumber);
+	int inactive(Integer orderId);
 
 	/**
 	 * 
