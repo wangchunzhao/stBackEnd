@@ -90,14 +90,14 @@
 			<if test="sequenceNumber != null and sequenceNumber != ''" >
 				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%'
 			</if>
-			<if test="orderStartCreateTime != null and orderStartCreateTime != ''" >
+			<if test="startTime != null and startTime != ''" >
 			<![CDATA[
-				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{orderStartCreateTime, jdbcType=VARCHAR}
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{startTime, jdbcType=VARCHAR}
 			]]>
 			</if>
-			<if test="orderEndCreateTime != null and orderEndCreateTime != ''" >
+			<if test="endTime != null and endTime != ''" >
 			<![CDATA[
-				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{orderEndCreateTime, jdbcType=VARCHAR}
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{endTime, jdbcType=VARCHAR}
 			]]>
 			</if>
 			<if test="orderStatus != null and orderStatus != ''" >
@@ -182,6 +182,7 @@
         LEFT JOIN k_order o ON o.id = oi.order_id
         LEFT JOIN sap_customer c on c.code = o.customer_code
         LEFT JOIN k_special_order_application soa ON soa.order_info_id = oi.id
+        LEFT JOIN b_user u ON u.user_identity = o.sales_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">

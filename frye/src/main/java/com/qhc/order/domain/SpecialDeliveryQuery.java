@@ -6,29 +6,17 @@ public class SpecialDeliveryQuery {
 	
 	int pageSize = 10;
 
-	public String id;
+	public Integer id;
 
 	public String sequenceNumber;
 
-	public String orderInfoId;
+	public Integer orderInfoId;
 
-	public String orderTypeCode;
+	public String orderStatus;
 
 	public String createTime;
 
 	private String salesTel;
-
-	private String contractorCode;
-
-	private String contractorName;
-
-	private String contractorClassCode;
-
-	private String contractorClassName;
-
-	public Integer kOrderVersionId;
-
-	public Double distcount;
 
 	public String startTime;
 
@@ -75,11 +63,11 @@ public class SpecialDeliveryQuery {
 		this.pageSize = pageSize;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -91,23 +79,23 @@ public class SpecialDeliveryQuery {
 		this.sequenceNumber = sequenceNumber;
 	}
 
-	public String getOrderInfoId() {
+	public Integer getOrderInfoId() {
 		return orderInfoId;
 	}
 
-	public void setOrderInfoId(String orderInfoId) {
+	public void setOrderInfoId(Integer orderInfoId) {
 		this.orderInfoId = orderInfoId;
 	}
 
-	public String getOrderTypeCode() {
-		return orderTypeCode;
-	}
+	public String getOrderStatus() {
+        return orderStatus;
+    }
 
-	public void setOrderTypeCode(String orderTypeCode) {
-		this.orderTypeCode = orderTypeCode;
-	}
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
-	public String getCreateTime() {
+    public String getCreateTime() {
 		return createTime;
 	}
 
@@ -123,60 +111,12 @@ public class SpecialDeliveryQuery {
 		this.salesTel = salesTel;
 	}
 
-	public String getContractorCode() {
-		return contractorCode;
-	}
-
-	public void setContractorCode(String contractorCode) {
-		this.contractorCode = contractorCode;
-	}
-
-	public String getContractorName() {
-		return contractorName;
-	}
-
-	public void setContractorName(String contractorName) {
-		this.contractorName = contractorName;
-	}
-
-	public String getContractorClassCode() {
-		return contractorClassCode;
-	}
-
-	public void setContractorClassCode(String contractorClassCode) {
-		this.contractorClassCode = contractorClassCode;
-	}
-
-	public String getContractorClassName() {
-		return contractorClassName;
-	}
-
-	public void setContractorClassName(String contractorClassName) {
-		this.contractorClassName = contractorClassName;
-	}
-
 	public String getOfficeCode() {
 		return officeCode;
 	}
 
 	public void setOfficeCode(String officeCode) {
 		this.officeCode = officeCode;
-	}
-
-	public Integer getkOrderVersionId() {
-		return kOrderVersionId;
-	}
-
-	public void setkOrderVersionId(Integer kOrderVersionId) {
-		this.kOrderVersionId = kOrderVersionId;
-	}
-
-	public Double getDistcount() {
-		return distcount;
-	}
-
-	public void setDistcount(Double distcount) {
-		this.distcount = distcount;
 	}
 
 	public String getStartTime() {
