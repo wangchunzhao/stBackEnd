@@ -425,6 +425,11 @@
 		where order_id = #{value, jdbcType=INTEGER}
 	</update>
 	
+	<update id="setActive" parameterType="Map" >
+		update k_order_info set is_active = #{isActive, jdbcType=INTEGER}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
 	<!-- 修改订单状态 -->
 	<update id="updateStatus" parameterType="Map" >
 		update k_order_info

@@ -92,6 +92,13 @@ public interface OrderInfoMapper {
 	 * @return
 	 */
 	int inactive(Integer orderId);
+    /**
+     * 設置版本is_active
+     * 
+     * @param orderId
+     * @return
+     */
+    int setActive(@Param("id") Integer id, @Param("isActive") Integer isActive);
 
 	/**
 	 * 

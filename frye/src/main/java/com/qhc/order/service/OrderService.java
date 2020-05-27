@@ -381,7 +381,7 @@ public class OrderService {
           if (historys != null && historys.size() > 0) {
             OrderInfo last = historys.get(0);
             last.setIsActive(1);
-            orderInfoMapper.update(last);
+            orderInfoMapper.setActive(last.getId(), 1);
           }
         } else {
           // 删除订单
