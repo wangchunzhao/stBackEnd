@@ -500,7 +500,8 @@ public class OrderService {
       item.setTransactionPrice(materialDto.getTranscationPrice());
       item.setRetailPrice(materialDto.getRetailPrice());
       item.setOptionalStandardPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D));
-      item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
+      // item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
+      item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalTransactionPrice(), 0D));
       item.setOptionalRetailPrice(item.getOptionalRetailPrice());
       if (freeCategorys.contains(item.getItemCategory())) {
           // 免费
