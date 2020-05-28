@@ -1176,13 +1176,21 @@ public class OrderService {
 //      oo.setTaxRate(taxRate);
 //    }
     List<Tax> taxs = taxMapper.findByParams(null);
-    Map<String, Double> taxRate = new LinkedHashMap<String, Double>();
+    Map<String, List<Map<String, Object>>> taxRate = new HashMap<String, List<Map<String, Object>>>();
     oo.setTaxRate(taxRate);
+    taxRate.put("10", new ArrayList<Map<String, Object>>()); // 内销
+    taxRate.put("20", new ArrayList<Map<String, Object>>()); // 出口
+    taxRate.put("30", new ArrayList<Map<String, Object>>()); // 冷库
     for (Tax tax : taxs) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", tax.getCode());
+        map.put("tax", tax.getTax());
         if (tax.getCode().equals("0")) {
-            continue;
+            taxRate.get("20").add(map);
+        } else {
+            taxRate.get("10").add(map);
+            taxRate.get("30").add(map);
         }
-        taxRate.put(tax.getCode(), tax.getTax());
     }
 
     // 税率，Code：tax_rate
