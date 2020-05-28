@@ -508,8 +508,9 @@ public class OrderService {
           item.setActualPrice(0);
           item.setOptionalActualPrice(0);
       } else {
-          item.setActualPrice(item.getRetailPrice() * item.getDiscount());
-          item.setOptionalActualPrice(ObjectUtils.defaultIfNull(item.getOptionalRetailPrice(), 0D) * item.getDiscount());
+          // 查询出来的订单行项目折扣为百分比形式， ex. 48
+          item.setActualPrice(item.getRetailPrice() * item.getDiscount() / 100);
+          item.setOptionalActualPrice(ObjectUtils.defaultIfNull(item.getOptionalRetailPrice(), 0D) * item.getDiscount() / 100);
       }
       
       List<CharacteristicDto> configs = item.getConfigs();
