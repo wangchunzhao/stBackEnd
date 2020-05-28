@@ -125,10 +125,10 @@
 				AND soa.approval_time = #{approvalTime, jdbcType=TIMESTAMP}
 			</if>
 			<if test="contractNumber != null and contractNumber != ''" >
-				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%'
+				AND UPPER(oi.contract_number) like '%${contractNumber.trim().toUpperCase()}%'
 			</if>
 			<if test="customerName != null and customerName.trim() != ''" >
-				AND (UPPER(c.code) like '%${contractNumber.trim().toUpperCase()}%' or UPPER(c.name) like '%${contractNumber.trim().toUpperCase()}%')
+				AND (UPPER(c.code) like '%${customerName.trim().toUpperCase()}%' or UPPER(c.name) like '%${customerName.trim().toUpperCase()}%')
 			</if>
 			<if test="salesName != null and salesName.trim() != ''" >
 				AND UPPER(u.name) like '%${salesName.trim().toUpperCase()}%'
@@ -150,6 +150,7 @@
         LEFT JOIN sap_customer c on c.code = o.customer_code
         LEFT JOIN k_special_order_application soa ON soa.order_info_id = oi.id
         LEFT JOIN b_user u ON u.user_identity = o.sales_code
+        LEFT JOIN sap_sales_office office ON office.code = oi.office_code
 		<include refid="Where_By_Params" />
 	</select>
 	
@@ -177,12 +178,16 @@
 	        o.customer_clazz,
 	        oi.discount,
 	        oi.create_time,
-	        oi.status
+	        oi.status,
+	        u.name as sales_name,
+	        oi.office_code,
+	        office.name as office_name
         from k_order_info oi 
         LEFT JOIN k_order o ON o.id = oi.order_id
         LEFT JOIN sap_customer c on c.code = o.customer_code
         LEFT JOIN k_special_order_application soa ON soa.order_info_id = oi.id
         LEFT JOIN b_user u ON u.user_identity = o.sales_code
+        LEFT JOIN sap_sales_office office ON office.code = oi.office_code
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">

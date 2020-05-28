@@ -76,9 +76,11 @@ public class SpecialDeliveryDto {
     private String status;
     
     private String salesCode;//客户经理 Customer manager
-//  private String salesName;//客户经理 Customer manager
+    private String salesName;//客户经理 Customer manager
     private String customerCode;//签约单位 Contract unit
     private String customerName;//签约单位 Contract Name
+    private String officeCode;//区域code
+    private String officeName;//区域name
     
     private double discount;//合并折扣
 
@@ -242,7 +244,31 @@ public class SpecialDeliveryDto {
 		this.salesCode = salesCode;
 	}
 
-  public String getContractNumber() {
+  public String getSalesName() {
+        return salesName;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setSalesName(String salesName) {
+        this.salesName = salesName;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+public String getContractNumber() {
     return contractNumber;
   }
 
