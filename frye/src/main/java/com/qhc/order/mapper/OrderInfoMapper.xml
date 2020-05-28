@@ -17,6 +17,7 @@
 		<result column="is_new" property="isNew" jdbcType="INTEGER" />
 		<result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />
 		<result column="sale_type" property="saleType" jdbcType="VARCHAR" />
+		<result column="tax_code" property="taxCode" jdbcType="VARCHAR" />
 		<result column="tax_rate" property="taxRate" jdbcType="DOUBLE" />
 		<result column="incoterm" property="incoterm" jdbcType="VARCHAR" />
 		<result column="incoterm_contect" property="incotermContect" jdbcType="VARCHAR" />
@@ -87,7 +88,7 @@
 			terminal_type, shop_name, record_code, 
 			sales_tel, is_convenient_store, is_reformed, 
 			is_new, contract_number, sale_type, 
-			tax_rate, incoterm, incoterm_contect, 
+			tax_code, tax_rate, incoterm, incoterm_contect, 
 			contract_value, contract_rmb_value, currency, 
 			currency_exchange, items_amount, contract_manager, 
 			office_code, group_code, warranty, 
@@ -110,7 +111,7 @@
 			#{terminalType, jdbcType=VARCHAR}, #{shopName, jdbcType=VARCHAR}, #{recordCode, jdbcType=VARCHAR}, 
 			#{salesTel, jdbcType=VARCHAR}, #{isConvenientStore, jdbcType=INTEGER}, #{isReformed, jdbcType=INTEGER}, 
 			#{isNew, jdbcType=INTEGER}, #{contractNumber, jdbcType=VARCHAR}, #{saleType, jdbcType=VARCHAR}, 
-			#{taxRate, jdbcType=DOUBLE}, #{incoterm, jdbcType=VARCHAR}, #{incotermContect, jdbcType=VARCHAR}, 
+			#{taxCode, jdbcType=VARCHAR}, #{taxRate, jdbcType=DOUBLE}, #{incoterm, jdbcType=VARCHAR}, #{incotermContect, jdbcType=VARCHAR}, 
 			#{contractValue, jdbcType=DECIMAL}, #{contractRmbValue, jdbcType=DECIMAL}, #{currency, jdbcType=VARCHAR}, 
 			#{currencyExchange, jdbcType=DOUBLE}, #{itemsAmount, jdbcType=DECIMAL}, #{contractManager, jdbcType=VARCHAR}, 
 			#{officeCode, jdbcType=VARCHAR}, #{groupCode, jdbcType=VARCHAR}, #{warranty, jdbcType=INTEGER}, 
@@ -147,6 +148,7 @@
 			is_new = #{isNew, jdbcType=INTEGER}, 
 			contract_number = #{contractNumber, jdbcType=VARCHAR}, 
 			sale_type = #{saleType, jdbcType=VARCHAR}, 
+			tax_code = #{taxCode, jdbcType=VARCHAR}, 
 			tax_rate = #{taxRate, jdbcType=DOUBLE}, 
 			incoterm = #{incoterm, jdbcType=VARCHAR}, 
 			incoterm_contect = #{incotermContect, jdbcType=VARCHAR}, 
@@ -214,7 +216,7 @@
 		k_order_info.id, k_order_info.order_id, k_order_info.version, k_order_info.version_num, k_order_info.status, 
 		k_order_info.is_active, k_order_info.terminal_type, k_order_info.shop_name, k_order_info.record_code, k_order_info.sales_tel, 
 		k_order_info.is_convenient_store, k_order_info.is_reformed, k_order_info.is_new, k_order_info.contract_number, k_order_info.sale_type, 
-		k_order_info.tax_rate, k_order_info.incoterm, k_order_info.incoterm_contect, k_order_info.contract_value, k_order_info.contract_rmb_value, 
+		k_order_info.tax_code, k_order_info.tax_rate, k_order_info.incoterm, k_order_info.incoterm_contect, k_order_info.contract_value, k_order_info.contract_rmb_value, 
 		k_order_info.currency, k_order_info.currency_exchange, k_order_info.items_amount, k_order_info.contract_manager, k_order_info.office_code, 
 		k_order_info.group_code, k_order_info.warranty, k_order_info.install_type, k_order_info.receive_type, k_order_info.transfer_type, 
 		k_order_info.freight, k_order_info.contactor1_id, k_order_info.contactor1_tel, k_order_info.contactor2_id, k_order_info.contactor2_tel, 

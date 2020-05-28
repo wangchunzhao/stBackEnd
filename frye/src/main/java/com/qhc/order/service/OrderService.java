@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,9 +76,11 @@ import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
+import com.qhc.sap.entity.Tax;
 import com.qhc.sap.entity.TermianlIndustryCode;
 import com.qhc.sap.mapper.SapOrderMapper;
 import com.qhc.sap.mapper.SapViewMapper;
+import com.qhc.sap.mapper.TaxMapper;
 import com.qhc.sap.service.MaterialService;
 import com.qhc.sap.service.SapService;
 import com.qhc.system.dao.AreaRepository;
@@ -201,6 +204,9 @@ public class OrderService {
 
   @Autowired
   private UserMapper userMapper;
+
+  @Autowired
+  private TaxMapper taxMapper;
   
   // 特殊物料
   List<String> specialMaterials =
@@ -1161,13 +1167,22 @@ public class OrderService {
     }
 
     // 税率，Code：tax_rate
-    p = settingsRepository.findEnabledInfo("tax_rate");
-    if (p != null) {
-      Map<String, Double> taxRate = new HashMap<String, Double>();
-      taxRate.put("10", Double.valueOf(p.getsValue()));
-      taxRate.put("30", Double.valueOf(p.getsValue()));
-
-      oo.setTaxRate(taxRate);
+//    p = settingsRepository.findEnabledInfo("tax_rate");
+//    if (p != null) {
+//      Map<String, Double> taxRate = new HashMap<String, Double>();
+//      taxRate.put("10", Double.valueOf(p.getsValue()));
+//      taxRate.put("30", Double.valueOf(p.getsValue()));
+//
+//      oo.setTaxRate(taxRate);
+//    }
+    List<Tax> taxs = taxMapper.findByParams(null);
+    Map<String, Double> taxRate = new LinkedHashMap<String, Double>();
+    oo.setTaxRate(taxRate);
+    for (Tax tax : taxs) {
+        if (tax.getCode().equals("0")) {
+            continue;
+        }
+        taxRate.put(tax.getCode(), tax.getTax());
     }
 
     // 税率，Code：tax_rate

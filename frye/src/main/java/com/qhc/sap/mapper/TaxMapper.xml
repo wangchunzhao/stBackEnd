@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qhc.sap.mapper.TaxMapper" >
+	<resultMap id="TaxBaseMap" type="com.qhc.sap.entity.Tax" >
+		<id column="code" property="code" jdbcType="VARCHAR" />
+		<result column="tax" property="tax" jdbcType="DECIMAL" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="TaxMap" type="com.qhc.sap.entity.Tax" extends="TaxBaseMap" >
+		<!-- to add extended property -->
+	</resultMap>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.qhc.sap.entity.Tax">
+		insert into sap_tax ( tax, remark )
+		values ( #{tax, jdbcType=DECIMAL}, #{remark, jdbcType=VARCHAR} )
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.qhc.sap.entity.Tax" >
+		update sap_tax
+		set tax = #{tax, jdbcType=DECIMAL}, 
+			remark = #{remark, jdbcType=VARCHAR}
+		where code = #{code, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 按主键删除 -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		delete from sap_tax
+		where code = #{value, jdbcType=VARCHAR}
+	</delete>
+
+	<sql id="Base_Column_List" >
+		sap_tax.code, sap_tax.tax, sap_tax.remark
+	</sql>
+	
+	<sql id="Column_List">
+		<include refid="Base_Column_List" />
+	</sql>
+	
+	<!-- 按主键查询 -->
+	<select id="findById" resultMap="TaxMap" parameterType="java.lang.String" >
+		select 
+		<include refid="Column_List" />
+		from sap_tax 
+		where sap_tax.code = #{value, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 按参数查询 -->
+	<select id="findByParams" resultMap="TaxMap" parameterType="Map" >
+		select 
+		<include refid="Column_List" />
+		from sap_tax
+		<include refid="Where_By_Params" />
+		<choose>
+			<when test="orderByClause != null">
+				order by ${orderByClause}
+			</when>
+			<otherwise>
+				order by code
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按参数统计 -->
+	<select id="countByParams" resultType="java.lang.Integer" parameterType="Map" >
+		select count(1) 
+		from sap_tax
+		<include refid="Where_By_Params" />
+	</select>
+	
+	<sql id="Where_By_Params" >
+		<trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="code != null and code != ''" >
+				AND sap_tax.code = #{code, jdbcType=VARCHAR}
+			</if>
+			<if test="tax != null" >
+				AND sap_tax.tax = #{tax, jdbcType=DECIMAL}
+			</if>
+			<if test="remark != null and remark != ''" >
+				AND sap_tax.remark = #{remark, jdbcType=VARCHAR}
+			</if>
+			
+			<include refid="Where_Clause" />
+		</trim>
+	</sql>
+	
+	<sql id="Where_Clause">
+		
+	</sql>
+</mapper>
