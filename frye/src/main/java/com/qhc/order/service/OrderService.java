@@ -1364,7 +1364,7 @@ public class OrderService {
     for (ItemDto item : items) {
       Integer itemId = item.getId();
       
-      if (item.getItemStatus().equals("10")) {
+      if (item.getItemStatus().equals("10") || item.getItemStatus().equals("Z2")) {
         order.setHasSendSap(true);
       }
 
