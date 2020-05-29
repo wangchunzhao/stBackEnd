@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +27,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.Constant;
-import com.qhc.exception.NotMatchException;
 import com.qhc.order.domain.CharacteristicDto;
 import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
@@ -1027,6 +1025,7 @@ public class OrderService {
   public String getRoleUserMails(Integer toRoleId) {
     Map<String, Object> params = new HashMap<>();
     params.put("roleId", toRoleId);
+    params.put("isActive", 1);
     List<User> users = userMapper.findByParams(params);
     StringBuilder to = new StringBuilder(256);
     for (User u : users) {

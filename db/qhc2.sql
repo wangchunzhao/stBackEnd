@@ -129,6 +129,8 @@ drop table if exists sap_sales_type;
 
 drop table if exists sap_shipping_type;
 
+drop table if exists sap_tax;
+
 drop table if exists sap_unit_of_measurement;
 
 /*==============================================================*/
@@ -650,7 +652,8 @@ create table k_order_info
             10	内销
             20	出口
             30	冷库',
-   tax_rate             double comment '税率',
+   tax_code             varchar(10) comment '税率code',
+   tax_rate             decimal(5,2) comment '税率',
    incoterm             varchar(45) comment '国际贸易条件code',
    incoterm_contect     varchar(64) comment '国际贸易条件内容',
    contract_value       decimal(13,2) comment '原合同金额',
@@ -865,7 +868,7 @@ create table sap_customer
    name                 varchar(64) not null,
    address              varchar(64),
    sap_customer_class_code varchar(2) not null comment '客户类型',
-   sap_industry_code_code varchar(10) not null comment '客户级别',
+   sap_industry_code_code varchar(10) not null comment '客户级别，客户分类',
    primary key (code),
    key number_UNIQUE (code)
 );
@@ -941,8 +944,7 @@ create table sap_industry_code
    key code_UNIQUE (code)
 );
 
-alter table sap_industry_code comment '客户级别
-';
+alter table sap_industry_code comment '客户分类';
 
 /*==============================================================*/
 /* Table: sap_installation_terms                                */
@@ -1236,6 +1238,19 @@ create table sap_shipping_type
 
 alter table sap_shipping_type comment '01	自提
 05	非自提';
+
+/*==============================================================*/
+/* Table: sap_tax                                               */
+/*==============================================================*/
+create table sap_tax
+(
+   code                 varchar(10) not null,
+   tax                  decimal(5,2) not null,
+   remark               varchar(64) not null default '2000-01-01 00:00:00',
+   primary key (code)
+);
+
+alter table sap_tax comment '税率';
 
 /*==============================================================*/
 /* Table: sap_unit_of_measurement                               */
