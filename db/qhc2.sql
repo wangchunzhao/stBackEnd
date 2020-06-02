@@ -631,7 +631,7 @@ create table k_order_info
             05   BPM审批通过
             06   订单变更BPM审批通过
             07   不用
-            08   不用
+            08   下推SAP待确认
             09   已下推SAP
             10   Selling Tool驳回
             11   BPM驳回',
