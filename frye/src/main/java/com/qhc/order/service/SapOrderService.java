@@ -517,7 +517,7 @@ public class SapOrderService {
 			// 1.ͬ同步SAP开单 没有数据 先注释
 			String sapStr = objectMapper.writeValueAsString(sapOrder);
 			logger.info("Order Data: {}", sapStr);
-			res = HttpUtil.postbody(url, sapStr, 300); // 5 minute
+			res = HttpUtil.postbody(url, sapStr, 7200); // 120 minute
 			objectMapper.getFactory().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
 			JsonNode tree = objectMapper.readTree(res);
 			JsonNode result = tree.get("subrc");
