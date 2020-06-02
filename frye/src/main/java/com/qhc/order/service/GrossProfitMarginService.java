@@ -173,8 +173,15 @@ public class GrossProfitMarginService {
 				double b2cEstimatedExcludingTaxAmount = 0d;
 				double b2cEstimatedCost = 0d;
 				for (ItemDto item : items) {
-					b2cEstimatedAmount += item.getB2cEstimatedPrice() * item.getQuantity();
-					b2cEstimatedCost += item.getB2cEstimatedCost() * item.getQuantity();
+		            String status = item.getItemStatus();
+		            // 取消状态的行项目不在累计范围
+		            if (status.equals("Z2")) {
+		              continue;
+		            }
+	                // 退货，减去
+	                int flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
+					b2cEstimatedAmount += flag * item.getB2cEstimatedPrice() * item.getQuantity();
+					b2cEstimatedCost += flag * item.getB2cEstimatedCost() * item.getQuantity();
 				}
 				b2cEstimatedAmount /= exchange; // 转换为凭证货币
 				b2cEstimatedExcludingTaxAmount = b2cEstimatedAmount / (1 + order.getTaxRate()) / exchange; // 转换为凭证货币

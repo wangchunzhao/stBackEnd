@@ -82,7 +82,7 @@
 	
 	<sql id="Where_By_Params" >
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			oi.status in ('05', '06', '09') AND o.st_order_type in ('1', '2', '4')
+			oi.status in ('05', '06', '09') AND o.st_order_type in ('4')
 			<if test="list != null and list != ''" >
 				<!-- 查询列表数据 -->
 				<!-- AND (soa.apply_status is null or soa.apply_status in (0, 1, 2, 3)) -->
