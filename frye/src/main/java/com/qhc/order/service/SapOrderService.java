@@ -181,11 +181,12 @@ public class SapOrderService {
 		if (isUpdate) {
 			header.setUpdateflag("U");
 		}
+		header.setTaxk1(order.getTaxCode()); // 税率Code
 
 //		ItemService itemService;
 		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
-		Integer addressSeq = null;
-		boolean singleAddress = true;
+//		Integer addressSeq = null;
+//		boolean singleAddress = true;
 		for (ItemDto item : items) {
 			int rowNumber = item.getRowNum();
 			double quantity = item.getQuantity();

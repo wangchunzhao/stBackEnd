@@ -77,6 +77,8 @@ public class SapOrderHeader {
 	private String vdatu;
 	// 变更状态
 	private String updateflag;
+    // 税率Code
+    private String taxk1;
 	
 	public String getAuart() {
 		return auart;
@@ -288,4 +290,10 @@ public class SapOrderHeader {
 	public void setUpdateflag(String updateflag) {
 		this.updateflag = updateflag;
 	}
+    public String getTaxk1() {
+        return taxk1;
+    }
+    public void setTaxk1(String taxk1) {
+        this.taxk1 = taxk1;
+    }
 }
