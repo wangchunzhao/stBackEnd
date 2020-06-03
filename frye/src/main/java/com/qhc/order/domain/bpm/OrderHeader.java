@@ -93,6 +93,19 @@ public class OrderHeader {
     private int isSpecial; // 是否非标准折扣，默认为0，经销商非标下单为1
     
     private int isNonUniform; // 是否非統一折扣，默认为0，非統一折扣为1
+    
+    //   ================== 特批发货申请信息  ==================
+    /* 收到电子订单或其他订单确认文件的时间 */
+    private String receiveMailTime = null;
+
+    /* 合同中要求的完工日期 */
+    private String contractTime = null;
+
+    /* 预计合同原件、预付款到达时间 */
+    private String payAdvancePaymentTime = null;
+
+    /* 备注 */
+    private String remark = null;
 
 	public String getSalesCode() {
 		return salesCode;
@@ -438,7 +451,39 @@ public class OrderHeader {
     this.isNonUniform = isNonUniform;
   }
 
-  @Override
+  public String getReceiveMailTime() {
+    return receiveMailTime;
+}
+
+public String getContractTime() {
+    return contractTime;
+}
+
+public String getPayAdvancePaymentTime() {
+    return payAdvancePaymentTime;
+}
+
+public String getRemark() {
+    return remark;
+}
+
+public void setReceiveMailTime(String receiveMailTime) {
+    this.receiveMailTime = receiveMailTime;
+}
+
+public void setContractTime(String contractTime) {
+    this.contractTime = contractTime;
+}
+
+public void setPayAdvancePaymentTime(String payAdvancePaymentTime) {
+    this.payAdvancePaymentTime = payAdvancePaymentTime;
+}
+
+public void setRemark(String remark) {
+    this.remark = remark;
+}
+
+@Override
   public String toString() {
     return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel + ", orderType="
         + orderType + ", sequenceNumber=" + sequenceNumber + ", discount=" + discount

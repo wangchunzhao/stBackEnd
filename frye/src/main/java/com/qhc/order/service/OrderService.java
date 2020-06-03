@@ -1683,6 +1683,16 @@ public class OrderService {
     bpmHeader.setIsLongterm(order.getIsLongterm()); // 长期折扣
     bpmHeader.setIsSpecial(order.getStOrderType().equals("2") ? 1 : 0); // 经销商非标折扣
     bpmHeader.setIsNonUniform(order.getIsSpecial()); //  经销商非标折扣订单非统一折扣
+    
+    // 特批发货申请信息
+    SpecialOrderApplication specialOrderApplication =
+            specialOrderApplicationMapper.findByOrderInfo(order.getId());
+    if (specialOrderApplication != null && specialOrderApplication.getApplyStatus().equals(1)) {
+        bpmHeader.setReceiveMailTime(specialOrderApplication.getReceiveMailTime());
+        bpmHeader.setContractTime(specialOrderApplication.getContractTime());
+        bpmHeader.setPayAdvancePaymentTime(specialOrderApplication.getPayAdvancePaymentTime());
+        bpmHeader.setRemark(specialOrderApplication.getRemark());
+    }
 
     // set bpm order attachements
     for (Attachment attachment : attachments) {
