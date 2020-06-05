@@ -473,7 +473,7 @@
 		from k_order_info 
 		where contract_number = #{contractNumber, jdbcType=VARCHAR}
 			<if test="orderId != null" >
-				AND order_id != #{id, jdbcType=INTEGER}
+				AND order_id != #{orderId, jdbcType=INTEGER}
 			</if>
 	</select>
 </mapper>
