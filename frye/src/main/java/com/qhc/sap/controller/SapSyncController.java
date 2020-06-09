@@ -316,7 +316,7 @@ public class SapSyncController {
 	
 	//每天凌晨5点执行一次
 //	@Scheduled(cron = "0 0 5 * * ?")
-	@ApiOperation(value = "同步sap订单状态")
+	@ApiOperation(value = "从SAP同步订单开工日期入库日期交货日期定时任务")
 	@GetMapping(value = "UpdateSellingToolOrderStatus")
 	@ResponseStatus(HttpStatus.OK)
 	public void sapOrderStatus() {
