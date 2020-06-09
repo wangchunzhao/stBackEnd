@@ -29,34 +29,63 @@ import io.swagger.annotations.ApiOperation;
 public class ConstantController {
 	@Autowired
 	private ConstantService constService;
-	
+
 	@ApiOperation(value = "列出所有客户的级别信息")
 	@GetMapping(value = "customerClazz")
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String,String> getCustomerClazz() throws Exception {
-		
-		Map<String,String> ccMap =  constService.findAllCustomerClazz();
+	public Map<String, String> getCustomerClazz() throws Exception {
+
+		Map<String, String> ccMap = constService.findAllCustomerClazz();
 		return ccMap;
 	}
-	
-		
+
 	@ApiOperation(value = "列出所有订单类型代码")
 	@GetMapping(value = "orderType")
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String,String> getOrderTypes() throws Exception {
-		
-		Map<String,String> ccMap =  constService.getOrderTypes();
+	public Map<String, String> getOrderTypes() throws Exception {
+
+		Map<String, String> ccMap = constService.getOrderTypes();
 		return ccMap;
 	}
-	
-		
-	@ApiOperation(value = "列出所有For Dealer的终端客户性质")
+
+	@ApiOperation(value = "列出所有For Dealer的客户分类")
 	@GetMapping(value = "dealerIndustryCode")
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String,String> getFordealerIndustryCodes() throws Exception {
-		Map<String,String> map =  constService.findFordealerIndustryCodes();
+	public Map<String, String> getFordealerIndustryCodes() throws Exception {
+		Map<String, String> map = constService.findFordealerIndustryCodes();
 		return map;
 	}
-	
+
+	@ApiOperation(value = "列出所有客户分类")
+	@GetMapping(value = "industryCode")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, String> getIndustryCodes() throws Exception {
+		Map<String, String> map = constService.findIndustryCodes();
+		return map;
+	}
+
+	@ApiOperation(value = "列出所有大客户")
+	@GetMapping(value = "industry")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, String> getIndustrys() throws Exception {
+		Map<String, String> map = constService.findIndustrys();
+		return map;
+	}
+
+	@ApiOperation(value = "列出所有销售类型")
+	@GetMapping(value = "saleType")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, String> getSaleTypes() throws Exception {
+		Map<String, String> map = constService.findSaleTypes();
+		return map;
+	}
+
+	@ApiOperation(value = "列出所有大区")
+	@GetMapping(value = "office")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, String> getOffices() throws Exception {
+		Map<String, String> map = constService.findOffices();
+		return map;
+	}
 
 }

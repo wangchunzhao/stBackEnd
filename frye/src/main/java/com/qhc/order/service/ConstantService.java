@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
@@ -19,33 +18,36 @@ import com.qhc.order.entity.MaterialGroupOrder;
 import com.qhc.order.mapper.MaterialGroupOrderMapper;
 import com.qhc.sap.dao.CurrencyRepository;
 import com.qhc.sap.dao.CustomerClassRepository;
-import com.qhc.sap.dao.IndustryCodeRepository;
-import com.qhc.sap.dao.ReceiveTermsRepository;
-import com.qhc.sap.dao.ShippingTypeRepository;
 import com.qhc.sap.dao.IncotermRepository;
+import com.qhc.sap.dao.IndustryCodeRepository;
+import com.qhc.sap.dao.IndustryRepository;
 import com.qhc.sap.dao.InstallationTermsRepository;
 import com.qhc.sap.dao.MeasurementUnitRepository;
 import com.qhc.sap.dao.OrderTypeRepository;
 import com.qhc.sap.dao.PaymentTermRepository;
+import com.qhc.sap.dao.ReceiveTermsRepository;
 import com.qhc.sap.dao.SalesGroupRepository;
 import com.qhc.sap.dao.SalesOfficeRepository;
+import com.qhc.sap.dao.SalesTypeRepository;
 import com.qhc.sap.dao.SapCurrencySaleTypeRepository;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
+import com.qhc.sap.dao.ShippingTypeRepository;
 import com.qhc.sap.domain.CurrencyDto;
-import com.qhc.sap.entity.CustomerClass;
 import com.qhc.sap.entity.Currency;
+import com.qhc.sap.entity.CustomerClass;
 import com.qhc.sap.entity.Incoterm;
+import com.qhc.sap.entity.Industry;
 import com.qhc.sap.entity.IndustryCode;
-import com.qhc.sap.entity.InstallationTerms;
 import com.qhc.sap.entity.MaterialGroups;
-import com.qhc.sap.entity.ReceiveTerms;
-import com.qhc.sap.entity.ShippingType;
-import com.qhc.sap.entity.Unit;
 import com.qhc.sap.entity.OrderTypeCustomerClass;
 import com.qhc.sap.entity.PaymentTerm;
+import com.qhc.sap.entity.ReceiveTerms;
+import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.SapCurrencySaleType;
 import com.qhc.sap.entity.SapSalesGroup;
 import com.qhc.sap.entity.SapSalesOffice;
+import com.qhc.sap.entity.ShippingType;
+import com.qhc.sap.entity.Unit;
 
 /**
  * @author wang@dxc.com
@@ -101,6 +103,12 @@ public class ConstantService {
 	@Autowired
 	private PaymentTermRepository paymentTermRepository;
 	
+	@Autowired
+	private SalesTypeRepository salesTypeRepository;
+	
+	@Autowired
+	private IndustryRepository industryRepository;
+	
 	public static Map<String, String> customerClazz;
 
 	public static Map<String, String> orderType;// Map<customerClassCode,List<ordertype code>>
@@ -135,6 +143,14 @@ public class ConstantService {
 	public static Map<String, String> acceptanceCriteria = null;
 
 	public static Map<String, String> dealerPaymentTerms = null;
+
+	public static Map<String, String> industryCodes = null;
+
+	public static Map<String, String> industrys = null;
+
+	public static Map<String, String> saleTypes = null;
+
+	public static Map<String, String> offices = null;
 
 	public Map<String, String> findAllCustomerClazz() {
 		if (customerClazz == null || customerClazz.isEmpty()) {
@@ -388,6 +404,58 @@ public class ConstantService {
 		}
 
 		return dealerPaymentTerms;
+	}
+
+	public Map<String, String> findIndustryCodes() {
+		if (industryCodes == null || industryCodes.isEmpty()) {
+			List<IndustryCode> industryCodeList = industryCodeRepository.findAll();
+			industryCodes = new HashMap<String, String>();
+
+			for (IndustryCode dIndustryCode : industryCodeList) {
+				industryCodes.put(dIndustryCode.getCode(), dIndustryCode.getName());
+			}
+		}
+
+		return industryCodes;
+	}
+
+	public Map<String, String> findIndustrys() {
+		if (industrys == null || industrys.isEmpty()) {
+			List<Industry> industryList = industryRepository.findAll();
+			industrys = new HashMap<String, String>();
+
+			for (Industry industry : industryList) {
+				industrys.put(industry.getCode(), industry.getName());
+			}
+		}
+
+		return industrys;
+	}
+
+	public Map<String, String> findSaleTypes() {
+		if (saleTypes == null || saleTypes.isEmpty()) {
+			List<SalesType> saleTypeList = salesTypeRepository.findAll();
+			saleTypes = new HashMap<String, String>();
+
+			for (SalesType saleType : saleTypeList) {
+				saleTypes.put(saleType.getCode(), saleType.getName());
+			}
+		}
+
+		return saleTypes;
+	}
+
+	public Map<String, String> findOffices() {
+		if (offices == null || offices.isEmpty()) {
+			List<SapSalesOffice> saleOfficeList = saleOfficeRepository.findAll();
+			offices = new HashMap<String, String>();
+
+			for (SapSalesOffice saleOffice : saleOfficeList) {
+				offices.put(saleOffice.getCode(), saleOffice.getName());
+			}
+		}
+
+		return offices;
 	}
 
 }

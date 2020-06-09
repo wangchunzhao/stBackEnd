@@ -66,16 +66,15 @@ import com.qhc.order.mapper.SpecialOrderApplicationMapper;
 import com.qhc.sap.dao.MaterialRepository;
 import com.qhc.sap.dao.PaymentTermRepository;
 import com.qhc.sap.dao.SalesTypeRepository;
-import com.qhc.sap.dao.TerminalIndustryCodeRepository;
 import com.qhc.sap.domain.Characteristic;
 import com.qhc.sap.domain.CustomerDto;
 import com.qhc.sap.domain.MaterialDto;
+import com.qhc.sap.entity.IndustryCode;
 import com.qhc.sap.entity.Material;
 import com.qhc.sap.entity.MaterialGroups;
 import com.qhc.sap.entity.PaymentTerm;
 import com.qhc.sap.entity.SalesType;
 import com.qhc.sap.entity.Tax;
-import com.qhc.sap.entity.TermianlIndustryCode;
 import com.qhc.sap.mapper.SapOrderMapper;
 import com.qhc.sap.mapper.SapViewMapper;
 import com.qhc.sap.mapper.TaxMapper;
@@ -151,9 +150,6 @@ public class OrderService {
 
   @Autowired
   private ProvinceRepository provinceRepo;
-
-  @Autowired
-  private TerminalIndustryCodeRepository industryCodeRepo;
 
   @Autowired
   private SalesTypeRepository saleTypeRepo;
@@ -1079,11 +1075,8 @@ public class OrderService {
     Set<Area> distincts = oo.getDistricts();
     distincts.addAll(bas);
     //
-    Map<String, String> incs = oo.getTermialClass();
-    List<TermianlIndustryCode> tics = industryCodeRepo.findAll();
-    for (TermianlIndustryCode tic : tics) {
-      incs.put(tic.getCode(), tic.getName());
-    }
+    Map<String, String> incs = constService.findIndustryCodes();
+    oo.setTermialClass(incs);
     //
     Map<String, String> st = oo.getSaleTypes();
     List<SalesType> dsts = saleTypeRepo.findAll();
