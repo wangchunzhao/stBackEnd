@@ -1,5 +1,6 @@
 package com.qhc.order.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -125,12 +126,20 @@ public class ReportService {
 				}
 			}
 			
+			String paymentType = (String)map.get("paymentType");
+			if (StringUtils.isNotEmpty(paymentType)) {
+				String name = constantService.findDealerPaymentTerms().get(paymentType);
+				if (name != null) {
+					map.put("paymentType", name);
+				}
+			}
+			
 			Integer id = Integer.valueOf(map.get("id").toString());
 			List<DeliveryAddressDto> addresses = deliveryAddressMapper.findByOrderInfoId(id);
 			DeliveryAddressDto deliveryAddressDto = addresses != null && addresses.size() > 0 ? addresses.get(0) : null;
 			if (deliveryAddressDto != null) {
 				// 省市區
-				map.put("city", deliveryAddressDto.getProvinceName() + deliveryAddressDto.getDistrictName() + deliveryAddressDto.getCityName());
+				map.put("city", StringUtils.trimToEmpty(deliveryAddressDto.getProvinceName()) + StringUtils.trimToEmpty(deliveryAddressDto.getDistrictName()) + StringUtils.trimToEmpty(deliveryAddressDto.getCityName()));
 				// 地址
 				map.put("address", deliveryAddressDto.getAddress());
 			}
@@ -138,7 +147,8 @@ public class ReportService {
 			// TODO 是否年采客户
 			
 			List<MaterialGroups> margins = new ObjectMapper().readValue(map.get("gross_profit_margin").toString(), new TypeReference<List<MaterialGroups>>() {});
-			map.put("margin", margins.get(margins.size() - 1).getGrossProfitMargin());
+			String margin = BigDecimal.valueOf(margins.get(margins.size() - 1).getGrossProfitMargin() * 100).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+			map.put("margin", margin);
 		}
 	}
 }
