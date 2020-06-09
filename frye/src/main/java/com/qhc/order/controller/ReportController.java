@@ -31,6 +31,21 @@ public class ReportController {
 	@Autowired
 	private ReportService reportService;
 
+	@ApiOperation(value = "购销明细报表")
+	@GetMapping(value = "orderdetail")
+	@ResponseStatus(HttpStatus.OK)
+	public Result getOrderReport(@RequestParam(required = false) Map<String, Object> params) throws Exception {
+		Result result = null;
+		try {
+			PageHelper<Map<String, Object>> page = new PageHelper<>(reportService.findPurchaseSalesReport(params));
+			result = Result.ok(page);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
+	}
+
 	@ApiOperation(value = "投标跟踪表")
 	@GetMapping(value = "bidding")
 	@ResponseStatus(HttpStatus.OK)
@@ -46,18 +61,19 @@ public class ReportController {
 		return result;
 	}
 
-	@ApiOperation(value = "购销明细报表")
-	@GetMapping(value = "orderdetail")
-	@ResponseStatus(HttpStatus.OK)
-	public List<Map<String, Object>> getOrderReport(@RequestParam(required = false) Map<String, Object> params) throws Exception {
-		return reportService.findPurchaseSalesReport(params);
-	}
-
 	@ApiOperation(value = "订单汇总报表，按订单查询")
 	@GetMapping(value = "ordersummary")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Map<String, Object>> getOrderSummaryReport(@RequestParam(required = false) Map<String, Object> params) throws Exception {
-		return reportService.findOrderSummaryReport(params);
+	public Result getOrderSummaryReport(@RequestParam(required = false) Map<String, Object> params) throws Exception {
+		Result result = null;
+		try {
+			PageHelper<Map<String, Object>> page = new PageHelper<>(reportService.findOrderSummaryReport(params));
+			result = Result.ok(page);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			result = Result.error(e.getMessage());
+		}
+		return result;
 	}
 	
 

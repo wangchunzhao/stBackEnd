@@ -79,6 +79,7 @@
 	<!-- 投标跟踪报表 -->
 	<select id="findBiddingReport" resultType="Map" parameterType="Map" >
 		select 
+			oi.id,
 			o.sequence_number as sequenceNumber, <!-- 需求流水号 -->
 			oi.contract_number as contractNumber, <!-- 合同号 -->
 			sc.name as customerName, <!-- 签约单位 -->
@@ -174,85 +175,131 @@
 	<!-- 销售订单汇总报表 -->
 	<select id="findOrderSummaryReport" resultType="Map" parameterType="Map" >
 		select 
-			o.sequence_number as sequenceNumber, <!-- 单据编号 -->
-			'' as contactor, <!-- 签约人 -->
-			so.name as officeName, <!-- 区域 -->
-			sg.name as groupName, <!-- 中心 -->
-			'' as contractDate, <!-- 签约日期 -->
+			oi.id,
+			o.sequence_number as sequenceNumber, <!-- 需求流水号 -->
 			oi.contract_number as contractNumber, <!-- 合同号 -->
-			o.customer_code as customerCode, <!-- 客户编号 -->
 			sc.name as customerName, <!-- 签约单位 -->
-			scc.name as customerClassName, <!-- 客户性质 -->
 			oi.shop_name as shopName, <!-- 店名 -->
-			sic.name as terminalType, <!-- 终端客户性质 -->
-			oi.is_special as isSpecial, <!-- 是否特批折扣 -->
+			u.name as salesName, <!-- 客户经理名称 -->
 			oi.is_reformed as isReformed, <!-- 是否改造店 -->
-			oi.contract_rmb_value as contractRmbAmount, <!-- 合同金额 -->
-			'' as groassProfit, <!-- 毛利率 -->
-			oi.is_longterm as isLongterm, <!-- 是否长期折扣 -->
-			oi.discount as discount, <!-- 折扣 -->
-			sm.description as materialName, <!-- 产品规格型号 -->
-			i.material_code as materialCode, <!-- 物料专用号 -->
-			sm.is_purchased as isPurchased, <!-- 物料属性 -->
-			i.quantity as quantity, <!-- 合同数量 -->	
-			i.actural_price as salesPrice, <!-- 销售单价 -->
-			i.actural_price * i.quantity as salesAmount, <!-- 销售金额 -->
-			sm.sap_unit_of_measurement_code as unitCode, <!-- 单位 -->
-			da.address as address, <!-- 到货地址 -->
-			oi.transfer_type as transferType, <!-- 是否自提 -->
-			oi.earliest_delivery_date as shippDate, <!-- 要求发货时间 -->
-			oi.install_type as installType, <!-- 安装公司 -->
-			oi.receive_type as receiveType, <!-- 收货方式 -->
-			oi.contactor1_id as contactorId, <!-- 授权人及身份证号 -->
-			oi.contactor1_tel as contactorTel, <!-- 授权人电话 -->
-			'' as receiverId, <!-- 收货人身份证号 -->
-			oi.payment_type as paymentType, <!-- 结算方式 -->
-			oi.freight as freight, <!-- 运费 -->
-			i.period as period, <!-- 保修期限（年） -->
-			'' as financialReviewer1, <!-- 财务1审核人 -->
-			'' as financialReviewer2, <!-- 财务2审核人 -->
-			oi.currency as currency, <!-- 币别 -->
-			oi.contract_value as contractAmount, <!-- 原币合同金额 -->
+			oi.is_new as isNew, <!-- 是否新客户 -->
+			oi.is_convenient_store as isConvenientStore, <!-- 是否便利店 -->
+			si.name as industryName, <!-- 隶属关系 -->
+			sit.name as customerIndustryCodeName, <!-- 客户分类 -->
+			oi.sale_type as saleType, <!-- 销售类型 -->
+			oi.contract_Value as contractValue, <!-- 合同金额（凭证货币） -->
+			oi.contract_Rmb_Value as contractRmbValue, <!-- 原币合同金额 -->
+			oi.create_time as createTime, <!-- 订单创建日期 -->
+			so.name as officeName, <!-- 大区 -->
+			sg.name as groupName, <!-- 中心 -->
+			oi.status, <!-- 订单状态 -->
+			sc.sap_industry_code_code as industryCodeName, <!-- 性质分类/客户分类 -->
+			cmu.name as contractManager, <!-- 合同管理员 -->
+			o.st_order_type as stOrderType, <!-- 订单类型 -->
+			0 as isYearpurchase, <!-- 是否年采客户 -->
+			oi.record_code as recordCode, <!-- 项目报备编号 -->
+			oi.tax_rate as taxRate, <!-- 税率 -->
+			oi.currency, <!-- 币种 -->
 			oi.currency_exchange as exchange, <!-- 汇率 -->
-			oi.is_new as isNew <!-- 是否新客户 -->
+			oi.incoterm, <!-- 国际贸易条件1 -->
+			oi.incoterm_contect as incotermContect, <!-- 国际贸易条件2 -->
+			oi.warranty, <!-- 保修年限 -->
+			oi.install_type as installType, <!-- 安装方式 -->
+			'' as city, <!-- 省市区 -->
+			'' as address, <!-- 到货地址 -->
+			oi.transfer_type as transferType, <!-- 运输方式 -->
+			oi.additional_freight as additionalFreight, <!-- 追加运费 -->
+			oi.freight, <!-- 外销运费 -->
+			oi.contactor1_id as contactor1Id, <!-- 授权人1及身份证号 -->
+			oi.contactor1_tel as contactor1Tel, <!-- 授权人1电话 -->
+			oi.contactor2_id as contactor2Id, <!-- 授权人2及身份证号 -->
+			oi.contactor2_tel as contactor2Tel, <!-- 授权人2电话 -->
+			oi.contactor3_id as contactor3Id, <!-- 授权人3及身份证号 -->
+			oi.contactor3_tel as contactor3Tel, <!-- 授权人3电话 -->
+			oi.payment_type as paymentType, <!-- 结算方式 -->
+			oi.earliest_delivery_date as earliestDeliveryDate, <!-- 要求发货时间 -->
+			oi.is_term1 as isTerm1, <!-- 柜体控制阀件是否甲供 -->
+			oi.is_term2 as isTerm2, <!-- 分体归是否远程监控 -->
+			oi.is_term3 as isTerm3, <!-- 立柜柜体是否在地下室 -->
+			oi.is_urgent_delivery as isUrgentDelivery, <!-- 是否特批发货 -->
+			oi.is_special_order as isSpecialOrder, <!-- 是否特批下单 -->
+			oi.gross_profit_margin <!-- 销售毛利率 -->
 		from k_order_info oi
 		inner join k_order o on o.id = oi.order_id
 		left join sap_customer sc on sc.code = o.customer_code
-		left join sap_customer_class scc on scc.code = sc.sap_customer_class_code
-		<!-- left join sap_industry_code sic on sic.code = oi.terminal_type -->
+		left join sap_industry_code sit on sit.code = sc.sap_industry_code_code
+		left join sap_industry_and_customer sic on sic.sap_customer_code = o.customer_code
+		left join sap_industry si on si.code = si.code = sic.sap_industry_code
 		left join k_contract c on c.order_info_id = oi.id
-		left join k_item i on i.order_info_id = oi.id
-		left join k_delivery_address da on da.order_info_id = oi.id and da.seq = i.delivery_address_seq
-		left join sap_materials sm on sm.code = i.material_code
 		left join sap_sales_office so on so.code = oi.office_code
 		left join sap_sales_group sg on sg.code = oi.group_code
+        LEFT JOIN b_user u on u.user_identity=oi.creater
+        LEFT JOIN b_user cmu on cmu.user_identity=oi.contract_manager
 		<trim prefix="WHERE" prefixOverrides="AND|OR" >
-			oi.is_active = 1
+			oi.is_active = 1 and oi.status != '00'
+			<!-- 需求流水号 -->
 			<if test="sequenceNumber != null and sequenceNumber != ''" >
-				AND o.sequence_number like '%${sequenceNumber}%'
+				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%' 
 			</if>
+			<!-- 合同号 -->
 			<if test="contractNumber != null and contractNumber != ''" >
-				AND oi.contract_number like '%${contractNumber}%'
+				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%' 
 			</if>
+			<!-- 签约单位 -->
 			<if test="customerName != null and customerName != ''" >
-				AND sc.name like '%${customerName}%'
+				AND (UPPER(sc.code) like '%${customerName.toUpperCase()}%' or UPPER(sc.name) like '%${customerName.toUpperCase()}%') 
 			</if>
+			<!-- 客户经理名称 -->
+			<if test="salesName != null and salesName != ''" >
+				AND UPPER(u.name) like '%${salesName.toUpperCase()}%' 
+			</if>
+			<!-- 隶属关系 -->
+			<if test="industry != null and industry != ''" >
+				AND sic.sap_industry_code = #{industry, jdbcType=VARCHAR} 
+			</if>
+			<!-- 客户分类 -->
+			<if test="industryCode != null and industryCode != ''" >
+				AND sc.sap_industry_code_code = #{industryCode, jdbcType=VARCHAR} 
+			</if>
+			<!-- 销售类型 -->
+			<if test="saleType != null and saleType != ''" >
+				AND oi.sale_type = #{saleType, jdbcType=VARCHAR} 
+			</if>
+			<!-- 原币合同金额 -->
+			<if test="contractAmount1 != null and contractAmount1 != ''" >
+				AND oi.contract_rmb_value >= ${contractAmount1} 
+			</if>
+			<if test="contractAmount2 != null and contractAmount2 != ''" >
+				<![CDATA[
+				AND oi.contract_rmb_value <= ${contractAmount2} 
+				]]>
+			</if>
+			<!-- 订单创建日期 -->
+			<!-- 2019-04-07 - 2019-11-07 -->
 			<if test="createTime != null and createTime != ''" >
 			<![CDATA[
-				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= #{createStartTime} AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= #{createEndTime} 
+				AND DATE_FORMAT(oi.create_time, '%Y-%m-%d') >= '${createTime.substring(0, createTime.indexOf(" - "))}' and DATE_FORMAT(oi.create_time, '%Y-%m-%d') <= '${createTime.substring(createTime.indexOf(" - ") + 3)}'
 			]]>
 			</if>
-			<if test="customerClass != null and customerClass != ''" >
-				AND scc.code = #{customerClass}
+			<!-- 大区 -->
+			<if test="officeCode != null and officeCode != ''" >
+				AND oi.office_code = #{officeCode, jdbcType=VARCHAR} 
 			</if>
-			<!-- <if test="isAnnual != null and isAnnual != ''" >
-				AND scc.code = #{customerClass}
-			</if> -->
-			<if test="isSpecial != null" >
-				AND oi.is_special = #{isSpecial}
-			</if>
+			<!-- 订单状态 -->
 			<if test="status != null and status != ''" >
-				AND oi.status = #{status}
+				AND oi.status = #{status, jdbcType=CHAR}
+			</if>
+			<!-- 性质分类 -->
+			<!-- <if test="industryCode != null and industryCode != ''" >
+				AND sc.sap_industry_code_code = #{industryCode, jdbcType=CHAR}
+			</if> -->
+			<!-- 合同管理员 -->
+			<if test="contractManager != null and contractManager != ''" >
+				AND UPPER(cmu.name) like '%${contractManager.toUpperCase()}%' 
+			</if>
+			<!-- 订单类型 -->
+			<if test="stOrderType != null and stOrderType != ''" >
+				AND o.st_order_type = #{stOrderType, jdbcType=CHAR}
 			</if>
 		</trim>
 	</select>

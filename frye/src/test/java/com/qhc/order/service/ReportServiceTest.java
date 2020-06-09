@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.github.pagehelper.PageInfo;
+
 @SpringBootTest
 class ReportServiceTest {
 	
@@ -17,23 +21,23 @@ class ReportServiceTest {
 	ReportService reportService;
 
 	@Test
-	void testFindPurchaseSalesReport() {
+	void testFindPurchaseSalesReport() throws JsonMappingException, JsonProcessingException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<Map<String, Object>> list = reportService.findPurchaseSalesReport(params);
+		PageInfo<Map<String, Object>> list = reportService.findPurchaseSalesReport(params);
 		System.out.println(list);
 	}
 
 	@Test
-	void testFindBiddingReport() {
+	void testFindBiddingReport() throws JsonMappingException, JsonProcessingException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<Map<String, Object>> list = reportService.findBiddingReport(params);
+		PageInfo<Map<String, Object>> list = reportService.findBiddingReport(params);
 		System.out.println(list);
 	}
 
 	@Test
-	void testFindOrderSummaryReport() {
+	void testFindOrderSummaryReport() throws JsonMappingException, JsonProcessingException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<Map<String, Object>> list = reportService.findOrderSummaryReport(params);
+		PageInfo<Map<String, Object>> list = reportService.findOrderSummaryReport(params);
 		System.out.println(list);
 	}
 

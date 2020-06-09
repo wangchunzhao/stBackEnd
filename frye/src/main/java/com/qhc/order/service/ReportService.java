@@ -12,6 +12,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
+import com.qhc.Constant;
+import com.qhc.order.domain.DeliveryAddressDto;
+import com.qhc.order.entity.DeliveryAddress;
+import com.qhc.order.mapper.DeliveryAddressMapper;
 import com.qhc.order.mapper.ReportMapper;
 import com.qhc.sap.entity.Currency;
 import com.qhc.sap.entity.MaterialGroups;
@@ -25,87 +29,70 @@ public class ReportService {
 	@Autowired
 	private ConstantService constantService;
 	
-	public List<Map<String, Object>> findPurchaseSalesReport(Map<String, Object> params) {
-		String createTime = (String)params.get("createTime");
-		if (StringUtils.isNoneEmpty(createTime)) {
-			String[] times = createTime.split(" - ");
-			params.put("startTime", times[0]);
-			params.put("endTime", times[1]);
-		}
-		
+	@Autowired
+	private DeliveryAddressMapper deliveryAddressMapper;
+	
+	public PageInfo<Map<String, Object>> findPurchaseSalesReport(Map<String, Object> params) throws JsonMappingException, JsonProcessingException {
+		// 设置分页信息
+	    int pageNo = params.get("pageNo") == null ? 0 : Integer.valueOf(params.get("pageNo").toString());
+	    int pageSize = params.get("pageSize") == null ? 0 : Integer.valueOf(params.get("pageSize").toString());
+
+	    com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		List<Map<String, Object>> list = reportMapper.findPurchaseAndSalesReport(params);
+		translateFieldValue(list);
 		
-		return list;
+		return new PageInfo<>(list);
 	}
 	
 	public PageInfo<Map<String, Object>>  findBiddingReport(Map<String, Object> params) throws JsonMappingException, JsonProcessingException {
-		String createTime = (String)params.get("createTime");
-//		if (StringUtils.isNoneEmpty(createTime)) {
-//			String[] times = createTime.split(" - ");
-//			params.put("startTime", times[0]);
-//			params.put("endTime", times[1]);
-//		}
-		
 		// 设置分页信息
 	    int pageNo = params.get("pageNo") == null ? 0 : Integer.valueOf(params.get("pageNo").toString());
 	    int pageSize = params.get("pageSize") == null ? 0 : Integer.valueOf(params.get("pageSize").toString());
 
 	    com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		List<Map<String, Object>> list = reportMapper.findBiddingReport(params);
-		for (Map<String, Object> map : list) {
-			Object quoteStatus = map.get("quoteStatus");
-			if (quoteStatus != null && quoteStatus.equals("01")) {
-				map.put("quoteStatusDesc", "是");
-			} else {
-				map.put("quoteStatusDesc", "否");
-			}
-			Object saleType = map.get("saleType");
-			if (saleType.equals("10")) {
-				map.put("saleTypeDesc", "内销");
-			}
-			if (saleType.equals("20")) {
-				map.put("saleTypeDesc", "出口");
-			}
-			if (saleType.equals("30")) {
-				map.put("saleTypeDesc", "冷库");
-			}
-			Object status = map.get("status");
-			if (status.equals("05")) {
-				map.put("statusDesc", "BPM审批通过");
-			}
-//			if (saleType.equals("01")) {
-//				map.put("statusDesc", "冷库");
-//			}
-//			if (saleType.equals("30")) {
-//				map.put("statusDesc", "冷库");
-//			}
-//			if (saleType.equals("30")) {
-//				map.put("statusDesc", "冷库");
-//			}
-//			if (saleType.equals("30")) {
-//				map.put("statusDesc", "冷库");
-//			}
-//			if (saleType.equals("30")) {
-//				map.put("statusDesc", "冷库");
-//			}
-			List<MaterialGroups> margins = new ObjectMapper().readValue(map.get("gross_profit_margin").toString(), new TypeReference<List<MaterialGroups>>() {});
-			map.put("margin", margins.get(margins.size() - 1).getGrossProfitMargin());
-		}
+		translateFieldValue(list);
 		
 		return new PageInfo<>(list);
 	}
 	
-	public List<Map<String, Object>>  findOrderSummaryReport(Map<String, Object> params) {
-		String createTime = (String)params.get("createTime");
-		if (StringUtils.isNoneEmpty(createTime)) {
-			String[] times = createTime.split(" - ");
-			params.put("startTime", times[0]);
-			params.put("endTime", times[1]);
-		}
-		
+	public PageInfo<Map<String, Object>>  findOrderSummaryReport(Map<String, Object> params) throws JsonMappingException, JsonProcessingException {
+		// 设置分页信息
+	    int pageNo = params.get("pageNo") == null ? 0 : Integer.valueOf(params.get("pageNo").toString());
+	    int pageSize = params.get("pageSize") == null ? 0 : Integer.valueOf(params.get("pageSize").toString());
+
+	    com.github.pagehelper.PageHelper.startPage(pageNo, pageSize);
 		List<Map<String, Object>> list = reportMapper.findOrderSummaryReport(params);
+		translateFieldValue(list);
 		
+		return new PageInfo<>(list);
+	}
+
+	private void translateFieldValue(List<Map<String, Object>> list)
+			throws JsonProcessingException, JsonMappingException {
 		for (Map<String, Object> map : list) {
+			Object quoteStatus = map.get("quoteStatus");
+			if (quoteStatus != null) {
+				if (quoteStatus.equals("01") || quoteStatus.equals("02")) {
+					map.put("quoteStatusDesc", "是");
+				} else {
+					map.put("quoteStatusDesc", "否");
+				}
+			}
+			Object saleType = map.get("saleType");
+			if (saleType != null) {
+				map.put("saleTypeDesc", Constant.saleTypeMap.get(saleType));
+			}
+			Object status = map.get("status");
+			if (status != null) {
+				map.put("statusDesc", Constant.statusMap.get(status));
+			}
+			
+			String stOrderType = (String)map.get("stOrderType");
+			if (StringUtils.isNotEmpty(stOrderType)) {
+				map.put("stOrderTypeDesc", Constant.stOrderTypeMap.get(stOrderType));
+			}
+			
 			String currency = (String)map.get("currency");
 			if (StringUtils.isNotEmpty(currency)) {
 				Currency c = constantService.findAllCurrency().get(currency);
@@ -113,8 +100,45 @@ public class ReportService {
 					map.put("currency", c.getName());
 				}
 			}
+			
+			String industryCodeCode = (String)map.get("industryCodeName");
+			if (StringUtils.isNotEmpty(industryCodeCode)) {
+				String name = constantService.findIndustryCodes().get(industryCodeCode);
+				if (name != null) {
+					map.put("industryCodeName", name);
+				}
+			}
+			
+			String installType = (String)map.get("installType");
+			if (StringUtils.isNotEmpty(installType)) {
+				String name = constantService.findInstallationTerms().get(installType);
+				if (name != null) {
+					map.put("installType", name);
+				}
+			}
+			
+			String transferType = (String)map.get("transferType");
+			if (StringUtils.isNotEmpty(transferType)) {
+				String name = constantService.findShippingTypes().get(transferType);
+				if (name != null) {
+					map.put("transferType", name);
+				}
+			}
+			
+			Integer id = Integer.valueOf(map.get("id").toString());
+			List<DeliveryAddressDto> addresses = deliveryAddressMapper.findByOrderInfoId(id);
+			DeliveryAddressDto deliveryAddressDto = addresses != null && addresses.size() > 0 ? addresses.get(0) : null;
+			if (deliveryAddressDto != null) {
+				// 省市區
+				map.put("city", deliveryAddressDto.getProvinceName() + deliveryAddressDto.getDistrictName() + deliveryAddressDto.getCityName());
+				// 地址
+				map.put("address", deliveryAddressDto.getAddress());
+			}
+			
+			// TODO 是否年采客户
+			
+			List<MaterialGroups> margins = new ObjectMapper().readValue(map.get("gross_profit_margin").toString(), new TypeReference<List<MaterialGroups>>() {});
+			map.put("margin", margins.get(margins.size() - 1).getGrossProfitMargin());
 		}
-		
-		return list;
 	}
 }
