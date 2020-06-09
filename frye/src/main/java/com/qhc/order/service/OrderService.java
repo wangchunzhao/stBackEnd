@@ -954,13 +954,13 @@ public class OrderService {
     String rejectStatus = "";
     switch (status) {
       case OrderDto.ORDER_STATUS_B2C:
-        rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+        rejectStatus = OrderDto.ORDER_STATUS_REJECT;
         break;
       case OrderDto.ORDER_STATUS_ENGINER:
         if (order.getIsB2c() == 1) {
           rejectStatus = OrderDto.ORDER_STATUS_B2C;
         } else {
-          rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+          rejectStatus = OrderDto.ORDER_STATUS_REJECT;
         }
         break;
       case OrderDto.ORDER_STATUS_MANAGER:
@@ -970,7 +970,7 @@ public class OrderService {
         } else if (order.getIsB2c() == 1) {
           rejectStatus = OrderDto.ORDER_STATUS_B2C;
         } else {
-          rejectStatus = OrderDto.ORDER_STATUS_DRAFT;
+          rejectStatus = OrderDto.ORDER_STATUS_REJECT;
         }
         break;
       default:
