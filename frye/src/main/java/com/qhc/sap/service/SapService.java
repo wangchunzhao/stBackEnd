@@ -730,8 +730,8 @@ public class SapService {
 				pa.setReceiptQuantity(obj.getDouble("menge"));
 				pa.setPlannedIssueQuantity(obj.getDouble("zmenge10"));
 				pa.setIssuedQuantity(obj.getDouble("zmenge11"));
-				pa.setFirstIssueDate(obj.getDouble("erdat1"));
-				pa.setFinallyIssueDate(obj.getDouble("erdat2"));
+				pa.setFirstIssueDate(obj.getString("erdat1"));
+				pa.setFinallyIssueDate(obj.getString("erdat2"));
 				list.add(pa);
 			}
 			sapOrderStatus.setItems(list);

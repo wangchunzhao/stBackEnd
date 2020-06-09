@@ -341,4 +341,12 @@
 		update k_item set item_status = #{itemStatus}
 		where order_info_id = #{orderInfoId} and (item_status is null or item_status = '' or item_status = '00')
 	</update>
+	
+	<update id="updateSapStatus" parameterType="Map" >
+		update k_item set 
+			produce_date = #{produceDate, jdbcType=DATE},
+			on_store_date = #{onStoreDate, jdbcType=DATE},
+			delivery_date = #{deliveryDate, jdbcType=DATE}
+		where order_info_id = #{orderInfoId, jdbcType=INTEGER} and row_num = #{rowNum, jdbcType=INTEGER}
+	</update>
 </mapper>

@@ -81,4 +81,12 @@ public class SapOrderStatus {
 	public void setItems(List<SapItemStatus> items) {
 		this.items = items;
 	}
+
+	@Override
+	public String toString() {
+		return "SapOrderStatus [contractNumber=" + contractNumber
+				+ ", blockStatus=" + blockStatus + ", overviewStatus="
+				+ overviewStatus + ", releaseStatus=" + releaseStatus
+				+ ", items=" + items + "]";
+	}
 }

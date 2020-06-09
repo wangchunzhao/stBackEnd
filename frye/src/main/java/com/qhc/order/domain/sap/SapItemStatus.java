@@ -76,11 +76,11 @@ public class SapItemStatus {
 	/**
 	 * First GI date/首次GI日期
 	 */
-	private double firstIssueDate;
+	private String firstIssueDate;
 	/**
 	 * Finally GI date/完全GI日期
 	 */
-	private double finallyIssueDate;
+	private String finallyIssueDate;
 	
 	public String getRowNum() {
 		return rowNum;
@@ -172,17 +172,32 @@ public class SapItemStatus {
 	public void setIssuedQuantity(double issuedQuantity) {
 		IssuedQuantity = issuedQuantity;
 	}
-	public double getFirstIssueDate() {
+	public String getFirstIssueDate() {
 		return firstIssueDate;
 	}
-	public void setFirstIssueDate(double firstIssueDate) {
+	public void setFirstIssueDate(String firstIssueDate) {
 		this.firstIssueDate = firstIssueDate;
 	}
-	public double getFinallyIssueDate() {
+	public String getFinallyIssueDate() {
 		return finallyIssueDate;
 	}
-	public void setFinallyIssueDate(double finallyIssueDate) {
+	public void setFinallyIssueDate(String finallyIssueDate) {
 		this.finallyIssueDate = finallyIssueDate;
+	}
+	@Override
+	public String toString() {
+		return "SapItemStatus [rowNum=" + rowNum + ", materialCode="
+				+ materialCode + ", quantity=" + quantity + ", unitCode="
+				+ unitCode + ", rejectedCode=" + rejectedCode + ", status="
+				+ status + ", purchaseType=" + purchaseType + ", groupCode="
+				+ groupCode + ", plannedOrder=" + plannedOrder
+				+ ", productionOrder=" + productionOrder
+				+ ", productionStartdate=" + productionStartdate
+				+ ", receiptDate=" + receiptDate + ", receiptQuantity="
+				+ receiptQuantity + ", plannedIssueQuantity="
+				+ plannedIssueQuantity + ", IssuedQuantity=" + IssuedQuantity
+				+ ", firstIssueDate=" + firstIssueDate + ", finallyIssueDate="
+				+ finallyIssueDate + "]";
 	}
 	
 }

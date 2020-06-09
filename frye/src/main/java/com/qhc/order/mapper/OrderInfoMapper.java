@@ -113,4 +113,9 @@ public interface OrderInfoMapper {
 	
 	List<String> checkContractNumber(Map<String, Object> params);
 
+	// 查询需要更新sap状态的订单
+	List<Map<String, Object>> findForUpdateSapStatus();
+	
+	int updateSapStatus(Map<String, Object> data);
+
 }

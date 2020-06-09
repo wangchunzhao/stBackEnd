@@ -1,7 +1,13 @@
 package com.qhc.sap.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qhc.order.domain.sap.SapItemStatus;
+import com.qhc.order.domain.sap.SapOrderStatus;
+import com.qhc.order.mapper.OrderInfoMapper;
+import com.qhc.order.mapper.ItemMapper;
+import com.qhc.order.service.OrderService;
 import com.qhc.order.service.SapOrderService;
 import com.qhc.sap.domain.CharacteristicValueDto;
 import com.qhc.sap.domain.Clazz;
@@ -57,6 +68,12 @@ public class SapSyncController {
 	
 	@Autowired
 	MaterialService materialService;
+	
+	@Autowired
+	OrderInfoMapper orderInfoMapper;
+	
+	@Autowired
+	ItemMapper itemMapper;
 	
 	
 	@ApiOperation(value = "同步sap的币种信息并写入销售工具数据库")
@@ -295,6 +312,82 @@ public class SapSyncController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//每天凌晨5点执行一次
+//	@Scheduled(cron = "0 0 5 * * ?")
+	@ApiOperation(value = "同步sap订单状态")
+	@GetMapping(value = "UpdateSellingToolOrderStatus")
+	@ResponseStatus(HttpStatus.OK)
+	public void sapOrderStatus() {
+		logger.info("每日自动同步sap订单状态开始==============================================");
+		logger.info("读取订单数据【订单-最早生产时间 为空 或者 行项目-生产开始时间/入库时间/最早交货时间 为空】");
+		List<Map<String, Object>> contractNumberList = orderInfoMapper.findForUpdateSapStatus();
+		logger.info("订单数据： {}", contractNumberList);
+		for (Map<String, Object> map : contractNumberList) {
+			try {
+				Integer orderInfoId = (Integer)map.get("id");
+				String contractNumber = (String)map.get("contractNumber");
+				logger.info("读取SAP订单状态：ContractNumber： {}", contractNumber);
+				SapOrderStatus sapOrderStatus = sapService.getOrderStatus(contractNumber);
+				logger.info("SAP订单状态：{}", sapOrderStatus);
+				List<SapItemStatus> itemStatusList = sapOrderStatus.getItems();
+				String firstProductionStartdate = null; // 最早开工日期
+				for (SapItemStatus itemStatus : itemStatusList) {
+					Integer rowNum = Integer.valueOf(itemStatus.getRowNum());
+					String receiptDate = StringUtils.trimToEmpty(itemStatus.getReceiptDate()); // 入库日期
+					String productionStartdate = StringUtils.trimToEmpty(itemStatus.getProductionStartdate()); // 开工日期
+					String firstIssueDate = StringUtils.trimToEmpty(itemStatus.getFirstIssueDate()); // 首次GI日期
+					
+					if (productionStartdate.length() > 0) {
+						if (firstProductionStartdate == null) {
+							firstProductionStartdate = productionStartdate;
+						}
+						if (firstProductionStartdate.compareTo(productionStartdate) > 0) {
+							firstProductionStartdate = productionStartdate;
+						}
+					}
+					
+					// update item
+					if (productionStartdate.length() > 0 || receiptDate.length() >0 || firstIssueDate.length() > 0) {
+						Date onStoreDate = strToDate(receiptDate);
+						Date produceDate = strToDate(productionStartdate);
+						Date deliveryDate = strToDate(firstIssueDate);
+						Map<String, Object> itemData = new HashMap<>();
+						itemData.put("orderInfoId", orderInfoId);
+						itemData.put("rowNum", rowNum);
+						itemData.put("onStoreDate", onStoreDate);
+						itemData.put("produceDate", produceDate);
+						itemData.put("deliveryDate", deliveryDate);
+
+						logger.info("更新行项目状态：{}", itemData);
+						itemMapper.updateSapStatus(itemData);
+					}
+				}
+				
+				// update order
+				if (firstProductionStartdate != null) {
+					Date earliestProductDate = strToDate(firstProductionStartdate);
+					Map<String, Object> orderData = new HashMap<>();
+					orderData.put("id", orderInfoId);
+					orderData.put("earliestProductDate", earliestProductDate);
+					
+					logger.info("更新订单状态：{}", orderData);
+					orderInfoMapper.updateSapStatus(orderData);
+				}
+			} catch (ParseException e) {
+				logger.error("", e);
+			}
+		}
+	}
+
+	private Date strToDate(String firstProductionStartdate)
+			throws ParseException {
+		Date date = null;
+		if (firstProductionStartdate.length() > 0) {
+			date = new SimpleDateFormat("yyyyMMdd").parse(firstProductionStartdate);
+		}
+		return date;
 	}
 	
 

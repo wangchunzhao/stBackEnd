@@ -190,7 +190,7 @@
 			maintenance_fee = #{maintenanceFee, jdbcType=DECIMAL}, 
 			additional_freight = #{additionalFreight, jdbcType=DECIMAL}, 
 			earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}, 
-			earliest_product_date = #{earliestProductDate, jdbcType=DATE}, 
+			<!-- earliest_product_date = #{earliestProductDate, jdbcType=DATE},  -->
 			is_b2c = #{isB2c, jdbcType=INTEGER}, 
 			is_bulk_cargo = #{isBulkCargo, jdbcType=INTEGER}, 
 			is_urgent_delivery = #{isUrgentDelivery, jdbcType=INTEGER}, 
@@ -476,4 +476,19 @@
 				AND order_id != #{orderId, jdbcType=INTEGER}
 			</if>
 	</select>
+	
+	<select id="findForUpdateSapStatus" resultType="String">
+		select 
+			id, contract_number
+		from k_order_info 
+		where is_active = 1 and contract_number != null and contract_number != '' 
+			and (earliest_product_date is null
+				or exists (select 1 from k_item where k_item.order_info_id = k_order_info.id 
+					and (delivery_date is null or produce_date is null or on_store_date is null)))
+	</select>
+	
+	<update id="updateSapStatus" parameterType="Map" >
+		update k_order_info set earliest_product_date = #{earliestProductDate, jdbcType=DATE}
+		where id = #{id, jdbcType=INTEGER}
+	</update>
 </mapper>

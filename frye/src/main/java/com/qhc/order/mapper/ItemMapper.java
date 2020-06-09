@@ -78,4 +78,10 @@ public interface ItemMapper {
 	 */
 	void updateSendSapStatusByOrderInfo(Item item);
 
+	/**
+	 * 更新SAP狀態
+	 * @param itemData
+	 */
+	void updateSapStatus(Map<String, Object> itemData);
+
 }
