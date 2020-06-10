@@ -205,13 +205,13 @@
 						AND c.status is null
 					</when>
 					<otherwise>
-						AND c.status = #{status, jdbcType=INTEGER}
+						AND c.status = #{status, jdbcType=VARCHAR}
 					</otherwise>
 				</choose>
 			</if>
-			<if test="statusList != null and statusList.size() > 0" >
+			<if test="statusList != null and statusList.length > 0" >
 				AND c.status in <foreach item="item" index="index" collection="statusList" open="("
-				            separator="," close=")">#{item, jdbcType=INTEGER}</foreach>
+				            separator="," close=")">#{item, jdbcType=VARCHAR}</foreach>
 			</if>
 			<if test="sequenceNumber != null and sequenceNumber != ''" >
 				AND UPPER(o.sequence_number) like '%${sequenceNumber.toUpperCase()}%'
