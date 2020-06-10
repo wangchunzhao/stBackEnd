@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.order.domain.ContractDto;
 import com.qhc.order.entity.Contract;
 import com.qhc.order.service.BestsignService;
@@ -196,16 +198,24 @@ public class ContractController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
+	@Scheduled(cron = "0 30 1 * * ?")
 	@RequestMapping(value = { "refreshState" }, method = { RequestMethod.PUT })
 	@ResponseBody
 	public Result<?> refreshState() throws JsonProcessingException {
+		logger.info(System.currentTimeMillis() + "--update contracts' state--开始执行");
 		Result<?> r = null;
-		boolean flag = this.contractService.doRefreshContractState();
-		if (flag) {
-			r = Result.ok("");
-		} else {
-			r = Result.error("");
+		try {
+			boolean flag = this.contractService.doRefreshContractState();
+			if (flag) {
+				r = Result.ok("");
+			} else {
+				r = Result.error("");
+			}
+		} catch (Exception e) {
+			logger.error("合同状态更新", e);
+			Result.error(e.getMessage());
 		}
+		logger.info(System.currentTimeMillis() + "--update contracts' state--完成");
 		return r;
 	}
 
