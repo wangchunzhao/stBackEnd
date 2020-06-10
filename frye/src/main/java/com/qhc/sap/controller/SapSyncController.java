@@ -327,7 +327,7 @@ public class SapSyncController {
 		for (Map<String, Object> map : contractNumberList) {
 			try {
 				Integer orderInfoId = (Integer)map.get("id");
-				String contractNumber = (String)map.get("contractNumber");
+				String contractNumber = (String)map.get("contract_number");
 				logger.info("读取SAP订单状态：ContractNumber： {}", contractNumber);
 				SapOrderStatus sapOrderStatus = sapService.getOrderStatus(contractNumber);
 				logger.info("SAP订单状态：{}", sapOrderStatus);
