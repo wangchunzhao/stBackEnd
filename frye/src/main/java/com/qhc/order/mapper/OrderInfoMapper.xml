@@ -477,7 +477,7 @@
 			</if>
 	</select>
 	
-	<select id="findForUpdateSapStatus" resultType="String">
+	<select id="findForUpdateSapStatus" resultType="Map">
 		select 
 			id, contract_number
 		from k_order_info 
