@@ -51,6 +51,11 @@ public class ContractService {
 		if (contract.getId() == null) {
 			contractMapper.insert(contract);
 		} else {
+			// 如果合同状态为已发送之后的状态，即为重新编辑
+			if (!contract.getStatus().equals("01")) {
+				contract.setStatus("01");
+				contractMapper.resetStatus(contract);
+			}
 			contractMapper.update(contract);
 		}
 		

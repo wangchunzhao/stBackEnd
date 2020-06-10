@@ -19,7 +19,7 @@
 		<result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
 		<result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
 		<result column="company_post_code" property="companyPostCode" jdbcType="VARCHAR" />
-		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
 		<result column="creater" property="creater" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="sender" property="sender" jdbcType="VARCHAR" />
@@ -53,7 +53,7 @@
 			#{customerEmail, jdbcType=VARCHAR}, #{invoiceAddress, jdbcType=VARCHAR}, #{invoicePostCode, jdbcType=VARCHAR}, 
 			#{invoiceReceiver, jdbcType=VARCHAR}, #{invoiceTel, jdbcType=VARCHAR}, #{broker, jdbcType=VARCHAR}, 
 			#{companyTel, jdbcType=VARCHAR}, #{bankName, jdbcType=VARCHAR}, #{accountNumber, jdbcType=VARCHAR}, 
-			#{companyAddress, jdbcType=VARCHAR}, #{companyPostCode, jdbcType=VARCHAR}, #{status, jdbcType=INTEGER}, 
+			#{companyAddress, jdbcType=VARCHAR}, #{companyPostCode, jdbcType=VARCHAR}, #{status, jdbcType=VARCHAR}, 
 			#{creater, jdbcType=VARCHAR}, now(), #{sender, jdbcType=VARCHAR}, 
 			#{sendTime, jdbcType=TIMESTAMP}, #{signer, jdbcType=VARCHAR}, #{signTime, jdbcType=TIMESTAMP}, 
 			#{fileHashcode, jdbcType=VARCHAR}, #{signContractid, jdbcType=VARCHAR} )
@@ -78,7 +78,7 @@
 			account_number = #{accountNumber, jdbcType=VARCHAR}, 
 			company_address = #{companyAddress, jdbcType=VARCHAR}, 
 			company_post_code = #{companyPostCode, jdbcType=VARCHAR}<!-- , 
-			status = #{status, jdbcType=INTEGER}, 
+			status = #{status, jdbcType=VARCHAR}, 
 			creater = #{creater, jdbcType=VARCHAR}, 
 			create_time = #{createTime, jdbcType=TIMESTAMP},
 			sender = #{sender, jdbcType=VARCHAR}, 
@@ -243,7 +243,7 @@
 	<!-- 修改 -->
 	<update id="updateStatus" parameterType="com.qhc.order.entity.Contract" >
 		update k_contract
-		set status = #{status, jdbcType=INTEGER}, 
+		set status = #{status, jdbcType=VARCHAR}, 
 		<trim suffixOverrides="," >
 			<if test="sender != null and sender != ''" >
 				sender = #{sender, jdbcType=VARCHAR}, 
@@ -260,6 +260,19 @@
 				sign_contractid = #{signContractid, jdbcType=VARCHAR},
 			</if>
 		</trim>
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<!-- 已发送后重新编辑，重置所有发送后的状态 -->
+	<update id="resetStatus" parameterType="com.qhc.order.entity.Contract" >
+		update k_contract
+		set status = #{status, jdbcType=VARCHAR}, 
+			sender = null, 
+			send_time = null, 
+			signer = null, 
+			sign_time = null, 
+			file_hashcode = null, 
+			sign_contractid = null
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 	

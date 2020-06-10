@@ -131,9 +131,10 @@ public class ContractController {
 	public Result<?> updateContractStatus(@PathVariable("id") Integer contractId, @PathVariable("status") String status) {
 		Result<?> result = null;
 		try {
-			Contract c = contractService.findOne(contractId);
+			Contract c = new Contract(); // contractService.findOne(contractId);
+			c.setId(contractId);
 			c.setStatus(status);
-			contractService.save(c);
+			contractService.updateStatus(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "更新合同状态，合同ID=" + contractId + "， status=" + status;
@@ -178,10 +179,11 @@ public class ContractController {
 	public Result<? extends Object> updateContractSignId(@PathVariable("id") Integer contractId, @PathVariable("signContractId") String signContractId, @PathVariable("status") String status) {
 		Result<? extends Object> result = null;
 		try {
-			Contract c = contractService.findOne(contractId);
+			Contract c = new Contract(); // contractService.findOne(contractId);
+			c.setId(contractId);
 			c.setSignContractid(signContractId);
 			c.setStatus(status);
-			contractService.save(c);
+			contractService.updateStatus(c);
 			result = Result.ok(c);
 		} catch (Exception e) {
 			String msg = "更新合同电子签约合同ID信息，合同ID=" + contractId + "， SignContractId=" + signContractId;

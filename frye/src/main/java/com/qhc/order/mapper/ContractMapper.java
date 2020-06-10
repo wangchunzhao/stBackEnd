@@ -75,5 +75,12 @@ public interface ContractMapper {
 	 * @return
 	 */
 	int updateStatus(Contract contract);
+	
+	/**
+	 * 重新编辑，重置所有发送后状态
+	 * @param contract
+	 * @return
+	 */
+	int resetStatus(Contract contract);
 
 } 
