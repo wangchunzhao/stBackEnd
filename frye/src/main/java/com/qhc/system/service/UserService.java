@@ -208,7 +208,7 @@ public class UserService {
 			params.put("isActive", user.getIsActive());
 		}
 		if (StringUtils.isNoneEmpty(user.getUserIdentity())) {
-			params.put("userIdentity", user.getUserIdentity().trim());
+			params.put("userIdentity", "%" +user.getUserIdentity().trim()+"%");
 		}
 		if (StringUtils.isNoneEmpty(user.getName())) {
 			params.put("name", "%" + user.getName().trim() + "%");
