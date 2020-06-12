@@ -488,7 +488,7 @@
 	</select>
 	
 	<update id="updateSapStatus" parameterType="Map" >
-		update k_order_info set earliest_product_date = #{earliestProductDate, jdbcType=DATE}
+		update k_order_info set earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
 </mapper>

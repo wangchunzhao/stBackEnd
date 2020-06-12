@@ -332,19 +332,19 @@ public class SapSyncController {
 				SapOrderStatus sapOrderStatus = sapService.getOrderStatus(contractNumber);
 				logger.info("SAP订单状态：{}", sapOrderStatus);
 				List<SapItemStatus> itemStatusList = sapOrderStatus.getItems();
-				String firstProductionStartdate = null; // 最早开工日期
+				String firstDeliveryDate = null; // 最早开工日期
 				for (SapItemStatus itemStatus : itemStatusList) {
 					Integer rowNum = Integer.valueOf(itemStatus.getRowNum());
 					String receiptDate = StringUtils.trimToEmpty(itemStatus.getReceiptDate()); // 入库日期
 					String productionStartdate = StringUtils.trimToEmpty(itemStatus.getProductionStartdate()); // 开工日期
-					String firstIssueDate = StringUtils.trimToEmpty(itemStatus.getFirstIssueDate()); // 首次GI日期
+					String firstIssueDate = receiptDate; // StringUtils.trimToEmpty(itemStatus.getFirstIssueDate()); // 首次GI日期
 					
 					if (productionStartdate.length() > 0) {
-						if (firstProductionStartdate == null) {
-							firstProductionStartdate = productionStartdate;
+						if (firstDeliveryDate == null) {
+							firstDeliveryDate = firstIssueDate;
 						}
-						if (firstProductionStartdate.compareTo(productionStartdate) > 0) {
-							firstProductionStartdate = productionStartdate;
+						if (firstDeliveryDate.compareTo(firstIssueDate) > 0) {
+							firstDeliveryDate = firstIssueDate;
 						}
 					}
 					
@@ -352,13 +352,13 @@ public class SapSyncController {
 					if (productionStartdate.length() > 0 || receiptDate.length() >0 || firstIssueDate.length() > 0) {
 						Date onStoreDate = strToDate(receiptDate);
 						Date produceDate = strToDate(productionStartdate);
-						Date deliveryDate = strToDate(firstIssueDate);
+						// Date deliveryDate = strToDate(firstIssueDate);
 						Map<String, Object> itemData = new HashMap<>();
 						itemData.put("orderInfoId", orderInfoId);
 						itemData.put("rowNum", rowNum);
 						itemData.put("onStoreDate", onStoreDate);
 						itemData.put("produceDate", produceDate);
-						itemData.put("deliveryDate", deliveryDate);
+						 itemData.put("deliveryDate", onStoreDate);
 
 						logger.info("更新行项目状态：{}", itemData);
 						itemMapper.updateSapStatus(itemData);
@@ -366,11 +366,11 @@ public class SapSyncController {
 				}
 				
 				// update order
-				if (firstProductionStartdate != null) {
-					Date earliestProductDate = strToDate(firstProductionStartdate);
+				if (firstDeliveryDate != null) {
+					Date earliestDeliveryDate = strToDate(firstDeliveryDate);
 					Map<String, Object> orderData = new HashMap<>();
 					orderData.put("id", orderInfoId);
-					orderData.put("earliestProductDate", earliestProductDate);
+					orderData.put("earliestDeliveryDate", earliestDeliveryDate);
 					
 					logger.info("更新订单状态：{}", orderData);
 					orderInfoMapper.updateSapStatus(orderData);
