@@ -112,7 +112,7 @@
 				AND b_user.id = #{id, jdbcType=INTEGER}
 			</if>
 			<if test="userIdentity != null and userIdentity != ''" >
-				AND b_user.user_identity = #{userIdentity, jdbcType=VARCHAR}
+				AND b_user.user_identity like #{userIdentity, jdbcType=VARCHAR}
 			</if>
 			<if test="name != null and name != ''" >
 				AND b_user.name like #{name, jdbcType=VARCHAR}
