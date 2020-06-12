@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.qhc.order.domain.ContractDto;
@@ -49,7 +51,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Walker
  *
  */
-@Controller
+@RestController
 @Api(value = "Contract management in Frye", description = "合同管理")
 @RequestMapping(path = "contract")
 public class ContractController {

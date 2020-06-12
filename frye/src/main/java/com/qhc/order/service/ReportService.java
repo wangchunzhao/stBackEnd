@@ -146,6 +146,45 @@ public class ReportService {
 			
 			// TODO 是否年采客户
 			
+			// 行项目状态
+			String itemStatus = (String)map.get("itemStatus");
+			if (StringUtils.isNotEmpty(itemStatus)) {
+				map.put("itemStatus", Constant.itemStatusMap.get(itemStatus));
+			}
+			// 行项目需求计划
+			String itemRequirementPlan = (String)map.get("itemRequirementPlan");
+			if (StringUtils.isNotEmpty(itemRequirementPlan)) {
+				map.put("itemRequirementPlan", Constant.itemRequirementPlanMap.get(itemRequirementPlan));
+			}
+			// 行项目物料分组
+			String materialGroupCode = (String)map.get("materialGroupCode");
+			if (StringUtils.isNotEmpty(materialGroupCode)) {
+				String name = constantService.findMaterialGroups().get(materialGroupCode);
+				if (name != null) {
+					map.put("materialGroupCode", name);
+				}
+			}
+			// 行项目物料计量单位
+			String unitCode = (String)map.get("unitCode");
+			if (StringUtils.isNotEmpty(unitCode)) {
+				String name = constantService.findMeasurementUnits().get(unitCode);
+				if (name != null) {
+					map.put("unitCode", name);
+				}
+			}
+			// 行项目类别
+			String itemCategory = (String)map.get("itemCategory");
+			if (StringUtils.isNotEmpty(itemCategory)) {
+				map.put("itemCategory", Constant.itemCategoryMap.get(itemCategory));
+			}
+			
+			// 行项目物料属性
+			Boolean isPurchased = (Boolean)map.get("isPurchased");
+			if (isPurchased != null) {
+				String name = isPurchased ? "生产" : "采购"; 
+				map.put("isPurchased", name);
+			}
+			
 			List<MaterialGroups> margins = new ObjectMapper().readValue(map.get("gross_profit_margin").toString(), new TypeReference<List<MaterialGroups>>() {});
 			String margin = BigDecimal.valueOf(margins.get(margins.size() - 1).getGrossProfitMargin() * 100).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 			map.put("margin", margin);

@@ -108,7 +108,7 @@ public class ContractService {
 		List<ContractDto> contractList = this.find(params).getRows();
 		List<ContractSignSys> signList = bestsignService.syncContractSignSysData();
 		if (signList == null || signList.size() <= 0) {
-			logger.info(System.currentTimeMillis() + ":--update contracts' state--Failed");
+			logger.info(System.currentTimeMillis() + ":--update contracts' state--Content is empty");
 			return false;
 		}
 

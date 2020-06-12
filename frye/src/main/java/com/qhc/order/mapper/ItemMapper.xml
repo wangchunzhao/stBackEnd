@@ -148,15 +148,14 @@
 
 	<sql id="Base_Column_List" >
 		k_item.id, k_item.order_info_id, k_item.row_num, k_item.material_code, k_item.quantity, 
-		k_item.item_category, k_item.item_requirement_plan, k_item.b2c_estimated_price, k_item.delivery_address_seq, k_item.delivery_address_id, 
-		k_item.standard_price, k_item.retail_price, k_item.actual_price, k_item.transaction_price, k_item.optional_actual_price, 
-		k_item.optional_standard_price, k_item.optional_retail_price, 
-		k_item.optional_transaction_price, k_item.discount, k_item.produce_date, k_item.on_store_date, k_item.delivery_date, 
-		k_item.shipp_date, k_item.period, k_item.b2c_comments, k_item.special_comments, k_item.color_comments, 
-		k_item.volume_cube, k_item.freight, k_item.is_virtual, k_item.config_comments, k_item.mosaic_image, 
+		k_item.item_category, k_item.item_requirement_plan, k_item.b2c_estimated_price, k_item.b2c_estimated_cost, k_item.delivery_address_seq, 
+		k_item.delivery_address_id, k_item.standard_price, k_item.retail_price, k_item.actual_price, k_item.transaction_price, 
+		k_item.optional_standard_price, k_item.optional_retail_price, k_item.optional_actual_price, k_item.optional_transaction_price, k_item.discount, 
+		k_item.produce_date, k_item.on_store_date, k_item.delivery_date, k_item.shipp_date, k_item.period, 
+		k_item.b2c_comments, k_item.special_comments, k_item.color_comments, k_item.volume_cube, k_item.freight, 
+		k_item.is_virtual, k_item.config_comments, k_item.color_options, k_item.item_status, k_item.mosaic_image, 
 		k_item.attached_image, k_item.request_brand, k_item.request_package, k_item.request_nameplate, k_item.request_circult, 
-		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments, 
-		k_item.color_options, k_item.item_status
+		k_item.config_transfer_price, k_item.config_retail_price, k_item.is_configurable, k_item.clazz_code, k_item.comments
 	</sql>
 	
 	<sql id="Column_List">
