@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +52,8 @@ public class BestSignClient {
 	private static Logger logger = LoggerFactory.getLogger(BestSignClient.class);
 
     private static final MediaType JSON_TYPE = MediaType.parse("application/json; charset=utf-8");
+    
+    private static final String proxyHost = "10.217.10.40";
 
     /**
      * 系统的地址
@@ -84,13 +88,16 @@ public class BestSignClient {
     }
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    //设置代理，用来访问外网
+    Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, 80));
 
     //shared perform best
     private final OkHttpClient okHttpClient = new OkHttpClient
             .Builder()
             .readTimeout(1, TimeUnit.MINUTES)
+            .proxy(proxy)
             .build();
-
+    
     /**
      * @param uriWithParam 请求的URL和参数
      * @param method       HTTP请求动词
