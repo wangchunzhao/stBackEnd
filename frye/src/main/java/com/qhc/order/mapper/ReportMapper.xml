@@ -296,11 +296,18 @@
 				AND oi.office_code = #{officeCode, jdbcType=VARCHAR} 
 			</if>
 			<!-- 是否中标 -->
-			<if test="winning != null and winning == 'Y'" >
-				AND o.quote_status = '01'
+			<if test=' winning != null and winning == "Y" ' >
+				AND (o.quote_status = '01' or o.quote_status = '02')
 			</if>
-			<if test="winning != null and winning == 'N'" >
+			<if test=' winning != null and winning == "N" ' >
 				AND o.quote_status = '05'
+			</if>
+			<!-- 是否下单 -->
+			<if test=' makingorder != null and makingorder == "Y" ' >
+				AND o.quote_status = '02'
+			</if>
+			<if test=' makingorder != null and makingorder == "N" ' >
+				AND o.quote_status != '02'
 			</if>
 			<!-- 订单状态 -->
 			<if test="status != null and status != ''" >

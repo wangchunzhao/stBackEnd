@@ -79,6 +79,11 @@ public class ReportService {
 				} else {
 					map.put("quoteStatusDesc", "否");
 				}
+				if (quoteStatus.equals("02")) {
+					map.put("makingOrder", "是");
+				} else {
+					map.put("makingOrder", "否");
+				}
 			}
 			Object saleType = map.get("saleType");
 			if (saleType != null) {
