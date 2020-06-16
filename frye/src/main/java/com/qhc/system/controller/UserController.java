@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.qhc.system.domain.*;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +80,9 @@ public class UserController {
 	@Transactional
 	public UserDto add(@RequestBody(required = true) UserDto user) throws Exception {
 		user.setName(user.getUserName());
+		if (StringUtils.isEmpty(user.getOfficeCode())) {
+			user.setOfficeCode("0841");
+		}
 		user = userService.createOrUpdateUser(user);
 		return user;
 	}
