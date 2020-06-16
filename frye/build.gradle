@@ -59,7 +59,8 @@ dependencies {
 	implementation "org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"
 	implementation "org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE"
 	
-	implementation "com.squareup.okhttp3:okhttp:3.9.0"
+	implementation "com.squareup.okhttp3:okhttp:3.14.4"
+//	implementation "com.fasterxml.jackson.core:jackson-databind:2.9.5"
 	
 	runtimeOnly 'mysql:mysql-connector-java'
 	//Gradle 5.0
