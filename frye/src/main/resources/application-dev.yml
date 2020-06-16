@@ -1,5 +1,8 @@
 server: 
    port: 8881
+http:
+   proxyHost: 10.217.10.40
+   proxyPort: 80
 
 qhc: 
    bayern: 
@@ -36,33 +39,33 @@ mail:
         port: 25
 
 # Bestsign config
-#contract: 
+contract: 
     bestsign:
         contractDir: D:\\qhc\\contracts\\
         url: https://api.bestsign.info
         accountname: chunzhao.wang@carrier.com
-        entername: \u9752\u5C9B\u6D77\u5C14\u5F00\u5229\u51B7\u51BB\u8BBE\u5907\u6709\u9650\u516C\u53F8
+        entername: 青岛海尔开利冷冻设备有限公司
         clientid: 1551431358012904950
         secrete: FB9KFCnfk1w9n1lRATGWHdCmiOf3Yt6J
         sealname: \u9752\u5C9B\u6D77\u5C14\u5F00\u5229\u51B7\u51BB\u8BBE\u5907
         privatekey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCT8nJ2xwoZbU20g5bA2V9xDVmFbK6cEctLgqyTaiVhC3t+muEu4KodoiiCMhiJgeQYzNHjxv4FKFxD9F5iSxVBREqSHd9KUamM3+yhHcDA8zalb9O9D9MZp6oP/9MerMrjnZC7KswtHME5nhElBQQdLgG5dDlK3TI/U17iUPY5mhfzBAoGyEiXdVwVzxZemzL8uWMl0+FVOgkf35R0oIz0SoV1748Dmuse0kqUdJltI8rByrOaS0UNwEtVhS8jC4fm6Aoly3/pwViHhCUouU73flzbHVCi74pZ8pJCH7UecM2P7C0aIWY+9FBRVBf0W5peEfZHFY0dYbPUUne52OuVAgMBAAECggEAVtjAdpcah5iRP8DrEuPHUe7bOSZ2TWlopDfeJF7v+EqsQMKcI0+ArQqOqvbLTpTwF9rL7uDWJqLtnnppmVun63syJxngBJlxZR/hoSZ9Cwb6chz194q9idbRTrkG7n/STdElr6lM18KEbtUqDUgnhRWHr5zZMOgt4dyH22RZVbAHcXSF6byDtc4RRpvEDGAjpxJZRUbgHq7G/kgXqoZYh3qfT/YlWULUyK1GPZWGu958fgswbRezFBGPo146IwfEbPykoIJg2AiQqmTBVp881SEVuqVWcM12UAt4wnY4jNzsvAwZFFHe1nOzwRAUfF3KZocZR+jM+XPB86IylmA4IQKBgQDfPKByf2rVX0TWDmcLflRrtm7MXHtaVr21A0uxIjNgVlNevnKNFXQ2C2wZ2Gts4dWJSTNpVwLINre2jxbNKQRB14GWRoPyTl3EkDieTaTOWxd/rFr6cZhDml7v4s7wTBik/2S+Z+SJbpFM/BNlv2X5eqwkrfIUHQ/xcI/H9Uz+aQKBgQCpqQ+BQvSRVA87MjT+FCwv+RFFz+LV6vL6XtkRLE9osZ1g7Nwi4UYYfROkv2QkyFTVojI4cn0F0J8BRmU+MBNmy2s01067GaIBK8gmxw9XnGi1TFZbE3vC73MaNhCzVw/+m+cHNG5BwHxkMgurpjwgWATOWc72iLxQHk0fW4x2TQKBgQC9yYhK74K/NoiKR6JZhiR1kpruCS4h5p7QFqYySPZOz/V/FgDDa1rqW5mi+3iREAp/9gjMZNoLp2FWxp3G/DkPVQ1p2jdxOCjF5SsNgss7WPxIYhrS0uJ1jvdpkHUInFlTZYGb0y3bnXHQdnpzRV6H1EAnyu6FJRQZ2u2SPT0hCQKBgDIPyp1vrk67qQrkk7JtLWSyb6BT6TEJ9Mxf9FkW5A+WaUPSYFqCcnaDYap5NwmLe0zWYU86qR1wI5rytKkW8oKgf2/GIFshAyapTpPypNpLMrJcZhbVtu0cTrBrR55DkFqmkhMUK3yHWa0O/1aU5KT+k9x3r5QbYMWbS1J3Zwj5AoGBAMNsxUEMP/IrNRgfKIfy81YyViG/hSKiYiQoBbhGPt0XgoM8SgTH/N6g5YC1+++ZjiijLrMY9AwoQeESdLQtTrGz9KvibpcSnNGG6/y/fyhl8Ug5TGTCH3KlhogKkRBJ6I+NjxKbkiTupmr5yc4DsPPRFhtbH+iWqid89HujDtkI
 
 # Bestsign config
-contract: 
-    bestsign:
-        contractDir: D:\\qhc\\contracts\\        
-        url: https://api.bestsign.cn
-        accountname: peng.liu@carrier.utc.com
-        entername: \u9752\u5C9B\u6D77\u5C14\u5F00\u5229\u51B7\u51BB\u8BBE\u5907\u6709\u9650\u516C\u53F8
-        clientid: 1555896956019659217
-        secrete: CRUhcOhYjL2zpCOMvLzuIKrnS4WKP1W6
-        sealname: \u6D77\u5C14\u5F00\u5229\u516C\u7AE0
-        privatekey: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCVWoXXGgYKtIlpT4l4exar2zsaVxF1QgKqHpz/HmJ9LBRGj7S7q/SDtPDgB+3OYE2WwgdjgJnMcMiT1GmLeEagaseIryZseREJcRE+rdiLh1bkN6r1G4SWF2xRvg5FDKSIt5GOnJrEuICImv5QRJeqHg+Cx7vFngp41vorGRB5w9qYZmPL09pcCSNgfqPBte+22CTLNS1C3hA1nzQSxnxN6Bh5caqMTcNy7LLTlbJtXUQ4Z1elo7gkfL44vIBtmvZj4lNiVZLmBLnHIQwDAauE1lkmVW9GA0mLjROmEzJ/qN/zgqjDe2jMkdGwrS2JuFBRdIldlSB8ySjVjomHgMVjAgMBAAECggEAQ2dUKeyjt2cc8LsllosugybwuIV86od8/lvMjNKgrk8bY3DtpxkGw/4AC4tohpAt1BEDFqPuRTbNPvJJI9mHPlSScpxhYekNiE5P8xKwPOA6lcqNzAq8PqSZjRaSCBWZl94IwezpaEjAMWaJyZ37OJpSc7pCgwA9R6X1x0eLiPfo5gZYn7N61HsOCQkfv30Cvk6rZ/zhBkgzd3kCAGuEj0ZQTvt6j8s0MN6RCCSXpRCZXo0mwq2oVc6Um+kr5pcQHg9kL1NjbDjGG6qWP/mOIBhn9Vc+j0F766uouaWagmcfBgSRfMGUE/qfIOSlvbBGKLN1n6d5jchoPE6XF1QfiQKBgQDod4O/WAhLbf62ZG875p09QfoM49erOEWkuVWIvuX7ywHvsSQYrHY7+TuVX7uTpd9TUMeHGfrC1sBDYV0BxXg+9TS1rf1YVn2VfOiYzWdiHA8F8HaO19kZ6k4boLZUOQaAqdGzJ+j+qwKY0ke9s7eRRmtLf9pTEULyrvqBPuPTPwKBgQCkeRcSL0ut4b4QRHg7mHpn1fXAQPaWOW17lCNLvh3/pKxlnlW+k7hM/YhZXhh+ITzHlS1lg8EHWJl3G0j1MbaNh9W/tsEo97g3AffUabxWDJXrcX7oIRjSZJEYo/GVY5KHeTrnhckpR7t1debfW4d8XME55G/Pek7XytL6vRqY3QKBgQCh2sSyLtrnmdgkqd0Audp00kEFRIXewrlKrXeuVCvQmlHoz08wlrNjom4n3JW/gVfyrGWf3SjJC7ilsV6OYy0LuLJQZKnmHaImuOdBrJH0r1COdBQ39HVGI+rqNYV9Mo8iehp1QK5q0ipmuNIWdNC0p3EBCi26dGRGkCn+XwlFBQKBgQCAUmmJqpTlKUdc8c7M0H5QHUMLqKO7OTsOO9n98mr9VcGb1xkXA7G7f+Otthht8Ai3vtAYb99el+XEY+lcRFklu2Etnqy+BegYItT1STnD+TXO6FIXUhtHq2b5To/h+joMsK0gjeUQ7AJ59m8WvRbMFKI9RNlniwmQm5JYRspFkQKBgQCRGys8S3rcVmoB/C0CC00CW9I5xMJFGK5gRo0HspJ92H4Ch90w0Uya4YnPBw7liIOvW2MjWhIKLN9cL1nTQ7V2ZFnwMgYdWCDEq77WqVVT6+YNy3NvnWV/GPpll3Gkthe/VG75vmkli1oSaXLrLHOm45uYCXZhA+K16Y4aJwgP/w==
+#contract: 
+#    bestsign:
+#       contractDir: D:\\qhc\\contracts\\        
+#       url: https://api.bestsign.cn
+#        accountname: peng.liu@carrier.utc.com
+#       entername: \u9752\u5C9B\u6D77\u5C14\u5F00\u5229\u51B7\u51BB\u8BBE\u5907\u6709\u9650\u516C\u53F8
+#       clientid: 1555896956019659217
+#        secrete: CRUhcOhYjL2zpCOMvLzuIKrnS4WKP1W6
+#       sealname: \u6D77\u5C14\u5F00\u5229\u516C\u7AE0
+#        privatekey: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCVWoXXGgYKtIlpT4l4exar2zsaVxF1QgKqHpz/HmJ9LBRGj7S7q/SDtPDgB+3OYE2WwgdjgJnMcMiT1GmLeEagaseIryZseREJcRE+rdiLh1bkN6r1G4SWF2xRvg5FDKSIt5GOnJrEuICImv5QRJeqHg+Cx7vFngp41vorGRB5w9qYZmPL09pcCSNgfqPBte+22CTLNS1C3hA1nzQSxnxN6Bh5caqMTcNy7LLTlbJtXUQ4Z1elo7gkfL44vIBtmvZj4lNiVZLmBLnHIQwDAauE1lkmVW9GA0mLjROmEzJ/qN/zgqjDe2jMkdGwrS2JuFBRdIldlSB8ySjVjomHgMVjAgMBAAECggEAQ2dUKeyjt2cc8LsllosugybwuIV86od8/lvMjNKgrk8bY3DtpxkGw/4AC4tohpAt1BEDFqPuRTbNPvJJI9mHPlSScpxhYekNiE5P8xKwPOA6lcqNzAq8PqSZjRaSCBWZl94IwezpaEjAMWaJyZ37OJpSc7pCgwA9R6X1x0eLiPfo5gZYn7N61HsOCQkfv30Cvk6rZ/zhBkgzd3kCAGuEj0ZQTvt6j8s0MN6RCCSXpRCZXo0mwq2oVc6Um+kr5pcQHg9kL1NjbDjGG6qWP/mOIBhn9Vc+j0F766uouaWagmcfBgSRfMGUE/qfIOSlvbBGKLN1n6d5jchoPE6XF1QfiQKBgQDod4O/WAhLbf62ZG875p09QfoM49erOEWkuVWIvuX7ywHvsSQYrHY7+TuVX7uTpd9TUMeHGfrC1sBDYV0BxXg+9TS1rf1YVn2VfOiYzWdiHA8F8HaO19kZ6k4boLZUOQaAqdGzJ+j+qwKY0ke9s7eRRmtLf9pTEULyrvqBPuPTPwKBgQCkeRcSL0ut4b4QRHg7mHpn1fXAQPaWOW17lCNLvh3/pKxlnlW+k7hM/YhZXhh+ITzHlS1lg8EHWJl3G0j1MbaNh9W/tsEo97g3AffUabxWDJXrcX7oIRjSZJEYo/GVY5KHeTrnhckpR7t1debfW4d8XME55G/Pek7XytL6vRqY3QKBgQCh2sSyLtrnmdgkqd0Audp00kEFRIXewrlKrXeuVCvQmlHoz08wlrNjom4n3JW/gVfyrGWf3SjJC7ilsV6OYy0LuLJQZKnmHaImuOdBrJH0r1COdBQ39HVGI+rqNYV9Mo8iehp1QK5q0ipmuNIWdNC0p3EBCi26dGRGkCn+XwlFBQKBgQCAUmmJqpTlKUdc8c7M0H5QHUMLqKO7OTsOO9n98mr9VcGb1xkXA7G7f+Otthht8Ai3vtAYb99el+XEY+lcRFklu2Etnqy+BegYItT1STnD+TXO6FIXUhtHq2b5To/h+joMsK0gjeUQ7AJ59m8WvRbMFKI9RNlniwmQm5JYRspFkQKBgQCRGys8S3rcVmoB/C0CC00CW9I5xMJFGK5gRo0HspJ92H4Ch90w0Uya4YnPBw7liIOvW2MjWhIKLN9cL1nTQ7V2ZFnwMgYdWCDEq77WqVVT6+YNy3NvnWV/GPpll3Gkthe/VG75vmkli1oSaXLrLHOm45uYCXZhA+K16Y4aJwgP/w==
         
 
 bpm:
-#    url: http://10.126.80.15/UltimusResources/SaleToolService.asmx?wsdl
-    url: http://10.126.80.27:88/UltimusResources/SaleToolService.asmx?wsdl
+    url: http://10.126.80.15/UltimusResources/SaleToolService.asmx?wsdl
+#    url: http://10.126.80.27:88/UltimusResources/SaleToolService.asmx?wsdl
   
 sap:
     currency:
