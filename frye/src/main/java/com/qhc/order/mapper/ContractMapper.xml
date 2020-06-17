@@ -178,6 +178,7 @@
 		left join k_order o on o.id = oi.order_id
 		left join k_contract c on oi.id = c.order_info_id
 		left join sap_customer sc on sc.code = o.customer_code
+		left join b_user mu on mu.user_identity = oi.contract_manager
 		<include refid="Where_By_Params" />
 		<choose>
 			<when test="orderByClause != null">
@@ -220,7 +221,10 @@
 				AND UPPER(oi.contract_number) like '%${contractNumber.toUpperCase()}%'
 			</if>
 			<if test="customerName != null and customerName != ''" >
-				AND UPPER(sc.name) like '%{contractorName.toUpperCase()}%'
+				AND UPPER(sc.name) like '%${customerName.toUpperCase()}%'
+			</if>
+			<if test="contractManager != null and contractManager != ''" >
+				AND UPPER(mu.name) like '%${contractManager.toUpperCase()}%'
 			</if>
 			<if test="customerCode != null and customerCode != ''" >
 				AND o.customer_code = #{customerCode, jdbcType=VARCHAR}
