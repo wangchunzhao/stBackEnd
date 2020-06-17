@@ -117,5 +117,7 @@ public interface OrderInfoMapper {
 	List<Map<String, Object>> findForUpdateSapStatus();
 	
 	int updateSapStatus(Map<String, Object> data);
+	
+	OrderInfo findLastVersion(Integer orderInfoId);
 
 }

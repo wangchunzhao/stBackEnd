@@ -107,11 +107,19 @@ public class ReportService {
 				}
 			}
 			
-			String industryCodeCode = (String)map.get("industryCodeName");
-			if (StringUtils.isNotEmpty(industryCodeCode)) {
-				String name = constantService.findIndustryCodes().get(industryCodeCode);
+//			String industryCodeCode = (String)map.get("industryCodeName");
+//			if (StringUtils.isNotEmpty(industryCodeCode)) {
+//				String name = constantService.findIndustryCodes().get(industryCodeCode);
+//				if (name != null) {
+//					map.put("industryCodeName", name);
+//				}
+//			}
+			
+			String customerClazz = (String)map.get("customerClazz");
+			if (StringUtils.isNotEmpty(customerClazz)) {
+				String name = constantService.findCustomerClazzByCode(customerClazz);
 				if (name != null) {
-					map.put("industryCodeName", name);
+					map.put("customerClazzName", name);
 				}
 			}
 			

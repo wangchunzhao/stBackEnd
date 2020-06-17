@@ -1686,6 +1686,22 @@ public class OrderService {
         bpmHeader.setPayAdvancePaymentTime(specialOrderApplication.getPayAdvancePaymentTime());
         bpmHeader.setRemark(specialOrderApplication.getRemark());
     }
+    
+    // 变更信息
+    bpmHeader.setIsUpgrade(order.getVersionNum() > 1 ? 1 : 0);
+    bpmHeader.setIsSendToSap(order.isHasSendSap() ? 1 : 0);
+		if (order.getVersionNum() > 1) {
+			OrderInfo lastVersionOrder = orderInfoMapper.findLastVersion(order.getId());
+			List<MaterialGroups> lastGrossProfitMargins = new ObjectMapper()
+					.readValue(lastVersionOrder.getGrossProfitMargin(),
+							new TypeReference<List<MaterialGroups>>() {
+							});
+			MaterialGroups lastSumMargin = lastGrossProfitMargins
+					.get(lastGrossProfitMargins.size() - 1);
+			double marginDelta = lastSumMargin.getGrossProfitMargin()
+					- sumMargin.getGrossProfitMargin();
+			bpmHeader.setMarginDelta(marginDelta);
+		}
 
     // set bpm order attachements
     for (Attachment attachment : attachments) {

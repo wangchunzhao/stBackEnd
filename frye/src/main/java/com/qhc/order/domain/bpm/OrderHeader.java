@@ -106,6 +106,13 @@ public class OrderHeader {
 
     /* 备注 */
     private String remark = null;
+    
+    //   ================== 订单变更信息  ==================
+    private int isUpgrade;//是否订单更改
+    
+    private int isSendToSap; // 是否已下推sap
+    
+    private double marginDelta; // 毛利下降比率
 
 	public String getSalesCode() {
 		return salesCode;
@@ -483,26 +490,61 @@ public void setRemark(String remark) {
     this.remark = remark;
 }
 
+public int getIsUpgrade() {
+	return isUpgrade;
+}
+
+public int getIsSendToSap() {
+	return isSendToSap;
+}
+
+public double getMarginDelta() {
+	return marginDelta;
+}
+
+public void setIsUpgrade(int isUpgrade) {
+	this.isUpgrade = isUpgrade;
+}
+
+public void setIsSendToSap(int isSendToSap) {
+	this.isSendToSap = isSendToSap;
+}
+
+public void setMarginDelta(double marginDelta) {
+	this.marginDelta = marginDelta;
+}
+
 @Override
-  public String toString() {
-    return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel + ", orderType="
-        + orderType + ", sequenceNumber=" + sequenceNumber + ", discount=" + discount
-        + ", customerName=" + customerName + ", contractNumber=" + contractNumber + ", shopName="
-        + shopName + ", contractRmbAmount=" + contractRmbAmount + ", contractAmount="
-        + contractAmount + ", currencyName=" + currencyName + ", exchange=" + exchange
-        + ", receiveTypeName=" + receiveTypeName + ", sapOffice=" + sapOffice + ", saleType="
-        + saleType + ", paymentTypeName=" + paymentTypeName + ", taxRate=" + taxRate
-        + ", bodyDiscount=" + bodyDiscount + ", unitDiscount=" + unitDiscount + ", mergeDiscount="
-        + mergeDiscount + ", approvalDiscount=" + approvalDiscount + ", earliestDeliveryDate="
-        + earliestDeliveryDate + ", dealer=" + dealer + ", specialDiscount=" + specialDiscount
-        + ", b2c=" + b2c + ", createTime=" + createTime + ", margin=" + margin + ", wtwMargin="
-        + wtwMargin + ", status=" + status + ", comments=" + comments + ", installFee=" + installFee
-        + ", materialFee=" + materialFee + ", electricalFee=" + electricalFee
-        + ", refrigeratoryFee=" + refrigeratoryFee + ", maintenanceFee=" + maintenanceFee
-        + ", address=" + address + ", materialGroupNames=" + materialGroupNames
-        + ", isUrgentDelivery=" + isUrgentDelivery + ", isSpecialOrder=" + isSpecialOrder
-        + ", isLongterm=" + isLongterm + ", isSpecial=" + isSpecial + ", isNonUniform="
-        + isNonUniform + "]";
-  }
+public String toString() {
+	return "OrderHeader [salesCode=" + salesCode + ", salesTel=" + salesTel
+			+ ", orderType=" + orderType + ", stOrderType=" + stOrderType
+			+ ", sequenceNumber=" + sequenceNumber + ", discount=" + discount
+			+ ", customerName=" + customerName + ", contractNumber="
+			+ contractNumber + ", shopName=" + shopName + ", contractRmbAmount="
+			+ contractRmbAmount + ", contractAmount=" + contractAmount
+			+ ", currencyName=" + currencyName + ", exchange=" + exchange
+			+ ", receiveTypeName=" + receiveTypeName + ", sapOffice="
+			+ sapOffice + ", saleType=" + saleType + ", paymentTypeName="
+			+ paymentTypeName + ", taxRate=" + taxRate + ", bodyDiscount="
+			+ bodyDiscount + ", unitDiscount=" + unitDiscount
+			+ ", mergeDiscount=" + mergeDiscount + ", approvalDiscount="
+			+ approvalDiscount + ", earliestDeliveryDate="
+			+ earliestDeliveryDate + ", dealer=" + dealer + ", specialDiscount="
+			+ specialDiscount + ", b2c=" + b2c + ", createTime=" + createTime
+			+ ", margin=" + margin + ", wtwMargin=" + wtwMargin + ", status="
+			+ status + ", comments=" + comments + ", installFee=" + installFee
+			+ ", materialFee=" + materialFee + ", electricalFee="
+			+ electricalFee + ", refrigeratoryFee=" + refrigeratoryFee
+			+ ", maintenanceFee=" + maintenanceFee + ", address=" + address
+			+ ", materialGroupNames=" + materialGroupNames
+			+ ", isUrgentDelivery=" + isUrgentDelivery + ", isSpecialOrder="
+			+ isSpecialOrder + ", isLongterm=" + isLongterm + ", isSpecial="
+			+ isSpecial + ", isNonUniform=" + isNonUniform
+			+ ", receiveMailTime=" + receiveMailTime + ", contractTime="
+			+ contractTime + ", payAdvancePaymentTime=" + payAdvancePaymentTime
+			+ ", remark=" + remark + ", isUpgrade=" + isUpgrade
+			+ ", isSendToSap=" + isSendToSap + ", marginDelta=" + marginDelta
+			+ "]";
+}
 
 }
