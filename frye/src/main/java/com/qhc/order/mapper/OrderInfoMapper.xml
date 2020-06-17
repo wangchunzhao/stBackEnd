@@ -491,4 +491,12 @@
 		update k_order_info set earliest_delivery_date = #{earliestDeliveryDate, jdbcType=DATE}
 		where id = #{id, jdbcType=INTEGER}
 	</update>
+	
+	<select id="findLastVersion" resultType="com.qhc.order.entity.OrderInfo" parameterType="Integer">
+		select 
+			*
+		from k_order_info
+		where order_id in (select order_id from k_order_info where id = #{orderInfoId}) and id != #{orderInfoId}
+		order by id desc
+	</select>
 </mapper>

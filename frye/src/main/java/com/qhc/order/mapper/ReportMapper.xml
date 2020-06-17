@@ -23,7 +23,7 @@
 			so.name as officeName, <!-- 大区 -->
 			sg.name as groupName, <!-- 中心 -->
 			oi.status, <!-- 订单状态 -->
-			sc.sap_industry_code_code as industryCodeName, <!-- 性质分类/客户分类 -->
+			o.customer_clazz as customerClazz, <!-- 性质分类/客户分类 -->
 			cmu.name as contractManager, <!-- 合同管理员 -->
 			o.st_order_type as stOrderType, <!-- 订单类型 -->
 			0 as isYearpurchase, <!-- 是否年采客户 -->
@@ -167,9 +167,9 @@
 				AND oi.status = #{status, jdbcType=CHAR}
 			</if>
 			<!-- 性质分类 -->
-			<!-- <if test="industryCode != null and industryCode != ''" >
-				AND sc.sap_industry_code_code = #{industryCode, jdbcType=CHAR}
-			</if> -->
+			<if test="customerClazz != null and customerClazz != ''" >
+				AND o.customer_clazz = #{customerClazz, jdbcType=CHAR}
+			</if>
 			<!-- 合同管理员 -->
 			<if test="contractManager != null and contractManager != ''" >
 				AND UPPER(cmu.name) like '%${contractManager.toUpperCase()}%' 
@@ -179,16 +179,37 @@
 				AND o.st_order_type = #{stOrderType, jdbcType=CHAR}
 			</if>
 			<!-- 专用号 -->
+			<if test="materialCode != null and materialCode != ''" >
+				AND UPPER(m.code) like '%${materialCode.toUpperCase()}%' 
+			</if>
+			<!-- 规格型号 -->
 			<if test="materialName != null and materialName != ''" >
-				AND UPPER(m.code) like '%${stOrderType.toUpperCase()}%' 
+				AND UPPER(m.description) like '%${materialName.toUpperCase()}%' 
 			</if>
 			<!-- 需求计划 -->
 			<if test="requirementPlan != null and requirementPlan != ''" >
 				AND item.item_requirement_plan = #{requirementPlan, jdbcType=CHAR}
 			</if>
 			<!-- 行项目类别 -->
-			<if test="itemCategory != null and itemCategory != ''" >
-				AND item.item_category = #{itemCategory, jdbcType=CHAR}
+			<!-- 标准 -->
+			<if test="itemCategory == '1'.toString()" >
+				AND item.item_category in ('ZHD1', 'ZHD2', 'ZHT1')
+			</if>
+			<!-- 免费 -->
+			<if test="itemCategory == '1'.toString()" >
+				AND item.item_category in ('ZHD3', 'ZHD4', 'ZHT3')
+			</if>
+			<!-- 退货 -->
+			<if test="itemCategory == '1'.toString()" >
+				AND item.item_category in ('ZHR3', 'ZHR4', 'ZHR1')
+			</if>
+			<!-- ZH97 -->
+			<if test="itemCategory == 'ZH97'.toString()" >
+				AND item.item_category = 'ZH97'
+			</if>
+			<!-- ZH98 -->
+			<if test="itemCategory == 'ZH98'.toString()" >
+				AND item.item_category = 'ZH98'
 			</if>
 			<!-- 入库时间 -->
 			<if test="onStoreDate != null and onStoreDate != ''" >
@@ -337,7 +358,7 @@
 			so.name as officeName, <!-- 大区 -->
 			sg.name as groupName, <!-- 中心 -->
 			oi.status, <!-- 订单状态 -->
-			sc.sap_industry_code_code as industryCodeName, <!-- 性质分类/客户分类 -->
+			o.customer_clazz as customerClazz, <!-- 性质分类/客户分类 -->
 			cmu.name as contractManager, <!-- 合同管理员 -->
 			o.st_order_type as stOrderType, <!-- 订单类型 -->
 			0 as isYearpurchase, <!-- 是否年采客户 -->
@@ -441,9 +462,9 @@
 				AND oi.status = #{status, jdbcType=CHAR}
 			</if>
 			<!-- 性质分类 -->
-			<!-- <if test="industryCode != null and industryCode != ''" >
-				AND sc.sap_industry_code_code = #{industryCode, jdbcType=CHAR}
-			</if> -->
+			<if test="customerClazz != null and customerClazz != ''" >
+				AND o.customer_clazz = #{customerClazz, jdbcType=CHAR}
+			</if>
 			<!-- 合同管理员 -->
 			<if test="contractManager != null and contractManager != ''" >
 				AND UPPER(cmu.name) like '%${contractManager.toUpperCase()}%' 
