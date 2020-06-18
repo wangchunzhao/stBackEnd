@@ -478,13 +478,17 @@
 	</select>
 	
 	<select id="findForUpdateSapStatus" resultType="Map">
-		select 
+		<!-- select 
 			id, contract_number
 		from k_order_info 
 		where is_active = 1 and status = '09' and contract_number is not null and contract_number != '' 
 			and (earliest_product_date is null
 				or exists (select 1 from k_item where k_item.order_info_id = k_order_info.id 
-					and (delivery_date is null or produce_date is null or on_store_date is null)))
+					and (delivery_date is null or produce_date is null or on_store_date is null))) -->
+		select 
+			id, contract_number
+		from k_order_info 
+		where is_active = 1 and status = '09' and DATE_ADD(update_time,INTERVAL 36 DAY) > now()
 	</select>
 	
 	<update id="updateSapStatus" parameterType="Map" >
