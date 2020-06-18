@@ -63,7 +63,7 @@ public class BestsignService {
 //	@Resource
 //	private ContractSignSysRepository contractSignSysRepository;
 	// 签约系统合同列表，缓存，模拟数据库表Repository
-	private List<ContractSignSys> signList = new ArrayList<ContractSignSys>();
+//	private List<ContractSignSys> signList = new ArrayList<ContractSignSys>();
 
 	/**
 	 * 
@@ -131,7 +131,8 @@ public class BestsignService {
 		paramsMap.put("pageIndex", 1);
 		paramsMap.put("pageSize", 50);
 		
-		List<String> list = new ArrayList<String>();
+//		List<String> list = new ArrayList<String>();
+		List<ContractSignSys> signList = new ArrayList<ContractSignSys>();
 		
 		boolean hasmore = false;
 		do {
@@ -146,59 +147,68 @@ public class BestsignService {
 				List<Map> results = (List<Map>)data.get("results");
 				if (results != null && results.size() > 0) {
 					for (Map map : results) {
-						list.add((String)map.get("contractId"));
+//						list.add((String)map.get("contractId"));
+						ContractSignSys signcontract = new ContractSignSys();
+						String signContractId = String.valueOf(map.get("contractId"));
+						signcontract.setSignContractId(signContractId);
+						signcontract.setTitle(String.valueOf(map.get("contractTitle")));
+//						List<Map> receiversMap = (List<Map>)map.get("receivers");
+						ContractSignSys newOne = getNewContractSignSys(signContractId);
+						signcontract.setFileHashCode(newOne.getFileHashCode());
+						signList.add(signcontract);
 					}
 				}
 			}
 			paramsMap.put("pageIndex", (Integer)paramsMap.get("pageIndex") + 1);
 		} while (hasmore);
 		
-		if (list.isEmpty()) {
+//		if (list.isEmpty()) {
+		if (signList.isEmpty()) {
 			return new ArrayList<ContractSignSys>();
 		}
 
 		// 从数据库查询删除标志为0的合同签署信息，现有系统用缓存代替
-//		List<ContractSignSys> signList = this.contractSignSysRepository.findContractByIsDelete("0");
-		for (int i = list.size() - 1; i >= 0; i--) {
-			String contractId = list.get(i);
-
-			boolean flag = false;
-			for (ContractSignSys one : signList) {
-				if (one.getSignContractId().equalsIgnoreCase(contractId)) {
-					one.setCurHave(Boolean.valueOf(true));
-					flag = true;
-					break;
-				}
-			}
-			// 如果不存在则添加新的对象
-			if (!flag) {
-				ContractSignSys newOne = getNewContractSignSys(contractId);
-				if (newOne != null)
-					signList.add(newOne);
-			}
-		}
+//		for (int i = list.size() - 1; i >= 0; i--) {
+//			String contractId = list.get(i);
+//
+//			boolean flag = false;
+//			for (ContractSignSys one : signList) {
+//				if (one.getSignContractId().equalsIgnoreCase(contractId)) {
+//					one.setCurHave(Boolean.valueOf(true));
+//					flag = true;
+//					break;
+//				}
+//			}
+//			// 如果不存在则添加新的对象
+//			if (!flag) {
+//				ContractSignSys newOne = getNewContractSignSys(contractId);
+//				if (newOne != null)
+//					signList.add(newOne);
+//			}
+//		}
 
 		// 过滤删除状态为1的合同签署信息
-		List<ContractSignSys> resultList = new ArrayList<ContractSignSys>();
-		for (ContractSignSys one : signList) {
-			if (one.getCurHave() == null || !one.getCurHave().booleanValue()) {
-				one.setIsDelete("1");
-				continue;
-			}
-			resultList.add(one);
-		}
+//		List<ContractSignSys> resultList = new ArrayList<ContractSignSys>();
+//		for (ContractSignSys one : signList) {
+//			if (one.getCurHave() == null || !one.getCurHave().booleanValue()) {
+//				one.setIsDelete("1");
+//				continue;
+//			}
+//			resultList.add(one);
+//		}
 
 //		this.contractSignSysRepository.save(signList);
 		// 模拟保存，过滤掉isdelete为1的数据
-		signList = resultList;
+//		signList = resultList;
 		// 初始化CurHave为false
-		for (ContractSignSys one : signList) {
-			one.setCurHave(false);
-		}
+//		for (ContractSignSys one : signList) {
+//			one.setCurHave(false);
+//		}
 		
 		logger.debug("Bestsign contract list: {}", signList);
 
-		return resultList;
+//		return resultList;
+		return signList;
 	}
 
 	/**
@@ -221,16 +231,29 @@ public class BestsignService {
 //		String receivers = contractMap.get("receivers").toString();
 //		List<Map> receiversMap = (List<Map>) mapper.readValue(receivers, ArrayList.class);
 		List<Map> receiversMap = (List<Map>) contractMap.get("receivers");
+		return getBestsignContractStatus(receiversMap, vAgentName);
+	}
+
+	/**
+	 * 从receivers列表判断上上签合同状态
+	 * 
+	 * @param receiversMap 接收人列表
+	 * @param vAgentName 客户名称
+	 * @return
+	 */
+	private String getBestsignContractStatus(List<Map> receiversMap,
+			String vAgentName) {
+		String status;
 		boolean flag1 = false, flag2 = false;
 		for (Map receiver : receiversMap) {
 			String enterpriseName = receiver.get("enterpriseName").toString();
-			if ((enterpriseName.indexOf(vAgentName) >= 0 || vAgentName.indexOf(enterpriseName) >= 0)
+			if ((enterpriseName.equals(vAgentName))
 					&& receiver.get("receiverType") != null
 					&& receiver.get("receiverType").toString().equalsIgnoreCase("SIGNER")) {
 				if (receiver.get("signStatus").toString().equalsIgnoreCase("COMPLETE"))
 					flag1 = true;
 			}
-			if ((enterpriseName.indexOf(this.enterName) >= 0 || this.enterName.indexOf(enterpriseName) >= 0)
+			if ((enterpriseName.equals(this.enterName))
 					&& receiver.get("receiverType") != null
 					&& receiver.get("receiverType").toString().equalsIgnoreCase("SIGNER")) {
 				if (receiver.get("signStatus").toString().equalsIgnoreCase("COMPLETE"))

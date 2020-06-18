@@ -247,8 +247,8 @@
 	<!-- 修改 -->
 	<update id="updateStatus" parameterType="com.qhc.order.entity.Contract" >
 		update k_contract
-		set status = #{status, jdbcType=VARCHAR}, 
-		<trim suffixOverrides="," >
+		<trim prefix="SET" prefixOverrides="AND|OR" suffixOverrides="," >
+		    status = #{status, jdbcType=VARCHAR}, 
 			<if test="sender != null and sender != ''" >
 				sender = #{sender, jdbcType=VARCHAR}, 
 				send_time = now(), 

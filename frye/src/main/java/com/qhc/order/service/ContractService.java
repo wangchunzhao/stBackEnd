@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class ContractService {
 			contractMapper.insert(contract);
 		} else {
 			// 如果合同状态为已发送之后的状态，即为重新编辑
-			if (!contract.getStatus().equals("01")) {
+			if (!StringUtils.trimToEmpty(contract.getStatus()).equals("01")) {
 				contract.setStatus("01");
 				contractMapper.resetStatus(contract);
 			}
@@ -153,7 +154,7 @@ public class ContractService {
 	 * @throws JsonMappingException
 	 */
 	@Transactional
-	public boolean doSignContract(int contractId) throws JsonMappingException, JsonProcessingException {
+	public boolean doSignContract(String userid, int contractId) throws JsonMappingException, JsonProcessingException {
 		ContractDto contract = this.findById(contractId);
 
 		if (contract == null)
@@ -172,6 +173,7 @@ public class ContractService {
 			Contract c = new Contract();
 			c.setId(contractId);
 			c.setStatus("06");
+			c.setSigner(userid);
 			updateStatus(c);
 		}
 

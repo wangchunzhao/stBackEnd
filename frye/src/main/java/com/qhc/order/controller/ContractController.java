@@ -147,15 +147,16 @@ public class ContractController {
 	}
 	
 	@ApiOperation(value = "更新合同PDF文档hashcode信息",notes="更新合同PDF文档hashcode信息")
-	@PutMapping(value = "{id}/hashcode/{hashcode}")
+	@PutMapping(value = "{id}/hashcode/{hashcode}/{user}")
 	@ResponseBody
-	public Result<?> updateContractFileHashcode(@PathVariable("id") Integer contractId, @PathVariable("hashcode") String hashcode) {
+	public Result<?> updateContractFileHashcode(@PathVariable("id") Integer contractId, @PathVariable("hashcode") String hashcode, @PathVariable("user") String user) {
 		Result<?> result = null;
 		try {
 			Contract c = new Contract();
 			c.setId(contractId);
 			c.setFileHashcode(hashcode);
 			c.setStatus("03");
+			c.setSender(user);
 			contractService.updateStatus(c);
 			result = Result.ok(c);
 	        
@@ -230,15 +231,19 @@ public class ContractController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = { "{id}/sign" }, method = { RequestMethod.PUT })
+	@RequestMapping(value = { "{id}/sign/{userid}" }, method = { RequestMethod.PUT })
 	@ResponseBody
-	public Result<?> signContract(@PathVariable("id") Integer contractId) throws JsonProcessingException {
+	public Result<?> signContract(@PathVariable("id") Integer contractId, @PathVariable("userid") String userid) throws JsonProcessingException {
 		Result<?> r = null;
-		boolean flag = this.contractService.doSignContract(contractId);
-		if (flag) {
-			r = Result.ok("");
-		} else {
-			r = Result.error("");
+		try {
+			boolean flag = this.contractService.doSignContract(userid, contractId);
+			if (flag) {
+				r = Result.ok("");
+			} else {
+				r = Result.error("");
+			}
+		} catch (Exception e) {
+			r = Result.error(e.getMessage());
 		}
         
         // 记录操作日志
