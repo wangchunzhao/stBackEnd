@@ -6,7 +6,7 @@
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/frye.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/frye-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>fryelogs/frye-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
            <!--  保留30天 -->
             <maxHistory>30</maxHistory>
