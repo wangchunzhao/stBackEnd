@@ -124,7 +124,7 @@ public class SapSyncController {
 		currencyService.savePaymentPlan(lp);
 	}
 	
-//	@Scheduled(cron = "0 10 12 * * ?")
+	@Scheduled(cron = "0 10 12 * * ?")
 	@ApiOperation(value = "同步sap的CharacteristicValue信息并写入销售工具数据库")
 	@GetMapping(value = "sycCharacteristicValue")
 	@ResponseStatus(HttpStatus.OK)
@@ -210,7 +210,7 @@ public class SapSyncController {
 	}
 	
 	//每天12点执行一次
-//	@Scheduled(cron = "0 0 12 * * ?")
+	@Scheduled(cron = "0 0 12 * * ?")
 	@ApiOperation(value = "同步sap的默认特征信息并写入销售工具数据库")
 	@GetMapping(value = "sycDefaultCharacteristic")
 	@ResponseStatus(HttpStatus.OK)
@@ -257,7 +257,7 @@ public class SapSyncController {
 	12.color
 	*/
 	//每天凌晨1点执行一次
-//	@Scheduled(cron = "0 0 1 * * ?")
+	@Scheduled(cron = "0 0 1 * * ?")
 	@ApiOperation(value = "同步sap数据进入销售工具")
 	@GetMapping(value = "SapToSellingTool")
 	@ResponseStatus(HttpStatus.OK)
@@ -315,7 +315,7 @@ public class SapSyncController {
 	}
 	
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 0 5 * * ?")
+	@Scheduled(cron = "0 0 5 * * ?")
 	@ApiOperation(value = "从SAP同步订单开工日期入库日期交货日期定时任务")
 	@GetMapping(value = "UpdateSellingToolOrderStatus")
 	@ResponseStatus(HttpStatus.OK)
