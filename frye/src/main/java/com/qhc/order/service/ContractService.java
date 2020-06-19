@@ -175,9 +175,11 @@ public class ContractService {
 			c.setStatus("06");
 			c.setSigner(userid);
 			updateStatus(c);
+			
+			return true;
+		} else {
+			return false;
 		}
-
-		return false;
 	}
 
 	/**
