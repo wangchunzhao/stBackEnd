@@ -381,11 +381,15 @@ public class SapSyncController {
 		}
 	}
 
-	private Date strToDate(String firstProductionStartdate)
+	private Date strToDate(String strDate)
 			throws ParseException {
 		Date date = null;
-		if (firstProductionStartdate.length() > 0) {
-			date = new SimpleDateFormat("yyyyMMdd").parse(firstProductionStartdate);
+		if (strDate.length() > 0) {
+			if (strDate.startsWith("0")) {
+				date = null;
+			} else {
+				date = new SimpleDateFormat("yyyyMMdd").parse(strDate);
+			}
 		}
 		return date;
 	}
