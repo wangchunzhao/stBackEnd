@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.qhc.Constant;
 import com.qhc.order.domain.CharacteristicDto;
+import com.qhc.order.domain.ContractDto;
 import com.qhc.order.domain.DeliveryAddressDto;
 import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.Mail;
@@ -201,6 +202,9 @@ public class OrderService {
 
   @Autowired
   private TaxMapper taxMapper;
+  
+  @Autowired
+  private ContractService contractService;
   
   // 特殊物料
   List<String> specialMaterials =
@@ -1224,7 +1228,17 @@ public class OrderService {
 
     if (!OrderDto.ORDER_STATUS_APPROVED.equals(status)
         && !OrderDto.ORDER_STATUS_APPROVED_UPDATE.equals(status)) {
-      throw new RuntimeException("当前状态不能下发SAP");
+      throw new RuntimeException("只有BPM审批通过才能下发SAP");
+    }
+
+    // 经销商订单要BPM审批通过并且上上签双方已签署才可以下推sap
+    if ("1".equals(stOrderType) || "2".equals(stOrderType)) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("orderInfoId", orderInfoId);
+    	List<ContractDto> contracts = contractService.find(params).getRows();
+    	if (contracts == null || contracts.size() == 0 || !contracts.get(0).getStatus().equals("06")) {
+    		throw new RuntimeException("经销商订单要上上签双方已签署才可以下发SAP");
+    	}
     }
 
     if (orderDto.isHasSendSap()) {
