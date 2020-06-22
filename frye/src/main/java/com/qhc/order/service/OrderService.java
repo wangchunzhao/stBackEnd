@@ -206,17 +206,6 @@ public class OrderService {
   @Autowired
   private ContractService contractService;
   
-  // 特殊物料
-  List<String> specialMaterials =
-      Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
-          "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
-  // 退货行项目分类
-  List<String> returnCategorys =
-      Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
-  // 免费行项目分类
-  List<String> freeCategorys =
-      Arrays.asList("ZHD3", "ZHD4", "ZHT3", "ZHT6");
-
   @Transactional
   public OrderDto save(String user, final OrderDto orderDto) throws Exception {
     orderDto.setUpdater(user);
@@ -496,7 +485,7 @@ public class OrderService {
       
       String materialCode = item.getMaterialCode();
       // 特殊物料不处理
-      if (specialMaterials.contains(materialCode)) {
+      if (Constant.specialMaterials.contains(materialCode)) {
           continue;
       }
       MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
@@ -507,7 +496,7 @@ public class OrderService {
       // item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
       item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalTransactionPrice(), 0D));
       item.setOptionalRetailPrice(item.getOptionalRetailPrice());
-      if (freeCategorys.contains(item.getItemCategory())) {
+      if (Constant.freeCategorys.contains(item.getItemCategory())) {
           // 免费
           item.setActualPrice(0);
           item.setOptionalActualPrice(0);
@@ -1954,7 +1943,7 @@ public class OrderService {
     List<ItemDto> items = order.getItems();
     for (ItemDto itemDto : items) {
       // 特殊物料，只合计购销明细金额
-      if (specialMaterials.contains(itemDto.getMaterialCode())) {
+      if (Constant.specialMaterials.contains(itemDto.getMaterialCode())) {
         continue;
       }
       String rowNum = String.valueOf(itemDto.getRowNum());
@@ -2028,9 +2017,9 @@ public class OrderService {
 
       String category = itemDto.getItemCategory();
       // 退货
-      double flag = returnCategorys.contains(category) ? -1 : 1;
+      double flag = Constant.returnCategorys.contains(category) ? -1 : 1;
       // 特殊物料，只合计购销明细金额
-      if (specialMaterials.contains(mcode)) {
+      if (Constant.specialMaterials.contains(mcode)) {
         // 退货
         itemsAmount += flag * itemDto.getActualPrice() * itemDto.getQuantity();
       } else {
@@ -2067,7 +2056,7 @@ public class OrderService {
     List<ItemDto> items = order.getItems();
     for (ItemDto itemDto : items) {
       // 特殊物料，只合计购销明细金额
-      if (specialMaterials.contains(itemDto.getMaterialCode())) {
+      if (Constant.specialMaterials.contains(itemDto.getMaterialCode())) {
         continue;
       }
       // 取消状态的行项目不在累计范围

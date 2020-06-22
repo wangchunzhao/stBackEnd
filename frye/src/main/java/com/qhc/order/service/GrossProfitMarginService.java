@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qhc.Constant;
 import com.qhc.order.domain.ItemDto;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.sap.dao.SapMaterialGroupsRepository;
@@ -38,9 +39,6 @@ public class GrossProfitMarginService {
 	@Autowired
 	private AreaRepository areaRepository;
 	
-    // 退货行项目分类
-    private static List<String> returnCategorys = Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
-
 	public List<MaterialGroups> calculate(OrderDto order) {
 		String stOrderType = order.getStOrderType();
 		double exchange = order.getCurrencyExchange();
@@ -179,7 +177,7 @@ public class GrossProfitMarginService {
 		              continue;
 		            }
 	                // 退货，减去
-	                int flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
+	                int flag = Constant.returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
 					b2cEstimatedAmount += flag * item.getB2cEstimatedPrice() * item.getQuantity();
 					b2cEstimatedCost += flag * item.getB2cEstimatedCost() * item.getQuantity();
 				}
@@ -293,7 +291,7 @@ public class GrossProfitMarginService {
 			}
 			if (itemMaterialGroupCode.equals(materialGroupCode)) {
 			  // 退货，减去
-			  double flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
+			  double flag = Constant.returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）+b2c预估价
                 // amount += ( item.getActualPrice() + ObjectUtils.defaultIfNull(item.getOptionalActualPrice(), 0D) +
                 // item.getB2cEstimatedPrice() ) * item.getQuantity();
@@ -341,7 +339,7 @@ public class GrossProfitMarginService {
               continue;
             }
             // 退货，减去
-            double flag = returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
+            double flag = Constant.returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
             // 1. 金额= sum（可选项实卖金额合计），可选项实卖金额=可选项实卖价*数量，可选项实卖价=可选项零售价*折扣
             amount += flag * (item.getOptionalActualPrice()) * item.getQuantity();
             // 成本（销售）

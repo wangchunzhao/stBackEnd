@@ -1,6 +1,8 @@
 package com.qhc;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface Constant {
@@ -53,27 +55,36 @@ public interface Constant {
   
   Map<String, String> itemCategoryMap = new HashMap() {
 	  {
-		// ZH0D/ZH01 可配置
+		  // 经销商 ZH0D/ZH01 可配置
 		  put("ZHD1","标准");
 		  put("ZHD3","免费");
 		  put("ZHR3","退货");
-		  // ZH0D/ZH02 不可配置
+		  // 经销商 ZH0D/ZH02 不可配置
 		  put("ZHD2","标准");
 		  put("ZHD4","免费");
 		  put("ZHR4","退货");
-		  // ZH0T/ZH01 可配置
+		  // ZH0T （大客户）/ZH01 可配置
 		  put("ZHT1","标准");
 		  put("ZHT3","免费");
 		  put("ZHR1","退货");
-		  // ZH0D/ZH02 可配置
+		  // ZH0T （大客户）/ZH02 不可配置
 		  put("ZHT2","标准");
-		  put("ZHT6","免费");
+		  put("ZHT4","免费");
 		  put("ZHR2","退货");
+		  put("ZHT6","供应商直发");
 		  // 不可预估费，其他项目收付费
 		  put("ZH97","ZH97");
 		  put("ZH98","ZH98");
 	  }
   };
+  
+  // 退货行项目分类
+  List<String> returnCategorys =
+      Arrays.asList("ZHR1", "ZHR2", "ZHR3", "ZHR4");
+  
+  // 免费行项目分类
+  List<String> freeCategorys =
+      Arrays.asList("ZHD3", "ZHD4", "ZHT3", "ZHT4");
   
   Map<String, String> itemRequirementPlanMap = new HashMap() {
 	  {
@@ -84,5 +95,10 @@ public interface Constant {
 		  put("005","替换");
 	  }
   };
+  
+  // 特殊物料
+  List<String> specialMaterials =
+      Arrays.asList("BG1GD1000000-X", "BG1GDA00000-X", "BG1GDB00000-X", "BG1P7E00000-X",
+          "BG1R8J00000-X", "BG1R8K00000-X", "BG1R8R00000-X", "BG1R8L00000-X");
   
 }

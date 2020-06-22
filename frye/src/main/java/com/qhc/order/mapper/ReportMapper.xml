@@ -193,15 +193,19 @@
 			<!-- 行项目类别 -->
 			<!-- 标准 -->
 			<if test="itemCategory == '1'.toString()" >
-				AND item.item_category in ('ZHD1', 'ZHD2', 'ZHT1')
+				AND item.item_category in ('ZHD1', 'ZHD2', 'ZHT1', 'ZHT2')
 			</if>
 			<!-- 免费 -->
-			<if test="itemCategory == '1'.toString()" >
-				AND item.item_category in ('ZHD3', 'ZHD4', 'ZHT3')
+			<if test="itemCategory == '2'.toString()" >
+				AND item.item_category in ('ZHD3', 'ZHD4', 'ZHT3', 'ZHT4')
 			</if>
 			<!-- 退货 -->
-			<if test="itemCategory == '1'.toString()" >
-				AND item.item_category in ('ZHR3', 'ZHR4', 'ZHR1')
+			<if test="itemCategory == '3'.toString()" >
+				AND item.item_category in ('ZHR3', 'ZHR4', 'ZHR1', 'ZHR2')
+			</if>
+			<!-- 供应商直发 -->
+			<if test="itemCategory == '4'.toString()" >
+				AND item.item_category in ('ZHT6')
 			</if>
 			<!-- ZH97 -->
 			<if test="itemCategory == 'ZH97'.toString()" >
