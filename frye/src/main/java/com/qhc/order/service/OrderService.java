@@ -1220,8 +1220,8 @@ public class OrderService {
       throw new RuntimeException("只有BPM审批通过才能下发SAP");
     }
 
-    // 经销商订单要BPM审批通过并且上上签双方已签署才可以下推sap
-    if ("1".equals(stOrderType) || "2".equals(stOrderType)) {
+    // 经销商订单要BPM审批通过并且上上签双方已签署才可以下推sap，不校验“出口”订单
+    if (("1".equals(stOrderType) || "2".equals(stOrderType)) && !orderDto.getSaleType().equals("20")) {
     	Map<String, Object> params = new HashMap<>();
     	params.put("orderInfoId", orderInfoId);
     	List<ContractDto> contracts = contractService.find(params).getRows();
