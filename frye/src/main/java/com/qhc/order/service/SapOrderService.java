@@ -103,7 +103,7 @@ public class SapOrderService {
 		Integer orderInfoId = order.getId();
 //		String orderType = order.getOrderType();
 		double exchange = order.getCurrencyExchange();
-		boolean isUpdate = order.getVersionNum() > 1;
+		boolean isUpdate = order.isHasSendSap();
 
 		// assemble sap order header
 		SapOrderHeader header = new SapOrderHeader();
@@ -193,6 +193,11 @@ public class SapOrderService {
 			String itemStatus = StringUtils.trimToEmpty(item.getItemStatus());
 			
 			SapOrderItem sapItem = new SapOrderItem();
+			if (itemStatus.equals("Z2")) {
+				sapItem.setAbgru(itemStatus);
+			} else {
+				sapItem.setAbgru("");
+			}
 			if (isUpdate) {
 				if (itemStatus.equals("") || itemStatus.equals("00")) {
 					sapItem.setUpdateflag("I");

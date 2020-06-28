@@ -21,6 +21,8 @@ public class SapOrderItem {
 	private String vkaus;
 	// Ship-to address/送达方地址 -- Selling tool 到货地址
 	private String street;
+	// Reason of rejection/拒绝原因 -- 
+	private String abgru;
 	// Province/省 -- Selling tool 省
 	private String region;
 	// City/市 -- Selling tool 市
@@ -85,6 +87,12 @@ public class SapOrderItem {
 	}
 	public void setStreet(String street) {
 		this.street = street;
+	}
+	public String getAbgru() {
+		return abgru;
+	}
+	public void setAbgru(String abgru) {
+		this.abgru = abgru;
 	}
 	public String getRegion() {
 		return region;
