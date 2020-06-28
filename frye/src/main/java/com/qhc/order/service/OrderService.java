@@ -1371,6 +1371,7 @@ public class OrderService {
       item.setMaterialName(m.getDescription());
       item.setMaterialGroupCode(m.getGroupCode());
       item.setMaterialGroupName(m.getGroupName());
+      item.setMaterialType(m.getMaterialType());
       item.setStMaterialGroupCode(m.getStGroupCode());
       item.setStMaterialGroupName(m.getStGroupName());
       item.setUnitCode(m.getUnitCode());

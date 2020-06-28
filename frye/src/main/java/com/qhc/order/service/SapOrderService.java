@@ -292,7 +292,7 @@ public class SapOrderService {
 			transferPriceSum /= quantity;
 			actualPriceSum = actualPriceSum / exchange; // 转换未凭证货币
 			transferPriceSum = transferPriceSum / exchange; // 转换未凭证货币
-			addItemPrice(sapPrices, rowNumber, actualPriceSum, transferPriceSum);
+			addItemPrice(StringUtils.trimToEmpty(item.getMaterialType()), sapPrices, rowNumber, actualPriceSum, transferPriceSum);
 
 			// Characteristics value input
 			List<CharacteristicDto> characList = characteristicsMapper.findByItemId(item.getId());
@@ -329,12 +329,12 @@ public class SapOrderService {
 //		其他项目收费  BG1GD1000000-X	
 //		addFeeItem(sapItems, "BG1GD1000000-X", 0);
 //		安装费  BG1GDA00000-X  9901
-		addFeeItem(sapItems, sapPrices, "BG1GDA00000-X", 9901, ObjectUtils.defaultIfNull(order.getInstallFee(), 0D) / exchange);
+		addFeeItem("VKHM", sapItems, sapPrices, "BG1GDA00000-X", 9901, ObjectUtils.defaultIfNull(order.getInstallFee(), 0D) / exchange);
 //		材料费  BG1GDB00000-X	  9902
-		addFeeItem(sapItems, sapPrices, "BG1GDB00000-X", 9902, ObjectUtils.defaultIfNull(order.getMaterialFee(), 0D) / exchange);
+		addFeeItem("VKHM", sapItems, sapPrices, "BG1GDB00000-X", 9902, ObjectUtils.defaultIfNull(order.getMaterialFee(), 0D) / exchange);
 //		销售运费  BG1P7E00000-X	9903
 		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D);
-		addFeeItem(sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
+		addFeeItem("VKHM", sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
 		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D);
 		if (freight > 0 && additionalFreight > 0) {
 			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
@@ -346,9 +346,9 @@ public class SapOrderService {
 		}
 		
 //		电气费  BG1R8J00000-X	
-		addFeeItem(sapItems, sapPrices, "BG1R8J00000-X", 9904, ObjectUtils.defaultIfNull(order.getElectricalFee(), 0D) / exchange);
+		addFeeItem("VKHM", sapItems, sapPrices, "BG1R8J00000-X", 9904, ObjectUtils.defaultIfNull(order.getElectricalFee(), 0D) / exchange);
 //		维保费  BG1R8K00000-X	
-		addFeeItem(sapItems, sapPrices, "BG1R8K00000-X", 9905, ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0D) / exchange);
+		addFeeItem("VKHM", sapItems, sapPrices, "BG1R8K00000-X", 9905, ObjectUtils.defaultIfNull(order.getMaintenanceFee(), 0D) / exchange);
 //		冷库  BG1R8R00000-X	
 //		addFeeItem(sapItems, sapPrices, "BG1R8R00000-X", 0);
 //		不可预估费  BG1R8L00000-X	
@@ -392,7 +392,7 @@ public class SapOrderService {
 		return province;
 	}
 	
-	private void addItemPrice(List<SapOrderPrice> sapPrices, int rowNumber, double actualPriceSum,
+	private void addItemPrice(String materialType, List<SapOrderPrice> sapPrices, int rowNumber, double actualPriceSum,
 			double transferPriceSum) {
 		// Price/condition record input
 		if (actualPriceSum > 0) {
@@ -405,11 +405,14 @@ public class SapOrderService {
 		}
 		if (transferPriceSum > 0) {
 			// ZH08：转移价合计/成本合计
-			SapOrderPrice price2 = new SapOrderPrice();
-			price2.setPosnr(rowNumber);
-			price2.setKschl("ZH08");
-			price2.setKbetr(BigDecimal.valueOf(transferPriceSum));
-			sapPrices.add(price2);
+			// 如果物料类别是FERT / HALB / ROH，接口不需要传入ZH08
+			if (!(materialType.equalsIgnoreCase("FERT") || materialType.equalsIgnoreCase("HALB") || materialType.equalsIgnoreCase("ROH"))) {
+				SapOrderPrice price2 = new SapOrderPrice();
+				price2.setPosnr(rowNumber);
+				price2.setKschl("ZH08");
+				price2.setKbetr(BigDecimal.valueOf(transferPriceSum));
+				sapPrices.add(price2);
+			}
 		}
 	}
 	
@@ -420,7 +423,7 @@ public class SapOrderService {
 	 * @param rowNumber
 	 * @param fee1 费用
 	 */
-	private void addFeeItem(List<SapOrderItem> sapItems, List<SapOrderPrice> sapPrices, String feeCode, Integer rowNumber, Double fee) {
+	private void addFeeItem(String materialType, List<SapOrderItem> sapItems, List<SapOrderPrice> sapPrices, String feeCode, Integer rowNumber, Double fee) {
 		fee = ObjectUtils.defaultIfNull(fee, 0).doubleValue();
 		// 费用为0则不传 
 		if (fee <= 0) {
@@ -463,7 +466,7 @@ public class SapOrderService {
 		// Color Note/颜色备注
 		sapItem.setVbbpz118("");
 		
-		addItemPrice(sapPrices, rowNumber, 0, fee);
+		addItemPrice(materialType, sapPrices, rowNumber, 0, fee);
 		
 		sapItems.add(sapItem);
 	}
