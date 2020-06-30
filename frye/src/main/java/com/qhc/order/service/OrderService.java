@@ -480,6 +480,19 @@ public class OrderService {
     order.setUpdater(user);
     // order.setAttachments(null); // 清除订单附件
     order.setContractNumber(""); // 合同號
+    // 直签订单清空安装费等5个费用
+    if (order.getStOrderType().equals("3") || order.getStOrderType().equals("4")) {
+    	/* 工程安装费 */
+    	order.setInstallFee(null);
+    	/* 工程材料费 */
+    	order.setMaterialFee(null);
+    	/* 工程电气费 */
+    	order.setElectricalFee(null);
+    	/* 工程冷库费 */
+    	order.setRefrigeratoryFee(null);
+    	/* 工程维保费 */
+    	order.setMaintenanceFee(null);
+    }
     for (ItemDto item : order.getItems()) {
       // item.setAttachments(null); // 清除调研表附件
       item.setItemStatus("00");
@@ -490,8 +503,8 @@ public class OrderService {
           continue;
       }
       // 同步物料最新价格
-  	MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
-      syncItemPrice(item, materialDto);
+//  	MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
+//      syncItemPrice(item, materialDto);
       
       List<CharacteristicDto> configs = item.getConfigs();
       // 没有特征值跳过
@@ -518,7 +531,13 @@ public class OrderService {
     return order;
   }
 
-public MaterialDto syncItemPrice(ItemDto item, MaterialDto materialDto) {
+  /**
+   * 同步物料价格
+   * @param item
+   * @param materialDto
+   * @return
+   */
+  private MaterialDto syncItemPrice(ItemDto item, MaterialDto materialDto) {
       item.setStandardPrice(materialDto.getStandardPrice());
       item.setTransactionPrice(materialDto.getTranscationPrice());
       item.setRetailPrice(materialDto.getRetailPrice());
