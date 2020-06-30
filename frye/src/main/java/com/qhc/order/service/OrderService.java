@@ -280,6 +280,7 @@ public class OrderService {
     Order order = new Order();
     OrderInfo orderInfo = new OrderInfo();
     BeanUtils.copyProperties(order, orderDto);
+    order.setId(orderDto.getOrderId());
     BeanUtils.copyProperties(orderInfo, orderDto);
 
     if (orderDto.getOrderId() == null || orderDto.getOrderId() == 0) {
@@ -488,23 +489,9 @@ public class OrderService {
       if (Constant.specialMaterials.contains(materialCode)) {
           continue;
       }
-      MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
-      item.setStandardPrice(materialDto.getStandardPrice());
-      item.setTransactionPrice(materialDto.getTranscationPrice());
-      item.setRetailPrice(materialDto.getRetailPrice());
-      item.setOptionalStandardPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D));
-      // item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
-      item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalTransactionPrice(), 0D));
-      item.setOptionalRetailPrice(item.getOptionalRetailPrice());
-      if (Constant.freeCategorys.contains(item.getItemCategory())) {
-          // 免费
-          item.setActualPrice(0);
-          item.setOptionalActualPrice(0);
-      } else {
-          // 查询出来的订单行项目折扣为百分比形式， ex. 48
-          item.setActualPrice(item.getRetailPrice() * item.getDiscount() / 100);
-          item.setOptionalActualPrice(ObjectUtils.defaultIfNull(item.getOptionalRetailPrice(), 0D) * item.getDiscount() / 100);
-      }
+      // 同步物料最新价格
+  	MaterialDto materialDto = materialService.getMaterialsById(materialCode, order.getCustomerIndustry());
+      syncItemPrice(item, materialDto);
       
       List<CharacteristicDto> configs = item.getConfigs();
       // 没有特征值跳过
@@ -530,6 +517,26 @@ public class OrderService {
 
     return order;
   }
+
+public MaterialDto syncItemPrice(ItemDto item, MaterialDto materialDto) {
+      item.setStandardPrice(materialDto.getStandardPrice());
+      item.setTransactionPrice(materialDto.getTranscationPrice());
+      item.setRetailPrice(materialDto.getRetailPrice());
+      item.setOptionalStandardPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D));
+      // item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * materialDto.getTranscationPrice() / materialDto.getStandardPrice());
+      item.setOptionalTransactionPrice(ObjectUtils.defaultIfNull(item.getOptionalTransactionPrice(), 0D));
+      item.setOptionalRetailPrice(item.getOptionalRetailPrice());
+      if (Constant.freeCategorys.contains(item.getItemCategory())) {
+          // 免费
+          item.setActualPrice(0);
+          item.setOptionalActualPrice(0);
+      } else {
+          // 查询出来的订单行项目折扣为百分比形式， ex. 48
+          item.setActualPrice(item.getRetailPrice() * item.getDiscount() / 100);
+          item.setOptionalActualPrice(ObjectUtils.defaultIfNull(item.getOptionalRetailPrice(), 0D) * item.getDiscount() / 100);
+      }
+	return materialDto;
+}
   
   /**
    * 同步物料特征表
