@@ -128,8 +128,8 @@ public class BestsignService {
 		parameters.put("account", this.accountName);
 		parameters.put("enterpriseName", this.enterName);
 		paramsMap.put("operator", parameters);
-		paramsMap.put("pageIndex", 1);
-		paramsMap.put("pageSize", 50);
+//		paramsMap.put("pageIndex", 1);
+//		paramsMap.put("pageSize", 350);
 		
 //		List<String> list = new ArrayList<String>();
 		List<ContractSignSys> signList = new ArrayList<ContractSignSys>();
@@ -137,7 +137,7 @@ public class BestsignService {
 		boolean hasmore = false;
 		do {
 			String result = getBestSignClient().executeRequest("/api/contracts/search", "post", paramsMap);
-			logger.debug("Search result:" + result);
+			logger.info("Search result:" + result);
 			Map resultMap = (Map) mapper.readValue(result, HashMap.class);
 			if (resultMap.get("code").equals("0")) {
 				Map data = (Map)resultMap.get("data");
@@ -314,6 +314,7 @@ public class BestsignService {
 		String result = getBestSignClient().executeRequest(
 				 url,
 				"get", null);
+		logger.info("url: " + url);
 		logger.info("getContractInfo(" + contractId + ") : " + result);
 
 		Map maps = null;
