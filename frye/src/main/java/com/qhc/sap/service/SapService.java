@@ -44,6 +44,9 @@ import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.domain.Parameter;
 import com.qhc.sap.domain.PaymentPlanDto;
 import com.qhc.sap.domain.PriceDto;
+import com.qhc.sap.domain.QueryOrderStatusDto;
+import com.qhc.sap.domain.QueryOrdersStatusBody;
+import com.qhc.sap.domain.QueryOrdersStatusHead;
 import com.qhc.sap.domain.SalesGroup;
 import com.qhc.sap.entity.LastUpdated;
 import com.qhc.utils.DateUtil;
@@ -100,6 +103,9 @@ public class SapService {
 	
 	@Value("${sap.queryOrderStatus.addr}")
 	String queryOrderStatusUrl;
+	
+	@Value("${sap.queryStatus.addr}")
+	String queryStatusUrl;
 	
 	
 	@Autowired
@@ -776,6 +782,38 @@ public class SapService {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	//查询订单状态     Z_QHC_SD_Q091_SD043
+	public List<QueryOrderStatusDto> queryOrderStatus(List<QueryOrdersStatusBody> queryOrdersStatusBody) {
+		List<QueryOrderStatusDto> list = new ArrayList<QueryOrderStatusDto>();
+		try {
+			//请求参数
+			
+			QueryOrdersStatusHead headParam = new QueryOrdersStatusHead();
+			headParam.setIT_QUERY(queryOrdersStatusBody);
+			String defaultParam = JSONObject.toJSONString(headParam);
+			
+			//发送请求获取数据
+			String bb = HttpUtil.postbody(queryStatusUrl, defaultParam);
+			JSONObject parseObject = JSONObject.parseObject(bb);
+			Object data = parseObject.get("et_query");
+			JSONArray dataArray = JSONArray.parseArray(data.toString());
+			for (int i = 0; i < dataArray.size();i++) { 
+				JSONObject obj = (JSONObject)dataArray.get(i);
+				
+				QueryOrderStatusDto dc = new QueryOrderStatusDto();
+				dc.setVbeln(obj.getString("vbeln"));
+				dc.setUpdkz(obj.getString("updkz"));
+				dc.setSubrc(obj.getString("subrc"));
+				dc.setMessage(obj.getString("message"));
+				list.add(dc);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
 	
 	public Map<String, List<Bom>> parseBomResult(String jsonResult)
 			throws JsonProcessingException, JsonMappingException {
