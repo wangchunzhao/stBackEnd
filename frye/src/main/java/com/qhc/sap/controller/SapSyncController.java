@@ -2,6 +2,7 @@ package com.qhc.sap.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +17,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.sap.SapItemStatus;
 import com.qhc.order.domain.sap.SapOrderStatus;
+import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.ItemMapper;
 import com.qhc.order.service.OrderService;
@@ -33,6 +35,8 @@ import com.qhc.sap.domain.IncotermDto;
 import com.qhc.sap.domain.MaterialDto;
 import com.qhc.sap.domain.PaymentPlanDto;
 import com.qhc.sap.domain.PriceDto;
+import com.qhc.sap.domain.QueryOrderStatusDto;
+import com.qhc.sap.domain.QueryOrdersStatusBody;
 import com.qhc.sap.domain.SalesGroup;
 import com.qhc.sap.service.CharacteristicService;
 import com.qhc.sap.service.CurrencyService;
@@ -380,6 +384,63 @@ public class SapSyncController {
 			}
 		}
 	}
+    
+    //每天8 - 19点每10分鐘执行一次
+    @Scheduled(cron = "0 */10 8-19 * * ?")
+    @ApiOperation(value = "从SAP同步订单下推后处理状态")
+    @GetMapping(value = "syncSendSapOrderStatus")
+    @ResponseStatus(HttpStatus.OK)
+    public void sapTempOrderStatus() {
+        logger.info("自动同步下推sap订单处理状态开始==============================================");
+        logger.info("读取已下推sap未处理订单数据【订单状态为07/08，并且为激活状态】");
+        List<OrderInfo> toSapTempOrders = orderInfoMapper.findSapTempOrder();
+        logger.info("订单数据： {}", toSapTempOrders);
+        
+        List<QueryOrdersStatusBody> queryOrders = new ArrayList<>();
+        Map<String, Integer> contractNumberMap = new HashMap<>();
+        for (OrderInfo orderInfo : toSapTempOrders) {
+          QueryOrdersStatusBody queryOrder = new QueryOrdersStatusBody();
+          queryOrder.setVBELN(orderInfo.getContractNumber()); //订单合同号
+          String status = orderInfo.getStatus();
+          if (OrderDto.ORDER_STATUS_SAP_TEMP.equals(status)) {
+            queryOrder.setUPDKZ("I"); //状态   U是订单变更，I是新建订单
+          } else {
+            queryOrder.setUPDKZ("U"); //状态   U是订单变更，I是新建订单
+          }
+          queryOrders.add(queryOrder);
+          // 存储合同号与orderinfo id映射关系
+          contractNumberMap.put(queryOrder.getVBELN(), orderInfo.getId());
+        }
+        logger.info("查询下推sap订单状态参数： {}", queryOrders);
+        List<QueryOrderStatusDto>orderStatusList = sapService.queryOrderStatus(queryOrders);
+        logger.info("查询下推sap订单状态结果： {}", orderStatusList);
+        for (QueryOrderStatusDto queryOrderStatusDto : orderStatusList) {
+          String contractNumber = queryOrderStatusDto.getVbeln(); //订单号 vbeln
+          String status = queryOrderStatusDto.getSubrc(); //订单创建状态   subrc  S/E
+          String updated = queryOrderStatusDto.getUpdkz(); //是否订单变更    updkz U/I
+          String comments = queryOrderStatusDto.getMessage(); //订单创建message   message 
+          
+          Integer id = contractNumberMap.get(contractNumber);
+          if (id == null) {
+            logger.error("SAP下推订单状态查询错误，合同号【{}】没有找到对应主键ID", contractNumber);
+            continue;
+          }
+          Map<String, Object> params = new HashMap<>();
+          params.put("id", id);
+          if (status.equals("S")) {
+            params.put("status", OrderDto.ORDER_STATUS_SAP);
+          } else {
+            if (updated.equals("I")) {
+              params.put("status", OrderDto.ORDER_STATUS_APPROVED);
+            } else {
+              params.put("status", OrderDto.ORDER_STATUS_APPROVED_UPDATE);
+            }
+            params.put("comments", comments);
+          }
+          
+          orderInfoMapper.updateSapTempOrderStatus(params);
+        }
+    }
 
 	private Date strToDate(String strDate)
 			throws ParseException {

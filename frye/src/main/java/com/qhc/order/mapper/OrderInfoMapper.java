@@ -120,4 +120,7 @@ public interface OrderInfoMapper {
 	
 	OrderInfo findLastVersion(Integer orderInfoId);
 
+	List<OrderInfo> findSapTempOrder();
+	
+	int updateSapTempOrderStatus(Map<String, Object> params);
 }

@@ -503,4 +503,23 @@
 		where order_id in (select order_id from k_order_info where id = #{orderInfoId}) and id != #{orderInfoId}
 		order by id desc
 	</select>
+	
+	<select id="findSapTempOrder" resultType="com.qhc.order.entity.OrderInfo" >
+		select 
+			id, contract_number, status
+		from k_order_info
+		where is_active = 1 and (status = '07' or status = '08')
+		order by id
+	</select>
+	
+	<!-- 修改订单状态 -->
+	<update id="updateSapTempOrderStatus" parameterType="Map" >
+		update k_order_info
+		set status = #{status, jdbcType=VARCHAR}
+			, updater = 'admin'
+			, update_time = now()
+			, comments = #{comments, jdbcType=VARCHAR}
+		</if>
+		where  id = #{id, jdbcType=INTEGER}
+	</update>
 </mapper>

@@ -1258,13 +1258,19 @@ public class OrderService {
 */
     if (orderDto.isHasSendSap()) {
       sapOrderService.updateOrder(orderDto);
+      // 修改订单状态为已下发SAP
+      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
+          null, null);
+//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_UPGRADE_TEMP, null, null,
+//          null, null);
     } else {
       sapOrderService.createOrder(orderDto);
+      // 修改订单状态为已下发SAP
+      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
+          null, null);
+//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_TEMP, null, null,
+//          null, null);
     }
-    // logger.info("SAP同步开单结果==>"+sapRes);
-    // 修改订单状态为已下发SAP
-    orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
-        null, null);
     // 修改行项目状体为已下发SAP
     Item item = new Item();
     item.setOrderInfoId(orderInfoId);
@@ -1786,6 +1792,7 @@ public class OrderService {
         bpmItem.setRowNumber(itemDto.getRowNum());
         bpmItem.setShippDate(itemDto.getShippDate());
         bpmItem.setSpecialComments(StringUtils.trimToEmpty(itemDto.getSpecialComments()));
+        bpmItem.setStandardPriceOfOptional(ObjectUtils.defaultIfNull(itemDto.getOptionalStandardPrice(), 0D));
         bpmItem.setTransactionPriceOfOptional(itemDto.getOptionalTransactionPrice() / exchange); // 凭证货币
         bpmItem.setTransfterPrice(itemDto.getTransactionPrice() / exchange); // 凭证货币
         double standardCost = itemDto.getStandardPrice()

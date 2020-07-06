@@ -27,6 +27,8 @@ public class OrderItem {
 	private double acturalAmount;
 	/* 产品转移价 */
 	private double transfterPrice;
+    /* 可选项实卖价 */
+    private double standardPriceOfOptional;
 	/* 可选项实卖价 */
 	private double acturalPriceOfOptional;
 	/* 可选项实卖金额 */
@@ -170,7 +172,15 @@ public class OrderItem {
 		this.transfterPrice = transfterPrice;
 	}
 
-	public double getActuralPriceOfOptional() {
+	public double getStandardPriceOfOptional() {
+    return standardPriceOfOptional;
+  }
+
+  public void setStandardPriceOfOptional(double standardPriceOfOptional) {
+    this.standardPriceOfOptional = standardPriceOfOptional;
+  }
+
+  public double getActuralPriceOfOptional() {
 		return acturalPriceOfOptional;
 	}
 
@@ -362,21 +372,81 @@ public class OrderItem {
 		this.standardCost = standardCost;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderItem [rowNumber=" + rowNumber + ", materialName=" + materialName + ", materialCode=" + materialCode
-				+ ", materialAttribute=" + materialAttribute + ", materialGroup=" + materialGroup
-				+ ", materialGroupName=" + materialGroupName + ", quantity=" + quantity + ", measureUnitName="
-				+ measureUnitName + ", acturalPrice=" + acturalPrice + ", acturalAmount=" + acturalAmount
-				+ ", transfterPrice=" + transfterPrice + ", acturalPriceOfOptional=" + acturalPriceOfOptional
-				+ ", acturalAmountOfOptional=" + acturalAmountOfOptional + ", transactionPriceOfOptional="
-				+ transactionPriceOfOptional + ", b2cPriceEstimated=" + b2cPriceEstimated + ", b2cAmountEstimated="
-				+ b2cAmountEstimated + ", b2cCostOfEstimated=" + b2cCostOfEstimated + ", retailPrice=" + retailPrice
-				+ ", retailAmount=" + retailAmount + ", discount=" + discount + ", itemCategoryName=" + itemCategoryName
-				+ ", itemRequirementPlanName=" + itemRequirementPlanName + ", period=" + period + ", deliveryDate="
-				+ deliveryDate + ", produceDate=" + produceDate + ", shippDate=" + shippDate + ", address=" + address
-				+ ", onStoreDate=" + onStoreDate + ", b2cComments=" + b2cComments + ", specialComments="
-				+ specialComments + ", colorComments=" + colorComments + ", standardCost=" + standardCost + "]";
-	}
+  @Override
+  public String toString() {
+    return "OrderItem [rowNumber="
+        + rowNumber
+        + ", materialName="
+        + materialName
+        + ", materialCode="
+        + materialCode
+        + ", materialAttribute="
+        + materialAttribute
+        + ", materialGroup="
+        + materialGroup
+        + ", materialGroupName="
+        + materialGroupName
+        + ", quantity="
+        + quantity
+        + ", measureUnitName="
+        + measureUnitName
+        + ", acturalPrice="
+        + acturalPrice
+        + ", acturalAmount="
+        + acturalAmount
+        + ", transfterPrice="
+        + transfterPrice
+        + ", standardPriceOfOptional="
+        + standardPriceOfOptional
+        + ", acturalPriceOfOptional="
+        + acturalPriceOfOptional
+        + ", acturalAmountOfOptional="
+        + acturalAmountOfOptional
+        + ", transactionPriceOfOptional="
+        + transactionPriceOfOptional
+        + ", b2cPriceEstimated="
+        + b2cPriceEstimated
+        + ", b2cAmountEstimated="
+        + b2cAmountEstimated
+        + ", b2cCostOfEstimated="
+        + b2cCostOfEstimated
+        + ", totalSellingPrice="
+        + totalSellingPrice
+        + ", totalSellingAmount="
+        + totalSellingAmount
+        + ", totalTransferAmount="
+        + totalTransferAmount
+        + ", retailPrice="
+        + retailPrice
+        + ", retailAmount="
+        + retailAmount
+        + ", discount="
+        + discount
+        + ", itemCategoryName="
+        + itemCategoryName
+        + ", itemRequirementPlanName="
+        + itemRequirementPlanName
+        + ", period="
+        + period
+        + ", deliveryDate="
+        + deliveryDate
+        + ", produceDate="
+        + produceDate
+        + ", shippDate="
+        + shippDate
+        + ", address="
+        + address
+        + ", onStoreDate="
+        + onStoreDate
+        + ", b2cComments="
+        + b2cComments
+        + ", specialComments="
+        + specialComments
+        + ", colorComments="
+        + colorComments
+        + ", standardCost="
+        + standardCost
+        + "]";
+  }
 
 }
