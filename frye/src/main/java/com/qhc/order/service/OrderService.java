@@ -1919,14 +1919,14 @@ public class OrderService {
           } else {
             // 修改订单行项目折扣，重新计算订单毛利率
             // 转换折扣格式为小数，用于计算
-            bodyDiscount = bodyDiscount / 100;
-            unitDiscount = unitDiscount / 100;
-            orderDto.setApprovedBodyDiscount(bodyDiscount);
-            orderDto.setBodyDiscount(bodyDiscount);
-            orderDto.setApprovedMainDiscount(unitDiscount);
-            orderDto.setMainDiscount(unitDiscount);
+            double tmpbodyDiscount = bodyDiscount / 100;
+            double tmpunitDiscount = unitDiscount / 100;
+            orderDto.setApprovedBodyDiscount(tmpbodyDiscount);
+            orderDto.setBodyDiscount(tmpbodyDiscount);
+            orderDto.setApprovedMainDiscount(tmpunitDiscount);
+            orderDto.setMainDiscount(tmpunitDiscount);
             // 更新行项目的discount
-            updateBpmItemDicount(orderDto, bodyDiscount, unitDiscount);
+            updateBpmItemDicount(orderDto, tmpbodyDiscount, tmpunitDiscount);
             bpmDicision.setRemark("经销商非标折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ",bodyDiscount: " + bodyDiscount + ", unitDiscount: " + unitDiscount);
           }
           // 计算合并折扣和行项目金额
