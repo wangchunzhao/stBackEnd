@@ -519,7 +519,7 @@
 			, updater = 'admin'
 			, update_time = now()
 			, comments = #{comments, jdbcType=VARCHAR}
-		</if>
+
 		where  id = #{id, jdbcType=INTEGER}
 	</update>
 </mapper>

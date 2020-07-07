@@ -96,3 +96,7 @@ sap:
     # 修改订单
     sapChangeOrder:
         addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
+     #查询订单状态
+    queryStatus:
+         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD043
+    

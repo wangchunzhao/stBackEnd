@@ -91,9 +91,12 @@ sap:
      
     # 下发订单
     sapCreateOrder:
-#        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
-         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD041
+        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
+#         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD041
     # 修改订单
     sapChangeOrder:
-#        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
-         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD042
+        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
+#         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD042
+   #查询订单状态
+    queryStatus:
+         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD043
