@@ -161,6 +161,12 @@ public class GrossProfitMarginService {
 				break;
 			case "3237": // "不可预估费"
 				// 不可预估费是作为行项目录入，不在订单详情
+			    // 页面只录入了产品转移价
+                items.forEach(i -> { 
+                    if (i.getMaterialGroupCode().equals(code)) {
+                        i.setStandardPrice(i.getTransactionPrice());
+                    }
+                });
 				calcItemMargin(mgroup, order);
 				break;
 			case "9103": // "追加运费"
