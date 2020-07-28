@@ -472,9 +472,9 @@
 			contract_number
 		from k_order_info 
 		where contract_number = #{contractNumber, jdbcType=VARCHAR}
-			<if test="orderId != null" >
+			<!-- <if test="orderId != null" > -->
 				AND order_id != #{orderId, jdbcType=INTEGER}
-			</if>
+			<!-- </if> -->
 	</select>
 	
 	<select id="findForUpdateSapStatus" resultType="Map">
