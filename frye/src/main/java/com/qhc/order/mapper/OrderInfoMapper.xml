@@ -323,7 +323,8 @@
         o.quote_status,
         c.name as customer_name,
       	s.name as office_name,
-      	g.name as group_name
+      	g.name as group_name,
+      	(select count(1) > 0 from k_item where order_info_id = oi.id and item_status in ('10', 'Z2')) as has_send_sap
 	</sql>
 	
 	<sql id="order_view_table_list" >
