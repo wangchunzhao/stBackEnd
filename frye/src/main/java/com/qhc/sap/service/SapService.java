@@ -721,7 +721,7 @@ public class SapService {
 				}
 
 				SapItemStatus pa = new SapItemStatus();
-				pa.setRowNum(obj.getString("posnr"));
+				pa.setRowNum(Integer.valueOf(obj.getString("posnr")));
 				pa.setMaterialCode(obj.getString("matnr"));
 				pa.setQuantity(obj.getDouble("kwmeng"));
 				pa.setUnitCode(obj.getString("vrkme"));

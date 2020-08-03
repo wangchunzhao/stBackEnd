@@ -8,7 +8,7 @@ package com.qhc.order.domain.sap;
  */
 public class SapItemStatus {
 	// SO item/订单编号项目
-	private String rowNum;
+	private Integer rowNum;
 	// Material Number/物料编码
 	private String materialCode;
 	// Order quantity/订单数量
@@ -82,10 +82,10 @@ public class SapItemStatus {
 	 */
 	private String finallyIssueDate;
 	
-	public String getRowNum() {
+	public Integer getRowNum() {
 		return rowNum;
 	}
-	public void setRowNum(String rowNum) {
+	public void setRowNum(Integer rowNum) {
 		this.rowNum = rowNum;
 	}
 	public String getMaterialCode() {
