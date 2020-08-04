@@ -721,9 +721,9 @@ public class SapService {
 				}
 
 				SapItemStatus pa = new SapItemStatus();
-				pa.setRowNum(Integer.valueOf(obj.getString("posnr")));
+				pa.setRowNum(Integer.valueOf(StringUtils.trimToEmpty(obj.getString("posnr"))));
 				pa.setMaterialCode(obj.getString("matnr"));
-				pa.setQuantity(obj.getDouble("kwmeng"));
+				pa.setQuantity(Double.valueOf(StringUtils.trimToEmpty(obj.getString("kwmeng"))));
 				pa.setUnitCode(obj.getString("vrkme"));
 				pa.setRejectedCode(obj.getString("abgru"));
 				pa.setStatus(obj.getString("gbsta"));
@@ -733,9 +733,9 @@ public class SapService {
 				pa.setProductionOrder(obj.getString("aufnr"));
 				pa.setProductionStartdate(obj.getString("erdat"));
 				pa.setReceiptDate(obj.getString("bldat"));
-				pa.setReceiptQuantity(obj.getDouble("menge"));
-				pa.setPlannedIssueQuantity(obj.getDouble("zmenge10"));
-				pa.setIssuedQuantity(obj.getDouble("zmenge11"));
+				pa.setReceiptQuantity(Double.valueOf(StringUtils.trimToEmpty(obj.getString("menge"))));
+				pa.setPlannedIssueQuantity(Double.valueOf(StringUtils.trimToEmpty(obj.getString("zmenge10"))));
+				pa.setIssuedQuantity(Double.valueOf(StringUtils.trimToEmpty(obj.getString("zmenge11"))));
 				pa.setFirstIssueDate(obj.getString("erdat1"));
 				pa.setFinallyIssueDate(obj.getString("erdat2"));
 				list.add(pa);
