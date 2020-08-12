@@ -182,6 +182,16 @@ public class SapOrderService {
 			header.setUpdateflag("U");
 		}
 		header.setTaxk1(order.getTaxCode()); // 税率Code
+		
+        // 备货订单的字段请按照下面默认，不需要在销售工具备货下单页面增加可选项：
+        // 分销渠道10（直销）
+        // 销售部门S012（华北区）
+        // 销售组S29（山东省）
+		if ("5".equals(order.getStOrderType())) {
+		    header.setVtweg("10"); // DC/分销渠道 -- 客户
+		    header.setVkorg("S012"); // Sales org./销售组织 -- Fixed value/固定为 0841
+		    header.setVkgrp("S29"); // Sales group/销售组 -- 中心
+		}
 
 //		ItemService itemService;
 		List<ItemDto> items = order.getItems(); // itemMapper.findByOrderInfoId(order.getId());
