@@ -189,7 +189,7 @@ public class SapOrderService {
         // 销售组S29（山东省）
 		if ("5".equals(order.getStOrderType())) {
 		    header.setVtweg("10"); // DC/分销渠道 -- 客户
-		    header.setVkorg("S012"); // Sales org./销售组织 -- Fixed value/固定为 0841
+		    header.setVkbur("S012"); // Sales office/销售办公室 -- 大区
 		    header.setVkgrp("S29"); // Sales group/销售组 -- 中心
 		}
 
