@@ -343,16 +343,19 @@ public class SapOrderService {
 //		材料费  BG1GDB00000-X	  9902
 		addFeeItem("VKHM", sapItems, sapPrices, "BG1GDB00000-X", 9902, ObjectUtils.defaultIfNull(order.getMaterialFee(), 0D) / exchange);
 //		销售运费  BG1P7E00000-X	9903
-		double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D);
-		addFeeItem("VKHM", sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
-		double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D);
-		if (freight > 0 && additionalFreight > 0) {
-			// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
-			SapOrderPrice price3 = new SapOrderPrice();
-			price3.setPosnr(9903);
-			price3.setKschl("ZH12");
-			price3.setKbetr(BigDecimal.valueOf(additionalFreight / exchange));
-			sapPrices.add(price3);
+		// 备货订单没有运费虚拟物料
+		if (!"5".equals(order.getStOrderType())) {
+			double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D);
+			addFeeItem("VKHM", sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
+			double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D);
+			if (freight > 0 && additionalFreight > 0) {
+				// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
+				SapOrderPrice price3 = new SapOrderPrice();
+				price3.setPosnr(9903);
+				price3.setKschl("ZH12");
+				price3.setKbetr(BigDecimal.valueOf(additionalFreight / exchange));
+				sapPrices.add(price3);
+			}
 		}
 		
 //		电气费  BG1R8J00000-X	
