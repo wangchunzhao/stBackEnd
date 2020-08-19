@@ -188,9 +188,29 @@ public class SapOrderService {
         // 销售部门S012（华北区）
         // 销售组S29（山东省）
 		if ("5".equals(order.getStOrderType())) {
+//			10（直销）	
+//			国内	10	S012（华北区）	S29（山东省）
+//			出口	20	S007（出口）	S33（出口）
+//			冷库	30	S006（冷库）	S32（冷库）
 		    header.setVtweg("10"); // DC/分销渠道 -- 客户
-		    header.setVkbur("S012"); // Sales office/销售办公室 -- 大区
-		    header.setVkgrp("S29"); // Sales group/销售组 -- 中心
+		    switch (order.getSaleType()) {
+			case "10":
+			    header.setVkbur("S012"); // Sales office/销售办公室 -- 大区
+			    header.setVkgrp("S29"); // Sales group/销售组 -- 中心
+				break;
+			case "20":
+			    header.setVkbur("S007"); // Sales office/销售办公室 -- 大区
+			    header.setVkgrp("S33"); // Sales group/销售组 -- 中心
+				break;
+			case "30":
+			    header.setVkbur("S006"); // Sales office/销售办公室 -- 大区
+			    header.setVkgrp("S32"); // Sales group/销售组 -- 中心
+				break;
+			default:
+			    header.setVkbur("S012"); // Sales office/销售办公室 -- 大区
+			    header.setVkgrp("S29"); // Sales group/销售组 -- 中心
+				break;
+			}
 		}
 
 //		ItemService itemService;
