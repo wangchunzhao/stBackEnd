@@ -416,8 +416,8 @@ public class SapSyncController {
         logger.info("查询下推sap订单状态结果： {}", orderStatusList);
         for (QueryOrderStatusDto queryOrderStatusDto : orderStatusList) {
           String contractNumber = queryOrderStatusDto.getVbeln(); //订单号 vbeln
-          String status = queryOrderStatusDto.getSubrc(); //订单创建状态   subrc  S/E
-          String updated = queryOrderStatusDto.getUpdkz(); //是否订单变更    updkz U/I
+          String status = StringUtils.trimToEmpty(queryOrderStatusDto.getSubrc()); //订单创建状态   subrc  S/E
+          String updated = StringUtils.trimToEmpty(queryOrderStatusDto.getUpdkz()); //是否订单变更    updkz U/I
           String comments = queryOrderStatusDto.getMessage(); //订单创建message   message 
           
           Integer id = contractNumberMap.get(contractNumber);
@@ -427,7 +427,9 @@ public class SapSyncController {
           }
           Map<String, Object> params = new HashMap<>();
           params.put("id", id);
-          if (status.equals("S")) {
+          if (status.equals("")) {
+        	  continue;
+          } else if (status.equals("S")) {
             params.put("status", OrderDto.ORDER_STATUS_SAP);
           } else {
             if (updated.equals("I")) {
