@@ -432,6 +432,11 @@ public class SapSyncController {
         	  continue;
           } else if (status.equals("S")) {
             params.put("status", OrderDto.ORDER_STATUS_SAP);
+            // 修改行项目状体为已下发SAP
+            Item item = new Item();
+            item.setOrderInfoId(orderInfoId);
+            item.setItemStatus("10");
+            itemMapper.updateSendSapStatusByOrderInfo(item);
           } else {
             if (updated.equals("I")) {
               params.put("status", OrderDto.ORDER_STATUS_APPROVED);
@@ -442,11 +447,6 @@ public class SapSyncController {
           }
           
 			orderInfoMapper.updateSapTempOrderStatus(params);
-			// 修改行项目状体为已下发SAP
-			Item item = new Item();
-			item.setOrderInfoId(orderInfoId);
-			item.setItemStatus("10");
-			itemMapper.updateSendSapStatusByOrderInfo(item);
         }
     }
 
