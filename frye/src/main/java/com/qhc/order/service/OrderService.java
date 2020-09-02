@@ -1272,15 +1272,24 @@ public class OrderService {
 //          null, null);
     }
     // 修改行项目状体为已下发SAP
-    Item item = new Item();
-    item.setOrderInfoId(orderInfoId);
-    item.setItemStatus("10");
-    itemMapper.updateSendSapStatusByOrderInfo(item);
+    // 异步推送sap后移到检查订单执行成功再修改
+//    updateItemToSapStatus(orderInfoId);
 
     return "success";
 
   }
 
+  /**
+   * 下推sap成功后修改行项目状态为10（已下推sap）
+   * 
+   * @param orderInfoId
+   */
+	public void updateItemToSapStatus(Integer orderInfoId) {
+		Item item = new Item();
+		item.setOrderInfoId(orderInfoId);
+		item.setItemStatus("10");
+		itemMapper.updateSendSapStatusByOrderInfo(item);
+	}
 
   /**
    * 查询订单版本历史

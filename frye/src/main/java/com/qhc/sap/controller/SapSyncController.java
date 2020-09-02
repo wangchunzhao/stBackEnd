@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qhc.order.domain.OrderDto;
 import com.qhc.order.domain.sap.SapItemStatus;
 import com.qhc.order.domain.sap.SapOrderStatus;
+import com.qhc.order.entity.Item;
 import com.qhc.order.entity.OrderInfo;
 import com.qhc.order.mapper.OrderInfoMapper;
 import com.qhc.order.mapper.ItemMapper;
@@ -420,13 +421,13 @@ public class SapSyncController {
           String updated = StringUtils.trimToEmpty(queryOrderStatusDto.getUpdkz()); //是否订单变更    updkz U/I
           String comments = queryOrderStatusDto.getMessage(); //订单创建message   message 
           
-          Integer id = contractNumberMap.get(contractNumber);
-          if (id == null) {
+          Integer orderInfoId = contractNumberMap.get(contractNumber);
+          if (orderInfoId == null) {
             logger.error("SAP下推订单状态查询错误，合同号【{}】没有找到对应主键ID", contractNumber);
             continue;
           }
           Map<String, Object> params = new HashMap<>();
-          params.put("id", id);
+          params.put("id", orderInfoId);
           if (status.equals("")) {
         	  continue;
           } else if (status.equals("S")) {
@@ -440,7 +441,12 @@ public class SapSyncController {
             params.put("comments", comments);
           }
           
-          orderInfoMapper.updateSapTempOrderStatus(params);
+			orderInfoMapper.updateSapTempOrderStatus(params);
+			// 修改行项目状体为已下发SAP
+			Item item = new Item();
+			item.setOrderInfoId(orderInfoId);
+			item.setItemStatus("10");
+			itemMapper.updateSendSapStatusByOrderInfo(item);
         }
     }
 
