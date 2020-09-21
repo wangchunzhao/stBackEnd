@@ -1994,6 +1994,9 @@ public class OrderService {
         String lineNum = (String)map.get("lineNum");
         Double discount = (Double)map.get("discount") / 100;
         if (lineNum.equals(rowNum)) {
+          if (itemDto.getDiscount() == discount.doubleValue()) {
+            break;
+          }
           itemDto.setDiscount(discount);
           // 非免费类别计算实卖价
           itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
