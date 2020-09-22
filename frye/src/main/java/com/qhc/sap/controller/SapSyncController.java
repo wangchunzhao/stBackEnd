@@ -387,7 +387,7 @@ public class SapSyncController {
 	}
     
     //每天8 - 19点每10分鐘执行一次
-    @Scheduled(cron = "0 0/10 8-23 * * ?")
+    @Scheduled(cron = "0 0/5 8-23 * * ?")
     @ApiOperation(value = "从SAP同步订单下推后处理状态")
     @GetMapping(value = "syncSendSapOrderStatus")
     @ResponseStatus(HttpStatus.OK)
