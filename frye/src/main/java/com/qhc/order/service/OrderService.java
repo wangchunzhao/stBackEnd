@@ -1736,7 +1736,8 @@ public class OrderService {
     bpmHeader.setIsUpgrade(order.getVersionNum() > 1 ? 1 : 0);
     bpmHeader.setIsSendToSap(order.isHasSendSap() ? 1 : 0);
 		if (order.getVersionNum() > 1) {
-			OrderInfo lastVersionOrder = orderInfoMapper.findLastVersion(order.getId());
+			// 获取订单前一个版本，计算margin的delta值
+			OrderInfo lastVersionOrder = orderInfoMapper.findLastVersion(order.getId()).get(0);
 			List<MaterialGroups> lastGrossProfitMargins = new ObjectMapper()
 					.readValue(lastVersionOrder.getGrossProfitMargin(),
 							new TypeReference<List<MaterialGroups>>() {

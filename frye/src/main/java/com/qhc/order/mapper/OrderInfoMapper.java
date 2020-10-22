@@ -118,7 +118,13 @@ public interface OrderInfoMapper {
 	
 	int updateSapStatus(Map<String, Object> data);
 	
-	OrderInfo findLastVersion(Integer orderInfoId);
+	/**
+	 * 查询当前订单的前一个版本
+	 * 
+	 * @param orderInfoId
+	 * @return
+	 */
+	List<OrderInfo> findLastVersion(Integer orderInfoId);
 
 	List<OrderInfo> findSapTempOrder();
 	
