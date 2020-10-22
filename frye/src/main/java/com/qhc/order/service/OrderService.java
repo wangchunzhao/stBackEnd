@@ -1259,17 +1259,17 @@ public class OrderService {
     if (orderDto.isHasSendSap()) {
       sapOrderService.updateOrder(orderDto);
       // 修改订单状态为已下发SAP
-      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
-          null, null);
-//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_UPGRADE_TEMP, null, null,
+//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
 //          null, null);
+        orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_UPGRADE_TEMP, null, null,
+          null, null);
     } else {
       sapOrderService.createOrder(orderDto);
       // 修改订单状态为已下发SAP
-      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
-          null, null);
-//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_TEMP, null, null,
+//      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP, null, null,
 //          null, null);
+      orderInfoMapper.updateStatus(orderDto.getId(), user, OrderDto.ORDER_STATUS_SAP_TEMP, null, null,
+          null, null);
     }
     // 修改行项目状体为已下发SAP
     // 异步推送sap后移到检查订单执行成功再修改
