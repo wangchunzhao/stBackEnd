@@ -366,14 +366,19 @@ public class SapOrderService {
 		// 备货订单没有运费虚拟物料
 		if (!"5".equals(order.getStOrderType())) {
 			double freight = ObjectUtils.defaultIfNull(order.getFreight(), 0D);
-			addFeeItem("VKHM", sapItems, sapPrices, "BG1P7E00000-X", 9903, freight / exchange);
 			double additionalFreight = ObjectUtils.defaultIfNull(order.getAdditionalFreight(), 0D);
+			// 出口外部订单，销售工具中录的运费都是凭证货币，不需要再换算
+			if (!"20".equals(order.getSaleType())) {
+				freight = freight / exchange;
+				additionalFreight = additionalFreight / exchange;
+			}
+			addFeeItem("VKHM", sapItems, sapPrices, "BG1P7E00000-X", 9903, freight);
 			if (freight > 0 && additionalFreight > 0) {
 				// 附加运费添加到销售运费行项目，用ZH12：承载附加运费费用
 				SapOrderPrice price3 = new SapOrderPrice();
 				price3.setPosnr(9903);
 				price3.setKschl("ZH12");
-				price3.setKbetr(BigDecimal.valueOf(additionalFreight / exchange));
+				price3.setKbetr(BigDecimal.valueOf(additionalFreight));
 				sapPrices.add(price3);
 			}
 		}
