@@ -138,7 +138,7 @@ public class MaterialController {
 			result = Result.ok(bom);
 		} catch (Exception e) {
 			this.log.error("查询产品BOM失败", e);
-			result = Result.error("查询产品BOM失败！");
+			result = Result.error("查询产品BOM失败！" + e.getMessage());
 		}
 		
 		return result;
