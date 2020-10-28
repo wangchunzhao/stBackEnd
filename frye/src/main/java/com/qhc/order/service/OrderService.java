@@ -1903,56 +1903,58 @@ public class OrderService {
         // 审批通过
         if (orderDto.getVersionNum() > 1) {
           status = OrderDto.ORDER_STATUS_APPROVED_UPDATE;
+          // 订单变更后BPM审批通过，只更新状态，不修改折扣和金额
+          orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null, null, null);
         } else {
           status = OrderDto.ORDER_STATUS_APPROVED;
-        }
   
-        // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
-        if (orderDto.getStOrderType().equals("2") 
-            && (orderDto.getBodyDiscount() != ObjectUtils.defaultIfNull(bodyDiscount, orderDto.getBodyDiscount())
-                || orderDto.getMainDiscount() != ObjectUtils.defaultIfNull(unitDiscount, orderDto.getMainDiscount())
-                || approvalItems != null) ) {
-          orderDto.setStatus(status);
-          orderDto.setUpdater(user);
-          // 转换折扣格式为小数，用于计算
-          convertDiscountToDecimal(orderDto);
-          List<ItemDto> items = orderDto.getItems();
-          
-          // 修改订单行项目折扣，重新计算订单毛利率
-          if (approvalItems != null) {
-//            && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1)
-//            && orderDto.getIsSpecial() != 1) { // 非统一折扣，长期折扣，需要单独处理
-            // 非统一折扣，长期折扣
-            // 更新行项目的discount
-            updateBpmItemDiscount2(orderDto, approvalItems);
-            bpmDicision.setRemark("经销商非标折扣长期折扣非统一折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ", " + new ObjectMapper().writeValueAsString(approvalItems));
-          } else {
-            // 修改订单行项目折扣，重新计算订单毛利率
-            // 转换折扣格式为小数，用于计算
-            double tmpbodyDiscount = bodyDiscount / 100;
-            double tmpunitDiscount = unitDiscount / 100;
-            orderDto.setApprovedBodyDiscount(tmpbodyDiscount);
-            orderDto.setBodyDiscount(tmpbodyDiscount);
-            orderDto.setApprovedMainDiscount(tmpunitDiscount);
-            orderDto.setMainDiscount(tmpunitDiscount);
-            // 更新行项目的discount
-            updateBpmItemDicount(orderDto, tmpbodyDiscount, tmpunitDiscount);
-            bpmDicision.setRemark("经销商非标折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ",bodyDiscount: " + bodyDiscount + ", unitDiscount: " + unitDiscount);
-          }
-          // 计算合并折扣和行项目金额
-          calcMergeDiscount(orderDto);
-  
-          // calculate gross profit margin
-          List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
-          orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
-  
-          OrderInfo orderInfo = new OrderInfo();
-          BeanUtils.copyProperties(orderInfo, orderDto);
-  //        Order order = orderMapper.findById(orderInfo.getOrderId());
-          orderInfoMapper.update(orderInfo);
-        } else {
-          orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null,
-              ObjectUtils.defaultIfNull(orderDto.getBodyDiscount() / 100, 0D), ObjectUtils.defaultIfNull(orderDto.getMainDiscount() / 100, 0D));
+	        // 经销商非标准折扣订单，并且柜体折扣或机组折扣在bpm审批时被修改，并且不是长期折扣
+	        if (orderDto.getStOrderType().equals("2") 
+	            && (orderDto.getBodyDiscount() != ObjectUtils.defaultIfNull(bodyDiscount, orderDto.getBodyDiscount())
+	                || orderDto.getMainDiscount() != ObjectUtils.defaultIfNull(unitDiscount, orderDto.getMainDiscount())
+	                || approvalItems != null) ) {
+	          orderDto.setStatus(status);
+	          orderDto.setUpdater(user);
+	          // 转换折扣格式为小数，用于计算
+	          convertDiscountToDecimal(orderDto);
+	          List<ItemDto> items = orderDto.getItems();
+	          
+	          // 修改订单行项目折扣，重新计算订单毛利率
+	          if (approvalItems != null) {
+	//            && (ObjectUtils.defaultIfNull(orderDto.getIsLongterm(), 0) != 1)
+	//            && orderDto.getIsSpecial() != 1) { // 非统一折扣，长期折扣，需要单独处理
+	            // 非统一折扣，长期折扣
+	            // 更新行项目的discount
+	            updateBpmItemDiscount2(orderDto, approvalItems);
+	            bpmDicision.setRemark("经销商非标折扣长期折扣非统一折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ", " + new ObjectMapper().writeValueAsString(approvalItems));
+	          } else {
+	            // 修改订单行项目折扣，重新计算订单毛利率
+	            // 转换折扣格式为小数，用于计算
+	            double tmpbodyDiscount = bodyDiscount / 100;
+	            double tmpunitDiscount = unitDiscount / 100;
+	            orderDto.setApprovedBodyDiscount(tmpbodyDiscount);
+	            orderDto.setBodyDiscount(tmpbodyDiscount);
+	            orderDto.setApprovedMainDiscount(tmpunitDiscount);
+	            orderDto.setMainDiscount(tmpunitDiscount);
+	            // 更新行项目的discount
+	            updateBpmItemDicount(orderDto, tmpbodyDiscount, tmpunitDiscount);
+	            bpmDicision.setRemark("经销商非标折扣审批。sequenceNumber: " + orderDto.getSequenceNumber() + ",bodyDiscount: " + bodyDiscount + ", unitDiscount: " + unitDiscount);
+	          }
+	          // 计算合并折扣和行项目金额
+	          calcMergeDiscount(orderDto);
+	  
+	          // calculate gross profit margin
+	          List<MaterialGroups> margin = grossProfitMarginService.calculate(orderDto);
+	          orderDto.setGrossProfitMargin(new ObjectMapper().writeValueAsString(margin));
+	  
+	          OrderInfo orderInfo = new OrderInfo();
+	          BeanUtils.copyProperties(orderInfo, orderDto);
+	  //        Order order = orderMapper.findById(orderInfo.getOrderId());
+	          orderInfoMapper.update(orderInfo);
+	        } else {
+	          orderInfoMapper.updateStatus(orderDto.getId(), user, status, null, null,
+	              ObjectUtils.defaultIfNull(orderDto.getBodyDiscount() / 100, 0D), ObjectUtils.defaultIfNull(orderDto.getMainDiscount() / 100, 0D));
+	        }
         }
       } else {
         // 审批拒绝
