@@ -105,6 +105,8 @@ public class SapSyncController {
 		characteristicService.saveClass(clazz);
 	}
 	
+	//每天10点13点16点同步更新客户主数据
+	@Scheduled(cron = "0 0 10,13,16 * * ?")
 	@ApiOperation(value = "同步sap的Customer信息并写入销售工具数据库")
 	@GetMapping(value = "sycCustomer")
 	@ResponseStatus(HttpStatus.OK)
@@ -129,7 +131,7 @@ public class SapSyncController {
 		currencyService.savePaymentPlan(lp);
 	}
 	
-	@Scheduled(cron = "0 10 12 * * ?")
+	@Scheduled(cron = "0 0 12 * * ?")
 	@ApiOperation(value = "同步sap的CharacteristicValue信息并写入销售工具数据库")
 	@GetMapping(value = "sycCharacteristicValue")
 	@ResponseStatus(HttpStatus.OK)
@@ -215,7 +217,7 @@ public class SapSyncController {
 	}
 	
 	//每天12点执行一次
-	@Scheduled(cron = "0 0 12 * * ?")
+	@Scheduled(cron = "0 10 12 * * ?")
 	@ApiOperation(value = "同步sap的默认特征信息并写入销售工具数据库")
 	@GetMapping(value = "sycDefaultCharacteristic")
 	@ResponseStatus(HttpStatus.OK)
