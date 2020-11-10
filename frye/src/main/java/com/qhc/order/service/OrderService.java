@@ -1997,9 +1997,13 @@ public class OrderService {
         String lineNum = (String)map.get("lineNum");
         Double discount = (Double)map.get("discount") / 100;
         if (lineNum.equals(rowNum)) {
-          if (itemDto.getDiscount() == discount.doubleValue()) {
-            break;
-          }
+        	// 判断折扣是否变化，精度检查
+        	BigDecimal itemDiscount = new BigDecimal(String.valueOf(itemDto.getDiscount())).setScale(4, BigDecimal.ROUND_HALF_UP);
+        	BigDecimal bpmDiscount = new BigDecimal(String.valueOf(discount)).setScale(4, BigDecimal.ROUND_HALF_UP);
+//          if (itemDto.getDiscount() == discount.doubleValue()) {
+        	if (itemDiscount.equals(bpmDiscount)) {
+        		break;
+        	}
           itemDto.setDiscount(discount);
           // 非免费类别计算实卖价
           itemDto.setActualPrice(itemDto.getRetailPrice() * discount);
