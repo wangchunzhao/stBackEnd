@@ -1196,7 +1196,7 @@ public class OrderService {
         Map<String, Object> map = new HashMap<>();
         map.put("code", tax.getCode());
         map.put("tax", tax.getTax());
-        if (tax.getCode().equals("0")) {
+        if (tax.getCode().equals("0") || tax.getCode().startsWith("0_")) {
             taxRate.get("20").add(map);
         } else {
             taxRate.get("10").add(map);
