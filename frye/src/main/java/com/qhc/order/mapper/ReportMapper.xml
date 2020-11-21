@@ -64,23 +64,23 @@
 			item.quantity, <!-- 数量 -->
 			m.sap_unit_of_measurement_code as unitCode, <!-- 计量单位 -->
 			item.actual_price / oi.currency_exchange as actualPrice, <!-- 产品实卖单价（凭证货币） -->
-			0 as actualAmount, <!-- 产品实卖金额（凭证货币） -->
+			(item.actual_price / oi.currency_exchange) * item.quantity as actualAmount, <!-- 产品实卖金额（凭证货币） -->
 			item.transaction_price as transactionPrice, <!-- 产品转移单价（凭证货币） -->
-			0 as transactionPriceAmount, <!-- 产品转移金额（凭证货币） -->
+			item.transaction_price * item.quantity as transactionPriceAmount, <!-- 产品转移金额（凭证货币） -->
 			item.optional_actual_price as optionalActualPrice, <!-- 可选项实卖单价（凭证货币） -->
-			0 as originalOptionalActualPrice, <!-- 可选项实卖金额（凭证货币） -->
+			item.optional_actual_price * item.quantity as originalOptionalActualPrice, <!-- 可选项实卖金额（凭证货币） -->
 			item.optional_transaction_price as optionalTransactionPrice, <!-- 可选项转移单价（凭证货币） -->
-			0 as optionalTransationPriceAmount, <!-- 可选项转移金额（凭证货币） -->
+			item.optional_transaction_price * item.quantity as optionalTransationPriceAmount, <!-- 可选项转移金额（凭证货币） -->
 			item.b2c_estimated_price as b2cEstimatedPrice, <!-- B2C预估单价（CNY） -->
-			0 as b2cEstimatedAmount, <!-- B2C预估金额（CNY） -->
+			item.b2c_estimated_price * item.quantity as b2cEstimatedAmount, <!-- B2C预估金额（CNY） -->
 			item.b2c_estimated_cost as b2cEstimatedCost, <!-- B2C预估成本单价 -->
-			0 as b2cEstimatedCostAmount, <!-- B2C预估成本金额 -->
-			0 as actualPriceSum, <!-- 实卖单价小计（凭证货币） -->
-			0 as actualAmountSum, <!-- 实卖金额合计（凭证货币） -->
-			0 as transactionPriceSum, <!-- 转移单价小计 -->
-			0 as transactionAmountSum, <!-- 转移金额合计 -->
+			item.b2c_estimated_cost * item.quantity as b2cEstimatedCostAmount, <!-- B2C预估成本金额 -->
+			item.actual_price / oi.currency_exchange + item.optional_actual_price + item.b2c_estimated_price as actualPriceSum, <!-- 实卖单价小计（凭证货币） -->
+			(item.actual_price / oi.currency_exchange + item.optional_actual_price + item.b2c_estimated_price) * item.quantity as actualAmountSum, <!-- 实卖金额合计（凭证货币） -->
+			item.transaction_price + item.optional_transaction_price + item.b2c_estimated_cost as transactionPriceSum, <!-- 转移单价小计 -->
+			(item.transaction_price + item.optional_transaction_price + item.b2c_estimated_cost) * item.quantity as transactionAmountSum, <!-- 转移金额合计 -->
 			item.retail_price as retailPrice, <!-- 市场零售价（CNY） -->
-			0 as retailAmount, <!-- 市场零售金额（CNY） -->
+			item.retail_price * item.quantity as retailAmount, <!-- 市场零售金额（CNY） -->
 			item.discount, <!-- 折扣率 -->
 			item.item_category as itemCategory,  <!-- 行项目类别 -->
 			m.is_purchased as isPurchased, <!-- 物料属性 -->
