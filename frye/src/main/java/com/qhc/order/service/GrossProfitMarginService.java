@@ -184,12 +184,12 @@ public class GrossProfitMarginService {
 		            }
 	                // 退货，减去
 	                int flag = Constant.returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
-					b2cEstimatedAmount += flag * item.getB2cEstimatedPrice() * item.getQuantity();
-					b2cEstimatedCost += flag * item.getB2cEstimatedCost() * item.getQuantity();
+					b2cEstimatedAmount += flag * toBigDecimal(item.getB2cEstimatedPrice() / exchange, 2).doubleValue() * item.getQuantity();
+					b2cEstimatedCost += flag * toBigDecimal(item.getB2cEstimatedCost() / exchange, 2).doubleValue() * item.getQuantity();
 				}
-				b2cEstimatedAmount /= exchange; // 转换为凭证货币
-				b2cEstimatedExcludingTaxAmount = b2cEstimatedAmount / (1 + order.getTaxRate()) / exchange; // 转换为凭证货币
-				b2cEstimatedCost /=  exchange; // 转换为凭证货币
+//				b2cEstimatedAmount /= exchange; // 转换为凭证货币
+				b2cEstimatedExcludingTaxAmount = b2cEstimatedAmount / (1 + order.getTaxRate()); // 转换为凭证货币
+//				b2cEstimatedCost /=  exchange; // 转换为凭证货币
 				setMaterialGroupMargin(mgroup, b2cEstimatedAmount, b2cEstimatedExcludingTaxAmount, b2cEstimatedCost, b2cEstimatedCost);
 				break;
 			case "9102": // "可选项"
@@ -304,21 +304,21 @@ public class GrossProfitMarginService {
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣+可选项实卖价（差价）
 //                amount += (item.getActualPrice() + item.getOptionalActualPrice()) * item.getQuantity();
                 // 1. 金额= sum（实卖金额合计），实卖金额=实卖价*数量，实卖价=零售价*折扣
-                amount += flag * (item.getActualPrice()) * item.getQuantity();
+                amount += flag * toBigDecimal(item.getActualPrice() / exchange, 2).doubleValue() * item.getQuantity();
                 // 成本（销售）
-                cost += flag * item.getTransactionPrice() * item.getQuantity();
+                cost += flag * toBigDecimal(item.getTransactionPrice() / exchange, 2).doubleValue() * item.getQuantity();
                 // 成本（生产）
-                wtwCost += flag * item.getStandardPrice() * item.getQuantity();
+                wtwCost += flag * toBigDecimal(item.getStandardPrice() / exchange, 2).doubleValue() * item.getQuantity();
 			}
 		}
 
 		// 2. 不含税金额=金额/(1+税率)
 		excludingTaxAmount = amount / (1 + taxRate);
 		
-		amount = amount / exchange; // 转换为凭证货币
-		excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
-		cost = cost / exchange;  // 转换为凭证货币
-		wtwCost = wtwCost / exchange;  // 转换为凭证货币
+//		amount = amount / exchange; // 转换为凭证货币
+//		excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
+//		cost = cost / exchange;  // 转换为凭证货币
+//		wtwCost = wtwCost / exchange;  // 转换为凭证货币
 
 		setMaterialGroupMargin(group, amount, excludingTaxAmount, cost, wtwCost);
 	}
@@ -347,20 +347,20 @@ public class GrossProfitMarginService {
             // 退货，减去
             double flag = Constant.returnCategorys.contains(item.getItemCategory()) ? -1 : 1;
             // 1. 金额= sum（可选项实卖金额合计），可选项实卖金额=可选项实卖价*数量，可选项实卖价=可选项零售价*折扣
-            amount += flag * (item.getOptionalActualPrice()) * item.getQuantity();
+            amount += flag * toBigDecimal(item.getOptionalActualPrice() / exchange, 2).doubleValue() * item.getQuantity();
             // 成本（销售）
-            cost += flag * item.getOptionalTransactionPrice() * item.getQuantity();
+            cost += flag * toBigDecimal(item.getOptionalTransactionPrice() / exchange, 2).doubleValue() * item.getQuantity();
             // 成本（生产）
-            wtwCost += flag * ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) * item.getQuantity();
+            wtwCost += flag * toBigDecimal(ObjectUtils.defaultIfNull(item.getOptionalStandardPrice(), 0D) / exchange, 2).doubleValue() * item.getQuantity();
         }
 
         // 2. 不含税金额=金额/(1+税率)
         excludingTaxAmount = amount / (1 + taxRate);
         
-        amount = amount / exchange; // 转换为凭证货币
-        excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
-        cost = cost / exchange;  // 转换为凭证货币
-        wtwCost = wtwCost / exchange;  // 转换为凭证货币
+//        amount = amount / exchange; // 转换为凭证货币
+//        excludingTaxAmount = excludingTaxAmount / exchange;  // 转换为凭证货币
+//        cost = cost / exchange;  // 转换为凭证货币
+//        wtwCost = wtwCost / exchange;  // 转换为凭证货币
 
         setMaterialGroupMargin(group, amount, excludingTaxAmount, cost, wtwCost);
     }
