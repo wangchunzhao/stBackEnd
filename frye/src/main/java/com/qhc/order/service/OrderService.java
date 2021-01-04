@@ -823,6 +823,7 @@ public class OrderService {
     List<ItemAttachment> attachments = itemDto.getAttachments();
     if (attachments != null && attachments.size() > 0) {
       for (ItemAttachment itemAttachment : attachments) {
+    	itemAttachment.setId(null);
         itemAttachment.setItemId(item.getId());
         itemAttachment.setOrderInfoId(item.getOrderInfoId());
         itemAttachmentMapper.insert(itemAttachment);
