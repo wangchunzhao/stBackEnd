@@ -29,14 +29,14 @@ mail:
         path: "d:/qhc/mail/files"
 ########### test profile ###########
     debug: true
-    host: 159.82.101.253
+    host: mailhub.carcgl.com
     username: 
     password: 
     smtp:
-        from: ricoh-4000@carrier.utc.com
+        from: qhcit@carrier.com
         auth: false
         timeout: 120000
-        port: 25
+        port: 
 
 # Bestsign config
 contract: 
@@ -91,12 +91,12 @@ sap:
      
     # 下发订单
     sapCreateOrder:
-        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
-#         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD041
+#        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
+         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD041
     # 修改订单
     sapChangeOrder:
-        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
-#         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD042
+#        addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
+         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD042
    #查询订单状态
     queryStatus:
          addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD043

@@ -108,7 +108,7 @@
 				AND (c.code = #{code})
 			</if>
 			<if test="clazzCode != null and clazzCode != ''" >
-				AND (c.sap_customer_class_code = #{clazzCode} OR c.sap_customer_class_code = '03')
+				AND (c.sap_customer_class_code = #{clazzCode} OR c.sap_customer_class_code in('03','04','05','06') )
 			</if>
 			<if test="name != null and name.trim() != ''" >
 				AND (UPPER(c.name) like '%${name.trim().toUpperCase()}%' OR UPPER(c.code) like '%${name.trim().toUpperCase()}%')

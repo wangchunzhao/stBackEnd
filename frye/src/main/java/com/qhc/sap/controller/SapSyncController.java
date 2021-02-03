@@ -140,6 +140,8 @@ public class SapSyncController {
 		characteristicService.saveCharacteristicValue(values);
 	}
 	
+	//每天11点15点同步更新物料主数据
+	@Scheduled(cron = "0 0 11,15 * * ?")
 	@ApiOperation(value="同步sap的material信息并写入销售工具数据库")
 	@GetMapping(value = "sycMaterial",produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.OK)
@@ -154,7 +156,7 @@ public class SapSyncController {
 			}
 		}
 	}
-	
+	//
 	@ApiOperation(value = "同步sap的price信息并写入销售工具数据库")
 	@GetMapping(value = "sycPrice")
 	@ResponseStatus(HttpStatus.OK)
@@ -178,6 +180,36 @@ public class SapSyncController {
 					currencyService.savePrice(temp);
 				}else {
 					currencyService.savePriceDate(date.substring(0, 8));
+					System.out.println("price数据抽取完毕");
+					break;
+				}
+			}
+		}
+	}
+	
+	//一天固定时间同步价格数据   朝九晚五工作时间内每50分钟
+	@Scheduled(cron = "0 0/50 9-17 * * ?")
+	@ApiOperation(value = "同步sap的price信息并写入销售工具数据库")
+	@GetMapping(value = "sycPriceBak")
+	@ResponseStatus(HttpStatus.OK)
+	public void sycPricesBak() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			if(i == 0) {
+				String date = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICE_CODE),"yyyyMMddHHmmss");
+				List<PriceDto> temp = sapService.getPriceFromSap(date,"");
+				if (temp.size() > 0) {
+					currencyService.savePrice(temp);
+				}else {
+					System.out.println("price数据抽取完毕");
+					break;
+				}
+			}else {
+				String date = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICE_CODE),"yyyyMMddHHmmss");
+				String updateDate = DateUtil.convert2String(currencyService.getLastUpdated(PriceDto.PRICE_CHANGE_CODE),"yyyyMMddHHmmss");
+				List<PriceDto> temp = sapService.getPriceFromSap(date,updateDate);
+				if (temp.size() > 0) {
+					currencyService.savePrice(temp);
+				}else {
 					System.out.println("price数据抽取完毕");
 					break;
 				}

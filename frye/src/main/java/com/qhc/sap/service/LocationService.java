@@ -57,9 +57,9 @@ public class LocationService {
 			sso.setCode(sg.getOfficeCode());
 			sso.setName(sg.getOfficeName());
 			//出口
-			if("S007".equals(sg.getOfficeCode())) {
+			if("S009".equals(sg.getOfficeCode())) {
 				sso.setTypeCode("20");
-			}else if("S006".equals(sg.getOfficeCode())) {
+			}else if("S010".equals(sg.getOfficeCode())) {
 				//冷库
 				sso.setTypeCode("30");
 			}else {

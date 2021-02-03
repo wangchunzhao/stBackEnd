@@ -29,14 +29,14 @@ mail:
         path: "d:/qhc/mail/files"
 ########### test profile ###########
     debug: true
-    host: 159.82.101.253
+    host: mailhub.carcgl.com
     username: 
     password: 
     smtp:
-        from: ricoh-4000@carrier.utc.com
+        from: qhcit@carrier.com
         auth: false
         timeout: 120000
-        port: 25
+        port: 
 
 
 # Bestsign config
@@ -57,46 +57,48 @@ bpm:
   
 sap:
     currency:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD024
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD024
         param: "[{\"key\": \"KURST\", \"value\":\"M\"},{\"key\": \"LANGU\", \"value\":\"1\"}]"
     customer:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD018
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD018
         param: "[{\"key\": \"DATUM\", \"value\":\"20190404\"}]"
     incoterm:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD034
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD034
         param: "[{\"key\": \"LANGU\", \"value\":\"1\"}]"
     clazz:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM016
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM016
     characteristic:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM017
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM017
     sapOfficeGroup:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD017
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD017
     paymentplan:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD023
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD023
     material:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM014
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q091_MDM014
     price:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD028
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD028
     priceA:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD028A  
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD028A  
     # 产品物料查询接口
     bomExplosion:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q090_MDM015 
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_MDM_Q090_MDM015 
     defaultCharacteristics:
-         addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=ZQHC_MDM_Q037_FM004
+         addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=ZQHC_MDM_Q037_FM004
     color:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=ZQHC_PPF_Q045_PP016
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=ZQHC_PPF_Q045_PP016
 #实时查询订单状态
     queryOrderStatus:
-       addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD029  
+       addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD029  
      
     # 下发订单
     sapCreateOrder:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
+#        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD031
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD041
     # 修改订单
     sapChangeOrder:
-        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
+#        addr: http://sapp11.eu.carrier.utc.com:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD032
+        addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD042
      #查询订单状态
     queryStatus:
-         addr: http://sapt11.eu.carrier.utc.com:8002/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD043
+         addr: http://10.124.103.1:8001/sap/xi/zqhc_service?sap-client=220&method=Z_QHC_SD_Q091_SD043
     
